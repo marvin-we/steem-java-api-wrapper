@@ -12,12 +12,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.tyrus.client.ClientManager;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import dez.steemit.com.configuration.SteemApiWrapperConfig;
 import dez.steemit.com.exceptions.SteemConnectionException;
 import dez.steemit.com.exceptions.SteemTimeoutException;
+import dez.steemit.com.exceptions.SteemTransformationException;
+import dez.steemit.com.models.SteemModel;
 
 public class CommunicationHandler {
 	private static final Logger LOGGER = LogManager.getLogger(CommunicationHandler.class);
+	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private ClientManager client;
 	private Session session;
@@ -30,10 +37,13 @@ public class CommunicationHandler {
 		this.client = ClientManager.createClient();
 		this.steemMessageHandler = new SteemMessageHandler(this);
 
+		MAPPER.setDateFormat(steemApiWrapperConfig.getDateTimeFormat());
+
 		reconnect();
 	}
 
-	public String performRequest(RequestObject requestObject) throws SteemTimeoutException, SteemConnectionException {
+	public <T extends SteemModel> T performRequest(RequestObject requestObject, Class<T> targetClass)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		if (!session.isOpen()) {
 			reconnect();
 		}
@@ -49,7 +59,10 @@ public class CommunicationHandler {
 				throw new SteemTimeoutException(errorMessage);
 			}
 
-			return steemMessageHandler.getMessage();
+			return MAPPER.readValue(steemMessageHandler.getMessage(), targetClass);
+
+		} catch (JsonParseException | JsonMappingException e) {
+			throw new SteemTransformationException("Could not transform the response into an object.", e);
 		} catch (IOException | EncodeException | InterruptedException e) {
 			throw new SteemConnectionException("There was a problem sending a message to the server.", e);
 		}

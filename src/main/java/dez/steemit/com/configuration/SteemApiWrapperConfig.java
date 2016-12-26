@@ -2,6 +2,7 @@ package dez.steemit.com.configuration;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 
 import javax.websocket.ClientEndpointConfig;
 
@@ -23,6 +24,7 @@ public class SteemApiWrapperConfig {
 	private ClientEndpointConfig clientEndpointConfig;
 	private URI websocketEndpointURI;
 	private long timeout;
+	private SimpleDateFormat dateTimeFormat;
 
 	/**
 	 * Default constructor that will set all default values.
@@ -37,6 +39,7 @@ public class SteemApiWrapperConfig {
 			this.websocketEndpointURI = null;
 		}
 		this.timeout = 1000;
+		this.dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	}
 
 	/**
@@ -90,5 +93,25 @@ public class SteemApiWrapperConfig {
 	 */
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
+	}
+
+	/**
+	 * The default date format that will be used to map the date fields
+	 * of the server response
+	 * 
+	 * @return
+	 */
+	public SimpleDateFormat getDateTimeFormat() {
+		return dateTimeFormat;
+	}
+
+	/**
+	 * Override the default date format that will be used to map the date fields
+	 * of the server response.
+	 * 
+	 * @param dateTimeFormat
+	 */
+	public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
+		this.dateTimeFormat = dateTimeFormat;
 	}
 }

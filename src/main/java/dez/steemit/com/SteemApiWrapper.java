@@ -1,10 +1,5 @@
 package dez.steemit.com;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import dez.steemit.com.communication.CommunicationHandler;
 import dez.steemit.com.communication.RequestMethods;
 import dez.steemit.com.communication.RequestObject;
@@ -16,56 +11,49 @@ import dez.steemit.com.models.AccountCount;
 import dez.steemit.com.models.AccountHistory;
 import dez.steemit.com.models.AccountVotes;
 import dez.steemit.com.models.WitnessCount;
+import dez.steemit.com.models.votes.Vote;
 
-public class SteemApiWrapper {
-	private static final ObjectMapper MAPPER = new ObjectMapper();
-	
+/**
+ * This class is a wrapper for the Steem web socket API.
+ * 
+ * @author http://steemit.com/@dez1337
+ */
+public class SteemApiWrapper {	
 	private CommunicationHandler communicationHandler;
 	
 	public SteemApiWrapper(SteemApiWrapperConfig apiWrapperConfig) throws SteemConnectionException {
 		this.communicationHandler = new CommunicationHandler(apiWrapperConfig);
-
-		MAPPER.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"));
 	}
 	
-	public AccountCount getAccountCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+	public int getAccountCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
 		requestObject.setMethod(RequestMethods.GET_ACCOUNT_COUNT);
 		String[] parameters = {};
 		requestObject.setParams(parameters);
-		try {
-			return MAPPER.readValue(communicationHandler.performRequest(requestObject), AccountCount.class);
-		} catch (IOException e) {
-			throw new SteemTransformationException("Could not transform the response into an object.", e);
-		}
+		
+		return communicationHandler.performRequest(requestObject, AccountCount.class).getCount();
 	}
 	
 	public AccountHistory getAccountHistory(String accountName, int from, int limit) throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		throw new RuntimeException("Not Implemented.");
 	}
 	
-	public AccountVotes getAccountVotes(String username) throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+	public Vote[] getAccountVotes(String username) throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
 		requestObject.setMethod(RequestMethods.GET_ACCOUNT_VOTES);
 		String[] parameters = {username};
 		requestObject.setParams(parameters);
-		try {
-			return MAPPER.readValue(communicationHandler.performRequest(requestObject), AccountVotes.class);
-		} catch (IOException e) {
-			throw new SteemTransformationException("Could not transform the response into an object.", e);
-		}
+		
+		return communicationHandler.performRequest(requestObject, AccountVotes.class).getVotes();
 	}
 	
-	public WitnessCount getWitnessCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+	public int getWitnessCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
 		requestObject.setMethod(RequestMethods.GET_WITNESS_COUNT);
 		String[] parameters = {};
 		requestObject.setParams(parameters);
-		try {
-			return MAPPER.readValue(communicationHandler.performRequest(requestObject), WitnessCount.class);
-		} catch (IOException e) {
-			throw new SteemTransformationException("Could not transform the response into an object.", e);
-		}
+
+		return communicationHandler.performRequest(requestObject, WitnessCount.class).getCount();
 	}
 	
 	public void getNodeInfo() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
