@@ -2,6 +2,11 @@ package dez.steemit.com.communication;
 
 import javax.websocket.MessageHandler;
 
+/**
+ * Simple MessageHandler implementation.
+ * 
+ * @author http://steemit.com/@dez1337
+ */
 public class SteemMessageHandler implements MessageHandler.Whole<String>{
 	private String message;
 	private CommunicationHandler communicationHandlerInstance;

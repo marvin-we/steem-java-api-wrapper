@@ -1,5 +1,10 @@
 package dez.steemit.com.exceptions;
 
+/**
+ * A custom Exception to handle transformation-Exceptions.
+ * 
+ * @author http://steemit.com/@dez1337
+ */
 public class SteemTransformationException extends Exception{
 	private static final long serialVersionUID = -1405676306096463952L;
 

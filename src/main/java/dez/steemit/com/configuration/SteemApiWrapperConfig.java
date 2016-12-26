@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 //TODO: Add value verification in setters.
 /**
  * This class stores the configuration that is used for the communication to the
- * defined websocket server.
+ * defined web socket server.
  * 
  * The setters can be used to override the default values.
  * 
@@ -96,8 +96,8 @@ public class SteemApiWrapperConfig {
 	}
 
 	/**
-	 * The default date format that will be used to map the date fields
-	 * of the server response
+	 * The default date format that will be used to map the date fields of the
+	 * server response
 	 * 
 	 * @return
 	 */

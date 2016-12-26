@@ -18,35 +18,106 @@ import dez.steemit.com.models.votes.Vote;
  * 
  * @author http://steemit.com/@dez1337
  */
-public class SteemApiWrapper {	
+public class SteemApiWrapper {
 	private CommunicationHandler communicationHandler;
-	
-	public SteemApiWrapper(SteemApiWrapperConfig apiWrapperConfig) throws SteemConnectionException {
-		this.communicationHandler = new CommunicationHandler(apiWrapperConfig);
+
+	/**
+	 * Initialize the Steem API Wrapper.
+	 * 
+	 * @param steemApiWrapperConfig
+	 *            A SteemApiWrapperConfig object that contains the required
+	 *            configuration.
+	 * @throws SteemConnectionException
+	 *             If there are problems due to connecting to the server.
+	 */
+	public SteemApiWrapper(SteemApiWrapperConfig steemApiWrapperConfig) throws SteemConnectionException {
+		this.communicationHandler = new CommunicationHandler(steemApiWrapperConfig);
 	}
-	
+
+	/**
+	 * Get the current number of registered Steem accounts.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 */
 	public int getAccountCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
 		requestObject.setMethod(RequestMethods.GET_ACCOUNT_COUNT);
 		String[] parameters = {};
 		requestObject.setParams(parameters);
-		
+
 		return communicationHandler.performRequest(requestObject, AccountCount.class).getCount();
 	}
-	
-	public AccountHistory getAccountHistory(String accountName, int from, int limit) throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+
+	/**
+	 * Get the latest activities of a specific account.
+	 * 
+	 * @param accountName
+	 *            The user name of the account.
+	 * @param from
+	 *            The starting point.
+	 * @param limit
+	 *            The maximum number of entries.
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 */
+	public AccountHistory getAccountHistory(String accountName, int from, int limit)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		throw new RuntimeException("Not Implemented.");
 	}
-	
-	public Vote[] getAccountVotes(String username) throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+
+	/**
+	 * Get an array of all votes done by a specific account.
+	 * 
+	 * @param accountName
+	 *            The user name of the account.
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 */
+	public Vote[] getAccountVotes(String accountName)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
 		requestObject.setMethod(RequestMethods.GET_ACCOUNT_VOTES);
-		String[] parameters = {username};
+		String[] parameters = { accountName };
 		requestObject.setParams(parameters);
-		
+
 		return communicationHandler.performRequest(requestObject, AccountVotes.class).getVotes();
 	}
-	
+
+	/**
+	 * Get the current number of active witnesses.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 */
 	public int getWitnessCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
 		requestObject.setMethod(RequestMethods.GET_WITNESS_COUNT);
@@ -55,7 +126,8 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, WitnessCount.class).getCount();
 	}
-	
+
+	// TODO: Implement
 	public void getNodeInfo() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		throw new RuntimeException("Not Implemented.");
 	}

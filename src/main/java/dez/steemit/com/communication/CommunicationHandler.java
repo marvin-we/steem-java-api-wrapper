@@ -22,6 +22,11 @@ import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
 import dez.steemit.com.models.SteemModel;
 
+/**
+ * This class handles the communication to the Steem web socket API.
+ * 
+ * @author http://steemit.com/@dez1337
+ */
 public class CommunicationHandler {
 	private static final Logger LOGGER = LogManager.getLogger(CommunicationHandler.class);
 	private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -32,6 +37,15 @@ public class CommunicationHandler {
 	private SteemMessageHandler steemMessageHandler;
 	private CountDownLatch messageLatch;
 
+	/**
+	 * Initialize the Connection Handler.
+	 * 
+	 * @param apiWrapperConfig
+	 *            A SteemApiWrapperConfig object that contains the required
+	 *            configuration.
+	 * @throws SteemConnectionException
+	 *             If there are problems due to connecting to the server.
+	 */
 	public CommunicationHandler(SteemApiWrapperConfig steemApiWrapperConfig) throws SteemConnectionException {
 		this.steemApiWrapperConfig = steemApiWrapperConfig;
 		this.client = ClientManager.createClient();
@@ -42,6 +56,24 @@ public class CommunicationHandler {
 		reconnect();
 	}
 
+	/**
+	 * Perform a request to the web socket API whose response will automatically
+	 * get transformed into the given object.
+	 * 
+	 * @param requestObject
+	 *            A request object that contains all needed parameters.
+	 * @param targetClass
+	 *            The target class for the transformation.
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 */
 	public <T extends SteemModel> T performRequest(RequestObject requestObject, Class<T> targetClass)
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		if (!session.isOpen()) {
@@ -68,6 +100,12 @@ public class CommunicationHandler {
 		}
 	}
 
+	/**
+	 * This method establishes a new connection to the web socket Server.
+	 * 
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 */
 	private void reconnect() throws SteemConnectionException {
 		try {
 			session = client.connectToServer(new SteemEndpoint(), steemApiWrapperConfig.getClientEndpointConfig(),

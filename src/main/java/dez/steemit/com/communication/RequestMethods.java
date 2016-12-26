@@ -1,5 +1,10 @@
 package dez.steemit.com.communication;
 
+/**
+ * An enumeration for all existing API methods.
+ * 
+ * @author http://steemit.com/@dez1337
+ */
 public enum RequestMethods {
 	// database_api
 	GET_ACCOUNT_COUNT,
