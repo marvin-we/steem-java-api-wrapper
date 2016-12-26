@@ -58,17 +58,4 @@ public class SteemApiWrapper {
 	public void getNodeInfo() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		throw new RuntimeException("Not Implemented.");
 	}
-	
-	public static void main(String args[]) {
-		
-		try {
-			SteemApiWrapper asdf = new SteemApiWrapper(new SteemApiWrapperConfig());
-			System.out.println(asdf.getAccountCount().toString());
-			//System.out.println(asdf.getAccountHistory("lantto",20,10).toString());
-			System.out.println(asdf.getAccountVotes("dez1337").toString());
-		} catch (SteemTimeoutException | SteemConnectionException | SteemTransformationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }
