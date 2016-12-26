@@ -15,6 +15,7 @@ import dez.steemit.com.exceptions.SteemTransformationException;
 import dez.steemit.com.models.AccountCount;
 import dez.steemit.com.models.AccountHistory;
 import dez.steemit.com.models.AccountVotes;
+import dez.steemit.com.models.WitnessCount;
 
 public class SteemApiWrapper {
 	private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -50,6 +51,18 @@ public class SteemApiWrapper {
 		requestObject.setParams(parameters);
 		try {
 			return MAPPER.readValue(communicationHandler.performRequest(requestObject), AccountVotes.class);
+		} catch (IOException e) {
+			throw new SteemTransformationException("Could not transform the response into an object.", e);
+		}
+	}
+	
+	public WitnessCount getWitnessCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+		RequestObject requestObject = new RequestObject();
+		requestObject.setMethod(RequestMethods.GET_WITNESS_COUNT);
+		String[] parameters = {};
+		requestObject.setParams(parameters);
+		try {
+			return MAPPER.readValue(communicationHandler.performRequest(requestObject), WitnessCount.class);
 		} catch (IOException e) {
 			throw new SteemTransformationException("Could not transform the response into an object.", e);
 		}
