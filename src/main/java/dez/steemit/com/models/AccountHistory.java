@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import dez.steemit.com.models.operations.Operation;
 
 public class AccountHistory {
+	private int entryNumber;
 	private Operation op;
 
 	@Override

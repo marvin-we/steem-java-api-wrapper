@@ -21,8 +21,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dez.steemit.com.configuration.SteemApiWrapperConfig;
 import dez.steemit.com.exceptions.SteemConnectionException;
+import dez.steemit.com.exceptions.SteemResponseError;
 import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
+import dez.steemit.com.models.error.SteemError;
 
 /**
  * This class handles the communication to the Steem web socket API.
@@ -76,15 +78,18 @@ public class CommunicationHandler {
 	 * @throws SteemTransformationException
 	 *             If the API Wrapper is unable to transform the JSON response
 	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
 	 */
 	public <T> List<T> performRequest(RequestWrapper requestObject, Class<T> targetClass)
-			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
 		if (!session.isOpen()) {
 			reconnect();
 		}
 
 		messageLatch = new CountDownLatch(1);
 
+		String rawJsonResponse = "";
 		try {
 			session.getBasicRemote().sendObject(requestObject);
 			if (!messageLatch.await(steemApiWrapperConfig.getTimeout(), TimeUnit.MILLISECONDS)) {
@@ -93,20 +98,30 @@ public class CommunicationHandler {
 				LOGGER.error(errorMessage);
 				throw new SteemTimeoutException(errorMessage);
 			}
-			
+
+			rawJsonResponse = steemMessageHandler.getMessage();
+
+			LOGGER.debug("Raw JSON response: {}", rawJsonResponse);
+
 			@SuppressWarnings("unchecked")
-			ResponseWrapper<T> response = MAPPER.readValue(steemMessageHandler.getMessage(), ResponseWrapper.class);
-			
+			ResponseWrapper<T> response = MAPPER.readValue(rawJsonResponse, ResponseWrapper.class);
+
 			if (response.getResponseId() != requestObject.getId()) {
 				LOGGER.error("The request and the response id are not equal! This may cause some strange behaivior.");
 			}
 
 			// Make sure that the inner result object has the correct type.
 			JavaType type = MAPPER.getTypeFactory().constructCollectionType(List.class, targetClass);
-			
+
 			return MAPPER.convertValue(response.getResult(), type);
 		} catch (JsonParseException | JsonMappingException e) {
-			throw new SteemTransformationException("Could not transform the response into an object.", e);
+			// The response may be an error, so lets try to parse it as one.
+			try {
+				throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
+			} catch (IOException ex) {
+				throw new SteemTransformationException("Could not transform the response into an object.", ex);
+			}
+
 		} catch (IOException | EncodeException | InterruptedException e) {
 			throw new SteemConnectionException("There was a problem sending a message to the server.", e);
 		}
