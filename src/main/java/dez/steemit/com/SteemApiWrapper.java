@@ -1,18 +1,18 @@
 package dez.steemit.com;
 
+import java.util.List;
+
 import dez.steemit.com.communication.CommunicationHandler;
 import dez.steemit.com.communication.RequestMethods;
-import dez.steemit.com.communication.RequestObject;
+import dez.steemit.com.communication.RequestWrapper;
 import dez.steemit.com.communication.SteemApis;
 import dez.steemit.com.configuration.SteemApiWrapperConfig;
 import dez.steemit.com.exceptions.SteemConnectionException;
 import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
-import dez.steemit.com.models.AccountCount;
 import dez.steemit.com.models.AccountHistory;
-import dez.steemit.com.models.AccountVotes;
-import dez.steemit.com.models.WitnessCount;
-import dez.steemit.com.models.votes.Vote;
+import dez.steemit.com.models.Version;
+import dez.steemit.com.models.Vote;
 
 /**
  * This class is a wrapper for the Steem web socket API.
@@ -49,13 +49,13 @@ public class SteemApiWrapper {
 	 *             into a Java object.
 	 */
 	public int getAccountCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
-		RequestObject requestObject = new RequestObject();
+		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_COUNT);
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
 		String[] parameters = {};
 		requestObject.setAdditionalParameters(parameters);
 
-		return communicationHandler.performRequest(requestObject, AccountCount.class).getCount();
+		return communicationHandler.performRequest(requestObject, Integer.class).get(0);
 	}
 
 	/**
@@ -98,15 +98,15 @@ public class SteemApiWrapper {
 	 *             If the API Wrapper is unable to transform the JSON response
 	 *             into a Java object.
 	 */
-	public Vote[] getAccountVotes(String accountName)
+	public List<Vote> getAccountVotes(String accountName)
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
-		RequestObject requestObject = new RequestObject();
+		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
 		requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_VOTES);
 		String[] parameters = { accountName };
 		requestObject.setAdditionalParameters(parameters);
 
-		return communicationHandler.performRequest(requestObject, AccountVotes.class).getVotes();
+		return communicationHandler.performRequest(requestObject, Vote.class);
 	}
 
 	/**
@@ -123,17 +123,40 @@ public class SteemApiWrapper {
 	 *             into a Java object.
 	 */
 	public int getWitnessCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
-		RequestObject requestObject = new RequestObject();
+		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
 		String[] parameters = {};
 		requestObject.setAdditionalParameters(parameters);
-
-		return communicationHandler.performRequest(requestObject, WitnessCount.class).getCount();
+		
+		return communicationHandler.performRequest(requestObject, Integer.class).get(0);
 	}
 
 	// TODO: Implement
 	public void getNodeInfo() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		throw new RuntimeException("Not Implemented.");
+	}
+
+	/**
+	 * Get the version information of the connected node.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 */
+	public Version getVersion() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_VERSION);
+		requestObject.setSteemApi(SteemApis.LOGIN_API);
+		String[] parameters = {};
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, Version.class).get(0);
 	}
 }

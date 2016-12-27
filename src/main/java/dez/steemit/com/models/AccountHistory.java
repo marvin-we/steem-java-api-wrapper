@@ -2,14 +2,10 @@ package dez.steemit.com.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import dez.steemit.com.models.operations.AccountAction;
+import dez.steemit.com.models.operations.Operation;
 
-public class AccountHistory extends SteemModel {
-	private AccountAction[] result;
-
-	public AccountAction[] getResult() {
-		return result;
-	}
+public class AccountHistory {
+	private Operation op;
 
 	@Override
 	public String toString() {

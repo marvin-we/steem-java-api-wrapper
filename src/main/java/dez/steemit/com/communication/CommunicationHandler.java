@@ -1,6 +1,7 @@
 package dez.steemit.com.communication;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -13,6 +14,8 @@ import org.apache.logging.log4j.Logger;
 import org.glassfish.tyrus.client.ClientManager;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,7 +23,6 @@ import dez.steemit.com.configuration.SteemApiWrapperConfig;
 import dez.steemit.com.exceptions.SteemConnectionException;
 import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
-import dez.steemit.com.models.SteemModel;
 
 /**
  * This class handles the communication to the Steem web socket API.
@@ -52,6 +54,7 @@ public class CommunicationHandler {
 		this.steemMessageHandler = new SteemMessageHandler(this);
 
 		MAPPER.setDateFormat(steemApiWrapperConfig.getDateTimeFormat());
+		MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
 		reconnect();
 	}
@@ -74,7 +77,7 @@ public class CommunicationHandler {
 	 *             If the API Wrapper is unable to transform the JSON response
 	 *             into a Java object.
 	 */
-	public <T extends SteemModel> T performRequest(RequestObject requestObject, Class<T> targetClass)
+	public <T> List<T> performRequest(RequestWrapper requestObject, Class<T> targetClass)
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		if (!session.isOpen()) {
 			reconnect();
@@ -83,20 +86,25 @@ public class CommunicationHandler {
 		messageLatch = new CountDownLatch(1);
 
 		try {
-			 session.getBasicRemote().sendObject(requestObject);
+			session.getBasicRemote().sendObject(requestObject);
 			if (!messageLatch.await(steemApiWrapperConfig.getTimeout(), TimeUnit.MILLISECONDS)) {
 				String errorMessage = "Timeout occured. The websocket server was not able to answer in "
 						+ steemApiWrapperConfig.getTimeout() + " millisecond(s).";
 				LOGGER.error(errorMessage);
 				throw new SteemTimeoutException(errorMessage);
 			}
-
-			T response = MAPPER.readValue(steemMessageHandler.getMessage(), targetClass);
-			if (response.getRequestId() == requestObject.getId()) {
-				// TODO throw exception, log,..
+			
+			@SuppressWarnings("unchecked")
+			ResponseWrapper<T> response = MAPPER.readValue(steemMessageHandler.getMessage(), ResponseWrapper.class);
+			
+			if (response.getResponseId() != requestObject.getId()) {
+				LOGGER.error("The request and the response id are not equal! This may cause some strange behaivior.");
 			}
 
-			return response;
+			// Make sure that the inner result object has the correct type.
+			JavaType type = MAPPER.getTypeFactory().constructCollectionType(List.class, targetClass);
+			
+			return MAPPER.convertValue(response.getResult(), type);
 		} catch (JsonParseException | JsonMappingException e) {
 			throw new SteemTransformationException("Could not transform the response into an object.", e);
 		} catch (IOException | EncodeException | InterruptedException e) {
