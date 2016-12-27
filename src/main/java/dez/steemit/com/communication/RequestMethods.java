@@ -15,9 +15,9 @@ public enum RequestMethods {
 	// network_node_api
 	GET_INFO,
 	// login_api
-	//TODO: Implement
 	LOGIN,
-	//TODO: Implement
 	GET_API_BY_NAME,
-	GET_VERSION;
+	GET_VERSION,
+	// network_broadcast_api
+	BROADCAST_TRANSACTION_SYNCHRONOUS;
 }

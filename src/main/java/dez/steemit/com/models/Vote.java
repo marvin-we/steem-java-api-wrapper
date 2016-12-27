@@ -4,6 +4,9 @@ import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * @author http://steemit.com/@dez1337
+ */
 public class Vote {
 	private String authorperm;
 	private String weight;

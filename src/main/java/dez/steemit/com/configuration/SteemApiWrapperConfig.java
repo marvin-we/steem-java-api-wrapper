@@ -32,7 +32,7 @@ public class SteemApiWrapperConfig {
 	public SteemApiWrapperConfig() {
 		this.clientEndpointConfig = ClientEndpointConfig.Builder.create().build();
 		try {
-			this.websocketEndpointURI = new URI("wss://node.steem.ws");//new URI("ws://echo.websocket.org");//new URI("wss://node.steem.ws");
+			this.websocketEndpointURI = new URI("wss://node.steem.ws");
 		} catch (URISyntaxException e) {
 			// This can never happen!
 			LOGGER.error("The configured default URI has a Syntax error.", e);

@@ -115,7 +115,8 @@ public class CommunicationHandler {
 
 			return MAPPER.convertValue(response.getResult(), type);
 		} catch (JsonParseException | JsonMappingException e) {
-			// The response may be an error, so lets try to parse it as one.
+			LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
+
 			try {
 				throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
 			} catch (IOException ex) {
@@ -143,6 +144,13 @@ public class CommunicationHandler {
 		}
 	}
 
+	public ObjectMapper getObjectMapper() {
+		return MAPPER;
+	}
+	
+	/**
+	 * Used to signal that the result is ready and can get accessed.
+	 */
 	public void countDownLetch() {
 		messageLatch.countDown();
 	}

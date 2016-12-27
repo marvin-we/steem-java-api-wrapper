@@ -2,6 +2,9 @@ package dez.steemit.com.models.error;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * @author http://steemit.com/@dez1337
+ */
 public class SteemErrorDetails {
 	private SteemErrorData data;
 	private int code;
