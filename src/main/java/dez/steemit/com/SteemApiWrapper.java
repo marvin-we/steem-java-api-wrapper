@@ -19,6 +19,7 @@ import dez.steemit.com.exceptions.SteemResponseError;
 import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
 import dez.steemit.com.models.AccountActivity;
+import dez.steemit.com.models.Config;
 import dez.steemit.com.models.NodeInfo;
 import dez.steemit.com.models.Version;
 import dez.steemit.com.models.Vote;
@@ -119,6 +120,7 @@ public class SteemApiWrapper {
 
 		Map<Integer, AccountActivity> accountActivities = new HashMap<>();
 
+		// TODO There are still problems with the deserialization of the op() object.
 		for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
 			accountActivities.put((Integer) accountActivity[0], communicationHandler.getObjectMapper()
 					.convertValue(accountActivity[1], new TypeReference<AccountActivity>() {
@@ -180,6 +182,58 @@ public class SteemApiWrapper {
 		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, Integer.class).get(0);
+	}
+	
+	/**
+	 * Get the current miner queue.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public String[] getMinerQueue()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_MINER_QUEUE);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = {};
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, String[].class).get(0);
+	}
+	
+	/**
+	 * Get the current miner queue.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public Config getConfig()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_CONFIG);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = {};
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, Config.class).get(0);
 	}
 
 	/**
