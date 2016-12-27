@@ -3,6 +3,7 @@ package dez.steemit.com;
 import dez.steemit.com.communication.CommunicationHandler;
 import dez.steemit.com.communication.RequestMethods;
 import dez.steemit.com.communication.RequestObject;
+import dez.steemit.com.communication.SteemApis;
 import dez.steemit.com.configuration.SteemApiWrapperConfig;
 import dez.steemit.com.exceptions.SteemConnectionException;
 import dez.steemit.com.exceptions.SteemTimeoutException;
@@ -49,9 +50,10 @@ public class SteemApiWrapper {
 	 */
 	public int getAccountCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
-		requestObject.setMethod(RequestMethods.GET_ACCOUNT_COUNT);
+		requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_COUNT);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
 		String[] parameters = {};
-		requestObject.setParams(parameters);
+		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, AccountCount.class).getCount();
 	}
@@ -75,6 +77,7 @@ public class SteemApiWrapper {
 	 *             If the API Wrapper is unable to transform the JSON response
 	 *             into a Java object.
 	 */
+	// TODO: Implement
 	public AccountHistory getAccountHistory(String accountName, int from, int limit)
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		throw new RuntimeException("Not Implemented.");
@@ -98,9 +101,10 @@ public class SteemApiWrapper {
 	public Vote[] getAccountVotes(String accountName)
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
-		requestObject.setMethod(RequestMethods.GET_ACCOUNT_VOTES);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_VOTES);
 		String[] parameters = { accountName };
-		requestObject.setParams(parameters);
+		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, AccountVotes.class).getVotes();
 	}
@@ -120,9 +124,10 @@ public class SteemApiWrapper {
 	 */
 	public int getWitnessCount() throws SteemTimeoutException, SteemConnectionException, SteemTransformationException {
 		RequestObject requestObject = new RequestObject();
-		requestObject.setMethod(RequestMethods.GET_WITNESS_COUNT);
+		requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
 		String[] parameters = {};
-		requestObject.setParams(parameters);
+		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, WitnessCount.class).getCount();
 	}

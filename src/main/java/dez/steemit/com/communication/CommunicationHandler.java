@@ -83,7 +83,7 @@ public class CommunicationHandler {
 		messageLatch = new CountDownLatch(1);
 
 		try {
-			session.getBasicRemote().sendObject(requestObject);
+			 session.getBasicRemote().sendObject(requestObject);
 			if (!messageLatch.await(steemApiWrapperConfig.getTimeout(), TimeUnit.MILLISECONDS)) {
 				String errorMessage = "Timeout occured. The websocket server was not able to answer in "
 						+ steemApiWrapperConfig.getTimeout() + " millisecond(s).";
@@ -91,8 +91,12 @@ public class CommunicationHandler {
 				throw new SteemTimeoutException(errorMessage);
 			}
 
-			return MAPPER.readValue(steemMessageHandler.getMessage(), targetClass);
+			T response = MAPPER.readValue(steemMessageHandler.getMessage(), targetClass);
+			if (response.getRequestId() == requestObject.getId()) {
+				// TODO throw exception, log,..
+			}
 
+			return response;
 		} catch (JsonParseException | JsonMappingException e) {
 			throw new SteemTransformationException("Could not transform the response into an object.", e);
 		} catch (IOException | EncodeException | InterruptedException e) {
