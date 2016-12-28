@@ -30,6 +30,7 @@ import dez.steemit.com.models.NodeInfo;
 import dez.steemit.com.models.TrendingTag;
 import dez.steemit.com.models.Version;
 import dez.steemit.com.models.Vote;
+import dez.steemit.com.models.WitnessSchedule;
 
 /**
  * This class is a wrapper for the Steem web socket API.
@@ -417,6 +418,32 @@ public class SteemApiWrapper {
 		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, String.class).get(0);
+	}
+	
+	/**
+	 * Get the witness schedule.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public WitnessSchedule getWitnessSchedule()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = {};
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
 	}
 
 	/**
