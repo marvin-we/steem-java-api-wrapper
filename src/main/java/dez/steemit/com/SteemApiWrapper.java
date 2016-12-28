@@ -420,6 +420,36 @@ public class SteemApiWrapper {
 	}
 
 	/**
+	 * Search for accounts.
+	 * 
+	 * @param pattern
+	 *            The lower case pattern you want to search for.
+	 * @param limit
+	 *            The maximum number of account names.
+	 * @return A list of matching account names.
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public List<String> lookupAccounts(String pattern, int limit)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.LOOKUP_ACCOUNTS);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = { pattern, String.valueOf(limit) };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, String.class);
+	}
+
+	/**
 	 * Get the global properties.
 	 * 
 	 * @return
@@ -470,7 +500,7 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
 	}
-	
+
 	/**
 	 * Get the current median price.
 	 * 
@@ -526,7 +556,7 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
 	}
-	
+
 	/**
 	 * Get the replies of a specific post.
 	 * 
