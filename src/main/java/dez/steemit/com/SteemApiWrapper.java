@@ -21,6 +21,7 @@ import dez.steemit.com.exceptions.SteemTransformationException;
 import dez.steemit.com.models.AccountActivity;
 import dez.steemit.com.models.Config;
 import dez.steemit.com.models.NodeInfo;
+import dez.steemit.com.models.TrendingTag;
 import dez.steemit.com.models.Version;
 import dez.steemit.com.models.Vote;
 
@@ -120,7 +121,8 @@ public class SteemApiWrapper {
 
 		Map<Integer, AccountActivity> accountActivities = new HashMap<>();
 
-		// TODO There are still problems with the deserialization of the op() object.
+		// TODO There are still problems with the deserialization of the op()
+		// object.
 		for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
 			accountActivities.put((Integer) accountActivity[0], communicationHandler.getObjectMapper()
 					.convertValue(accountActivity[1], new TypeReference<AccountActivity>() {
@@ -183,7 +185,7 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, Integer.class).get(0);
 	}
-	
+
 	/**
 	 * Get the current miner queue.
 	 * 
@@ -209,9 +211,9 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, String[].class).get(0);
 	}
-	
+
 	/**
-	 * Get the current miner queue.
+	 * Get the configuration.
 	 * 
 	 * @return
 	 * @throws SteemTimeoutException
@@ -290,9 +292,13 @@ public class SteemApiWrapper {
 	}
 
 	/**
-	 * Get the version information of the connected node.
+	 * Login.
 	 * 
-	 * @return
+	 * @param username
+	 *            The user name.
+	 * @param password
+	 *            The password.
+	 * @return true if the login was successful. False otherwise.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -320,6 +326,8 @@ public class SteemApiWrapper {
 	 * Returns the id of an api or null if no api with the given name could be
 	 * found.
 	 * 
+	 * @param apiName
+	 *            The name of the api.
 	 * @return
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
@@ -346,6 +354,36 @@ public class SteemApiWrapper {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Returns detailed values for tags that match the given conditions.
+	 * 
+	 * @param firstTag
+	 *            Only count posts whose first tag is this.
+	 * @param limit
+	 *            The number of results.
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public List<TrendingTag> getTrendingTags(String firstTag, int limit)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = { firstTag, String.valueOf(limit) };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, TrendingTag.class);
 	}
 
 	// TODO implement this!

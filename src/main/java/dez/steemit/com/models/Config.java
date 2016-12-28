@@ -2,6 +2,9 @@ package dez.steemit.com.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * @author http://steemit.com/@dez1337
+ */
 public class Config {
 	@JsonProperty("IS_TEST_NET")
 	private Boolean isTestNet;
