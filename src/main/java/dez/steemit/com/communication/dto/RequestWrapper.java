@@ -50,7 +50,7 @@ public class RequestWrapper {
 	/**
 	 * Get the api type used for this request.
 	 * 
-	 * @return
+	 * @return The selected steem api name.
 	 */
 	public SteemApis getSteemApi() {
 		return steemApi;
@@ -60,6 +60,7 @@ public class RequestWrapper {
 	 * Set the api type you want to request (@see SteemApis)
 	 * 
 	 * @param steemApi
+	 *            The name of the api you want to connect to.
 	 */
 	public void setSteemApi(SteemApis steemApi) {
 		this.steemApi = steemApi;
@@ -68,7 +69,7 @@ public class RequestWrapper {
 	/**
 	 * Get the api method used for this request.
 	 * 
-	 * @return
+	 * @return The selected steem api method.
 	 */
 	public RequestMethods getApiMethod() {
 		return apiMethod;
@@ -78,6 +79,7 @@ public class RequestWrapper {
 	 * Set the API-Method (@see RequestMethods).
 	 * 
 	 * @param apiMethod
+	 *            The api method you want to use.
 	 */
 	public void setApiMethod(RequestMethods apiMethod) {
 		this.apiMethod = apiMethod;
@@ -86,7 +88,7 @@ public class RequestWrapper {
 	/**
 	 * Get the additional parameters for this request.
 	 * 
-	 * @return
+	 * @return The additional user parameters.
 	 */
 	public Object[] getAdditionalParameters() {
 		return additionalParameters;
@@ -96,6 +98,7 @@ public class RequestWrapper {
 	 * Add custom parameters to this request.
 	 * 
 	 * @param userParameters
+	 *            The additional parameters you want to use.
 	 */
 	public void setAdditionalParameters(Object[] userParameters) {
 		this.additionalParameters = userParameters;
@@ -104,7 +107,7 @@ public class RequestWrapper {
 	/**
 	 * Get the complete list of parameters used for this request.
 	 * 
-	 * @return
+	 * @return The final params fields, used for this request.
 	 */
 	public Object[] getParams() {
 		params = new Object[3];
@@ -118,7 +121,7 @@ public class RequestWrapper {
 	/**
 	 * Get the API-Method that will be used for this request.
 	 * 
-	 * @return
+	 * @return The value of the "method" field.
 	 */
 	public String getMethod() {
 		return METHOD;
@@ -127,7 +130,7 @@ public class RequestWrapper {
 	/**
 	 * Get the json-rpc version.
 	 * 
-	 * @return
+	 * @return The used json-rpc version.
 	 */
 	public String getJsonrpc() {
 		return JSONRPC;
@@ -136,7 +139,7 @@ public class RequestWrapper {
 	/**
 	 * Get the id of this request.
 	 * 
-	 * @return
+	 * @return The id of this request.
 	 */
 	public int getId() {
 		return id;
@@ -145,7 +148,8 @@ public class RequestWrapper {
 	/**
 	 * Increments the global request id.
 	 * 
-	 * @return
+	 * @return The current value of the global request id after it has been
+	 *         incremented.
 	 */
 	public static int incrementGlobalRequestId() {
 		return ++globalRequestId;

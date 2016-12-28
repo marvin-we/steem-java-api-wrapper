@@ -53,6 +53,7 @@ public class SteemApiWrapperConfig {
 	 * Override the default ClientEndpointConfig instance.
 	 * 
 	 * @param clientEndpointConfig
+	 *            The configuration of the client end point.
 	 */
 	public void setClientEndpointConfig(ClientEndpointConfig clientEndpointConfig) {
 		this.clientEndpointConfig = clientEndpointConfig;
@@ -69,6 +70,7 @@ public class SteemApiWrapperConfig {
 	 * Override the default websocket endpoint URI.
 	 * 
 	 * @param websocketEndpointURI
+	 *            The URI of the node you want to connect to.
 	 */
 	public void setWebsocketEndpointURI(URI websocketEndpointURI) {
 		this.websocketEndpointURI = websocketEndpointURI;
@@ -99,7 +101,7 @@ public class SteemApiWrapperConfig {
 	 * The default date format that will be used to map the date fields of the
 	 * server response
 	 * 
-	 * @return
+	 * @return The used date time format used for deserialization.
 	 */
 	public SimpleDateFormat getDateTimeFormat() {
 		return dateTimeFormat;
@@ -110,6 +112,7 @@ public class SteemApiWrapperConfig {
 	 * of the server response.
 	 * 
 	 * @param dateTimeFormat
+	 *            The date time format used for deserialization.
 	 */
 	public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
 		this.dateTimeFormat = dateTimeFormat;

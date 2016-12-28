@@ -74,7 +74,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the current number of registered Steem accounts.
 	 * 
-	 * @return
+	 * @return The number of accounts.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -106,7 +106,8 @@ public class SteemApiWrapper {
 	 *            The starting point.
 	 * @param limit
 	 *            The maximum number of entries.
-	 * @return
+	 * @return A map containing the activities. The key is the id of the
+	 *         activity.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -140,11 +141,11 @@ public class SteemApiWrapper {
 	}
 
 	/**
-	 * Get an array of all votes done by a specific account.
+	 * Get a list of all votes done by a specific account.
 	 * 
 	 * @param accountName
 	 *            The user name of the account.
-	 * @return
+	 * @return A List of votes done by the specified account.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -170,7 +171,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the current number of active witnesses.
 	 * 
-	 * @return
+	 * @return The number of witnesses.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -196,7 +197,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the current miner queue.
 	 * 
-	 * @return
+	 * @return A list of account names that are in the mining queue.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -222,7 +223,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the configuration.
 	 * 
-	 * @return
+	 * @return The steem configuration.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -248,7 +249,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get general network information, such as p2p port.
 	 * 
-	 * @return
+	 * @return Detailed information of the connected node.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -275,7 +276,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the version information of the connected node.
 	 * 
-	 * @return
+	 * @return The steem version that the connected node is running.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -335,7 +336,8 @@ public class SteemApiWrapper {
 	 * 
 	 * @param apiName
 	 *            The name of the api.
-	 * @return
+	 * @return The id for the given api name or null, if the api is not active
+	 *         or does not exist.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -371,7 +373,7 @@ public class SteemApiWrapper {
 	 *            result in starting from the top.
 	 * @param limit
 	 *            The number of results.
-	 * @return
+	 * @return A list of tags.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -397,7 +399,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the hardfork version.
 	 * 
-	 * @return
+	 * @return The hardfork version that the connected node is running on.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -419,11 +421,11 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, String.class).get(0);
 	}
-	
+
 	/**
 	 * Get the witness schedule.
 	 * 
-	 * @return
+	 * @return The witness schedule.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -475,7 +477,7 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, String.class);
 	}
-	
+
 	/**
 	 * Search for witness accounts.
 	 * 
@@ -509,7 +511,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the global properties.
 	 * 
-	 * @return
+	 * @return The dynamic global properties.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -535,7 +537,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the chain properties.
 	 * 
-	 * @return
+	 * @return The chain properties.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -561,7 +563,7 @@ public class SteemApiWrapper {
 	/**
 	 * Get the current median price.
 	 * 
-	 * @return
+	 * @return The current median history price.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -591,7 +593,7 @@ public class SteemApiWrapper {
 	 *            The authors name.
 	 * @param permlink
 	 *            The permlink of the article.
-	 * @return
+	 * @return The details of a specific post.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -651,7 +653,7 @@ public class SteemApiWrapper {
 	 *            The authors name.
 	 * @param permlink
 	 *            The permlink of the article.
-	 * @return
+	 * @return A list of votes for a specific article.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -681,7 +683,7 @@ public class SteemApiWrapper {
 	 *            Get discussions that are tagged with this tag.
 	 * @param limit
 	 *            The number of results.
-	 * @return
+	 * @return A list of discussions.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)

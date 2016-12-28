@@ -46,7 +46,7 @@ public class CommunicationHandler {
 	/**
 	 * Initialize the Connection Handler.
 	 * 
-	 * @param apiWrapperConfig
+	 * @param steemApiWrapperConfig
 	 *            A SteemApiWrapperConfig object that contains the required
 	 *            configuration.
 	 * @throws SteemConnectionException
@@ -71,7 +71,9 @@ public class CommunicationHandler {
 	 *            A request object that contains all needed parameters.
 	 * @param targetClass
 	 *            The target class for the transformation.
-	 * @return
+	 * @param <T>
+	 *            The object that you want to map the result to.
+	 * @return The server response transformed into a list of given objects.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
 	 *             time (@see SteemApiWrapperConfig)
@@ -149,7 +151,7 @@ public class CommunicationHandler {
 	public ObjectMapper getObjectMapper() {
 		return MAPPER;
 	}
-	
+
 	/**
 	 * Used to signal that the result is ready and can get accessed.
 	 */
