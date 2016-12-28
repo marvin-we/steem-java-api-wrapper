@@ -1,4 +1,4 @@
-package dez.steemit.com.communication;
+package dez.steemit.com.communication.dto;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import dez.steemit.com.communication.RequestMethods;
+import dez.steemit.com.communication.SteemApis;
 
 /**
  * A wrapper object that carries all required fields for a request.
@@ -94,7 +97,7 @@ public class RequestWrapper {
 	 * 
 	 * @param userParameters
 	 */
-	public void setAdditionalParameters(String[] userParameters) {
+	public void setAdditionalParameters(Object[] userParameters) {
 		this.additionalParameters = userParameters;
 	}
 

@@ -1,4 +1,4 @@
-package dez.steemit.com.communication;
+package dez.steemit.com.communication.dto;
 
 import java.util.List;
 

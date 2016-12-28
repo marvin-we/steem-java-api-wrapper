@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dez.steemit.com.communication.dto.RequestWrapper;
+import dez.steemit.com.communication.dto.ResponseWrapper;
 import dez.steemit.com.configuration.SteemApiWrapperConfig;
 import dez.steemit.com.exceptions.SteemConnectionException;
 import dez.steemit.com.exceptions.SteemResponseError;

@@ -11,6 +11,7 @@ public class SteemData {
 	private String name;
 	// The error only contains "what" or "api" depending on the kind.
 	private String what;
+	private String type;
 	private Map<String, Integer> api;
 
 	public String getName() {
@@ -19,6 +20,10 @@ public class SteemData {
 
 	public String getWhat() {
 		return what;
+	}
+	
+	public String getType() {
+		return type;
 	}
 	
 	public Map<String, Integer> getApi() {

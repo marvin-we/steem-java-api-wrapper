@@ -11,8 +11,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import dez.steemit.com.communication.CommunicationHandler;
 import dez.steemit.com.communication.RequestMethods;
-import dez.steemit.com.communication.RequestWrapper;
 import dez.steemit.com.communication.SteemApis;
+import dez.steemit.com.communication.dto.GetDiscussionParametersDTO;
+import dez.steemit.com.communication.dto.RequestWrapper;
 import dez.steemit.com.configuration.SteemApiWrapperConfig;
 import dez.steemit.com.exceptions.SteemConnectionException;
 import dez.steemit.com.exceptions.SteemResponseError;
@@ -20,6 +21,8 @@ import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
 import dez.steemit.com.models.AccountActivity;
 import dez.steemit.com.models.Config;
+import dez.steemit.com.models.Discussion;
+import dez.steemit.com.models.GlobalProperties;
 import dez.steemit.com.models.NodeInfo;
 import dez.steemit.com.models.TrendingTag;
 import dez.steemit.com.models.Version;
@@ -360,7 +363,8 @@ public class SteemApiWrapper {
 	 * Returns detailed values for tags that match the given conditions.
 	 * 
 	 * @param firstTag
-	 *            Only count posts whose first tag is this.
+	 *            Start the list after this category. An empty String will
+	 *            result in starting from the top.
 	 * @param limit
 	 *            The number of results.
 	 * @return
@@ -384,6 +388,92 @@ public class SteemApiWrapper {
 		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, TrendingTag.class);
+	}
+	
+	/**
+	 * Get the hardfork version.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public String getHardforkVersion()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = { };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, String.class).get(0);
+	}
+	
+	/**
+	 * Get the global properites.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public GlobalProperties getDynamicGlobalProperties()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = { };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, GlobalProperties.class).get(0);
+	}
+	
+	/**
+	 * Get active discussions for a specified tag.
+	 * 
+	 * @param tag
+	 *            Get discussions that are tagged with this tag.
+	 * @param limit
+	 *            The number of results.
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public List<Discussion> getDiscussionsByActive(String tag, int limit)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		// This steem api is the most non standardized shit I've ever seen in my life.
+		GetDiscussionParametersDTO getDiscussionParameterDTO = new GetDiscussionParametersDTO();
+		getDiscussionParameterDTO.setTag(tag);
+		getDiscussionParameterDTO.setLimit(String.valueOf(limit));
+		Object[] parameters = { getDiscussionParameterDTO };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, Discussion.class);
 	}
 
 	// TODO implement this!
