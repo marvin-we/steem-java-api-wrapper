@@ -21,6 +21,7 @@ import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
 import dez.steemit.com.models.AccountActivity;
 import dez.steemit.com.models.ActiveVote;
+import dez.steemit.com.models.ChainProperties;
 import dez.steemit.com.models.Config;
 import dez.steemit.com.models.Discussion;
 import dez.steemit.com.models.GlobalProperties;
@@ -390,7 +391,7 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, TrendingTag.class);
 	}
-	
+
 	/**
 	 * Get the hardfork version.
 	 * 
@@ -411,12 +412,12 @@ public class SteemApiWrapper {
 		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
-		String[] parameters = { };
+		String[] parameters = {};
 		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, String.class).get(0);
 	}
-	
+
 	/**
 	 * Get the global properties.
 	 * 
@@ -437,15 +438,75 @@ public class SteemApiWrapper {
 		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
-		String[] parameters = { };
+		String[] parameters = {};
 		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, GlobalProperties.class).get(0);
 	}
-	
+
 	/**
-	 * Get the global properites.
+	 * Get the chain properties.
 	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public ChainProperties getChainProperties()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_CHAIN_PROPERTIES);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = {};
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
+	}
+
+	/**
+	 * Get the details of a specific post.
+	 * 
+	 * @param author
+	 *            The authors name.
+	 * @param permlink
+	 *            The permlink of the article.
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public Discussion getContent(String author, String permlink)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_CONTENT);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = { author, permlink };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
+	}
+
+	/**
+	 * Get the active votes for a given post of a given author.
+	 * 
+	 * @param author
+	 *            The authors name.
+	 * @param permlink
+	 *            The permlink of the article.
 	 * @return
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
@@ -468,7 +529,7 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, ActiveVote.class);
 	}
-	
+
 	/**
 	 * Get active discussions for a specified tag.
 	 * 
@@ -493,7 +554,8 @@ public class SteemApiWrapper {
 		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
-		// This steem api is the most non standardized shit I've ever seen in my life. Here goes the workaround:
+		// This steem api is the most non standardized shit I've ever seen in my
+		// life. Here goes the workaround:
 		GetDiscussionParametersDTO getDiscussionParameterDTO = new GetDiscussionParametersDTO();
 		getDiscussionParameterDTO.setTag(tag);
 		getDiscussionParameterDTO.setLimit(String.valueOf(limit));
