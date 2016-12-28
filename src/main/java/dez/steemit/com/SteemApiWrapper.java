@@ -20,6 +20,7 @@ import dez.steemit.com.exceptions.SteemResponseError;
 import dez.steemit.com.exceptions.SteemTimeoutException;
 import dez.steemit.com.exceptions.SteemTransformationException;
 import dez.steemit.com.models.AccountActivity;
+import dez.steemit.com.models.ActiveVote;
 import dez.steemit.com.models.Config;
 import dez.steemit.com.models.Discussion;
 import dez.steemit.com.models.GlobalProperties;
@@ -417,7 +418,7 @@ public class SteemApiWrapper {
 	}
 	
 	/**
-	 * Get the global properites.
+	 * Get the global properties.
 	 * 
 	 * @return
 	 * @throws SteemTimeoutException
@@ -440,6 +441,32 @@ public class SteemApiWrapper {
 		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, GlobalProperties.class).get(0);
+	}
+	
+	/**
+	 * Get the global properites.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public List<ActiveVote> getActiveVotes(String author, String permlink)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = { author, permlink };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, ActiveVote.class);
 	}
 	
 	/**
@@ -466,7 +493,7 @@ public class SteemApiWrapper {
 		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
-		// This steem api is the most non standardized shit I've ever seen in my life.
+		// This steem api is the most non standardized shit I've ever seen in my life. Here goes the workaround:
 		GetDiscussionParametersDTO getDiscussionParameterDTO = new GetDiscussionParametersDTO();
 		getDiscussionParameterDTO.setTag(tag);
 		getDiscussionParameterDTO.setLimit(String.valueOf(limit));
