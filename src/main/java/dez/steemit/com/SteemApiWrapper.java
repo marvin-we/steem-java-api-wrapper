@@ -25,6 +25,7 @@ import dez.steemit.com.models.ChainProperties;
 import dez.steemit.com.models.Config;
 import dez.steemit.com.models.Discussion;
 import dez.steemit.com.models.GlobalProperties;
+import dez.steemit.com.models.MedianHistoryPrice;
 import dez.steemit.com.models.NodeInfo;
 import dez.steemit.com.models.TrendingTag;
 import dez.steemit.com.models.Version;
@@ -468,6 +469,32 @@ public class SteemApiWrapper {
 		requestObject.setAdditionalParameters(parameters);
 
 		return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
+	}
+	
+	/**
+	 * Get the current median price.
+	 * 
+	 * @return
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public MedianHistoryPrice getCurrentMedianHistoryPrice()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = {};
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, MedianHistoryPrice.class).get(0);
 	}
 
 	/**
