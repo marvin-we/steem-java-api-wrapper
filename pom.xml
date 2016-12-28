@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>dez1337.steemit.com</groupId>
-	<artifactId>steemit-api-wrapper</artifactId>
+	<groupId>eu.bittrade.libs</groupId>
+	<artifactId>steem-api-wrapper</artifactId>
 	<version>0.0.2</version>
-	<name>Steemit Java API Wrapper</name>
-	<description>A simple wrapper to enable the access of the steem web socket api through Java.</description>
+	<name>Steem Java API Wrapper</name>
+	<description>A simple wrapper to enable the access of the steem web socket API through Java.</description>
 	<url>http://www.steemit.com/@dez1337</url>
 
 	<licenses>
@@ -18,9 +18,9 @@
 	<developers>
 		<developer>
 			<name>dez1337</name>
-			<email></email>
-			<organization></organization>
-			<organizationUrl>http://www.steemit.com/@dez1337</organizationUrl>
+			<email>dez1337@bittrade.eu</email>
+			<organization>bittrade.eu</organization>
+			<organizationUrl>http://www.bittrade.eu</organizationUrl>
 		</developer>
 	</developers>
 
