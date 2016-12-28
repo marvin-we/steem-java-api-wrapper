@@ -499,6 +499,36 @@ public class SteemApiWrapper {
 
 		return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
 	}
+	
+	/**
+	 * Get the replies of a specific post.
+	 * 
+	 * @param author
+	 *            The authors name.
+	 * @param permlink
+	 *            The permlink of the article.
+	 * @return A list of discussions or null if the post has no replies.
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public List<Discussion> getContentReplies(String author, String permlink)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
+		requestObject.setSteemApi(SteemApis.DATABASE_API);
+		String[] parameters = { author, permlink };
+		requestObject.setAdditionalParameters(parameters);
+
+		return communicationHandler.performRequest(requestObject, Discussion.class);
+	}
 
 	/**
 	 * Get the active votes for a given post of a given author.

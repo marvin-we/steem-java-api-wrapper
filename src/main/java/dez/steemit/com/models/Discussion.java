@@ -87,13 +87,12 @@ public class Discussion {
 	private String totalPendingPayoutValue;
 	@JsonProperty("active_votes")
 	private List<ActiveVote> activeVotes;
-	// TODO: How does this object looks like? :o
-	private List<Object> replies;
+	private List<Discussion> replies;
 	@JsonProperty("author_reputation")
 	private String authorReputation;
 	private String promoted;
 
-	public Discussion(@JsonProperty("replies") List<Object> replies,
+	public Discussion(@JsonProperty("replies") List<Discussion> replies,
 			@JsonProperty("active_votes") List<ActiveVote> activeVotes) {
 		this.replies = replies;
 		this.activeVotes = activeVotes;
@@ -259,7 +258,7 @@ public class Discussion {
 		return activeVotes;
 	}
 
-	public List<Object> getReplies() {
+	public List<Discussion> getReplies() {
 		return replies;
 	}
 
