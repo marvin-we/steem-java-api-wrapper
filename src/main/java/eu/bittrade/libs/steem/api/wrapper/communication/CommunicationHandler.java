@@ -146,6 +146,7 @@ public class CommunicationHandler {
 		} catch (DeploymentException | IOException e) {
 			throw new SteemConnectionException("Could not connect to the server.", e);
 		}
+		// TODO: Login again?
 	}
 
 	public ObjectMapper getObjectMapper() {

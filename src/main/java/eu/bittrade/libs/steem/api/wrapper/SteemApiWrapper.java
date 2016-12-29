@@ -26,7 +26,6 @@ import eu.bittrade.libs.steem.api.wrapper.models.Config;
 import eu.bittrade.libs.steem.api.wrapper.models.Discussion;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.MedianHistoryPrice;
-import eu.bittrade.libs.steem.api.wrapper.models.NodeInfo;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
@@ -41,6 +40,7 @@ public class SteemApiWrapper {
 	private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapper.class);
 
 	private CommunicationHandler communicationHandler;
+	private SteemApiWrapperConfig steemApiWrapperConfig;
 
 	/**
 	 * Initialize the Steem API Wrapper.
@@ -62,6 +62,20 @@ public class SteemApiWrapper {
 	public SteemApiWrapper(SteemApiWrapperConfig steemApiWrapperConfig)
 			throws SteemConnectionException, SteemTimeoutException, SteemTransformationException, SteemResponseError {
 		this.communicationHandler = new CommunicationHandler(steemApiWrapperConfig);
+		this.steemApiWrapperConfig = steemApiWrapperConfig;
+
+		if (!("").equals(String.valueOf(steemApiWrapperConfig.getPassword()))
+				&& !("").equals(steemApiWrapperConfig.getUsername())) {
+			LOGGER.info("Calling the login method with the prodvided credentials before checking the available apis.");
+			if (login(steemApiWrapperConfig.getUsername(), String.valueOf(steemApiWrapperConfig.getPassword()))) {
+				LOGGER.info("You have been logged in.");
+			} else {
+				LOGGER.error("Login failed. The following check of available apis will be done as a anonymous user.");
+			}
+		} else {
+			LOGGER.info(
+					"No credentials have been provided. The following check of available apis will be done as a anonymous user.");
+		}
 
 		// Check all known apis
 		for (SteemApis steemApi : SteemApis.values()) {
@@ -247,33 +261,6 @@ public class SteemApiWrapper {
 	}
 
 	/**
-	 * Get general network information, such as p2p port.
-	 * 
-	 * @return Detailed information of the connected node.
-	 * @throws SteemTimeoutException
-	 *             If the server was not able to answer the request in the given
-	 *             time (@see SteemApiWrapperConfig)
-	 * @throws SteemConnectionException
-	 *             If there is a connection problem.
-	 * @throws SteemTransformationException
-	 *             If the API Wrapper is unable to transform the JSON response
-	 *             into a Java object.
-	 * @throws SteemResponseError
-	 *             If the Server returned an error object.
-	 */
-	public NodeInfo getNodeInfo()
-			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-		// TODO: Implement this!
-		RequestWrapper requestObject = new RequestWrapper();
-		requestObject.setApiMethod(RequestMethods.GET_INFO);
-		requestObject.setSteemApi(SteemApis.NETWORK_NODE_API);
-		String[] parameters = {};
-		requestObject.setAdditionalParameters(parameters);
-
-		return communicationHandler.performRequest(requestObject, NodeInfo.class).get(0);
-	}
-
-	/**
 	 * Get the version information of the connected node.
 	 * 
 	 * @return The steem version that the connected node is running.
@@ -300,7 +287,27 @@ public class SteemApiWrapper {
 	}
 
 	/**
-	 * Login.
+	 * Login under the use of the credentials which are stored in the config object.
+	 * 
+	 * @return true if the login was successful. False otherwise.
+	 * @throws SteemTimeoutException
+	 *             If the server was not able to answer the request in the given
+	 *             time (@see SteemApiWrapperConfig)
+	 * @throws SteemConnectionException
+	 *             If there is a connection problem.
+	 * @throws SteemTransformationException
+	 *             If the API Wrapper is unable to transform the JSON response
+	 *             into a Java object.
+	 * @throws SteemResponseError
+	 *             If the Server returned an error object.
+	 */
+	public Boolean login()
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		return login(steemApiWrapperConfig.getUsername(), String.valueOf(steemApiWrapperConfig.getPassword()));
+	}
+	
+	/**
+	 * Login under the use of the specified credentials.
 	 * 
 	 * @param username
 	 *            The user name.
@@ -320,7 +327,11 @@ public class SteemApiWrapper {
 	 */
 	public Boolean login(String username, String password)
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-		// TODO this method always returns true? :o
+		/*
+		 * TODO this method always returns true? Created the following GitHub
+		 * issue for this: https://github.com/steemit/steem/issues/739
+		 */
+
 		RequestWrapper requestObject = new RequestWrapper();
 		requestObject.setApiMethod(RequestMethods.LOGIN);
 		requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -720,6 +731,19 @@ public class SteemApiWrapper {
 		String[] parameters = { trx };
 		requestObject.setAdditionalParameters(parameters);
 
+		return null;
+	}
+
+	// TODO implement this!
+	public Boolean broadcastTransaction(String trx)
+			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+		RequestWrapper requestObject = new RequestWrapper();
+		requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
+		requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
+		String[] parameters = { trx };
+		requestObject.setAdditionalParameters(parameters);
+
+		communicationHandler.performRequest(requestObject, Object[].class);
 		return null;
 	}
 }

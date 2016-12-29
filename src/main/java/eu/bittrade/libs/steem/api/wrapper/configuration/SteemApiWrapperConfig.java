@@ -25,6 +25,8 @@ public class SteemApiWrapperConfig {
 	private URI websocketEndpointURI;
 	private long timeout;
 	private SimpleDateFormat dateTimeFormat;
+	private String username;
+	private char[] password;
 
 	/**
 	 * Default constructor that will set all default values.
@@ -40,6 +42,8 @@ public class SteemApiWrapperConfig {
 		}
 		this.timeout = 1000;
 		this.dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		this.username = "";
+		this.password = "".toCharArray();
 	}
 
 	/**
@@ -116,5 +120,43 @@ public class SteemApiWrapperConfig {
 	 */
 	public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
 		this.dateTimeFormat = dateTimeFormat;
+	}
+
+	/**
+	 * Set the user name which should be used for methods, that require
+	 * authentication.
+	 * 
+	 * @param username The user name to use.
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * Set the password which should be used for methods, that require
+	 * authentication.
+	 * 
+	 * @param password The password to use.
+	 */
+	public void setPassword(char[] password) {
+		this.password = password;
+	}
+
+	/**
+	 * Get the currently configured user name.
+	 * 
+	 * @return The currently configured user name.
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * Get the currently configured password.
+	 * 
+	 * @return The currently configured password.
+	 */
+	public char[] getPassword() {
+		return password;
 	}
 }
