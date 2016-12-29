@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import eu.bittrade.libs.steem.api.wrapper.communication.CommunicationHandler;
+import eu.bittrade.libs.steem.api.wrapper.communication.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.communication.RequestMethods;
 import eu.bittrade.libs.steem.api.wrapper.communication.SteemApis;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.GetDiscussionParametersDTO;
@@ -287,7 +288,8 @@ public class SteemApiWrapper {
 	}
 
 	/**
-	 * Login under the use of the credentials which are stored in the config object.
+	 * Login under the use of the credentials which are stored in the config
+	 * object.
 	 * 
 	 * @return true if the login was successful. False otherwise.
 	 * @throws SteemTimeoutException
@@ -305,7 +307,7 @@ public class SteemApiWrapper {
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
 		return login(steemApiWrapperConfig.getUsername(), String.valueOf(steemApiWrapperConfig.getPassword()));
 	}
-	
+
 	/**
 	 * Login under the use of the specified credentials.
 	 * 
@@ -694,6 +696,8 @@ public class SteemApiWrapper {
 	 *            Get discussions that are tagged with this tag.
 	 * @param limit
 	 *            The number of results.
+	 * @param sortBy
+	 *            The way how the results should be sorted by.
 	 * @return A list of discussions.
 	 * @throws SteemTimeoutException
 	 *             If the server was not able to answer the request in the given
@@ -706,9 +710,55 @@ public class SteemApiWrapper {
 	 * @throws SteemResponseError
 	 *             If the Server returned an error object.
 	 */
-	public List<Discussion> getDiscussionsByActive(String tag, int limit)
+	public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
 			throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
 		RequestWrapper requestObject = new RequestWrapper();
+		
+		switch (sortBy) {
+		case SORT_BY_ACTIVE:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
+			break;
+		case SORT_BY_BLOG:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_BLOG);
+			break;
+		case SORT_BY_CASHOUT:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_CASHOUT);
+			break;
+		case SORT_BY_CHILDREN:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_CHILDREN);
+			break;
+		case SORT_BY_COMMENTS:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_COMMENTS);
+			break;
+		case SORT_BY_CREATED:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_CREATED);
+			break;
+		case SORT_BY_FEED:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_FEED);
+			break;
+		case SORT_BY_HOT:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_HOT);
+			break;
+		case SORT_BY_PAYOUT:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_PAYOUT);
+			break;
+		case SORT_BY_PROMOTED:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_PROMOTED);
+			break;
+		case SORT_BY_TRENDING:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_TRENDING);
+			break;
+		case SORT_BY_TRENDING_30_DAYS:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_TRENDING30);
+			break;
+		case SORT_BY_VOTES:
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_VOTES);
+			break;
+		default:
+			LOGGER.warn("Unkown sort type. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).");
+			requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
+			break;
+		}
 		requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
 		requestObject.setSteemApi(SteemApis.DATABASE_API);
 		// This steem api is the most non standardized shit I've ever seen in my

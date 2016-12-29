@@ -19,6 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steem.api.wrapper.communication.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
@@ -269,8 +270,68 @@ public class SteemApiWrapperTest extends BaseTest {
 
 	@Category({ PublicNode.class, PrivateNode.class })
 	@Test
-	public void testGetDiscussionByActive() throws Exception {
-		final List<Discussion> discussions = steemApiWrapper.getDiscussionsByActive("steemit", 1);
+	public void testGetDiscussionBy() throws Exception {
+		List<Discussion> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_ACTIVE);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_TRENDING);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_TRENDING_30_DAYS);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_FEED);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_BLOG);
+		
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_COMMENTS);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_CREATED);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_CASHOUT);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_PAYOUT);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_VOTES);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_CHILDREN);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_HOT);
+
+		assertNotNull("expect discussions", discussions);
+		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
+		
+		steemApiWrapper.getDiscussionsBy("steemit", 1, DiscussionSortType.SORT_BY_PROMOTED);
 
 		assertNotNull("expect discussions", discussions);
 		assertThat("expect discussions greater than zero", discussions.size(), greaterThan(0));
