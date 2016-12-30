@@ -10,45 +10,45 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author http://steemit.com/@dez1337
  */
 public class SteemContext {
-	private String level;
-	private String file;
-	private int line;
-	private String method;
-	private String hostname;
-	private String threadName;
-	private Date timestamp;
+    private String level;
+    private String file;
+    private int line;
+    private String method;
+    private String hostname;
+    private String threadName;
+    private Date timestamp;
 
-	public String getLevel() {
-		return level;
-	}
+    public String getLevel() {
+        return level;
+    }
 
-	public String getFile() {
-		return file;
-	}
+    public String getFile() {
+        return file;
+    }
 
-	public int getLine() {
-		return line;
-	}
+    public int getLine() {
+        return line;
+    }
 
-	public String getMethod() {
-		return method;
-	}
+    public String getMethod() {
+        return method;
+    }
 
-	public String getHostname() {
-		return hostname;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
-	@JsonProperty("thread_name")
-	public String getThreadName() {
-		return threadName;
-	}
+    @JsonProperty("thread_name")
+    public String getThreadName() {
+        return threadName;
+    }
 
-	public Date getTimestamp() {
-		return timestamp;
-	}
+    public Date getTimestamp() {
+        return timestamp;
+    }
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }

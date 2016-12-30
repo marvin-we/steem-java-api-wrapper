@@ -13,22 +13,22 @@ import org.apache.logging.log4j.Logger;
  * 
  * @author http://steemit.com/@dez1337
  */
-public class SteemEndpoint extends Endpoint{
-	private static final Logger LOGGER = LogManager.getLogger(SteemEndpoint.class);
+public class SteemEndpoint extends Endpoint {
+    private static final Logger LOGGER = LogManager.getLogger(SteemEndpoint.class);
 
-	@Override
-	public void onOpen(Session session, EndpointConfig config) {
-		LOGGER.info("Connection has been established.");
-	}
-	
-	@Override
-	public void onClose(Session session, CloseReason closeReason) {
-		LOGGER.info("Connection has been closed.");
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
+        LOGGER.info("Connection has been established.");
     }
-	
-	@Override
-	public void onError(Session session, Throwable thr) {
-		LOGGER.error("Connection error.", thr);
-	}
+
+    @Override
+    public void onClose(Session session, CloseReason closeReason) {
+        LOGGER.info("Connection has been closed.");
+    }
+
+    @Override
+    public void onError(Session session, Throwable thr) {
+        LOGGER.error("Connection error.", thr);
+    }
 
 }

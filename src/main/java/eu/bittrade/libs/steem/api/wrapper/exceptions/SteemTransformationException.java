@@ -5,14 +5,14 @@ package eu.bittrade.libs.steem.api.wrapper.exceptions;
  * 
  * @author http://steemit.com/@dez1337
  */
-public class SteemTransformationException extends Exception{
-	private static final long serialVersionUID = -1405676306096463952L;
+public class SteemTransformationException extends Exception {
+    private static final long serialVersionUID = -1405676306096463952L;
 
-	public SteemTransformationException(String message) {
-		super(message);
-	}
-	
-	public SteemTransformationException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public SteemTransformationException(String message) {
+        super(message);
+    }
+
+    public SteemTransformationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

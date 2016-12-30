@@ -7,21 +7,21 @@ import javax.websocket.MessageHandler;
  * 
  * @author http://steemit.com/@dez1337
  */
-public class SteemMessageHandler implements MessageHandler.Whole<String>{
-	private String message;
-	private CommunicationHandler communicationHandlerInstance;
-	
-	public SteemMessageHandler(CommunicationHandler communicationHandlerInstance) {
-		this.communicationHandlerInstance = communicationHandlerInstance;
-	}
-	
-	@Override
-	public void onMessage(String message) {
-		this.message = message;
-		communicationHandlerInstance.countDownLetch();
-	}
+public class SteemMessageHandler implements MessageHandler.Whole<String> {
+    private String message;
+    private CommunicationHandler communicationHandlerInstance;
 
-	public String getMessage() {
-		return message;
-	}
+    public SteemMessageHandler(CommunicationHandler communicationHandlerInstance) {
+        this.communicationHandlerInstance = communicationHandlerInstance;
+    }
+
+    @Override
+    public void onMessage(String message) {
+        this.message = message;
+        communicationHandlerInstance.countDownLetch();
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

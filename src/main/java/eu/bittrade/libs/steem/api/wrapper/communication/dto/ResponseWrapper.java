@@ -14,25 +14,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author http://steemit.com/@dez1337
  */
 public class ResponseWrapper<T> {
-	private int responseId;
-	private List<T> result;
+    private int responseId;
+    private List<T> result;
 
-	@JsonCreator
-	public ResponseWrapper(@JsonProperty("result") List<T> result) {
-		this.result = result;
-	}
+    @JsonCreator
+    public ResponseWrapper(@JsonProperty("result") List<T> result) {
+        this.result = result;
+    }
 
-	@JsonProperty("id")
-	public int getResponseId() {
-		return responseId;
-	}
+    @JsonProperty("id")
+    public int getResponseId() {
+        return responseId;
+    }
 
-	public List<T> getResult() {
-		return result;
-	}
+    public List<T> getResult() {
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this);
-	}
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
 }
