@@ -27,6 +27,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.BlockHeader;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
 import eu.bittrade.libs.steem.api.wrapper.models.Discussion;
+import eu.bittrade.libs.steem.api.wrapper.models.FeedHistory;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.MedianHistoryPrice;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
@@ -836,6 +837,60 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Block.class).get(0);
+    }
+    
+    /**
+     * TODO: Look up what this is used for and what it can return.
+     * 
+     * @return Unknown
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public Object[] getConversationRequests()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_COVERSATION_REQUEST);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Object[].class).get(0);
+    }
+    
+    /**
+     * Get the current price and a list of history prices combined in one object.
+     * 
+     * @param blockNumber
+     *            The id of the block the header should be requested from.
+     * @return The current price and a list of past prices.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public FeedHistory getFeedHistory()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
     }
 
     // TODO implement this!
