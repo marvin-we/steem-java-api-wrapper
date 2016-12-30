@@ -727,7 +727,7 @@ public class SteemApiWrapper {
     public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapper requestObject = new RequestWrapper();
- 
+
         requestObject.setApiMethod(SteemApiWrapperUtil.getEquivalentRequestMethod(sortBy));
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         // This steem api is the most non standardized shit I've ever seen in my
@@ -905,7 +905,7 @@ public class SteemApiWrapper {
 
         return communicationHandler.performRequest(requestObject, UserOrder.class);
     }
-    
+
     /**
      * Get a list of orders of the order book.
      * 
@@ -933,7 +933,7 @@ public class SteemApiWrapper {
 
         return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
     }
-    
+
     /**
      * Get the account names of the active witnesses.
      * 
@@ -958,6 +958,34 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, String[].class).get(0);
+    }
+
+    /**
+     * Search for users under the use of their public key(s).
+     * 
+     * @param publicKeys
+     *            An array containing one or more public keys.
+     * @return A list of arrays containing the matching account names.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<String[]> getKeyReferences(String[] publicKeys)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
+        requestObject.setSteemApi(SteemApis.ACCOUNT_BY_KEY_API);
+        Object[] parameters = { publicKeys };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String[].class);
     }
 
     // TODO implement this!
