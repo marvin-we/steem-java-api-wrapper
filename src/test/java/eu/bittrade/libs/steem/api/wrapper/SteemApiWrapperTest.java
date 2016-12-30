@@ -212,7 +212,7 @@ public class SteemApiWrapperTest extends BaseTest {
 		final ChainProperties properties = steemApiWrapper.getChainProperties();
 
 		assertNotNull("expect properties", properties);
-		assertThat("expect head block number", properties.getSdbInterestRate(), greaterThan(0));
+		assertThat("expect sbd interest rate", properties.getSdbInterestRate(), greaterThan(0));
 	}
 
 	@Category({ PublicNode.class, PrivateNode.class })
