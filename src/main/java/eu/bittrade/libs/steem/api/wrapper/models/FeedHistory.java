@@ -6,6 +6,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * @author http://steemit.com/@dez1337
+ */
 public class FeedHistory {
     private int id;
     @JsonProperty("current_median_history")
