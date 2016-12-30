@@ -3,6 +3,12 @@ A Java API-Wrapper for the Steem websocket API.
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
+# How to build the project
+The project requires Maven and Java to be installed on your machine. It can be build with the default maven command:
+>mvn clean package
+
+The resulting JAR can be found in the target directory as usual.
+
 # Example
 The following code is a small example on how to use this Wrapper.
 
