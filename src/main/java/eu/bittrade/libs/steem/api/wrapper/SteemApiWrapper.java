@@ -37,6 +37,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.UserOrder;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemApiWrapperUtil;
 
 /**
  * This class is a wrapper for the Steem web socket API.
@@ -726,54 +727,8 @@ public class SteemApiWrapper {
     public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapper requestObject = new RequestWrapper();
-
-        switch (sortBy) {
-        case SORT_BY_ACTIVE:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
-            break;
-        case SORT_BY_BLOG:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_BLOG);
-            break;
-        case SORT_BY_CASHOUT:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_CASHOUT);
-            break;
-        case SORT_BY_CHILDREN:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_CHILDREN);
-            break;
-        case SORT_BY_COMMENTS:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_COMMENTS);
-            break;
-        case SORT_BY_CREATED:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_CREATED);
-            break;
-        case SORT_BY_FEED:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_FEED);
-            break;
-        case SORT_BY_HOT:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_HOT);
-            break;
-        case SORT_BY_PAYOUT:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_PAYOUT);
-            break;
-        case SORT_BY_PROMOTED:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_PROMOTED);
-            break;
-        case SORT_BY_TRENDING:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_TRENDING);
-            break;
-        case SORT_BY_TRENDING_30_DAYS:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_TRENDING30);
-            break;
-        case SORT_BY_VOTES:
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_VOTES);
-            break;
-        default:
-            LOGGER.warn(
-                    "Unkown sort type. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).");
-            requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
-            break;
-        }
-        requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_ACTIVE);
+ 
+        requestObject.setApiMethod(SteemApiWrapperUtil.getEquivalentRequestMethod(sortBy));
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         // This steem api is the most non standardized shit I've ever seen in my
         // life. Here goes the workaround:
@@ -977,6 +932,32 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
+    }
+    
+    /**
+     * Get the account names of the active witnesses.
+     * 
+     * @return A list of account names of the active witnesses.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public String[] getActiveWitnesses()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String[].class).get(0);
     }
 
     // TODO implement this!
