@@ -30,8 +30,10 @@ import eu.bittrade.libs.steem.api.wrapper.models.Discussion;
 import eu.bittrade.libs.steem.api.wrapper.models.FeedHistory;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.HardforkSchedule;
-import eu.bittrade.libs.steem.api.wrapper.models.MedianHistoryPrice;
+import eu.bittrade.libs.steem.api.wrapper.models.OrderBook;
+import eu.bittrade.libs.steem.api.wrapper.models.Price;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
+import eu.bittrade.libs.steem.api.wrapper.models.UserOrder;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
@@ -599,7 +601,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public MedianHistoryPrice getCurrentMedianHistoryPrice()
+    public Price getCurrentMedianHistoryPrice()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapper requestObject = new RequestWrapper();
         requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
@@ -607,7 +609,7 @@ public class SteemApiWrapper {
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, MedianHistoryPrice.class).get(0);
+        return communicationHandler.performRequest(requestObject, Price.class).get(0);
     }
 
     /**
@@ -896,11 +898,9 @@ public class SteemApiWrapper {
 
     /**
      * TODO: Check what this method is supposed to do. In a fist test it seems
-     * to return the time, since the current version is active.
+     * to return the time since the current version is active.
      * 
-     * @param blockNumber
-     *            The id of the block the header should be requested from.
-     * @return The current price and a list of past prices.
+     * @return ???
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
      *             time (@see SteemApiWrapperConfig)
@@ -912,15 +912,71 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public HardforkSchedule getNextHardforkSchedule()
+    public HardforkSchedule getNextScheduledHarfork()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_NEXT_HARDFORK_SCHEDULE);
+        requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, HardforkSchedule.class).get(0);
+    }
+
+    /**
+     * Get all open orders of a specified account.
+     * 
+     * @param accountName
+     *            The name of the account.
+     * @return A list of open orders for this account.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<UserOrder> getOpenOrders(String accountName)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { accountName };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, UserOrder.class);
+    }
+    
+    /**
+     * Get a list of orders of the order book.
+     * 
+     * @param limit
+     *            The maximum number of results for each category (asks / bids).
+     * @return A list of current asks and bids.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public OrderBook getOrderBook(int limit)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { String.valueOf(limit) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
     }
 
     // TODO implement this!

@@ -12,11 +12,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FeedHistory {
     private int id;
     @JsonProperty("current_median_history")
-    private MedianHistoryPrice currentPrice;
+    private Price currentPrice;
     @JsonProperty("price_history")
-    private List<MedianHistoryPrice> priceHistory;
+    private List<Price> priceHistory;
 
-    public FeedHistory(@JsonProperty("price_history") List<MedianHistoryPrice> priceHistory) {
+    public FeedHistory(@JsonProperty("price_history") List<Price> priceHistory) {
         this.priceHistory = priceHistory;
     }
 
@@ -24,11 +24,11 @@ public class FeedHistory {
         return id;
     }
 
-    public MedianHistoryPrice getCurrentPrice() {
+    public Price getCurrentPrice() {
         return currentPrice;
     }
 
-    public List<MedianHistoryPrice> getPriceHistory() {
+    public List<Price> getPriceHistory() {
         return priceHistory;
     }
 
