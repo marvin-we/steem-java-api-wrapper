@@ -3,6 +3,11 @@ A Java API-Wrapper for the Steem websocket API.
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
+# Contriboters
+- [inertia](https://steemit.com/@inertia) provided a bunch of unit tests to this project.
+- An article from [Kyle](https://steemit.com/@klye) has been used to improve the documentation of the methods.
+- The [guide](https://steemit.com/steem/@xeroc/steem-transaction-signing-in-a-nutshell) from [xeroc](https://steemit.com/@xeroc) shows how to create and sign transactions.
+
 # How to build the project
 The project requires Maven and Java to be installed on your machine. It can be build with the default maven command:
 >mvn clean package
