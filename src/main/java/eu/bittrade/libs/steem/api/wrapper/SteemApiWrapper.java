@@ -495,7 +495,7 @@ public class SteemApiWrapper {
     public Object[] getConversationRequests()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_COVERSATION_REQUEST);
+        requestObject.setApiMethod(RequestMethods.GET_CONVERSATION_REQUEST);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
