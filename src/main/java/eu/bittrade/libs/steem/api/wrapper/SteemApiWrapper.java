@@ -95,6 +95,31 @@ public class SteemApiWrapper {
         }
     }
 
+    // TODO implement this!
+    public Boolean broadcastTransaction(String trx)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
+        requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
+        String[] parameters = { trx };
+        requestObject.setAdditionalParameters(parameters);
+
+        communicationHandler.performRequest(requestObject, Object[].class);
+        return null;
+    }
+
+    // TODO implement this!
+    public Boolean broadcastTransactionSynchronous(String trx)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
+        requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
+        String[] parameters = { trx };
+        requestObject.setAdditionalParameters(parameters);
+
+        return null;
+    }
+
     /**
      * Get the current number of registered Steem accounts.
      * 
@@ -193,9 +218,13 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Get the current number of active witnesses.
+     * Get the active votes for a given post of a given author.
      * 
-     * @return The number of witnesses.
+     * @param author
+     *            The authors name.
+     * @param permlink
+     *            The permlink of the article.
+     * @return A list of votes for a specific article.
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
      *             time (@see SteemApiWrapperConfig)
@@ -207,21 +236,21 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public int getWitnessCount()
+    public List<ActiveVote> getActiveVotes(String author, String permlink)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
+        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = {};
+        String[] parameters = { author, permlink };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
+        return communicationHandler.performRequest(requestObject, ActiveVote.class);
     }
 
     /**
-     * Get the current miner queue.
+     * Get the account names of the active witnesses.
      * 
-     * @return A list of account names that are in the mining queue.
+     * @return A list of account names of the active witnesses.
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
      *             time (@see SteemApiWrapperConfig)
@@ -233,15 +262,133 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public String[] getMinerQueue()
+    public String[] getActiveWitnesses()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_MINER_QUEUE);
+        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, String[].class).get(0);
+    }
+
+    /**
+     * Returns the id of an api or null if no api with the given name could be
+     * found.
+     * 
+     * @param apiName
+     *            The name of the api.
+     * @return The id for the given api name or null, if the api is not active
+     *         or does not exist.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public String getApiByName(String apiName)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_API_BY_NAME);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { apiName };
+        requestObject.setAdditionalParameters(parameters);
+
+        List<String> response = communicationHandler.performRequest(requestObject, String.class);
+        if (response != null && response.get(0) != null) {
+            return response.get(0);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a complete block by a given block number including all transactions
+     * of this block.
+     * 
+     * @param blockNumber
+     *            The id of the block the header should be requested from.
+     * @return A complete block.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public Block getBlock(long blockNumber)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_BLOCK);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { String.valueOf(blockNumber) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Block.class).get(0);
+    }
+
+    /**
+     * Get only the header of a block instead of the complete one.
+     * 
+     * @param blockNumber
+     *            The id of the block the header should be requested from.
+     * @return The header of a block.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public BlockHeader getBlockHeader(long blockNumber)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_BLOCK_HEADER);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { String.valueOf(blockNumber) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, BlockHeader.class).get(0);
+    }
+
+    /**
+     * Get the chain properties.
+     * 
+     * @return The chain properties.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public ChainProperties getChainProperties()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_CHAIN_PROPERTIES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
     }
 
     /**
@@ -271,6 +418,415 @@ public class SteemApiWrapper {
     }
 
     /**
+     * Get the details of a specific post.
+     * 
+     * @param author
+     *            The authors name.
+     * @param permlink
+     *            The permlink of the article.
+     * @return The details of a specific post.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public Discussion getContent(String author, String permlink)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_CONTENT);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = { author, permlink };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
+    }
+
+    /**
+     * Get the replies of a specific post.
+     * 
+     * @param author
+     *            The authors name.
+     * @param permlink
+     *            The permlink of the article.
+     * @return A list of discussions or null if the post has no replies.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<Discussion> getContentReplies(String author, String permlink)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = { author, permlink };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Discussion.class);
+    }
+
+    /**
+     * TODO: Look up what this is used for and what it can return.
+     * 
+     * @return Unknown
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public Object[] getConversationRequests()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_COVERSATION_REQUEST);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Object[].class).get(0);
+    }
+
+    /**
+     * Grab the current median conversion price of SBD / STEEM.
+     * 
+     * @return The current median price.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public Price getCurrentMedianHistoryPrice()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Price.class).get(0);
+    }
+
+    /**
+     * Get active discussions for a specified tag.
+     * 
+     * @param tag
+     *            Get discussions that are tagged with this tag.
+     * @param limit
+     *            The number of results.
+     * @param sortBy
+     *            The way how the results should be sorted by.
+     * @return A list of discussions.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+
+        requestObject.setApiMethod(SteemApiWrapperUtil.getEquivalentRequestMethod(sortBy));
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        // This steem api is the most non standardized shit I've ever seen in my
+        // life. Here goes the workaround:
+        GetDiscussionParametersDTO getDiscussionParameterDTO = new GetDiscussionParametersDTO();
+        getDiscussionParameterDTO.setTag(tag);
+        getDiscussionParameterDTO.setLimit(String.valueOf(limit));
+        Object[] parameters = { getDiscussionParameterDTO };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Discussion.class);
+    }
+
+    /**
+     * Get the global properties.
+     * 
+     * @return The dynamic global properties.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public GlobalProperties getDynamicGlobalProperties()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, GlobalProperties.class).get(0);
+    }
+
+    /**
+     * Get the current price and a list of history prices combined in one
+     * object.
+     * 
+     * @return The conversion history of SBD / STEEM.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public FeedHistory getFeedHistory()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
+    }
+
+    /**
+     * Get the hardfork version.
+     * 
+     * @return The hardfork version that the connected node is running on.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public String getHardforkVersion()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String.class).get(0);
+    }
+
+    /**
+     * Search for users under the use of their public key(s).
+     * 
+     * @param publicKeys
+     *            An array containing one or more public keys.
+     * @return A list of arrays containing the matching account names.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<String[]> getKeyReferences(String[] publicKeys)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
+        requestObject.setSteemApi(SteemApis.ACCOUNT_BY_KEY_API);
+        Object[] parameters = { publicKeys };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String[].class);
+    }
+
+    /**
+     * Get the current miner queue.
+     * 
+     * @return A list of account names that are in the mining queue.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public String[] getMinerQueue()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_MINER_QUEUE);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String[].class).get(0);
+    }
+
+    /**
+     * TODO: Check what this method is supposed to do. In a fist test it seems
+     * to return the time since the current version is active.
+     * 
+     * @return ???
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public HardforkSchedule getNextScheduledHarfork()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, HardforkSchedule.class).get(0);
+    }
+
+    /**
+     * If specified user name has orders open on the internal STEEM market it will return them.
+     * 
+     * @param accountName
+     *            The name of the account.
+     * @return A list of open orders for this account.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<UserOrder> getOpenOrders(String accountName)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { accountName };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, UserOrder.class);
+    }
+
+    /**
+     * Returns a list of orders on the internal steem market.
+     * 
+     * @param limit
+     *            The maximum number of results for each category (asks / bids).
+     * @return A list of orders on the internal steem market.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public OrderBook getOrderBook(int limit)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
+        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        String[] parameters = { String.valueOf(limit) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
+    }
+
+    // TODO implement this!
+    public List<String[]> getPotentialSignatures()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_POTENTIAL_SIGNATURES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        Object[] parameters = { };
+        requestObject.setAdditionalParameters(parameters);
+        LOGGER.info("output: {}", communicationHandler.performRequest(requestObject, Object[].class));
+        return null;
+    }
+
+    /**
+     * Returns detailed values for tags that match the given conditions.
+     * 
+     * @param firstTag
+     *            Start the list after this category. An empty String will
+     *            result in starting from the top.
+     * @param limit
+     *            The number of results.
+     * @return A list of tags.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<TrendingTag> getTrendingTags(String firstTag, int limit)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = { firstTag, String.valueOf(limit) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, TrendingTag.class);
+    }
+
+    /**
      * Get the version information of the connected node.
      * 
      * @return The steem version that the connected node is running.
@@ -294,6 +850,58 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Version.class).get(0);
+    }
+
+    /**
+     * Get the current number of active witnesses.
+     * 
+     * @return The number of witnesses.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public int getWitnessCount()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
+    }
+
+    /**
+     * Get the witness schedule.
+     * 
+     * @return The witness schedule.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public WitnessSchedule getWitnessSchedule()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapper requestObject = new RequestWrapper();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
     }
 
     /**
@@ -358,124 +966,6 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Returns the id of an api or null if no api with the given name could be
-     * found.
-     * 
-     * @param apiName
-     *            The name of the api.
-     * @return The id for the given api name or null, if the api is not active
-     *         or does not exist.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public String getApiByName(String apiName)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_API_BY_NAME);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = { apiName };
-        requestObject.setAdditionalParameters(parameters);
-
-        List<String> response = communicationHandler.performRequest(requestObject, String.class);
-        if (response != null && response.get(0) != null) {
-            return response.get(0);
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns detailed values for tags that match the given conditions.
-     * 
-     * @param firstTag
-     *            Start the list after this category. An empty String will
-     *            result in starting from the top.
-     * @param limit
-     *            The number of results.
-     * @return A list of tags.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public List<TrendingTag> getTrendingTags(String firstTag, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { firstTag, String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, TrendingTag.class);
-    }
-
-    /**
-     * Get the hardfork version.
-     * 
-     * @return The hardfork version that the connected node is running on.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public String getHardforkVersion()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class).get(0);
-    }
-
-    /**
-     * Get the witness schedule.
-     * 
-     * @return The witness schedule.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public WitnessSchedule getWitnessSchedule()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
-    }
-
-    /**
      * Search for accounts.
      * 
      * @param pattern
@@ -533,483 +1023,5 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, String.class);
-    }
-
-    /**
-     * Get the global properties.
-     * 
-     * @return The dynamic global properties.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public GlobalProperties getDynamicGlobalProperties()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, GlobalProperties.class).get(0);
-    }
-
-    /**
-     * Get the chain properties.
-     * 
-     * @return The chain properties.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public ChainProperties getChainProperties()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_CHAIN_PROPERTIES);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
-    }
-
-    /**
-     * Get the current median price.
-     * 
-     * @return The current median history price.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public Price getCurrentMedianHistoryPrice()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Price.class).get(0);
-    }
-
-    /**
-     * Get the details of a specific post.
-     * 
-     * @param author
-     *            The authors name.
-     * @param permlink
-     *            The permlink of the article.
-     * @return The details of a specific post.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public Discussion getContent(String author, String permlink)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_CONTENT);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { author, permlink };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
-    }
-
-    /**
-     * Get the replies of a specific post.
-     * 
-     * @param author
-     *            The authors name.
-     * @param permlink
-     *            The permlink of the article.
-     * @return A list of discussions or null if the post has no replies.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public List<Discussion> getContentReplies(String author, String permlink)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { author, permlink };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
-    }
-
-    /**
-     * Get the active votes for a given post of a given author.
-     * 
-     * @param author
-     *            The authors name.
-     * @param permlink
-     *            The permlink of the article.
-     * @return A list of votes for a specific article.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public List<ActiveVote> getActiveVotes(String author, String permlink)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { author, permlink };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, ActiveVote.class);
-    }
-
-    /**
-     * Get active discussions for a specified tag.
-     * 
-     * @param tag
-     *            Get discussions that are tagged with this tag.
-     * @param limit
-     *            The number of results.
-     * @param sortBy
-     *            The way how the results should be sorted by.
-     * @return A list of discussions.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-
-        requestObject.setApiMethod(SteemApiWrapperUtil.getEquivalentRequestMethod(sortBy));
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        // This steem api is the most non standardized shit I've ever seen in my
-        // life. Here goes the workaround:
-        GetDiscussionParametersDTO getDiscussionParameterDTO = new GetDiscussionParametersDTO();
-        getDiscussionParameterDTO.setTag(tag);
-        getDiscussionParameterDTO.setLimit(String.valueOf(limit));
-        Object[] parameters = { getDiscussionParameterDTO };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
-    }
-
-    /**
-     * Get only the header of a block instead of the complete one.
-     * 
-     * @param blockNumber
-     *            The id of the block the header should be requested from.
-     * @return The header of a block.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public BlockHeader getBlockHeader(long blockNumber)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_BLOCK_HEADER);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = { String.valueOf(blockNumber) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, BlockHeader.class).get(0);
-    }
-
-    /**
-     * Get a complete block by a given block number including all transactions
-     * of this block.
-     * 
-     * @param blockNumber
-     *            The id of the block the header should be requested from.
-     * @return A complete block.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public Block getBlock(long blockNumber)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_BLOCK);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = { String.valueOf(blockNumber) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Block.class).get(0);
-    }
-
-    /**
-     * TODO: Look up what this is used for and what it can return.
-     * 
-     * @return Unknown
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public Object[] getConversationRequests()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_COVERSATION_REQUEST);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Object[].class).get(0);
-    }
-
-    /**
-     * Get the current price and a list of history prices combined in one
-     * object.
-     * 
-     * @return The current price and a list of past prices.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public FeedHistory getFeedHistory()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
-    }
-
-    /**
-     * TODO: Check what this method is supposed to do. In a fist test it seems
-     * to return the time since the current version is active.
-     * 
-     * @return ???
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public HardforkSchedule getNextScheduledHarfork()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, HardforkSchedule.class).get(0);
-    }
-
-    /**
-     * Get all open orders of a specified account.
-     * 
-     * @param accountName
-     *            The name of the account.
-     * @return A list of open orders for this account.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public List<UserOrder> getOpenOrders(String accountName)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = { accountName };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, UserOrder.class);
-    }
-
-    /**
-     * Get a list of orders of the order book.
-     * 
-     * @param limit
-     *            The maximum number of results for each category (asks / bids).
-     * @return A list of current asks and bids.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public OrderBook getOrderBook(int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = { String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
-    }
-
-    /**
-     * Get the account names of the active witnesses.
-     * 
-     * @return A list of account names of the active witnesses.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public String[] getActiveWitnesses()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String[].class).get(0);
-    }
-
-    /**
-     * Search for users under the use of their public key(s).
-     * 
-     * @param publicKeys
-     *            An array containing one or more public keys.
-     * @return A list of arrays containing the matching account names.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     */
-    public List<String[]> getKeyReferences(String[] publicKeys)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
-        requestObject.setSteemApi(SteemApis.ACCOUNT_BY_KEY_API);
-        Object[] parameters = { publicKeys };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String[].class);
-    }
-
-    // TODO implement this!
-    public Boolean broadcastTransactionSynchronous(String trx)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
-        requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
-        String[] parameters = { trx };
-        requestObject.setAdditionalParameters(parameters);
-
-        return null;
-    }
-
-    // TODO implement this!
-    public Boolean broadcastTransaction(String trx)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
-        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
-        requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
-        String[] parameters = { trx };
-        requestObject.setAdditionalParameters(parameters);
-
-        communicationHandler.performRequest(requestObject, Object[].class);
-        return null;
     }
 }
