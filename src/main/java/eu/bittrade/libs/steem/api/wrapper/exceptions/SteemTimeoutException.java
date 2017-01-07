@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.exceptions;
 /**
  * A custom Exception to handle timeouts.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemTimeoutException extends Exception {
     private static final long serialVersionUID = 147694337695115012L;

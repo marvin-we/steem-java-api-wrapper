@@ -11,14 +11,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * As every response starts with a id and a result element, this wrapper class
  * can carry every kind of responses.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ResponseWrapper<T> {
+public class ResponseWrapperDTO<T> {
     private int responseId;
     private List<T> result;
 
     @JsonCreator
-    public ResponseWrapper(@JsonProperty("result") List<T> result) {
+    public ResponseWrapperDTO(@JsonProperty("result") List<T> result) {
         this.result = result;
     }
 

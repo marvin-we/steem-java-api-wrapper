@@ -8,19 +8,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import eu.bittrade.libs.steem.api.wrapper.communication.RequestMethods;
-import eu.bittrade.libs.steem.api.wrapper.communication.SteemApis;
+import eu.bittrade.libs.steem.api.wrapper.util.RequestMethods;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemApis;
 
 /**
  * A wrapper object that carries all required fields for a request.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 // TODO: Verify data in set-methods.
 @JsonPropertyOrder({ "jsonrpc", "params", "id", "method" })
-public class RequestWrapper {
+public class RequestWrapperDTO {
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final Logger LOGGER = LogManager.getLogger(RequestWrapper.class);
+    private static final Logger LOGGER = LogManager.getLogger(RequestWrapperDTO.class);
 
     /**
      * The id of the request (used to identify which answer belongs to which
@@ -43,7 +43,7 @@ public class RequestWrapper {
     /**
      * Instantiate a new RequestObject.
      */
-    public RequestWrapper() {
+    public RequestWrapperDTO() {
         this.id = globalRequestId++;
     }
 

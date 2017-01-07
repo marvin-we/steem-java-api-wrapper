@@ -19,7 +19,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steem.api.wrapper.communication.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
@@ -30,6 +29,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
+import eu.bittrade.libs.steem.api.wrapper.util.DiscussionSortType;
 
 /**
  * @author Anthony Martin

@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.exceptions;
 /**
  * A custom Exception to handle transformation-Exceptions.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemTransformationException extends Exception {
     private static final long serialVersionUID = -1405676306096463952L;

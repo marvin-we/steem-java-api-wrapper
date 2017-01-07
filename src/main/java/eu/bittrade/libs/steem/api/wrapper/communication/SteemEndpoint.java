@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Simple Endpoint implementation.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemEndpoint extends Endpoint {
     private static final Logger LOGGER = LogManager.getLogger(SteemEndpoint.class);

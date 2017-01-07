@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * This class is a wrapper for the different kinds of operations that an user
  * can perform.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Operation {
     private String author;

@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
  * 
  * The setters can be used to override the default values.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemApiWrapperConfig {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperConfig.class);

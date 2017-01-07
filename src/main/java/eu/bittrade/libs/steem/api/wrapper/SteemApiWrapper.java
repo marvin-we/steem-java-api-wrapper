@@ -10,11 +10,8 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import eu.bittrade.libs.steem.api.wrapper.communication.CommunicationHandler;
-import eu.bittrade.libs.steem.api.wrapper.communication.DiscussionSortType;
-import eu.bittrade.libs.steem.api.wrapper.communication.RequestMethods;
-import eu.bittrade.libs.steem.api.wrapper.communication.SteemApis;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.GetDiscussionParametersDTO;
-import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapper;
+import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemConnectionException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
@@ -37,12 +34,15 @@ import eu.bittrade.libs.steem.api.wrapper.models.UserOrder;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
+import eu.bittrade.libs.steem.api.wrapper.util.DiscussionSortType;
+import eu.bittrade.libs.steem.api.wrapper.util.RequestMethods;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemApiWrapperUtil;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemApis;
 
 /**
  * This class is a wrapper for the Steem web socket API.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemApiWrapper {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapper.class);
@@ -98,7 +98,7 @@ public class SteemApiWrapper {
     // TODO implement this!
     public Boolean broadcastTransaction(String trx)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
         String[] parameters = { trx };
@@ -111,7 +111,7 @@ public class SteemApiWrapper {
     // TODO implement this!
     public Boolean broadcastTransactionSynchronous(String trx)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
         String[] parameters = { trx };
@@ -137,7 +137,7 @@ public class SteemApiWrapper {
      */
     public int getAccountCount()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_COUNT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -170,7 +170,7 @@ public class SteemApiWrapper {
      */
     public Map<Integer, AccountActivity> getAccountHistory(String accountName, int from, int limit)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
         String[] parameters = { accountName, String.valueOf(from), String.valueOf(limit) };
@@ -208,7 +208,7 @@ public class SteemApiWrapper {
      */
     public List<Vote> getAccountVotes(String accountName)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_VOTES);
         String[] parameters = { accountName };
@@ -238,7 +238,7 @@ public class SteemApiWrapper {
      */
     public List<ActiveVote> getActiveVotes(String author, String permlink)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { author, permlink };
@@ -264,7 +264,7 @@ public class SteemApiWrapper {
      */
     public String[] getActiveWitnesses()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -294,7 +294,7 @@ public class SteemApiWrapper {
      */
     public String getApiByName(String apiName)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_API_BY_NAME);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = { apiName };
@@ -328,7 +328,7 @@ public class SteemApiWrapper {
      */
     public Block getBlock(long blockNumber)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_BLOCK);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = { String.valueOf(blockNumber) };
@@ -356,7 +356,7 @@ public class SteemApiWrapper {
      */
     public BlockHeader getBlockHeader(long blockNumber)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_BLOCK_HEADER);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = { String.valueOf(blockNumber) };
@@ -382,7 +382,7 @@ public class SteemApiWrapper {
      */
     public ChainProperties getChainProperties()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CHAIN_PROPERTIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -408,7 +408,7 @@ public class SteemApiWrapper {
      */
     public Config getConfig()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONFIG);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -438,7 +438,7 @@ public class SteemApiWrapper {
      */
     public Discussion getContent(String author, String permlink)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { author, permlink };
@@ -468,7 +468,7 @@ public class SteemApiWrapper {
      */
     public List<Discussion> getContentReplies(String author, String permlink)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { author, permlink };
@@ -494,7 +494,7 @@ public class SteemApiWrapper {
      */
     public Object[] getConversationRequests()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONVERSATION_REQUEST);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = {};
@@ -520,7 +520,7 @@ public class SteemApiWrapper {
      */
     public Price getCurrentMedianHistoryPrice()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -552,7 +552,7 @@ public class SteemApiWrapper {
      */
     public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
         requestObject.setApiMethod(SteemApiWrapperUtil.getEquivalentRequestMethod(sortBy));
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -584,7 +584,7 @@ public class SteemApiWrapper {
      */
     public GlobalProperties getDynamicGlobalProperties()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -611,7 +611,7 @@ public class SteemApiWrapper {
      */
     public FeedHistory getFeedHistory()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = {};
@@ -637,7 +637,7 @@ public class SteemApiWrapper {
      */
     public String getHardforkVersion()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -665,7 +665,7 @@ public class SteemApiWrapper {
      */
     public List<String[]> getKeyReferences(String[] publicKeys)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
         requestObject.setSteemApi(SteemApis.ACCOUNT_BY_KEY_API);
         Object[] parameters = { publicKeys };
@@ -691,7 +691,7 @@ public class SteemApiWrapper {
      */
     public String[] getMinerQueue()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_MINER_QUEUE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -718,7 +718,7 @@ public class SteemApiWrapper {
      */
     public HardforkSchedule getNextScheduledHarfork()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = {};
@@ -746,7 +746,7 @@ public class SteemApiWrapper {
      */
     public List<UserOrder> getOpenOrders(String accountName)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = { accountName };
@@ -774,7 +774,7 @@ public class SteemApiWrapper {
      */
     public OrderBook getOrderBook(int limit)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = { String.valueOf(limit) };
@@ -786,7 +786,7 @@ public class SteemApiWrapper {
     // TODO implement this!
     public List<String[]> getPotentialSignatures()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_POTENTIAL_SIGNATURES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         Object[] parameters = { };
@@ -817,7 +817,7 @@ public class SteemApiWrapper {
      */
     public List<TrendingTag> getTrendingTags(String firstTag, int limit)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { firstTag, String.valueOf(limit) };
@@ -843,7 +843,7 @@ public class SteemApiWrapper {
      */
     public Version getVersion()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_VERSION);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = {};
@@ -869,7 +869,7 @@ public class SteemApiWrapper {
      */
     public int getWitnessCount()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -895,7 +895,7 @@ public class SteemApiWrapper {
      */
     public WitnessSchedule getWitnessSchedule()
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
@@ -956,7 +956,7 @@ public class SteemApiWrapper {
      */
     public Boolean login(String username, String password)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOGIN);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = { username, password };
@@ -986,7 +986,7 @@ public class SteemApiWrapper {
      */
     public List<String> lookupAccounts(String pattern, int limit)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOOKUP_ACCOUNTS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { pattern, String.valueOf(limit) };
@@ -1016,7 +1016,7 @@ public class SteemApiWrapper {
      */
     public List<String> lookupWitnessAccounts(String pattern, int limit)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapper requestObject = new RequestWrapper();
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOOKUP_WITNESS_ACCOUNTS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { pattern, String.valueOf(limit) };

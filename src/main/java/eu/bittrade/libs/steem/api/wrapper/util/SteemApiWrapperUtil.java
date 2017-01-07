@@ -3,20 +3,18 @@ package eu.bittrade.libs.steem.api.wrapper.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import eu.bittrade.libs.steem.api.wrapper.communication.DiscussionSortType;
-import eu.bittrade.libs.steem.api.wrapper.communication.RequestMethods;
-
 /**
  * This class contains some utility methods used by the steem api wrapper.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemApiWrapperUtil {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperUtil.class);
 
     /** Add a private constructor to hide the implicit public one. */
-    private SteemApiWrapperUtil() { }
-    
+    private SteemApiWrapperUtil() {
+    }
+
     public static RequestMethods getEquivalentRequestMethod(DiscussionSortType discussionSortType) {
         switch (discussionSortType) {
         case SORT_BY_ACTIVE:
@@ -46,7 +44,8 @@ public class SteemApiWrapperUtil {
         case SORT_BY_VOTES:
             return RequestMethods.GET_DISCUSSIONS_BY_VOTES;
         default:
-            LOGGER.warn("Unkown sort type. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).");
+            LOGGER.warn(
+                    "Unkown sort type. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).");
             return RequestMethods.GET_DISCUSSIONS_BY_ACTIVE;
         }
     }

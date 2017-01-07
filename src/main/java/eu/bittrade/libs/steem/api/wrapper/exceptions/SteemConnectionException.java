@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.exceptions;
 /**
  * A custom Exception to handle connection problems.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemConnectionException extends Exception {
     private static final long serialVersionUID = 8749084658239933634L;

@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.error;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemStack {
     private SteemContext context;

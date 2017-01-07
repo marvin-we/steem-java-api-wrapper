@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.communication.dto;
 /**
  * A wrapper object that carries all required fields for a request.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class GetDiscussionParametersDTO {
     private String tag;

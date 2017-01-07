@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapper;
-import eu.bittrade.libs.steem.api.wrapper.communication.dto.ResponseWrapper;
+import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
+import eu.bittrade.libs.steem.api.wrapper.communication.dto.ResponseWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemConnectionException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
@@ -31,7 +31,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.error.SteemError;
 /**
  * This class handles the communication to the Steem web socket API.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommunicationHandler {
     private static final Logger LOGGER = LogManager.getLogger(CommunicationHandler.class);
@@ -85,7 +85,7 @@ public class CommunicationHandler {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public <T> List<T> performRequest(RequestWrapper requestObject, Class<T> targetClass)
+    public <T> List<T> performRequest(RequestWrapperDTO requestObject, Class<T> targetClass)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         if (!session.isOpen()) {
             reconnect();
@@ -108,7 +108,7 @@ public class CommunicationHandler {
             LOGGER.debug("Raw JSON response: {}", rawJsonResponse);
 
             @SuppressWarnings("unchecked")
-            ResponseWrapper<T> response = MAPPER.readValue(rawJsonResponse, ResponseWrapper.class);
+            ResponseWrapperDTO<T> response = MAPPER.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 
             if (response.getResponseId() != requestObject.getId()) {
                 LOGGER.error("The request and the response id are not equal! This may cause some strange behaivior.");

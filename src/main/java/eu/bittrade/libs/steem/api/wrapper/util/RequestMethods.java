@@ -1,9 +1,9 @@
-package eu.bittrade.libs.steem.api.wrapper.communication;
+package eu.bittrade.libs.steem.api.wrapper.util;
 
 /**
  * An enumeration for all existing API methods.
  * 
- * @author http://steemit.com/@dez1337
+ * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum RequestMethods {
     // database_api
