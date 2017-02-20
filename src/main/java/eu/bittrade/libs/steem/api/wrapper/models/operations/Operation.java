@@ -1,6 +1,10 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user
@@ -8,53 +12,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Operation {
-    private String author;
-    private String permlink;
-    private String voter;
-    private long weight;
-    private String parentAuthor;
-    private String parentPermlink;
-    private String title;
-    private String body;
-    private String jsonMetadata;
-
-    @JsonProperty("parent_author")
-    public String getParentAuthor() {
-        return parentAuthor;
-    }
-
-    @JsonProperty("parent_permlink")
-    public String getParentPermlink() {
-        return parentPermlink;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    @JsonProperty("json_metadata")
-    public String getJsonMetadata() {
-        return jsonMetadata;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getPermlink() {
-        return permlink;
-    }
-
-    public String getVoter() {
-        return voter;
-    }
-
-    public long getWeight() {
-        return weight;
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({ @Type(value = VoteOperation.class, name = "vote"),
+        @Type(value = CommentOperation.class, name = "comment"),
+        @Type(value = AccountCreateOperation.class, name = "account_create") })
+public abstract class Operation {
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

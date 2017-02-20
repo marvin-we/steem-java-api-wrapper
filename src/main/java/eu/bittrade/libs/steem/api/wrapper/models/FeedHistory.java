@@ -16,10 +16,6 @@ public class FeedHistory {
     @JsonProperty("price_history")
     private List<Price> priceHistory;
 
-    public FeedHistory(@JsonProperty("price_history") List<Price> priceHistory) {
-        this.priceHistory = priceHistory;
-    }
-
     public int getId() {
         return id;
     }

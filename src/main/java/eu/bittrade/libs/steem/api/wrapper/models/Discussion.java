@@ -94,12 +94,6 @@ public class Discussion {
     private String authorReputation;
     private String promoted;
 
-    public Discussion(@JsonProperty("replies") List<Discussion> replies,
-            @JsonProperty("active_votes") List<ActiveVote> activeVotes) {
-        this.replies = replies;
-        this.activeVotes = activeVotes;
-    }
-
     public long getId() {
         return id;
     }
@@ -271,7 +265,7 @@ public class Discussion {
     public String getPromoted() {
         return promoted;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

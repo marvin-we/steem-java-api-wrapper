@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import javax.activity.InvalidActivityException;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.bitcoinj.core.VarInt;
 
@@ -46,7 +48,18 @@ public class VoteDTO extends OperationDTO {
         return weight;
     }
 
-    public void setWeight(short weight) {
+    /**
+     * Set the weight of the vote in percent. (max. is 10000 which is a weight
+     * of 100%)
+     * 
+     * @param weight
+     * @throws InvalidActivityException
+     *             If the weight is greater than 10000.
+     */
+    public void setWeight(short weight) throws InvalidActivityException {
+        if (this.weight > 10000) {
+            throw new InvalidActivityException("The weight can't be higher than 10000 which are 100%.");
+        }
         this.weight = weight;
     }
 

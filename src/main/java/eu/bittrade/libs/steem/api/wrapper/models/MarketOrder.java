@@ -18,10 +18,6 @@ public class MarketOrder {
     private int steem;
     private int sdb;
 
-    public MarketOrder(@JsonProperty("order_price") List<Price> orderPrice) {
-        this.orderPrice = orderPrice;
-    }
-
     public String getCreated() {
         return created;
     }

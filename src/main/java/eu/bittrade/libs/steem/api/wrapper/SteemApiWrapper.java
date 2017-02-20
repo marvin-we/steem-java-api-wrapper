@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,10 +177,17 @@ public class SteemApiWrapper {
         String[] parameters = { accountName, String.valueOf(from), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
-        Map<Integer, AccountActivity> accountActivities = new HashMap<>();
+        List<Object[]> response = communicationHandler.performRequest(requestObject, Object[].class);
 
-        // TODO There are still problems with the deserialization of the op()
-        // object.
+        // TODO: Do this for every method?
+        if (response == null || response.isEmpty()) {
+            LOGGER.warn("The response was empty - The node may not provide this method.");
+            return null;
+        }
+
+        // TODO: Instead of this set the activity Id and return a list instead of a map
+        Map<Integer, AccountActivity> accountActivities = new HashMap<>();
+        
         for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
             accountActivities.put((Integer) accountActivity[0], communicationHandler.getObjectMapper()
                     .convertValue(accountActivity[1], new TypeReference<AccountActivity>() {
@@ -330,7 +338,7 @@ public class SteemApiWrapper {
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_BLOCK);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { String.valueOf(blockNumber) };
         requestObject.setAdditionalParameters(parameters);
 
@@ -728,7 +736,8 @@ public class SteemApiWrapper {
     }
 
     /**
-     * If specified user name has orders open on the internal STEEM market it will return them.
+     * If specified user name has orders open on the internal STEEM market it
+     * will return them.
      * 
      * @param accountName
      *            The name of the account.
@@ -789,7 +798,7 @@ public class SteemApiWrapper {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_POTENTIAL_SIGNATURES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        Object[] parameters = { };
+        Object[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
         LOGGER.info("output: {}", communicationHandler.performRequest(requestObject, Object[].class));
         return null;

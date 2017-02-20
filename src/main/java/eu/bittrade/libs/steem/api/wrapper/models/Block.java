@@ -14,9 +14,8 @@ public class Block extends BlockHeader {
     private String witnessSignature;
     private List<Transaction> transactions;
 
-    public Block(@JsonProperty("transactions") List<Transaction> transactions) {
+    public Block() {
         super();
-        this.transactions = transactions;
     }
 
     public String getWitnessSignature() {

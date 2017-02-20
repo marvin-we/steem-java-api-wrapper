@@ -23,10 +23,6 @@ public class UserOrder {
     private String realPrice;
     private Boolean rewarded;
 
-    public UserOrder(@JsonProperty("sell_price") List<Price> sellPrice) {
-        this.sellPrice = sellPrice;
-    }
-
     public long getId() {
         return id;
     }
