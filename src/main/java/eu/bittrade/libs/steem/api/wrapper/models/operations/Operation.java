@@ -12,9 +12,18 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * 
  * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_ARRAY)
 @JsonSubTypes({ @Type(value = VoteOperation.class, name = "vote"),
         @Type(value = CommentOperation.class, name = "comment"),
+        @Type(value = AuthorRewardOperation.class, name = "author_reward"),
+        @Type(value = ConvertOperation.class, name = "convert"),
+        @Type(value = InterestOperation.class, name = "interest"),
+        @Type(value = CustomJsonOperation.class, name = "custom_json"),
+        @Type(value = AccountWitnessVoteOperation.class, name = "account_witness_vote"),
+        @Type(value = FillConvertRequestOperation.class, name = "fill_convert_request"),
+        @Type(value = TransferToVestingOperation.class, name = "transfer_to_vesting"),
+        @Type(value = CurationRewardOperation.class, name = "curation_reward"),
+        @Type(value = TransferOperation.class, name = "transfer"),
         @Type(value = AccountCreateOperation.class, name = "account_create") })
 public abstract class Operation {
     @Override

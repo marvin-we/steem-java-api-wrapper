@@ -1,6 +1,5 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,17 +176,15 @@ public class SteemApiWrapper {
         String[] parameters = { accountName, String.valueOf(from), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
-        List<Object[]> response = communicationHandler.performRequest(requestObject, Object[].class);
-
         // TODO: Do this for every method?
-        if (response == null || response.isEmpty()) {
-            LOGGER.warn("The response was empty - The node may not provide this method.");
-            return null;
-        }
+        // if (response == null || response.isEmpty()) {
+        // LOGGER.warn("The response was empty - The node may not provide this
+        // method.");
+        // return null;
+        // }
 
-        // TODO: Instead of this set the activity Id and return a list instead of a map
         Map<Integer, AccountActivity> accountActivities = new HashMap<>();
-        
+
         for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
             accountActivities.put((Integer) accountActivity[0], communicationHandler.getObjectMapper()
                     .convertValue(accountActivity[1], new TypeReference<AccountActivity>() {
@@ -309,7 +306,7 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         List<String> response = communicationHandler.performRequest(requestObject, String.class);
-        if (response != null && response.get(0) != null) {
+        if (!response.isEmpty()) {
             return response.get(0);
         }
 

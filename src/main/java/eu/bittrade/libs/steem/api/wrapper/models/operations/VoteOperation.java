@@ -15,19 +15,19 @@ public class VoteOperation extends Operation {
     @JsonProperty("weight")
     private int weight;
 
-    String getVoter() {
+    public String getVoter() {
         return voter;
     }
     
-    String getAuthor() {
+    public String getAuthor() {
         return author;
     }
     
-    String getPermlink() {
+    public String getPermlink() {
         return permlink;
     }
     
-    int getWeight() {
+    public int getWeight() {
         return weight;
     }
 }

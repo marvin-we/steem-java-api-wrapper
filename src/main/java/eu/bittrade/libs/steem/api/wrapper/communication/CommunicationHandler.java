@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steem.api.wrapper.communication;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -109,6 +110,14 @@ public class CommunicationHandler {
 
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = MAPPER.readValue(rawJsonResponse, ResponseWrapperDTO.class);
+
+            if (response == null || "".equals(response) || response.getResult() == null
+                    || "".equals(response.getResult())) {
+                LOGGER.debug("The response was empty. The requested node may not provided the method {}.", requestObject.getApiMethod().toString());
+                List<T> emptyResult = new ArrayList<>();
+                emptyResult.add(null);
+                return emptyResult;
+            }
 
             if (response.getResponseId() != requestObject.getId()) {
                 LOGGER.error("The request and the response id are not equal! This may cause some strange behaivior.");
