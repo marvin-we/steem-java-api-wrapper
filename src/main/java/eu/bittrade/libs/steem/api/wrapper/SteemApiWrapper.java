@@ -33,6 +33,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.UserOrder;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
+import eu.bittrade.libs.steem.api.wrapper.models.Witness;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
 import eu.bittrade.libs.steem.api.wrapper.util.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.util.RequestMethods;
@@ -859,6 +860,38 @@ public class SteemApiWrapper {
     }
 
     /**
+     * Get a list of witnesses sorted by the amount of votes. The list begins
+     * with the given account name and contains the next witnesses with less
+     * votes than given one.
+     * 
+     * @param witnessName
+     *            The witness name to start from.
+     * @param limit
+     *            The number of results.
+     * @return A list of witnesses.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<Witness> getWitnessByVote(String witnessName, int limit)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_BY_VOTE);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = { witnessName, String.valueOf(limit) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Witness.class);
+    }
+
+    /**
      * Get the current number of active witnesses.
      * 
      * @return The number of witnesses.
@@ -882,6 +915,60 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Integer.class).get(0);
+    }
+
+    /**
+     * Get all witnesses.
+     * 
+     * @return A list of witnesses.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<Witness> getWitnesses()
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESSES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Witness.class);
+    }
+
+    /**
+     * Get the witness information for a given witness account name.
+     * 
+     * @param witnessName
+     *            The witness name.
+     * @return A list of witnesses.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public Witness getWitnessesByAccount(String witnessName)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESSES);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = { witnessName };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Witness.class).get(0);
     }
 
     /**
