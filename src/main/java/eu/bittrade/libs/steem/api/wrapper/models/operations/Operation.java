@@ -24,6 +24,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(value = TransferToVestingOperation.class, name = "transfer_to_vesting"),
         @Type(value = CurationRewardOperation.class, name = "curation_reward"),
         @Type(value = TransferOperation.class, name = "transfer"),
+        @Type(value = LimitOrderCreateOperation.class, name = "limit_order_create"),
+        @Type(value = FillOrderOperation.class, name = "fill_order"),
+        @Type(value = PowOperation.class, name = "pow"),
+        @Type(value = AccountUpdateOperation.class, name = "account_update"),
         @Type(value = AccountCreateOperation.class, name = "account_create") })
 public abstract class Operation {
     @Override
