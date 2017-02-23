@@ -12,6 +12,12 @@ public class AccountUpdateOperation extends Operation {
     private String memoKey;
     @JsonProperty("json_metadata")
     private String jsonMetadata;
+    @JsonProperty("posting")
+    private Key posting;
+    @JsonProperty("owner")
+    private Key owner;
+    @JsonProperty("active")
+    private Key active;
 
     public String getAccount() {
         return account;
@@ -23,5 +29,17 @@ public class AccountUpdateOperation extends Operation {
 
     public String getJsonMetadata() {
         return jsonMetadata;
+    }
+
+    public Key getPosting() {
+        return posting;
+    }
+
+    public Key getOwner() {
+        return owner;
+    }
+
+    public Key getActive() {
+        return active;
     }
 }

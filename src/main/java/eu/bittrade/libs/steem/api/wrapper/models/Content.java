@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steem.api.wrapper.models;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -9,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Discussion {
+public class Content {
     private long id;
     @JsonProperty("author")
     private String author;
@@ -28,13 +29,13 @@ public class Discussion {
     @JsonProperty("json_metadata")
     private String jsonMetadata;
     @JsonProperty("last_update")
-    private String lastUpdate;
+    private Date lastUpdate;
     @JsonProperty("created")
-    private String created;
+    private Date created;
     @JsonProperty("active")
     private String active;
     @JsonProperty("last_payout")
-    private String lastPayout;
+    private Date lastPayout;
     @JsonProperty("depth")
     private int depth;
     @JsonProperty("children")
@@ -89,7 +90,7 @@ public class Discussion {
     private String totalPendingPayoutValue;
     @JsonProperty("active_votes")
     private List<ActiveVote> activeVotes;
-    private List<Discussion> replies;
+    private List<Content> replies;
     @JsonProperty("author_reputation")
     private String authorReputation;
     private String promoted;
@@ -130,11 +131,11 @@ public class Discussion {
         return jsonMetadata;
     }
 
-    public String getLastUpdate() {
+    public Date getLastUpdate() {
         return lastUpdate;
     }
 
-    public String getCreated() {
+    public Date getCreated() {
         return created;
     }
 
@@ -142,7 +143,7 @@ public class Discussion {
         return active;
     }
 
-    public String getLastPayout() {
+    public Date getLastPayout() {
         return lastPayout;
     }
 
@@ -254,7 +255,7 @@ public class Discussion {
         return activeVotes;
     }
 
-    public List<Discussion> getReplies() {
+    public List<Content> getReplies() {
         return replies;
     }
 

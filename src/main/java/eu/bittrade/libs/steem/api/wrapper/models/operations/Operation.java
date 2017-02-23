@@ -25,9 +25,18 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(value = CurationRewardOperation.class, name = "curation_reward"),
         @Type(value = TransferOperation.class, name = "transfer"),
         @Type(value = LimitOrderCreateOperation.class, name = "limit_order_create"),
+        @Type(value = LimitOrderCancelOperation.class, name = "limit_order_cancel"),
         @Type(value = FillOrderOperation.class, name = "fill_order"),
-        @Type(value = PowOperation.class, name = "pow"),
+        @Type(value = CommentOptionsOperation.class, name = "comment_options"),
+        @Type(value = PowOperation.class, name = "pow"), @Type(value = Pow2Operation.class, name = "pow2"),
+        @Type(value = FeedPublishOperation.class, name = "feed_publish"),
+        @Type(value = DeleteCommentOperation.class, name = "delete_comment"),
+        @Type(value = WithdrawVestingOperation.class, name = "withdraw_vesting"),
+        @Type(value = RequestAccountRecoveryOperation.class, name = "request_account_recovery"),
+        @Type(value = SetWithdrawVestingRouteOperation.class, name = "set_withdraw_vesting_route"),
+        @Type(value = AccountWitnessProxyOperation.class, name = "account_witness_proxy"),
         @Type(value = AccountUpdateOperation.class, name = "account_update"),
+        @Type(value = WitnessUpdateOperation.class, name = "witness_update"),
         @Type(value = AccountCreateOperation.class, name = "account_create") })
 public abstract class Operation {
     @Override

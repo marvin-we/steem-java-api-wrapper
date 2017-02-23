@@ -23,10 +23,11 @@ import eu.bittrade.libs.steem.api.wrapper.models.Block;
 import eu.bittrade.libs.steem.api.wrapper.models.BlockHeader;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
-import eu.bittrade.libs.steem.api.wrapper.models.Discussion;
+import eu.bittrade.libs.steem.api.wrapper.models.Content;
 import eu.bittrade.libs.steem.api.wrapper.models.FeedHistory;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.HardforkSchedule;
+import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steem.api.wrapper.models.OrderBook;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
@@ -442,7 +443,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Discussion getContent(String author, String permlink)
+    public Content getContent(String author, String permlink)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
@@ -450,7 +451,7 @@ public class SteemApiWrapper {
         String[] parameters = { author, permlink };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
+        return communicationHandler.performRequest(requestObject, Content.class).get(0);
     }
 
     /**
@@ -472,7 +473,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<Discussion> getContentReplies(String author, String permlink)
+    public List<Content> getContentReplies(String author, String permlink)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
@@ -480,7 +481,7 @@ public class SteemApiWrapper {
         String[] parameters = { author, permlink };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        return communicationHandler.performRequest(requestObject, Content.class);
     }
 
     /**
@@ -556,7 +557,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
+    public List<Content> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
@@ -570,7 +571,7 @@ public class SteemApiWrapper {
         Object[] parameters = { getDiscussionParameterDTO };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        return communicationHandler.performRequest(requestObject, Content.class);
     }
 
     /**
@@ -678,6 +679,68 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, String[].class);
+    }
+
+    /**
+     * Get the liquidity queue for a specified account.
+     * 
+     * @param accoutName
+     *            The name of the account you want to request the queue entries
+     *            for.
+     * @return A list of liquidity queue entries.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<LiquidityQueueEntry> getLiquidityQueue(String accoutName)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_LIQUIDITY_QUEUE);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        Object[] parameters = { accoutName };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, LiquidityQueueEntry.class);
+    }
+
+    /**
+     * /** Get a list of Content starting from the given post of the given user.
+     * The list will be sorted by the Date of the last update.
+     * 
+     * @param username
+     *            The name of the user.
+     * @param permlink
+     *            The permlink of an article.
+     * @param limit
+     *            Number of results.
+     * @return A list of Content objects.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     */
+    public List<Content> getRepliesByLastUpdate(String username, String permlink, int limit)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        Object[] parameters = { username, permlink, String.valueOf(limit) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Content.class);
     }
 
     /**
