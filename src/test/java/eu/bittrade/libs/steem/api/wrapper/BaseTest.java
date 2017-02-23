@@ -20,7 +20,7 @@ public abstract class BaseTest {
     @Before
     public void setUp() throws Exception {
         // Change the default settings if needed.
-        CONFIG.setWebsocketEndpointURI(new URI("wss://steemit.com/wspa"));
+        CONFIG.setWebsocketEndpointURI(new URI("wss://this.piston.rocks"));
         // Create a new apiWrapper with your config object.
         steemApiWrapper = new SteemApiWrapper(CONFIG);
     }

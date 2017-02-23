@@ -11,6 +11,7 @@ import static org.junit.Assert.fail;
 
 import java.time.Month;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,15 +21,18 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
-import eu.bittrade.libs.steem.api.wrapper.models.Discussion;
+import eu.bittrade.libs.steem.api.wrapper.models.Content;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.AccountCreateOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 import eu.bittrade.libs.steem.api.wrapper.util.DiscussionSortType;
 
 /**
@@ -48,12 +52,13 @@ public class SteemApiWrapperTest extends BaseTest {
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
-    @Ignore("not fully implemented")
     @Test
     public void testAccountHistory() throws Exception {
-        // final Map<Integer, AccountActivity> accountHistory =
-        // steemApiWrapper.getAccountHistory(ACCOUNT, 0, 10);
-        // TODO write assertions
+        final Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
+        assertEquals("expect response to contain 10 results", accountHistory.size(), 10);
+        
+        Operation firstOperation = accountHistory.get(0).getOperations();
+        assertTrue("the first operation for each account is the 'account_create_operation'", firstOperation instanceof AccountCreateOperation);
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -230,7 +235,7 @@ public class SteemApiWrapperTest extends BaseTest {
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
     public void testGetContent() throws Exception {
-        final Discussion discussion = steemApiWrapper.getContent(ACCOUNT, PERMLINK);
+        final Content discussion = steemApiWrapper.getContent(ACCOUNT, PERMLINK);
 
         assertNotNull("expect discussion", discussion);
         assertEquals("expect correct author", ACCOUNT, discussion.getAuthor());
@@ -239,7 +244,7 @@ public class SteemApiWrapperTest extends BaseTest {
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
     public void testGetContentReplies() throws Exception {
-        final List<Discussion> replies = steemApiWrapper.getContentReplies(ACCOUNT, PERMLINK);
+        final List<Content> replies = steemApiWrapper.getContentReplies(ACCOUNT, PERMLINK);
 
         assertNotNull("expect replies", replies);
         assertThat("expect replies greater than zero", replies.size(), greaterThan(0));
@@ -285,13 +290,13 @@ public class SteemApiWrapperTest extends BaseTest {
         final DiscussionSortType[] invalidTypes = new DiscussionSortType[] { DiscussionSortType.SORT_BY_COMMENTS };
 
         for (final DiscussionSortType type : activeTypes) {
-            final List<Discussion> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
+            final List<Content> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
             assertNotNull("expect discussions", discussions);
             assertThat("expect discussions in " + type + " greater than zero", discussions.size(), greaterThan(0));
         }
 
         for (final DiscussionSortType type : inactiveTypes) {
-            final List<Discussion> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
+            final List<Content> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
             assertNotNull("expect discussions", discussions);
             assertEquals("expect discussions in " + type + " of zero", 0, discussions.size());
         }
