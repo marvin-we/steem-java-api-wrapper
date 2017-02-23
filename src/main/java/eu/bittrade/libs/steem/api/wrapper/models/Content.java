@@ -94,6 +94,12 @@ public class Content {
     @JsonProperty("author_reputation")
     private String authorReputation;
     private String promoted;
+    @JsonProperty("body_length")
+    private String bodyLength;
+    // TODO: Fix type
+    @JsonProperty("reblogged_by")
+    private Object[] rebloggedBy;
+    
 
     public long getId() {
         return id;
@@ -265,6 +271,14 @@ public class Content {
 
     public String getPromoted() {
         return promoted;
+    }
+    
+    public String getBodyLength() {
+        return bodyLength;
+    }
+
+    public Object[] getRebloggedBy() {
+        return rebloggedBy;
     }
 
     @Override

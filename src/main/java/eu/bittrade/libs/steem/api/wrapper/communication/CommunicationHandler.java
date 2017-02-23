@@ -131,7 +131,7 @@ public class CommunicationHandler {
             LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
 
             try {
-                throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
+               throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
             } catch (IOException ex) {
                 throw new SteemTransformationException("Could not transform the response into an object.", ex);
             }

@@ -4,15 +4,21 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemData {
     private String name;
-    // The error only contains "what" or "api" depending on the kind.
+    // TODO: The error only contains "what" or "api" depending on the kind.
     private String what;
     private String type;
     private Map<String, Integer> api;
+    @JsonProperty("call.method")
+    private String callMethod;
+    @JsonProperty("call.params")
+    private Object[] callParams;
 
     public String getName() {
         return name;
@@ -28,6 +34,14 @@ public class SteemData {
 
     public Map<String, Integer> getApi() {
         return api;
+    }
+
+    public String getCallMethod() {
+        return callMethod;
+    }
+
+    public Object[] getCallParams() {
+        return callParams;
     }
 
     @Override

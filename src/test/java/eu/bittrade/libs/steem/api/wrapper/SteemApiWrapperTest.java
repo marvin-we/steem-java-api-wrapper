@@ -55,7 +55,7 @@ public class SteemApiWrapperTest extends BaseTest {
     @Test
     public void testAccountHistory() throws Exception {
         final Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
-        assertEquals("expect response to contain 10 results", accountHistory.size(), 10);
+        assertEquals("expect response to contain 10 results", 11, accountHistory.size());
         
         Operation firstOperation = accountHistory.get(0).getOperations();
         assertTrue("the first operation for each account is the 'account_create_operation'", firstOperation instanceof AccountCreateOperation);

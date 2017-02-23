@@ -8,15 +8,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemError {
+    @JsonProperty("id")
     private int responseId;
+    @JsonProperty("error")
     private SteemErrorDetails steemErrorDetails;
 
-    @JsonProperty("id")
     public int getResponseId() {
         return responseId;
     }
 
-    @JsonProperty("error")
     public SteemErrorDetails getSteemErrorDetails() {
         return steemErrorDetails;
     }
