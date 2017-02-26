@@ -15,6 +15,8 @@ public class Witness {
     private BigInteger votes;
     @JsonProperty("virtual_last_update")
     private String virtualLastUpdate;
+    @JsonProperty("virtual_position")
+    private String virtualPosition;
     @JsonProperty("virtual_scheduled_time")
     private String virtualScheduledTime;
     @JsonProperty("total_missed")
@@ -43,6 +45,10 @@ public class Witness {
 
     public int getId() {
         return id;
+    }
+
+    public String getVirtualPosition() {
+        return virtualPosition;
     }
 
     public String getOwner() {

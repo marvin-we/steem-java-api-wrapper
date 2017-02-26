@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -575,6 +577,50 @@ public class SteemApiWrapper {
     }
 
     /**
+     * Get a list of discussion for a given author.
+     * 
+     * @param author
+     *            The authors name.
+     * @param permlink
+     *            The permlink of the article.
+     * @param date
+     *            Only return articles before this date. (This field seems to be
+     *            ignored by the Steem api)
+     * @param limit
+     * @return A list of discussions.
+     * @throws SteemTimeoutException
+     *             If the server was not able to answer the request in the given
+     *             time (@see SteemApiWrapperConfig)
+     * @throws SteemConnectionException
+     *             If there is a connection problem.
+     * @throws SteemTransformationException
+     *             If the API Wrapper is unable to transform the JSON response
+     *             into a Java object.
+     * @throws SteemResponseError
+     *             If the Server returned an error object.
+     * @throws ParseException
+     *             If the given date does not match the pattern defined in the
+     *             SteemApiWrapperConfig.
+     */
+    public List<Content> getDiscussionsByAuthorBeforeDate(String author, String permlink, String date, int limit)
+            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError,
+            ParseException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+
+        requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+
+        // Verify that the date has the correct format.
+        Date beforeDate = steemApiWrapperConfig.getDateTimeFormat().parse(date);
+
+        String[] parameters = { author, permlink, steemApiWrapperConfig.getDateTimeFormat().format(beforeDate),
+                String.valueOf(limit) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Content.class);
+    }
+
+    /**
      * Get the global properties.
      * 
      * @return The dynamic global properties.
@@ -687,6 +733,8 @@ public class SteemApiWrapper {
      * @param accoutName
      *            The name of the account you want to request the queue entries
      *            for.
+     * @param limit
+     *            Number of results.
      * @return A list of liquidity queue entries.
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
@@ -699,12 +747,12 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<LiquidityQueueEntry> getLiquidityQueue(String accoutName)
+    public List<LiquidityQueueEntry> getLiquidityQueue(String accoutName, int limit)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_LIQUIDITY_QUEUE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        Object[] parameters = { accoutName };
+        Object[] parameters = { accoutName, String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, LiquidityQueueEntry.class);
@@ -946,7 +994,7 @@ public class SteemApiWrapper {
     public List<Witness> getWitnessByVote(String witnessName, int limit)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESS_BY_VOTE);
+        requestObject.setApiMethod(RequestMethods.GET_WITNESSES_BY_VOTE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { witnessName, String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
@@ -1023,10 +1071,10 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Witness getWitnessesByAccount(String witnessName)
+    public Witness getWitnessByAccount(String witnessName)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESSES);
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_BY_ACCOUNT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { witnessName };
         requestObject.setAdditionalParameters(parameters);

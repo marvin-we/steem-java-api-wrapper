@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
+import java.net.URI;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -18,7 +20,7 @@ public abstract class BaseTest {
     @Before
     public void setUp() throws Exception {
         // Change the default settings if needed.
-        // CONFIG.setWebsocketEndpointURI(new URI("wss://this.piston.rocks"));
+        CONFIG.setWebsocketEndpointURI(new URI("wss://this.piston.rocks"));
         // Create a new apiWrapper with your config object.
         CONFIG.setTimeout(5000);
         steemApiWrapper = new SteemApiWrapper(CONFIG);

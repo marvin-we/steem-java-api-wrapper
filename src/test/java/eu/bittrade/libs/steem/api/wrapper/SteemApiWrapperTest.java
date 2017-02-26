@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,11 @@ import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
 import eu.bittrade.libs.steem.api.wrapper.models.Content;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
+import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
+import eu.bittrade.libs.steem.api.wrapper.models.Witness;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
@@ -41,6 +44,7 @@ import eu.bittrade.libs.steem.api.wrapper.util.DiscussionSortType;
 public class SteemApiWrapperTest extends BaseTest {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperTest.class);
     private static final String ACCOUNT = "dez1337";
+    private static final String WITNESS_ACCOUNT = "good-karma";
     private static final String PERMLINK = "steem-api-wrapper-for-java-update1";
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -56,9 +60,10 @@ public class SteemApiWrapperTest extends BaseTest {
     public void testAccountHistory() throws Exception {
         final Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
         assertEquals("expect response to contain 10 results", 11, accountHistory.size());
-        
+
         Operation firstOperation = accountHistory.get(0).getOperations();
-        assertTrue("the first operation for each account is the 'account_create_operation'", firstOperation instanceof AccountCreateOperation);
+        assertTrue("the first operation for each account is the 'account_create_operation'",
+                firstOperation instanceof AccountCreateOperation);
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -309,6 +314,67 @@ public class SteemApiWrapperTest extends BaseTest {
                 // success
             }
         }
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetActiveWitnesses() throws Exception {
+        final String[] activeWitnesses = steemApiWrapper.getActiveWitnesses();
+
+        assertTrue("expect " + WITNESS_ACCOUNT + " to be an active witness.",
+                Arrays.asList(activeWitnesses).contains(WITNESS_ACCOUNT));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetWitnessesByVote() throws Exception {
+        final List<Witness> activeWitnessesByVote = steemApiWrapper.getWitnessByVote(WITNESS_ACCOUNT, 10);
+
+        assertEquals("expect that 10 results are returned", activeWitnessesByVote.size(), 10);
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned witness", WITNESS_ACCOUNT,
+                activeWitnessesByVote.get(0).getOwner());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetWitnessByAccount() throws Exception {
+        final Witness activeWitnessesByVote = steemApiWrapper.getWitnessByAccount(WITNESS_ACCOUNT);
+
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account", WITNESS_ACCOUNT,
+                activeWitnessesByVote.getOwner());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetRepliesByLastUpdate() throws Exception {
+        final List<Content> repliesByLastUpdate = steemApiWrapper.getRepliesByLastUpdate(ACCOUNT, PERMLINK, 9);
+
+        assertEquals("expect that 9 results are returned", repliesByLastUpdate.size(), 9);
+        assertEquals("expect " + ACCOUNT + " to be the first returned author", ACCOUNT,
+                repliesByLastUpdate.get(0).getAuthor());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetDiscussionsByAuthorBeforeDate() throws Exception {
+        final List<Content> repliesByLastUpdate = steemApiWrapper.getDiscussionsByAuthorBeforeDate(ACCOUNT, PERMLINK,
+                "2017-02-10T22:00:06", 8);
+
+        assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
+        assertEquals("expect " + ACCOUNT + " to be the first returned author", repliesByLastUpdate.get(0).getAuthor(),
+                ACCOUNT);
+        assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK,
+                repliesByLastUpdate.get(0).getPermlink());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetLiquidityQueue() throws Exception {
+        final List<LiquidityQueueEntry> repliesByLastUpdate = steemApiWrapper.getLiquidityQueue(WITNESS_ACCOUNT, 5);
+
+        assertEquals("expect that 5 results are returned", repliesByLastUpdate.size(), 5);
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned account", WITNESS_ACCOUNT,
+                repliesByLastUpdate.get(0).getAccount());
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
