@@ -17,12 +17,20 @@ The resulting JAR can be found in the target directory as usual.
 # How to incldude the steem-java-api-wrapper to your project
 The steem-java-api-wrapper releases are pushed into the maven central repo. Due to that you can simply add a depedency to your project.
 
+##Maven
 ```Xml
 	<dependency>
             <groupId>eu.bittrade.libs</groupId>
             <artifactId>steem-api-wrapper</artifactId>
-            <version>0.0.3</version>
+            <version>0.1.0</version>
 	</dependency>
+```
+
+##Gradle
+```Xml
+	dependencies {
+    		compile 'eu.bittrade.libs:steem-api-wrapper:0.1.0'
+	}
 ```
 
 # Example
