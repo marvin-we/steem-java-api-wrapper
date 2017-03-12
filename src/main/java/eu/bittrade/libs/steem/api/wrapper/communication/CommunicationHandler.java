@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
 import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
@@ -13,6 +15,9 @@ import javax.websocket.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.client.SslContextConfigurator;
+import org.glassfish.tyrus.client.SslEngineConfigurator;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -57,6 +62,17 @@ public class CommunicationHandler {
         this.steemApiWrapperConfig = steemApiWrapperConfig;
         this.client = ClientManager.createClient();
         this.steemMessageHandler = new SteemMessageHandler(this);
+        
+        if(steemApiWrapperConfig.isSslVerificationDisabled()) {
+            SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
+            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String host, SSLSession sslSession) {
+                    return true;
+                }
+            });
+            client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
+        }
 
         MAPPER.setDateFormat(steemApiWrapperConfig.getDateTimeFormat());
         MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);

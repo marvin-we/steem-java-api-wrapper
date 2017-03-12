@@ -27,6 +27,7 @@ public class SteemApiWrapperConfig {
     private SimpleDateFormat dateTimeFormat;
     private String username;
     private char[] password;
+    private boolean sslVerificationDisabled;
 
     /**
      * Default constructor that will set all default values.
@@ -44,6 +45,7 @@ public class SteemApiWrapperConfig {
         this.dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         this.username = "";
         this.password = "".toCharArray();
+        this.sslVerificationDisabled = false;
     }
 
     /**
@@ -160,5 +162,23 @@ public class SteemApiWrapperConfig {
      */
     public char[] getPassword() {
         return password;
+    }
+
+    /**
+     * Check if the SSL-Verification should be disabled.
+     * 
+     * @return True if the SSL-Verification should be disabled or false if not.
+     */
+    public boolean isSslVerificationDisabled() {
+        return sslVerificationDisabled;
+    }
+
+    /**
+     * Set if the SSL-Verification should be disabled.
+     * 
+     * @param sslVerificationDisabled
+     */
+    public void setSslVerificationDisabled(boolean sslVerificationDisabled) {
+        this.sslVerificationDisabled = sslVerificationDisabled;
     }
 }

@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steem.api.wrapper.models;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class BlockHeader {
     private String previous;
-    private String timestamp;
+    private Date timestamp;
     private String witness;
     @JsonProperty("transaction_merkle_root")
     private String transactionMerkleRoot;
@@ -20,7 +22,7 @@ public class BlockHeader {
         return previous;
     }
 
-    public String getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
