@@ -8,6 +8,7 @@ import javax.websocket.ClientEndpointConfig;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bitcoinj.core.ECKey;
 
 //TODO: Add value verification in setters.
 /**
@@ -28,6 +29,10 @@ public class SteemApiWrapperConfig {
     private String username;
     private char[] password;
     private boolean sslVerificationDisabled;
+    private ECKey privatePostingKey;
+    private ECKey privateActiveKey;
+    private ECKey privateOwnerKey;
+    private ECKey privateMemoKey;
 
     /**
      * Default constructor that will set all default values.
@@ -46,6 +51,11 @@ public class SteemApiWrapperConfig {
         this.username = "";
         this.password = "".toCharArray();
         this.sslVerificationDisabled = false;
+
+        this.privatePostingKey = null;
+        this.privateActiveKey = null;
+        this.privateOwnerKey = null;
+        this.privateMemoKey = null;
     }
 
     /**
@@ -180,5 +190,89 @@ public class SteemApiWrapperConfig {
      */
     public void setSslVerificationDisabled(boolean sslVerificationDisabled) {
         this.sslVerificationDisabled = sslVerificationDisabled;
+    }
+
+    /**
+     * Get the configured private posting key. A posting key is required to
+     * vote, post or comment on content.
+     * 
+     * @return Your private posting key.
+     */
+    public ECKey getPrivatePostingKey() {
+        return privatePostingKey;
+    }
+
+    /**
+     * Set your private posting key. A posting key is required to vote, post or
+     * comment on content.
+     * 
+     * @param privatePostingKey
+     *            Your private posting key.
+     */
+    public void setPrivatePostingKey(ECKey privatePostingKey) {
+        this.privatePostingKey = privatePostingKey;
+    }
+
+    /**
+     * Get the configured private active key. An active key is required to
+     * interact with the market, to change keys and to vote for witnesses.
+     * 
+     * @return Your private active key.
+     */
+    public ECKey getPrivateActiveKey() {
+        return privateActiveKey;
+    }
+
+    /**
+     * Set your private active key. An active key is required to interact with
+     * the market, to change keys and to vote for witnesses.
+     * 
+     * @param privateActiveKey
+     *            Your private active key.
+     */
+    public void setPrivateActiveKey(ECKey privateActiveKey) {
+        this.privateActiveKey = privateActiveKey;
+    }
+
+    /**
+     * Get the configured private owner key. An owner key is required to change
+     * the owner key.
+     * 
+     * @return Your private owner key.
+     */
+    public ECKey getPrivateOwnerKey() {
+        return privateOwnerKey;
+    }
+
+    /**
+     * Set the private owner key. An owner key is required to change the owner
+     * key.
+     * 
+     * @param privateOwnerKey
+     *            Your private owner key.
+     */
+    public void setPrivateOwnerKey(ECKey privateOwnerKey) {
+        this.privateOwnerKey = privateOwnerKey;
+    }
+
+    /**
+     * Get the configured private memo key. A memo key is required to use
+     * private messages.
+     * 
+     * @return Your private memo key.
+     */
+    public ECKey getPrivateMemoKey() {
+        return privateMemoKey;
+    }
+
+    /**
+     * Set your private memo key. A memo key is required to use private
+     * messages.
+     * 
+     * @param privateMemoKey
+     *            Your private memo key.
+     */
+    public void setPrivateMemoKey(ECKey privateMemoKey) {
+        this.privateMemoKey = privateMemoKey;
     }
 }
