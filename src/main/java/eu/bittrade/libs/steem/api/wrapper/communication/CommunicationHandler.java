@@ -37,7 +37,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.error.SteemError;
 /**
  * This class handles the communication to the Steem web socket API.
  * 
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommunicationHandler {
     private static final Logger LOGGER = LogManager.getLogger(CommunicationHandler.class);
@@ -144,7 +144,7 @@ public class CommunicationHandler {
 
             return MAPPER.convertValue(response.getResult(), type);
         } catch (JsonParseException | JsonMappingException e) {
-            LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
+            LOGGER.debug("Could not parse the response. Trying to transform it to an error object.");
 
             try {
                throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
