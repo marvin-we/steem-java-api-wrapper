@@ -24,6 +24,7 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
+import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
 import eu.bittrade.libs.steem.api.wrapper.models.Content;
@@ -214,7 +215,7 @@ public class SteemApiWrapperTest extends BaseTest {
         final GlobalProperties properties = steemApiWrapper.getDynamicGlobalProperties();
 
         assertNotNull("expect properties", properties);
-        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000L));
+        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000));
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -229,12 +230,13 @@ public class SteemApiWrapperTest extends BaseTest {
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
     public void testCurrentMedianHistoryPrice() throws Exception {
-        final String base = steemApiWrapper.getCurrentMedianHistoryPrice().getBase();
-        final double base_value = Double.parseDouble(base.substring(0, base.indexOf(' ')));
-        final String symbol = base.substring(base.indexOf(' ') + 1, base.length());
-
-        assertThat("expect current median price greater than zero", base_value, greaterThan(0.00));
-        assertEquals("expect current median price symbol", "SBD", symbol);
+        final Asset base = steemApiWrapper.getCurrentMedianHistoryPrice().getBase();
+        final Asset quote = steemApiWrapper.getCurrentMedianHistoryPrice().getQuote();
+        
+        assertThat("expect current median price greater than zero", base.getAmount(), greaterThan(0.00));
+        assertEquals("expect current median price symbol", "SBD", base.getSymbol());
+        assertThat("expect current median price greater than zero", quote.getAmount(), greaterThan(0.00));
+        assertEquals("expect current median price symbol", "STEEM", quote.getSymbol());
     }
 
     @Category({ PublicNode.class, PrivateNode.class })

@@ -3,17 +3,21 @@ package eu.bittrade.libs.steem.api.wrapper.models;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * This class is the java implementation of the <a href=
+ * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steemit/protocol/asset.hpp">Steem
+ * price object</a>.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Price {
-    private String base;
-    private String quote;
+    private Asset base;
+    private Asset quote;
 
-    public String getBase() {
+    public Asset getBase() {
         return base;
     }
 
-    public String getQuote() {
+    public Asset getQuote() {
         return quote;
     }
     

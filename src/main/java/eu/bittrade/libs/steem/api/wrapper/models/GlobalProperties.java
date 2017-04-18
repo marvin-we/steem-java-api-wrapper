@@ -5,12 +5,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class GlobalProperties {
     private int id;
     @JsonProperty("head_block_number")
-    private long headBlockNumber;
+    private int headBlockNumber;
     @JsonProperty("head_block_id")
     private String headBlockId;
     @JsonProperty("time")
@@ -61,12 +61,17 @@ public class GlobalProperties {
     private int currentReserveRatio;
     @JsonProperty("vote_regeneration_per_day")
     private int voteRegenerationPerDay;
+    @JsonProperty("pending_rewarded_vesting_shares")
+    private String pendingRewardedVestingShares;
+    @JsonProperty("pending_rewarded_vesting_steem")
+    private String pendingRewardedVestingSteem;
 
     public int getId() {
         return id;
     }
 
-    public long getHeadBlockNumber() {
+    // TODO: Oringial is short?
+    public int getHeadBlockNumber() {
         return headBlockNumber;
     }
 
@@ -169,7 +174,15 @@ public class GlobalProperties {
     public int getVoteRegenerationPerDay() {
         return voteRegenerationPerDay;
     }
-    
+
+    public String getPendingRewardedVestingShares() {
+        return pendingRewardedVestingShares;
+    }
+
+    public String getPendingRewardedVestingSteem() {
+        return pendingRewardedVestingSteem;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
