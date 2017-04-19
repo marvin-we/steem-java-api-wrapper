@@ -42,4 +42,10 @@ public class AccountUpdateOperation extends Operation {
     public Key getActive() {
         return active;
     }
+	
+	@Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -40,4 +40,10 @@ public class PowOperation extends Operation {
     public ChainProperties getProperties() {
         return properties;
     }
+	
+	@Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

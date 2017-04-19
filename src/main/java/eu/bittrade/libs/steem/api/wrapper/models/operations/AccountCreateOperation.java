@@ -54,4 +54,10 @@ public class AccountCreateOperation extends Operation {
     public String getJsonMetadata() {
         return jsonMetadata;
     }
+	
+	@Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

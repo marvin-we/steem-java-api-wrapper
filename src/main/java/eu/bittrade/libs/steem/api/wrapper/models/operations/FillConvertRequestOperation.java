@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillConvertRequestOperation extends Operation {
     @JsonProperty("owner")
@@ -29,5 +29,11 @@ public class FillConvertRequestOperation extends Operation {
 
     public String getAmountOut() {
         return amountOut;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

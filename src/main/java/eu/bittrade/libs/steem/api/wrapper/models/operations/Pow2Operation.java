@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Pow2Operation extends Operation {
     // TODO: Fix type of work
@@ -26,5 +26,11 @@ public class Pow2Operation extends Operation {
 
     public String getNewOwnerKey() {
         return newOwnerKey;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

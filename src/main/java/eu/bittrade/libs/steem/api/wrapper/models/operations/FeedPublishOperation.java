@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FeedPublishOperation extends Operation {
     @JsonProperty("publisher")
@@ -19,5 +19,11 @@ public class FeedPublishOperation extends Operation {
 
     public Price getExchangeRate() {
         return exchangeRate;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

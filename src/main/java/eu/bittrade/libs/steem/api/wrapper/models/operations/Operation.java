@@ -1,16 +1,21 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
+
 /**
  * This class is a wrapper for the different kinds of operations that an user
  * can perform.
  * 
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_ARRAY)
 @JsonSubTypes({ @Type(value = VoteOperation.class, name = "vote"),
@@ -38,7 +43,18 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @Type(value = AccountUpdateOperation.class, name = "account_update"),
         @Type(value = WitnessUpdateOperation.class, name = "witness_update"),
         @Type(value = AccountCreateOperation.class, name = "account_create") })
-public abstract class Operation {
+public abstract class Operation implements IByteArray {
+    /**
+     * Provide a SimpleDateFormat instance which is used when the object gets
+     * converted into a byte array.
+     */
+    private SimpleDateFormat simpleDateFormat;
+
+    public Operation() {
+        this.simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        this.simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

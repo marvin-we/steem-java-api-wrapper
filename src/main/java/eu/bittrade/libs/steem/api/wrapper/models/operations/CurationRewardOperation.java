@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CurationRewardOperation extends Operation {
     @JsonProperty("curator")
@@ -29,5 +29,11 @@ public class CurationRewardOperation extends Operation {
 
     public String getCommentPermlink() {
         return commentPermlink;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

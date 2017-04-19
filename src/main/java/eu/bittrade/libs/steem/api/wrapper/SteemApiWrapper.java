@@ -32,6 +32,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.HardforkSchedule;
 import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steem.api.wrapper.models.OrderBook;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
+import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.UserOrder;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
@@ -99,28 +100,17 @@ public class SteemApiWrapper {
         }
     }
 
-    // TODO implement this!
-    public Boolean broadcastTransaction(String trx)
+	// TODO implement this more accurate!
+    public Boolean broadcastTransaction(Transaction signedTransactions)
             throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
-        String[] parameters = { trx };
+
+        Object[] parameters = { signedTransactions };
         requestObject.setAdditionalParameters(parameters);
 
         communicationHandler.performRequest(requestObject, Object[].class);
-        return null;
-    }
-
-    // TODO implement this!
-    public Boolean broadcastTransactionSynchronous(String trx)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
-        requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
-        String[] parameters = { trx };
-        requestObject.setAdditionalParameters(parameters);
-
         return null;
     }
 

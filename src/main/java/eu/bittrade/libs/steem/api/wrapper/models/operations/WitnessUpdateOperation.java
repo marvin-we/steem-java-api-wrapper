@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class WitnessUpdateOperation extends Operation {
     @JsonProperty("owner")
@@ -37,5 +37,11 @@ public class WitnessUpdateOperation extends Operation {
 
     public String getFee() {
         return fee;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

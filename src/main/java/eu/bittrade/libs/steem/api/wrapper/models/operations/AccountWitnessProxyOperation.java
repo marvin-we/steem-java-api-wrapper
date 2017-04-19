@@ -3,7 +3,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AccountWitnessProxyOperation extends Operation {
     @JsonProperty("account")
@@ -17,5 +17,11 @@ public class AccountWitnessProxyOperation extends Operation {
 
     public String getProxy() {
         return proxy;
+    }
+
+    @Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

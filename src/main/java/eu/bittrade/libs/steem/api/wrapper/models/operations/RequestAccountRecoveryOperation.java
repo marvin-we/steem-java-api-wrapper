@@ -24,4 +24,10 @@ public class RequestAccountRecoveryOperation extends Operation {
     public Key getNewOwnerAuthority() {
         return newOwnerAuthority;
     }
+	
+	@Override
+    public byte[] toByteArray() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
