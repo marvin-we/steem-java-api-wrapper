@@ -8,7 +8,7 @@ package eu.bittrade.libs.steem.api.wrapper.util;
  * Like for the official type, it is important the order of this items does not
  * get changed! Otherwise the transactions will use a wrong type.
  * 
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum OperationTypes {
     VOTE_OPERATION, COMMENT_OPERATION,

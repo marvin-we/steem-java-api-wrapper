@@ -10,12 +10,15 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bitcoinj.core.DumpedPrivateKey;
+import org.bitcoinj.core.ECKey;
 import org.exparity.hamcrest.date.DateMatchers;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,6 +33,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Config;
 import eu.bittrade.libs.steem.api.wrapper.models.Content;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
+import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
@@ -37,6 +41,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Witness;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.VoteOperation;
 import eu.bittrade.libs.steem.api.wrapper.util.DiscussionSortType;
 
 /**
@@ -47,94 +52,10 @@ public class SteemApiWrapperTest extends BaseTest {
     private static final String ACCOUNT = "dez1337";
     private static final String WITNESS_ACCOUNT = "good-karma";
     private static final String PERMLINK = "steem-api-wrapper-for-java-update1";
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testAccountCount() throws Exception {
-        final int accountCount = steemApiWrapper.getAccountCount();
-
-        assertThat("expect the number of accounts greater than 122908", accountCount, greaterThan(122908));
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testAccountHistory() throws Exception {
-        final Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
-        assertEquals("expect response to contain 10 results", 11, accountHistory.size());
-
-        Operation firstOperation = accountHistory.get(0).getOperations();
-        assertTrue("the first operation for each account is the 'account_create_operation'",
-                firstOperation instanceof AccountCreateOperation);
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testInvalidAccountVotes() throws Exception {
-        // Force an error response:
-        try {
-            steemApiWrapper.getAccountVotes("thisAcountDoesNotExistYet");
-        } catch (final SteemResponseError steemResponseError) {
-            // success
-        } catch (final Exception e) {
-            LOGGER.error(e);
-            fail(e.toString());
-        }
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testWitnessCount() throws Exception {
-        final int witnessCount = steemApiWrapper.getWitnessCount();
-
-        assertThat("expect the number of witnesses greater than 13071", witnessCount, greaterThan(13071));
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testMinerQueue() throws Exception {
-        final String[] minerQueue = steemApiWrapper.getMinerQueue();
-
-        assertThat("expect the number of miners greater than 0", minerQueue.length, greaterThan(0));
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testConfig() throws Exception {
-        final Config config = steemApiWrapper.getConfig();
-        final boolean isTestNet = config.getIsTestNet();
-        final String steemitNullAccount = config.getSteemitNullAccount();
-        final String initMinerName = config.getSteemitInitMinerName();
-
-        assertEquals("expect main net", false, isTestNet);
-        assertEquals("expect the null account to be null", "null", steemitNullAccount);
-        assertEquals("expect the init miner name to be initminer", "initminer", initMinerName);
-    }
-
-    @Category({ PrivateNode.class })
-    @Ignore("not fully implemented")
-    @Test
-    public void testNodeInfo() throws Exception {
-        // final NodeInfo nodeInfo = steemApiWrapper.getNodeInfo();
-        // TODO write assertions
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testVersion() throws Exception {
-        final Version version = steemApiWrapper.getVersion();
-
-        assertNotEquals("expect non-empty blockchain version", "", version.getBlockchainVersion());
-        assertNotEquals("expect non-empty fc revision", "", version.getFcRevision());
-        assertNotEquals("expect non-empty steem revision", "", version.getSteemRevision());
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testLogin() throws Exception {
-        final boolean success = steemApiWrapper.login("gilligan", "s.s.minnow");
-
-        assertTrue("expect login to always return success: true", success);
-    }
+    private static final String WIF = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
+    private static final int REF_BLOCK_NUM = 34294;
+    private static final long REF_BLOCK_PREFIX = 3707022213L;
+    private static final String EXPIRATION_DATE = "2016-04-06T08:29:27UTC";
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
@@ -168,93 +89,21 @@ public class SteemApiWrapperTest extends BaseTest {
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
-    public void testTrendingTags() throws Exception {
-        final List<TrendingTag> trendingTags = steemApiWrapper.getTrendingTags(null, 10);
+    public void testAccountCount() throws Exception {
+        final int accountCount = steemApiWrapper.getAccountCount();
 
-        assertNotNull("expect trending tags", trendingTags);
-        assertThat("expect trending tags size > 0", trendingTags.size(), greaterThan(0));
+        assertThat("expect the number of accounts greater than 122908", accountCount, greaterThan(122908));
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
-    public void testHardforkVersion() throws Exception {
-        final String hardforkVersion = steemApiWrapper.getHardforkVersion();
+    public void testAccountHistory() throws Exception {
+        final Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
+        assertEquals("expect response to contain 10 results", 11, accountHistory.size());
 
-        assertNotNull("expect hardfork version", hardforkVersion);
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testWitnessSchedule() throws Exception {
-        final WitnessSchedule witnessSchedule = steemApiWrapper.getWitnessSchedule();
-
-        assertNotNull("expect hardfork version", witnessSchedule);
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testLookupAccount() throws Exception {
-        final List<String> accounts = steemApiWrapper.lookupAccounts(ACCOUNT, 10);
-
-        assertNotNull("expect accounts", accounts);
-        assertThat("expect at least one account", accounts.size(), greaterThan(0));
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testLookupWitnessAccount() throws Exception {
-        final List<String> accounts = steemApiWrapper.lookupWitnessAccounts("gtg", 10);
-
-        assertNotNull("expect accounts", accounts);
-        assertThat("expect at least one account", accounts.size(), greaterThan(0));
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testGetDynamicGlobalProperties() throws Exception {
-        final GlobalProperties properties = steemApiWrapper.getDynamicGlobalProperties();
-
-        assertNotNull("expect properties", properties);
-        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000));
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testGetChainProperties() throws Exception {
-        final ChainProperties properties = steemApiWrapper.getChainProperties();
-
-        assertNotNull("expect properties", properties);
-        assertThat("expect sbd interest rate", properties.getSdbInterestRate(), greaterThan(0));
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testCurrentMedianHistoryPrice() throws Exception {
-        final Asset base = steemApiWrapper.getCurrentMedianHistoryPrice().getBase();
-        final Asset quote = steemApiWrapper.getCurrentMedianHistoryPrice().getQuote();
-        
-        assertThat("expect current median price greater than zero", base.getAmount(), greaterThan(0.00));
-        assertEquals("expect current median price symbol", "SBD", base.getSymbol());
-        assertThat("expect current median price greater than zero", quote.getAmount(), greaterThan(0.00));
-        assertEquals("expect current median price symbol", "STEEM", quote.getSymbol());
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testGetContent() throws Exception {
-        final Content discussion = steemApiWrapper.getContent(ACCOUNT, PERMLINK);
-
-        assertNotNull("expect discussion", discussion);
-        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor());
-    }
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void testGetContentReplies() throws Exception {
-        final List<Content> replies = steemApiWrapper.getContentReplies(ACCOUNT, PERMLINK);
-
-        assertNotNull("expect replies", replies);
-        assertThat("expect replies greater than zero", replies.size(), greaterThan(0));
+        Operation firstOperation = accountHistory.get(0).getOperations();
+        assertTrue("the first operation for each account is the 'account_create_operation'",
+                firstOperation instanceof AccountCreateOperation);
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -279,6 +128,76 @@ public class SteemApiWrapperTest extends BaseTest {
         }
 
         assertTrue("expect self vote for article of account", foundSelfVote);
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Ignore("not fully implemented")
+    @Test
+    public void testBroadcastTransactionSynchronous() throws Exception {
+        final boolean success = steemApiWrapper.broadcastTransactionSynchronous("TODO");
+
+        assertTrue("expect broadcast success: true", success);
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testConfig() throws Exception {
+        final Config config = steemApiWrapper.getConfig();
+        final boolean isTestNet = config.getIsTestNet();
+        final String steemitNullAccount = config.getSteemitNullAccount();
+        final String initMinerName = config.getSteemitInitMinerName();
+
+        assertEquals("expect main net", false, isTestNet);
+        assertEquals("expect the null account to be null", "null", steemitNullAccount);
+        assertEquals("expect the init miner name to be initminer", "initminer", initMinerName);
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testCurrentMedianHistoryPrice() throws Exception {
+        final Asset base = steemApiWrapper.getCurrentMedianHistoryPrice().getBase();
+        final Asset quote = steemApiWrapper.getCurrentMedianHistoryPrice().getQuote();
+
+        assertThat("expect current median price greater than zero", base.getAmount(), greaterThan(0.00));
+        assertEquals("expect current median price symbol", "SBD", base.getSymbol());
+        assertThat("expect current median price greater than zero", quote.getAmount(), greaterThan(0.00));
+        assertEquals("expect current median price symbol", "STEEM", quote.getSymbol());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetActiveWitnesses() throws Exception {
+        final String[] activeWitnesses = steemApiWrapper.getActiveWitnesses();
+
+        assertTrue("expect " + WITNESS_ACCOUNT + " to be an active witness.",
+                Arrays.asList(activeWitnesses).contains(WITNESS_ACCOUNT));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetChainProperties() throws Exception {
+        final ChainProperties properties = steemApiWrapper.getChainProperties();
+
+        assertNotNull("expect properties", properties);
+        assertThat("expect sbd interest rate", properties.getSdbInterestRate(), greaterThan(0));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetContent() throws Exception {
+        final Content discussion = steemApiWrapper.getContent(ACCOUNT, PERMLINK);
+
+        assertNotNull("expect discussion", discussion);
+        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetContentReplies() throws Exception {
+        final List<Content> replies = steemApiWrapper.getContentReplies(ACCOUNT, PERMLINK);
+
+        assertNotNull("expect replies", replies);
+        assertThat("expect replies greater than zero", replies.size(), greaterThan(0));
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -320,11 +239,84 @@ public class SteemApiWrapperTest extends BaseTest {
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
-    public void testGetActiveWitnesses() throws Exception {
-        final String[] activeWitnesses = steemApiWrapper.getActiveWitnesses();
+    public void testGetDiscussionsByAuthorBeforeDate() throws Exception {
+        final List<Content> repliesByLastUpdate = steemApiWrapper.getDiscussionsByAuthorBeforeDate(ACCOUNT, PERMLINK,
+                "2017-02-10T22:00:06", 8);
 
-        assertTrue("expect " + WITNESS_ACCOUNT + " to be an active witness.",
-                Arrays.asList(activeWitnesses).contains(WITNESS_ACCOUNT));
+        assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
+        assertEquals("expect " + ACCOUNT + " to be the first returned author", repliesByLastUpdate.get(0).getAuthor(),
+                ACCOUNT);
+        assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK,
+                repliesByLastUpdate.get(0).getPermlink());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetDynamicGlobalProperties() throws Exception {
+        final GlobalProperties properties = steemApiWrapper.getDynamicGlobalProperties();
+
+        assertNotNull("expect properties", properties);
+        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetLiquidityQueue() throws Exception {
+        final List<LiquidityQueueEntry> repliesByLastUpdate = steemApiWrapper.getLiquidityQueue(WITNESS_ACCOUNT, 5);
+
+        assertEquals("expect that 5 results are returned", repliesByLastUpdate.size(), 5);
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned account", WITNESS_ACCOUNT,
+                repliesByLastUpdate.get(0).getAccount());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetRepliesByLastUpdate() throws Exception {
+        final List<Content> repliesByLastUpdate = steemApiWrapper.getRepliesByLastUpdate(ACCOUNT, PERMLINK, 9);
+
+        assertEquals("expect that 9 results are returned", repliesByLastUpdate.size(), 9);
+        assertEquals("expect " + ACCOUNT + " to be the first returned author", ACCOUNT,
+                repliesByLastUpdate.get(0).getAuthor());
+    }
+
+    @Category({ PrivateNode.class })
+    @Test
+    public void testGetTransactionHex() throws Exception {
+        final String EXPECTED_RESULT = "f68585abf4dce7c80457010007666f6f6261726107666f6f62617263"
+                + "07666f6f62617264e8030001202e09123f732a438ef6d6138484d7ad"
+                + "edfdcf4a4f3d171f7fcafe836efa2a3c8877290bd34c67eded824ac0"
+                + "cc39e33d154d0617f64af936a83c442f62aef08fec";
+
+        VoteOperation voteOperation = new VoteOperation();
+        voteOperation.setAuthor("foobarc");
+        voteOperation.setPermlink("foobard");
+        voteOperation.setVoter("foobara");
+        voteOperation.setWeight((short) 1000);
+
+        Operation[] operations = { voteOperation };
+
+        Transaction transaction = new Transaction();
+        transaction.setExpirationDate(EXPIRATION_DATE);
+        transaction.setRefBlockNum(REF_BLOCK_NUM);
+        transaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
+        transaction.setOperations(operations);
+
+        List<ECKey> wifKeys = new ArrayList<>();
+        ECKey privateKey = DumpedPrivateKey.fromBase58(null, WIF).getKey();
+        wifKeys.add(privateKey);
+
+        transaction.sign(wifKeys);
+
+        assertEquals("expect the correct hex value", EXPECTED_RESULT, steemApiWrapper.getTransactionHex(transaction));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetWitnessByAccount() throws Exception {
+        final Witness activeWitnessesByVote = steemApiWrapper.getWitnessByAccount(WITNESS_ACCOUNT);
+
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account", WITNESS_ACCOUNT,
+                activeWitnessesByVote.getOwner());
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -339,52 +331,100 @@ public class SteemApiWrapperTest extends BaseTest {
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
-    public void testGetWitnessByAccount() throws Exception {
-        final Witness activeWitnessesByVote = steemApiWrapper.getWitnessByAccount(WITNESS_ACCOUNT);
+    public void testHardforkVersion() throws Exception {
+        final String hardforkVersion = steemApiWrapper.getHardforkVersion();
 
-        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account", WITNESS_ACCOUNT,
-                activeWitnessesByVote.getOwner());
+        assertNotNull("expect hardfork version", hardforkVersion);
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
-    public void testGetRepliesByLastUpdate() throws Exception {
-        final List<Content> repliesByLastUpdate = steemApiWrapper.getRepliesByLastUpdate(ACCOUNT, PERMLINK, 9);
-
-        assertEquals("expect that 9 results are returned", repliesByLastUpdate.size(), 9);
-        assertEquals("expect " + ACCOUNT + " to be the first returned author", ACCOUNT,
-                repliesByLastUpdate.get(0).getAuthor());
+    public void testInvalidAccountVotes() throws Exception {
+        // Force an error response:
+        try {
+            steemApiWrapper.getAccountVotes("thisAcountDoesNotExistYet");
+        } catch (final SteemResponseError steemResponseError) {
+            // success
+        } catch (final Exception e) {
+            LOGGER.error(e);
+            fail(e.toString());
+        }
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
-    public void testGetDiscussionsByAuthorBeforeDate() throws Exception {
-        final List<Content> repliesByLastUpdate = steemApiWrapper.getDiscussionsByAuthorBeforeDate(ACCOUNT, PERMLINK,
-                "2017-02-10T22:00:06", 8);
+    public void testLogin() throws Exception {
+        final boolean success = steemApiWrapper.login("gilligan", "s.s.minnow");
 
-        assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
-        assertEquals("expect " + ACCOUNT + " to be the first returned author", repliesByLastUpdate.get(0).getAuthor(),
-                ACCOUNT);
-        assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK,
-                repliesByLastUpdate.get(0).getPermlink());
+        assertTrue("expect login to always return success: true", success);
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
-    public void testGetLiquidityQueue() throws Exception {
-        final List<LiquidityQueueEntry> repliesByLastUpdate = steemApiWrapper.getLiquidityQueue(WITNESS_ACCOUNT, 5);
+    public void testLookupAccount() throws Exception {
+        final List<String> accounts = steemApiWrapper.lookupAccounts(ACCOUNT, 10);
 
-        assertEquals("expect that 5 results are returned", repliesByLastUpdate.size(), 5);
-        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned account", WITNESS_ACCOUNT,
-                repliesByLastUpdate.get(0).getAccount());
+        assertNotNull("expect accounts", accounts);
+        assertThat("expect at least one account", accounts.size(), greaterThan(0));
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testLookupWitnessAccount() throws Exception {
+        final List<String> accounts = steemApiWrapper.lookupWitnessAccounts("gtg", 10);
+
+        assertNotNull("expect accounts", accounts);
+        assertThat("expect at least one account", accounts.size(), greaterThan(0));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testMinerQueue() throws Exception {
+        final String[] minerQueue = steemApiWrapper.getMinerQueue();
+
+        assertThat("expect the number of miners greater than 0", minerQueue.length, greaterThan(0));
+    }
+
+    @Category({ PrivateNode.class })
     @Ignore("not fully implemented")
     @Test
-    public void testBroadcastTransactionSynchronous() throws Exception {
-        final boolean success = steemApiWrapper.broadcastTransactionSynchronous("TODO");
+    public void testNodeInfo() throws Exception {
+        // final NodeInfo nodeInfo = steemApiWrapper.getNodeInfo();
+        // TODO write assertions
+    }
 
-        assertTrue("expect broadcast success: true", success);
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testTrendingTags() throws Exception {
+        final List<TrendingTag> trendingTags = steemApiWrapper.getTrendingTags(null, 10);
+
+        assertNotNull("expect trending tags", trendingTags);
+        assertThat("expect trending tags size > 0", trendingTags.size(), greaterThan(0));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testVersion() throws Exception {
+        final Version version = steemApiWrapper.getVersion();
+
+        assertNotEquals("expect non-empty blockchain version", "", version.getBlockchainVersion());
+        assertNotEquals("expect non-empty fc revision", "", version.getFcRevision());
+        assertNotEquals("expect non-empty steem revision", "", version.getSteemRevision());
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testWitnessCount() throws Exception {
+        final int witnessCount = steemApiWrapper.getWitnessCount();
+
+        assertThat("expect the number of witnesses greater than 13071", witnessCount, greaterThan(13071));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testWitnessSchedule() throws Exception {
+        final WitnessSchedule witnessSchedule = steemApiWrapper.getWitnessSchedule();
+
+        assertNotNull("expect hardfork version", witnessSchedule);
     }
 }
