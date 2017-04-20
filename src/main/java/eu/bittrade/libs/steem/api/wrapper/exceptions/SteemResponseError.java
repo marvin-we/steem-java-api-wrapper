@@ -7,7 +7,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.error.SteemError;
  * 
  * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class SteemResponseError extends Exception {
+public class SteemResponseError extends SteemCommunicationException {
     private static final long serialVersionUID = 147694337695115012L;
 
     private SteemError steemError;

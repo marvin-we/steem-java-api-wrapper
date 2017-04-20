@@ -5,7 +5,7 @@ import javax.websocket.MessageHandler;
 /**
  * Simple MessageHandler implementation.
  * 
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemMessageHandler implements MessageHandler.Whole<String> {
     private String message;

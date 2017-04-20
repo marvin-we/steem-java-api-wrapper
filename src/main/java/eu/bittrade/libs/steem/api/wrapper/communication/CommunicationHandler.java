@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
@@ -28,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.ResponseWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemConnectionException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTimeoutException;
@@ -55,22 +55,18 @@ public class CommunicationHandler {
      * @param steemApiWrapperConfig
      *            A SteemApiWrapperConfig object that contains the required
      *            configuration.
-     * @throws SteemConnectionException
-     *             If there are problems due to connecting to the server.
+     * @throws SteemCommunicationException
+     *             If no connection to the Steem Node could be established.
      */
-    public CommunicationHandler(SteemApiWrapperConfig steemApiWrapperConfig) throws SteemConnectionException {
+    public CommunicationHandler(SteemApiWrapperConfig steemApiWrapperConfig) throws SteemCommunicationException {
         this.steemApiWrapperConfig = steemApiWrapperConfig;
         this.client = ClientManager.createClient();
         this.steemMessageHandler = new SteemMessageHandler(this);
-        
-        if(steemApiWrapperConfig.isSslVerificationDisabled()) {
+
+        if (steemApiWrapperConfig.isSslVerificationDisabled()) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String host, SSLSession sslSession) {
-                    return true;
-                }
-            });
+            sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true );
+
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
@@ -103,7 +99,7 @@ public class CommunicationHandler {
      *             If the Server returned an error object.
      */
     public <T> List<T> performRequest(RequestWrapperDTO requestObject, Class<T> targetClass)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+            throws SteemCommunicationException {
         if (!session.isOpen()) {
             reconnect();
         }
@@ -116,6 +112,7 @@ public class CommunicationHandler {
             if (!messageLatch.await(steemApiWrapperConfig.getTimeout(), TimeUnit.MILLISECONDS)) {
                 String errorMessage = "Timeout occured. The websocket server was not able to answer in "
                         + steemApiWrapperConfig.getTimeout() + " millisecond(s).";
+
                 LOGGER.error(errorMessage);
                 throw new SteemTimeoutException(errorMessage);
             }
@@ -127,9 +124,10 @@ public class CommunicationHandler {
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = MAPPER.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 
-            if (response == null || "".equals(response) || response.getResult() == null
-                    || "".equals(response.getResult())) {
-                LOGGER.debug("The response was empty. The requested node may not provided the method {}.", requestObject.getApiMethod().toString());
+            if (response == null || "".equals(response.toString()) || response.getResult() == null
+                    || "".equals(response.getResult().toString())) {
+                LOGGER.debug("The response was empty. The requested node may not provided the method {}.",
+                        requestObject.getApiMethod().toString());
                 List<T> emptyResult = new ArrayList<>();
                 emptyResult.add(null);
                 return emptyResult;
@@ -147,23 +145,24 @@ public class CommunicationHandler {
             LOGGER.debug("Could not parse the response. Trying to transform it to an error object.");
 
             try {
-               throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
+                // TODO: Find a better solution for errors in general.
+                throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
             } catch (IOException ex) {
                 throw new SteemTransformationException("Could not transform the response into an object.", ex);
             }
 
         } catch (IOException | EncodeException | InterruptedException e) {
-            throw new SteemConnectionException("There was a problem sending a message to the server.", e);
+            throw new SteemConnectionException("Could not send the message to the Steem Node.", e);
         }
     }
 
     /**
      * This method establishes a new connection to the web socket Server.
      * 
-     * @throws SteemConnectionException
+     * @throws SteemCommunicationException
      *             If there is a connection problem.
      */
-    private void reconnect() throws SteemConnectionException {
+    private void reconnect() throws SteemCommunicationException {
         try {
             session = client.connectToServer(new SteemEndpoint(), steemApiWrapperConfig.getClientEndpointConfig(),
                     steemApiWrapperConfig.getWebsocketEndpointURI());

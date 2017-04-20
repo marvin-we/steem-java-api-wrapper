@@ -15,6 +15,7 @@ import eu.bittrade.libs.steem.api.wrapper.communication.CommunicationHandler;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.GetDiscussionParametersDTO;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemConnectionException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTimeoutException;
@@ -72,8 +73,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public SteemApiWrapper(SteemApiWrapperConfig steemApiWrapperConfig)
-            throws SteemConnectionException, SteemTimeoutException, SteemTransformationException, SteemResponseError {
+    public SteemApiWrapper(SteemApiWrapperConfig steemApiWrapperConfig) throws SteemCommunicationException {
         this.communicationHandler = new CommunicationHandler(steemApiWrapperConfig);
         this.steemApiWrapperConfig = steemApiWrapperConfig;
 
@@ -110,8 +110,7 @@ public class SteemApiWrapper {
      * @throws SteemTransformationException
      * @throws SteemResponseError
      */
-    public void broadcastTransaction(Transaction transaction)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public void broadcastTransaction(Transaction transaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
@@ -124,8 +123,7 @@ public class SteemApiWrapper {
     }
 
     // TODO implement this!
-    public Boolean broadcastTransactionSynchronous(String trx)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Boolean broadcastTransactionSynchronous(String trx) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
@@ -150,8 +148,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public int getAccountCount()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public int getAccountCount() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_COUNT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -184,7 +181,7 @@ public class SteemApiWrapper {
      *             If the Server returned an error object.
      */
     public Map<Integer, AccountActivity> getAccountHistory(String accountName, int from, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
@@ -226,8 +223,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<Vote> getAccountVotes(String accountName)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<Vote> getAccountVotes(String accountName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_VOTES);
@@ -256,8 +252,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<ActiveVote> getActiveVotes(String author, String permlink)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<ActiveVote> getActiveVotes(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -282,8 +277,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public String[] getActiveWitnesses()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public String[] getActiveWitnesses() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -312,8 +306,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public String getApiByName(String apiName)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public String getApiByName(String apiName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_API_BY_NAME);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -346,8 +339,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Block getBlock(long blockNumber)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Block getBlock(long blockNumber) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_BLOCK);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -374,8 +366,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public BlockHeader getBlockHeader(long blockNumber)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public BlockHeader getBlockHeader(long blockNumber) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_BLOCK_HEADER);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -400,8 +391,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public ChainProperties getChainProperties()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public ChainProperties getChainProperties() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CHAIN_PROPERTIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -426,8 +416,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Config getConfig()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Config getConfig() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONFIG);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -456,8 +445,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Content getContent(String author, String permlink)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Content getContent(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -486,8 +474,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<Content> getContentReplies(String author, String permlink)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<Content> getContentReplies(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -512,8 +499,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Object[] getConversationRequests()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Object[] getConversationRequests() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONVERSATION_REQUEST);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -538,8 +524,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Price getCurrentMedianHistoryPrice()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Price getCurrentMedianHistoryPrice() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CURRENT_MEDIAN_HISTORY_PRICE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -571,7 +556,7 @@ public class SteemApiWrapper {
      *             If the Server returned an error object.
      */
     public List<Content> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
         requestObject.setApiMethod(Utils.getEquivalentRequestMethod(sortBy));
@@ -614,8 +599,7 @@ public class SteemApiWrapper {
      *             SteemApiWrapperConfig.
      */
     public List<Content> getDiscussionsByAuthorBeforeDate(String author, String permlink, String date, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError,
-            ParseException {
+            throws SteemCommunicationException, ParseException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
         requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
@@ -646,8 +630,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public GlobalProperties getDynamicGlobalProperties()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public GlobalProperties getDynamicGlobalProperties() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -673,8 +656,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public FeedHistory getFeedHistory()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public FeedHistory getFeedHistory() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -699,8 +681,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public String getHardforkVersion()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public String getHardforkVersion() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -727,8 +708,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<String[]> getKeyReferences(String[] publicKeys)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<String[]> getKeyReferences(String[] publicKeys) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
         requestObject.setSteemApi(SteemApis.ACCOUNT_BY_KEY_API);
@@ -759,7 +739,7 @@ public class SteemApiWrapper {
      *             If the Server returned an error object.
      */
     public List<LiquidityQueueEntry> getLiquidityQueue(String accoutName, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_LIQUIDITY_QUEUE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -784,8 +764,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public String[] getMinerQueue()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public String[] getMinerQueue() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_MINER_QUEUE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -811,8 +790,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public HardforkSchedule getNextScheduledHarfork()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public HardforkSchedule getNextScheduledHarfork() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -840,8 +818,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<UserOrder> getOpenOrders(String accountName)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<UserOrder> getOpenOrders(String accountName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -868,8 +845,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public OrderBook getOrderBook(int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public OrderBook getOrderBook(int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -880,8 +856,7 @@ public class SteemApiWrapper {
     }
 
     // TODO implement this!
-    public List<String[]> getPotentialSignatures()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<String[]> getPotentialSignatures() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_POTENTIAL_SIGNATURES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -914,7 +889,7 @@ public class SteemApiWrapper {
      *             If the Server returned an error object.
      */
     public List<Content> getRepliesByLastUpdate(String username, String permlink, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -934,8 +909,7 @@ public class SteemApiWrapper {
      * @throws SteemTransformationException
      * @throws SteemResponseError
      */
-    public String getTransactionHex(Transaction signedTransaction)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public String getTransactionHex(Transaction signedTransaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_TRANSACTION_HEX);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -966,8 +940,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<TrendingTag> getTrendingTags(String firstTag, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<TrendingTag> getTrendingTags(String firstTag, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -992,8 +965,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Version getVersion()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Version getVersion() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_VERSION);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -1020,8 +992,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Witness getWitnessByAccount(String witnessName)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Witness getWitnessByAccount(String witnessName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESS_BY_ACCOUNT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1052,8 +1023,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<Witness> getWitnessByVote(String witnessName, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<Witness> getWitnessByVote(String witnessName, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESSES_BY_VOTE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1078,8 +1048,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public int getWitnessCount()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public int getWitnessCount() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1104,8 +1073,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<Witness> getWitnesses()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<Witness> getWitnesses() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESSES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1130,8 +1098,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public WitnessSchedule getWitnessSchedule()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public WitnessSchedule getWitnessSchedule() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1162,8 +1129,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Boolean login()
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Boolean login() throws SteemCommunicationException {
         return login(steemApiWrapperConfig.getUsername(), String.valueOf(steemApiWrapperConfig.getPassword()));
     }
 
@@ -1191,8 +1157,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public Boolean login(String username, String password)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Boolean login(String username, String password) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOGIN);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
@@ -1221,8 +1186,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<String> lookupAccounts(String pattern, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<String> lookupAccounts(String pattern, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOOKUP_ACCOUNTS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1251,8 +1215,7 @@ public class SteemApiWrapper {
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public List<String> lookupWitnessAccounts(String pattern, int limit)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public List<String> lookupWitnessAccounts(String pattern, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOOKUP_WITNESS_ACCOUNTS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1272,8 +1235,7 @@ public class SteemApiWrapper {
      * @throws SteemTransformationException
      * @throws SteemResponseError
      */
-    public Boolean verifyAuthority(Transaction signedTransaction)
-            throws SteemTimeoutException, SteemConnectionException, SteemTransformationException, SteemResponseError {
+    public Boolean verifyAuthority(Transaction signedTransaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.VERIFY_AUTHORITY);
         requestObject.setSteemApi(SteemApis.DATABASE_API);

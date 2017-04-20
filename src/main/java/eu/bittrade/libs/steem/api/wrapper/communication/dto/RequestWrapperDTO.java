@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.util.SteemApis;
 /**
  * A wrapper object that carries all required fields for a request.
  * 
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 // TODO: Verify data in set-methods.
 @JsonPropertyOrder({ "jsonrpc", "params", "id", "method" })
