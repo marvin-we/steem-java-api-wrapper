@@ -3,41 +3,47 @@ package eu.bittrade.libs.steem.api.wrapper.configuration;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 import javax.websocket.ClientEndpointConfig;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
-//TODO: Add value verification in setters.
+import eu.bittrade.libs.steem.api.wrapper.util.PrivateKeyType;
+
 /**
  * This class stores the configuration that is used for the communication to the
  * defined web socket server.
  * 
  * The setters can be used to override the default values.
  * 
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemApiWrapperConfig {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperConfig.class);
 
+    private static SteemApiWrapperConfig steemApiWrapperConfigInstance;
+
     private ClientEndpointConfig clientEndpointConfig;
     private URI websocketEndpointURI;
     private long timeout;
-    private SimpleDateFormat dateTimeFormat;
+    private String dateTimePattern;
+    private long maximumExpirationDateOffset;
+    private String timeZone;
     private String username;
     private char[] password;
     private boolean sslVerificationDisabled;
-    private ECKey privatePostingKey;
-    private ECKey privateActiveKey;
-    private ECKey privateOwnerKey;
-    private ECKey privateMemoKey;
+    private Map<PrivateKeyType, ECKey> privateKeys;
 
     /**
      * Default constructor that will set all default values.
      */
-    public SteemApiWrapperConfig() {
+    private SteemApiWrapperConfig() {
         this.clientEndpointConfig = ClientEndpointConfig.Builder.create().build();
         try {
             this.websocketEndpointURI = new URI("wss://node.steem.ws");
@@ -47,15 +53,17 @@ public class SteemApiWrapperConfig {
             this.websocketEndpointURI = null;
         }
         this.timeout = 1000;
-        this.dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        this.dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
         this.username = "";
         this.password = "".toCharArray();
         this.sslVerificationDisabled = false;
+        this.maximumExpirationDateOffset = 3600000L;
+        this.timeZone = "GMT";
 
-        this.privatePostingKey = null;
-        this.privateActiveKey = null;
-        this.privateOwnerKey = null;
-        this.privateMemoKey = null;
+        this.privateKeys = new EnumMap<>(PrivateKeyType.class);
+        for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
+            this.privateKeys.put(privateKeyType, null);
+        }
     }
 
     /**
@@ -114,24 +122,37 @@ public class SteemApiWrapperConfig {
     }
 
     /**
-     * The default date format that will be used to map the date fields of the
-     * server response
+     * Get the currently configured date time pattern. This date pattern is used
+     * to serialize and deserialize JSON/Java objects.
      * 
-     * @return The used date time format used for deserialization.
+     * @return The used date time pattern used for
+     *         serialization/deserialization.
      */
-    public SimpleDateFormat getDateTimeFormat() {
-        return dateTimeFormat;
+    public String getDateTimePattern() {
+        return dateTimePattern;
     }
 
     /**
-     * Override the default date format that will be used to map the date fields
-     * of the server response.
+     * Override the default date pattern. This date pattern is used to serialize
+     * and deserialize JSON/Java objects.
      * 
-     * @param dateTimeFormat
-     *            The date time format used for deserialization.
+     * @param dateTimePattern
+     *            The date time pattern used for serialization/deserialization.
+     * @param timeZoneId
+     *            The time zone id used for serialization/deserialization (e.g.
+     *            "UTC").
      */
-    public void setDateTimeFormat(SimpleDateFormat dateTimeFormat) {
-        this.dateTimeFormat = dateTimeFormat;
+    public void setDateTime(String dateTimePattern, String timeZoneId) {
+        // Create a SimpleDateFormat instance to verify the pattern is valid.
+        new SimpleDateFormat(dateTimePattern);
+        this.dateTimePattern = dateTimePattern;
+        // Try to verify the timeZoneId.
+        if (!"GMT".equals(timeZoneId) && "GMT".equals(TimeZone.getTimeZone(timeZone).getID())) {
+            LOGGER.warn("The timezoneId {} could not be understood - UTC will now be used as a default.", timeZoneId);
+            this.timeZone = "UTC";
+        } else {
+            this.timeZone = timeZoneId;
+        }
     }
 
     /**
@@ -193,86 +214,122 @@ public class SteemApiWrapperConfig {
     }
 
     /**
-     * Get the configured private posting key. A posting key is required to
-     * vote, post or comment on content.
+     * Add one private key as a ECKey instance to the configuration. The private
+     * keys are required to sign transactions.
      * 
-     * @return Your private posting key.
+     * <ul>
+     * <li>A posting key is required to vote, post or comment on content.</li>
+     * <li>An active key is required to interact with the market, to change keys
+     * and to vote for witnesses.</li>
+     * <li>An owner key is required to change the keys.</li>
+     * <li>A memo key is required to use private messages.</li>
+     * </ul>
+     * 
+     * @param privateKeyType
+     *            The type of the key.
+     * @param privateKey
+     *            The private key itself as a ECKey instance.
      */
-    public ECKey getPrivatePostingKey() {
-        return privatePostingKey;
+    public void setPrivateKey(PrivateKeyType privateKeyType, ECKey privateKey) {
+        this.privateKeys.put(privateKeyType, privateKey);
     }
 
     /**
-     * Set your private posting key. A posting key is required to vote, post or
-     * comment on content.
+     * Add one private key in its String representation to the configuration.
+     * The private keys are required to sign transactions.
+     *
+     * <ul>
+     * <li>A posting key is required to vote, post or comment on content.</li>
+     * <li>An active key is required to interact with the market, to change keys
+     * and to vote for witnesses.</li>
+     * <li>An owner key is required to change the keys.</li>
+     * <li>A memo key is required to use private messages.</li>
+     * </ul>
      * 
-     * @param privatePostingKey
-     *            Your private posting key.
+     * <p>
+     * Example:<br>
+     * setPrivateKey(PrivateKeyType.OWNER,
+     * "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3")
+     * </p>
+     * 
+     * @param privateKeyType
+     *            The type of the key.
+     * @param privateKey
+     *            The private key itself as a ECKey instance.
      */
-    public void setPrivatePostingKey(ECKey privatePostingKey) {
-        this.privatePostingKey = privatePostingKey;
+    public void setPrivateKey(PrivateKeyType privateKeyType, String privateKey) {
+        this.privateKeys.put(privateKeyType, DumpedPrivateKey.fromBase58(null, privateKey).getKey());
     }
 
     /**
-     * Get the configured private active key. An active key is required to
-     * interact with the market, to change keys and to vote for witnesses.
+     * Get a specific private key.
      * 
-     * @return Your private active key.
+     * @param privateKeyType
+     *            The private key type.
+     * @return The configured private key of the specified type.
      */
-    public ECKey getPrivateActiveKey() {
-        return privateActiveKey;
+    public ECKey getPrivateKey(PrivateKeyType privateKeyType) {
+        return this.privateKeys.get(privateKeyType);
     }
 
     /**
-     * Set your private active key. An active key is required to interact with
-     * the market, to change keys and to vote for witnesses.
+     * Get all configured keys.
      * 
-     * @param privateActiveKey
-     *            Your private active key.
+     * @return A map containing all configured keys. If no key has been
+     *         specified, the key will be 'null'.
      */
-    public void setPrivateActiveKey(ECKey privateActiveKey) {
-        this.privateActiveKey = privateActiveKey;
+    public Map<PrivateKeyType, ECKey> getPrivateKeys() {
+        return this.privateKeys;
     }
 
     /**
-     * Get the configured private owner key. An owner key is required to change
-     * the owner key.
+     * Get the currently configured maximum offset of the expiration date.
      * 
-     * @return Your private owner key.
+     * @return The maximum offset of the expiration date.
      */
-    public ECKey getPrivateOwnerKey() {
-        return privateOwnerKey;
+    public long getMaximumExpirationDateOffset() {
+        return maximumExpirationDateOffset;
     }
 
     /**
-     * Set the private owner key. An owner key is required to change the owner
-     * key.
+     * A Steem Node will only accept transactions whose expiration date is not
+     * to far in the future.
      * 
-     * @param privateOwnerKey
-     *            Your private owner key.
+     * <p>
+     * Example:<br>
+     * Time now: 2017-04-20 20:33 Latest allowed expiration date: 2017-04-20
+     * 21:24
+     * </p>
+     * 
+     * The difference between $NOW and the $MAXIMAL_ALLOWED_TIME can be
+     * configured here.
+     * 
+     * @param maximumExpirationDateOffset
+     *            The offset in milliseconds.
      */
-    public void setPrivateOwnerKey(ECKey privateOwnerKey) {
-        this.privateOwnerKey = privateOwnerKey;
+    public void setMaximumExpirationDateOffset(long maximumExpirationDateOffset) {
+        this.maximumExpirationDateOffset = maximumExpirationDateOffset;
     }
 
     /**
-     * Get the configured private memo key. A memo key is required to use
-     * private messages.
+     * Get the currently configured time zone id.
      * 
-     * @return Your private memo key.
+     * @return The time zone id.
      */
-    public ECKey getPrivateMemoKey() {
-        return privateMemoKey;
+    public String getTimeZone() {
+        return timeZone;
     }
 
     /**
-     * Set your private memo key. A memo key is required to use private
-     * messages.
+     * Receive a {@link #SteemApiWrapperConfig) instance.
      * 
-     * @param privateMemoKey
-     *            Your private memo key.
+     * @return A SteemApiWrapperConfig instance.
      */
-    public void setPrivateMemoKey(ECKey privateMemoKey) {
-        this.privateMemoKey = privateMemoKey;
+    public static SteemApiWrapperConfig getInstance() {
+        if (steemApiWrapperConfigInstance == null) {
+            steemApiWrapperConfigInstance = new SteemApiWrapperConfig();
+        }
+
+        return steemApiWrapperConfigInstance;
     }
 }

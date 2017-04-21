@@ -1,8 +1,10 @@
 package eu.bittrade.libs.steem.api.wrapper.communication;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -65,12 +67,17 @@ public class CommunicationHandler {
 
         if (steemApiWrapperConfig.isSslVerificationDisabled()) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true );
+            sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
 
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
-        MAPPER.setDateFormat(steemApiWrapperConfig.getDateTimeFormat());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                SteemApiWrapperConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZone()));
+
+        MAPPER.setDateFormat(simpleDateFormat);
+        MAPPER.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZone()));
         MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         reconnect();

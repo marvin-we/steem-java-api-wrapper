@@ -1,10 +1,12 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,9 +18,6 @@ import eu.bittrade.libs.steem.api.wrapper.communication.dto.GetDiscussionParamet
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemConnectionException;
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
@@ -62,16 +61,16 @@ public class SteemApiWrapper {
      * @param steemApiWrapperConfig
      *            A SteemApiWrapperConfig object that contains the required
      *            configuration.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public SteemApiWrapper(SteemApiWrapperConfig steemApiWrapperConfig) throws SteemCommunicationException {
         this.communicationHandler = new CommunicationHandler(steemApiWrapperConfig);
@@ -105,10 +104,16 @@ public class SteemApiWrapper {
      * 
      * @param signedTransactions
      * @return
-     * @throws SteemTimeoutException
-     * @throws SteemConnectionException
-     * @throws SteemTransformationException
-     * @throws SteemResponseError
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public void broadcastTransaction(Transaction transaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -137,16 +142,16 @@ public class SteemApiWrapper {
      * Get the current number of registered Steem accounts.
      * 
      * @return The number of accounts.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public int getAccountCount() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -169,16 +174,16 @@ public class SteemApiWrapper {
      *            The maximum number of entries.
      * @return A map containing the activities. The key is the id of the
      *         activity.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Map<Integer, AccountActivity> getAccountHistory(String accountName, int from, int limit)
             throws SteemCommunicationException {
@@ -212,16 +217,16 @@ public class SteemApiWrapper {
      * @param accountName
      *            The user name of the account.
      * @return A List of votes done by the specified account.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<Vote> getAccountVotes(String accountName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -241,16 +246,16 @@ public class SteemApiWrapper {
      * @param permlink
      *            The permlink of the article.
      * @return A list of votes for a specific article.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<ActiveVote> getActiveVotes(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -266,16 +271,16 @@ public class SteemApiWrapper {
      * Get the account names of the active witnesses.
      * 
      * @return A list of account names of the active witnesses.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public String[] getActiveWitnesses() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -295,16 +300,16 @@ public class SteemApiWrapper {
      *            The name of the api.
      * @return The id for the given api name or null, if the api is not active
      *         or does not exist.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public String getApiByName(String apiName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -328,16 +333,16 @@ public class SteemApiWrapper {
      * @param blockNumber
      *            The id of the block the header should be requested from.
      * @return A complete block.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Block getBlock(long blockNumber) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -355,16 +360,16 @@ public class SteemApiWrapper {
      * @param blockNumber
      *            The id of the block the header should be requested from.
      * @return The header of a block.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public BlockHeader getBlockHeader(long blockNumber) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -380,16 +385,16 @@ public class SteemApiWrapper {
      * Get the chain properties.
      * 
      * @return The chain properties.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public ChainProperties getChainProperties() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -405,16 +410,16 @@ public class SteemApiWrapper {
      * Get the configuration.
      * 
      * @return The steem configuration.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Config getConfig() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -434,16 +439,16 @@ public class SteemApiWrapper {
      * @param permlink
      *            The permlink of the article.
      * @return The details of a specific post.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Content getContent(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -463,16 +468,16 @@ public class SteemApiWrapper {
      * @param permlink
      *            The permlink of the article.
      * @return A list of discussions or null if the post has no replies.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<Content> getContentReplies(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -488,16 +493,16 @@ public class SteemApiWrapper {
      * TODO: Look up what this is used for and what it can return.
      * 
      * @return Unknown
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Object[] getConversationRequests() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -513,16 +518,16 @@ public class SteemApiWrapper {
      * Grab the current median conversion price of SBD / STEEM.
      * 
      * @return The current median price.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Price getCurrentMedianHistoryPrice() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -544,16 +549,16 @@ public class SteemApiWrapper {
      * @param sortBy
      *            The way how the results should be sorted by.
      * @return A list of discussions.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<Content> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
             throws SteemCommunicationException {
@@ -584,32 +589,36 @@ public class SteemApiWrapper {
      *            ignored by the Steem api)
      * @param limit
      * @return A list of discussions.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
-     * @throws ParseException
-     *             If the given date does not match the pattern defined in the
-     *             SteemApiWrapperConfig.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<Content> getDiscussionsByAuthorBeforeDate(String author, String permlink, String date, int limit)
-            throws SteemCommunicationException, ParseException {
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
         requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
 
         // Verify that the date has the correct format.
-        Date beforeDate = steemApiWrapperConfig.getDateTimeFormat().parse(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                SteemApiWrapperConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZone()));
+        Date beforeDate;
+        try {
+            beforeDate = simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            throw new SteemTransformationException("Could not parse the received date to a Date object.", e);
+        }
 
-        String[] parameters = { author, permlink, steemApiWrapperConfig.getDateTimeFormat().format(beforeDate),
-                String.valueOf(limit) };
+        String[] parameters = { author, permlink, simpleDateFormat.format(beforeDate), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Content.class);
@@ -619,16 +628,16 @@ public class SteemApiWrapper {
      * Get the global properties.
      * 
      * @return The dynamic global properties.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public GlobalProperties getDynamicGlobalProperties() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -645,16 +654,16 @@ public class SteemApiWrapper {
      * object.
      * 
      * @return The conversion history of SBD / STEEM.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public FeedHistory getFeedHistory() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -670,16 +679,16 @@ public class SteemApiWrapper {
      * Get the hardfork version.
      * 
      * @return The hardfork version that the connected node is running on.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public String getHardforkVersion() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -697,16 +706,16 @@ public class SteemApiWrapper {
      * @param publicKeys
      *            An array containing one or more public keys.
      * @return A list of arrays containing the matching account names.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<String[]> getKeyReferences(String[] publicKeys) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -727,16 +736,16 @@ public class SteemApiWrapper {
      * @param limit
      *            Number of results.
      * @return A list of liquidity queue entries.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<LiquidityQueueEntry> getLiquidityQueue(String accoutName, int limit)
             throws SteemCommunicationException {
@@ -753,16 +762,16 @@ public class SteemApiWrapper {
      * Get the current miner queue.
      * 
      * @return A list of account names that are in the mining queue.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public String[] getMinerQueue() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -779,16 +788,16 @@ public class SteemApiWrapper {
      * to return the time since the current version is active.
      * 
      * @return ???
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public HardforkSchedule getNextScheduledHarfork() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -807,16 +816,16 @@ public class SteemApiWrapper {
      * @param accountName
      *            The name of the account.
      * @return A list of open orders for this account.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<UserOrder> getOpenOrders(String accountName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -834,16 +843,16 @@ public class SteemApiWrapper {
      * @param limit
      *            The maximum number of results for each category (asks / bids).
      * @return A list of orders on the internal steem market.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public OrderBook getOrderBook(int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -877,16 +886,16 @@ public class SteemApiWrapper {
      * @param limit
      *            Number of results.
      * @return A list of Content objects.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<Content> getRepliesByLastUpdate(String username, String permlink, int limit)
             throws SteemCommunicationException {
@@ -904,10 +913,16 @@ public class SteemApiWrapper {
      * 
      * @param signedTransaction
      * @return
-     * @throws SteemTimeoutException
-     * @throws SteemConnectionException
-     * @throws SteemTransformationException
-     * @throws SteemResponseError
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public String getTransactionHex(Transaction signedTransaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -929,16 +944,16 @@ public class SteemApiWrapper {
      * @param limit
      *            The number of results.
      * @return A list of tags.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<TrendingTag> getTrendingTags(String firstTag, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -954,16 +969,16 @@ public class SteemApiWrapper {
      * Get the version information of the connected node.
      * 
      * @return The steem version that the connected node is running.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Version getVersion() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -981,16 +996,16 @@ public class SteemApiWrapper {
      * @param witnessName
      *            The witness name.
      * @return A list of witnesses.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Witness getWitnessByAccount(String witnessName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1012,16 +1027,16 @@ public class SteemApiWrapper {
      * @param limit
      *            The number of results.
      * @return A list of witnesses.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<Witness> getWitnessByVote(String witnessName, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1037,16 +1052,16 @@ public class SteemApiWrapper {
      * Get the current number of active witnesses.
      * 
      * @return The number of witnesses.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public int getWitnessCount() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1062,16 +1077,16 @@ public class SteemApiWrapper {
      * Get all witnesses.
      * 
      * @return A list of witnesses.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<Witness> getWitnesses() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1087,16 +1102,16 @@ public class SteemApiWrapper {
      * Get the witness schedule.
      * 
      * @return The witness schedule.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public WitnessSchedule getWitnessSchedule() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1118,16 +1133,16 @@ public class SteemApiWrapper {
      * strings can be enough to access them.
      * 
      * @return true if the login was successful. False otherwise.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Boolean login() throws SteemCommunicationException {
         return login(steemApiWrapperConfig.getUsername(), String.valueOf(steemApiWrapperConfig.getPassword()));
@@ -1146,16 +1161,16 @@ public class SteemApiWrapper {
      * @param password
      *            The password.
      * @return true if the login was successful. False otherwise.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Boolean login(String username, String password) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1175,16 +1190,16 @@ public class SteemApiWrapper {
      * @param limit
      *            The maximum number of account names.
      * @return A list of matching account names.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<String> lookupAccounts(String pattern, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1204,16 +1219,16 @@ public class SteemApiWrapper {
      * @param limit
      *            The maximum number of account names.
      * @return A list of matching account names.
-     * @throws SteemTimeoutException
-     *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
-     *             If there is a connection problem.
-     * @throws SteemTransformationException
-     *             If the API Wrapper is unable to transform the JSON response
-     *             into a Java object.
-     * @throws SteemResponseError
-     *             If the Server returned an error object.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public List<String> lookupWitnessAccounts(String pattern, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
@@ -1230,10 +1245,16 @@ public class SteemApiWrapper {
      * 
      * @param signedTransaction
      * @return
-     * @throws SteemTimeoutException
-     * @throws SteemConnectionException
-     * @throws SteemTransformationException
-     * @throws SteemResponseError
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public Boolean verifyAuthority(Transaction signedTransaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();

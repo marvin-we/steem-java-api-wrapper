@@ -13,7 +13,7 @@ import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
  */
 public abstract class BaseTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseTest.class);
-    protected static final SteemApiWrapperConfig CONFIG = new SteemApiWrapperConfig();
+    protected static final SteemApiWrapperConfig CONFIG = SteemApiWrapperConfig.getInstance();
 
     protected SteemApiWrapper steemApiWrapper;
 
