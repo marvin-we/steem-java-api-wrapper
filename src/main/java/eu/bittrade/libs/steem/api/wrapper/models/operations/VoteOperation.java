@@ -66,6 +66,7 @@ public class VoteOperation extends Operation {
      * of 100%)
      * 
      * @param weight
+     *            The weight of this vote.
      * @throws InvalidActivityException
      *             If the weight is greater than 10000.
      */

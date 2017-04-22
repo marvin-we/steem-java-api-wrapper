@@ -57,9 +57,6 @@ public class SteemApiWrapper {
     /**
      * Initialize the Steem API Wrapper.
      * 
-     * @param steemApiWrapperConfig
-     *            A SteemApiWrapperConfig object that contains the required
-     *            configuration.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -99,11 +96,11 @@ public class SteemApiWrapper {
         }
     }
 
-    // TODO: Fix Javadoc
     /**
+     * Broadcast a transaction on the Steem blockchain.
      * 
-     * @param signedTransactions
-     * @return
+     * @param transaction
+     *            A transaction object that has been signed.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -604,6 +601,7 @@ public class SteemApiWrapper {
      *            Only return articles before this date. (This field seems to be
      *            ignored by the Steem api)
      * @param limit
+     *            The number of results you want to receive.
      * @return A list of discussions.
      * @throws SteemCommunicationException
      *             <ul>
@@ -935,11 +933,14 @@ public class SteemApiWrapper {
         return communicationHandler.performRequest(requestObject, Content.class);
     }
 
-    // TODO Fix Javadoc
     /**
+     * Use the Steem API to receive the HEX representation of a signed
+     * transaction.
      * 
      * @param signedTransaction
-     * @return
+     *            The signed Transaction object you want to receive the HEX
+     *            representation for.
+     * @return The HEX representation.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1280,11 +1281,14 @@ public class SteemApiWrapper {
         return communicationHandler.performRequest(requestObject, String.class);
     }
 
-    // TODO Fix Javadoc
     /**
+     * Use the Steem API to verify the required authorities for this
+     * transaction.
      * 
      * @param signedTransaction
-     * @return
+     *            A whole and signed transaction object.
+     * @return True if the given transaction has been signed correctly or false
+     *         if not.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the

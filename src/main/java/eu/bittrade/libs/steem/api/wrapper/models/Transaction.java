@@ -190,6 +190,7 @@ public class Transaction implements IByteArray, Serializable {
      * Extensions are currently not supported and will be ignored.
      * 
      * @param extensions
+     *            Define a list of extensions.
      */
     public void setExtensions(List<Object> extensions) {
         this.extensions = extensions;
@@ -205,6 +206,12 @@ public class Transaction implements IByteArray, Serializable {
         this.operations = operations;
     }
 
+    /**
+     * Set the ref block number by providing its int representation.
+     * 
+     * @param refBlockNum
+     *            The ref block number as int.
+     */
     public void setRefBlockNum(int refBlockNum) {
         this.refBlockNum = refBlockNum;
     }
@@ -215,6 +222,7 @@ public class Transaction implements IByteArray, Serializable {
      * setRefBlockPrefix(String)}.
      * 
      * @param refBlockPrefix
+     *            The ref block prefix.
      */
     public void setRefBlockPrefix(long refBlockPrefix) {
         this.refBlockPrefix = refBlockPrefix;
@@ -223,7 +231,7 @@ public class Transaction implements IByteArray, Serializable {
     /**
      * Set the ref block prefix by providing its String representation. The
      * String representation can be received from the @link
-     * {@link eu.bittrade.libs.Steem.api.wrapper.SteemApiWrapper#getDynamicGlobalProperties
+     * {@link eu.bittrade.libs.steem.api.wrapper.SteemApiWrapper#getDynamicGlobalProperties
      * getDynamicGlobalProperties} method.
      * 
      * @param refBlockPrefix
@@ -235,7 +243,7 @@ public class Transaction implements IByteArray, Serializable {
 
     /**
      *
-     * Like {@link #sign(List) #sign(List)}, but uses the default Steem chain
+     * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
      * id.
      *
      * @throws UnsupportedEncodingException
@@ -247,8 +255,7 @@ public class Transaction implements IByteArray, Serializable {
 
     /**
      * Use this method if you want to specify a different chainId than the
-     * default one for STEEM. Otherwise use the {@link #sign(List) sign(List)}
-     * method.
+     * default one for STEEM. Otherwise use the {@link #sign() sign()} method.
      * 
      * @param chainId
      *            The chain id that should be used during signing.
@@ -316,6 +323,10 @@ public class Transaction implements IByteArray, Serializable {
      * Original implementation can be found <a href=
      * "https://github.com/kenCode-de/graphenej/blob/master/graphenej/src/main/java/de/bitsharesmunich/graphenej/Transaction.java"
      * >here.</a>
+     * 
+     * @param signature
+     *            A single signature in its byte representation.
+     * @return True if the signature is canonical or false if not.
      */
     private boolean isCanonical(byte[] signature) {
         return ((signature[0] & 0x80) != 0) || (signature[0] == 0) || ((signature[1] & 0x80) != 0)
@@ -333,13 +344,15 @@ public class Transaction implements IByteArray, Serializable {
 
     /**
      * This method creates a byte array based on a transaction object under the
-     * use of a guide written by <a
-     * href="https://Steemit.com/Steem/@xeroc/steem-transaction-signing-in-a-nutshell>Xeroc</a>.
-     * This method should only be used internally.
+     * use of a guide written by <a href="https://Steemit.com/Steem/@xeroc/">
+     * Xeroc</a>. This method should only be used internally.
      * 
      * If a chainId is provided it will be added in front of the byte array.
      * 
      * @return The serialized transaction object.
+     * @param chainId
+     *            The HEX representation of the chain Id you want to use for
+     *            this transaction.
      * @throws UnsupportedEncodingException
      *             If your platform does not know US-ASCII.
      */

@@ -53,9 +53,6 @@ public class CommunicationHandler {
     /**
      * Initialize the Connection Handler.
      * 
-     * @param steemApiWrapperConfig
-     *            A SteemApiWrapperConfig object that contains the required
-     *            configuration.
      * @throws SteemCommunicationException
      *             If no connection to the Steem Node could be established.
      */

@@ -208,6 +208,7 @@ public class SteemApiWrapperConfig {
      * Set if the SSL-Verification should be disabled.
      * 
      * @param sslVerificationDisabled
+     *            Defines if the SSL-Verification should be disabled or not.
      */
     public void setSslVerificationDisabled(boolean sslVerificationDisabled) {
         this.sslVerificationDisabled = sslVerificationDisabled;
@@ -321,7 +322,9 @@ public class SteemApiWrapperConfig {
     }
 
     /**
-     * Receive a {@link #SteemApiWrapperConfig) instance.
+     * Receive a
+     * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig
+     * SteemApiWrapperConfig} instance.
      * 
      * @return A SteemApiWrapperConfig instance.
      */
