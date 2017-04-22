@@ -30,7 +30,6 @@ import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.ResponseWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemConnectionException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTransformationException;
@@ -91,8 +90,8 @@ public class CommunicationHandler {
      * @return The server response transformed into a list of given objects.
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
-     *             time (@see SteemApiWrapperConfig)
-     * @throws SteemConnectionException
+     *             time (@see {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long) setTimeout()})
+     * @throws SteemCommunicationException
      *             If there is a connection problem.
      * @throws SteemTransformationException
      *             If the API Wrapper is unable to transform the JSON response
@@ -154,7 +153,7 @@ public class CommunicationHandler {
             }
 
         } catch (IOException | EncodeException | InterruptedException e) {
-            throw new SteemConnectionException("Could not send the message to the Steem Node.", e);
+            throw new SteemCommunicationException("Could not send the message to the Steem Node.", e);
         }
     }
 
@@ -171,7 +170,7 @@ public class CommunicationHandler {
                     SteemApiWrapperConfig.getInstance().getWebsocketEndpointURI());
             session.addMessageHandler(steemMessageHandler);
         } catch (DeploymentException | IOException e) {
-            throw new SteemConnectionException("Could not connect to the server.", e);
+            throw new SteemCommunicationException("Could not connect to the server.", e);
         }
         // TODO: Login again?
     }

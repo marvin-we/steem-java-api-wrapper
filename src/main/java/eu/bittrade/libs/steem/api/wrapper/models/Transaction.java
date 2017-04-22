@@ -15,6 +15,8 @@ import java.util.TimeZone;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
@@ -25,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
@@ -36,6 +40,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
  */
 public class Transaction implements IByteArray, Serializable {
     private static final long serialVersionUID = 4821422578657270330L;
+    private static final Logger LOGGER = LogManager.getLogger(Transaction.class);
 
     /**
      * For STEEM the the chain id is a 256bit long 0 sequence. It could also be
@@ -72,11 +77,6 @@ public class Transaction implements IByteArray, Serializable {
     protected String[] signatures;
     // TODO: Find out what type this is and what the use of this field is.
     private List<Object> extensions;
-
-    public Transaction() {
-        // Set the expiration date to the current date and time.
-        this.expirationDate = (new Timestamp(System.currentTimeMillis())).getTime();
-    }
 
     /**
      * This method returns the expiration date as its String representation. For
@@ -163,12 +163,15 @@ public class Transaction implements IByteArray, Serializable {
     }
 
     /**
-     * The date has to be specified as String and needs a special format:
-     * yyyy-MM-dd'T'HH:mm:ss
+     * Define how long this transaction is valid. The date has to be specified
+     * as String and needs a special format: yyyy-MM-dd'T'HH:mm:ss
      * 
      * <p>
      * Example: "2016-08-08T12:24:17"
      * </p>
+     * 
+     * If not set the current time plus the maximal allowed offset is used by
+     * default.
      * 
      * @param expirationDate
      *            The expiration date as its String representation.
@@ -176,8 +179,6 @@ public class Transaction implements IByteArray, Serializable {
      *             If the given String does not patch the pattern.
      */
     public void setExpirationDate(String expirationDate) throws ParseException {
-        // TODO: Verifiy with
-        // SteemApiWrapperConfig.getInstance().getMaximumExpirationDateOffset
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 SteemApiWrapperConfig.getInstance().getDateTimePattern());
@@ -246,10 +247,10 @@ public class Transaction implements IByteArray, Serializable {
      * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
      * id.
      *
-     * @throws UnsupportedEncodingException
-     *             If the used encoding is not supported on your platform.
+     * @throws SteemInvalidTransactionException
+     *             If the transaction can not be signed.
      */
-    public void sign() throws UnsupportedEncodingException {
+    public void sign() throws SteemInvalidTransactionException {
         sign(CHAIN_ID);
     }
 
@@ -259,26 +260,59 @@ public class Transaction implements IByteArray, Serializable {
      * 
      * @param chainId
      *            The chain id that should be used during signing.
-     * @throws UnsupportedEncodingException
-     *             If the used encoding is not supported on your platform.
+     * @throws SteemInvalidTransactionException
+     *             If the transaction can not be signed.
      */
-    public void sign(String chainId) throws UnsupportedEncodingException {
-        // TODO Verify that all required fields are provided and throw an
-        // Exception if not. (Create InvalidSteemTransactionException)
-        // TODO Check which keys are required for the attached operations to
+    public void sign(String chainId) throws SteemInvalidTransactionException {
+        // Before we start signing the transaction we check if all required
+        // fields are present, which private keys are required and if those keys
+        // are provided.
+        if (this.expirationDate == 0) {
+            // The expiration date is not set by the user so we do it on our own
+            // by adding the maximal allowed offset to the current time.
+            this.expirationDate = (new Timestamp(System.currentTimeMillis())).getTime()
+                    + SteemApiWrapperConfig.getInstance().getMaximumExpirationDateOffset() - 60000L;
+            LOGGER.debug("No expiration date has been provided so the latest possible time is used.");
+        } else if (this.expirationDate > (new Timestamp(System.currentTimeMillis())).getTime()
+                + SteemApiWrapperConfig.getInstance().getMaximumExpirationDateOffset()) {
+            LOGGER.warn("The configured expiration date for this transaction is to far "
+                    + "in the future and may not be accepted by the Steem node.");
+        } else if (this.operations == null || this.operations.length == 0) {
+            throw new SteemInvalidTransactionException("At least one operation is required to sign the transaction.");
+        } else if (this.refBlockNum == 0) {
+            throw new SteemInvalidTransactionException("The refBlockNum field needs to be set.");
+        } else if (this.refBlockPrefix == 0) {
+            throw new SteemInvalidTransactionException("The refBlockPrefix field needs to be set.");
+        }
+
+        // Check which keys are required for the attached operations to
         // avoid an "irrelevant signature included\nUnnecessary signature(s)
         // detected" error.
-        for (ECKey privateKey : SteemApiWrapperConfig.getInstance().getPrivateKeys().values()) {
-            // Skip not provided keys.
-            if (privateKey == null) {
-                continue;
+        List<PrivateKeyType> requiredPrivateKeyTypes = new ArrayList<>();
+        for (Operation operation : this.operations) {
+            if (!requiredPrivateKeyTypes.contains(operation.getRequiredPrivateKeyType())) {
+                if (SteemApiWrapperConfig.getInstance().getPrivateKey(operation.getRequiredPrivateKeyType()) == null) {
+                    throw new SteemInvalidTransactionException("The operation of type "
+                            + operation.getClass().getSimpleName() + " requires a private key of type "
+                            + operation.getRequiredPrivateKeyType().toString() + ".");
+                }
+                requiredPrivateKeyTypes.add(operation.getRequiredPrivateKeyType());
             }
+        }
 
+        for (PrivateKeyType requiredKeyType : requiredPrivateKeyTypes) {
+            ECKey privateKey = SteemApiWrapperConfig.getInstance().getPrivateKey(requiredKeyType);
             boolean isCanonical = false;
             byte[] signedTransaction = null;
 
+            Sha256Hash messageAsHash = null;
             while (!isCanonical) {
-                Sha256Hash messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(this.toByteArray(chainId)));
+                try {
+                    messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(this.toByteArray(chainId)));
+                } catch (UnsupportedEncodingException e) {
+                    throw new SteemInvalidTransactionException(
+                            "The required encoding is not supported by your platform.", e);
+                }
                 ECDSASignature signature = privateKey.sign(messageAsHash);
 
                 /*

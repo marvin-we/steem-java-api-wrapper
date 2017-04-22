@@ -90,6 +90,7 @@ public class VoteOperation extends Operation {
         VarInt voterAccountNameLength = new VarInt(this.voter.length());
         serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, voterAccountNameLength.encode());
 
+        // TODO: Make the standard charset configurable.
         serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
                 ByteBuffer.allocate(voter.length()).put(this.voter.getBytes(StandardCharsets.US_ASCII)).array());
 
