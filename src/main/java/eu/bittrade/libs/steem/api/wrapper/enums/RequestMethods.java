@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steem.api.wrapper.util;
+package eu.bittrade.libs.steem.api.wrapper.enums;
 
 /**
  * An enumeration for all existing API methods.

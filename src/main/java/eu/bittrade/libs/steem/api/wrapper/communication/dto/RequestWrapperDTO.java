@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import eu.bittrade.libs.steem.api.wrapper.util.RequestMethods;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemApis;
+import eu.bittrade.libs.steem.api.wrapper.enums.RequestMethods;
+import eu.bittrade.libs.steem.api.wrapper.enums.SteemApis;
 
 /**
  * A wrapper object that carries all required fields for a request.

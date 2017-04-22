@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steem.api.wrapper.util;
+package eu.bittrade.libs.steem.api.wrapper.enums;
 
 /**
  * This class is the java implementation of the <a href=
@@ -7,6 +7,6 @@ package eu.bittrade.libs.steem.api.wrapper.util;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public enum AssetSymbolTypes {
+public enum AssetSymbolType {
     VESTS, STEEM, SBD, STMD
 }

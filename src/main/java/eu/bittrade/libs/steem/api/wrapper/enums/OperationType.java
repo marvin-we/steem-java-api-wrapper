@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steem.api.wrapper.util;
+package eu.bittrade.libs.steem.api.wrapper.enums;
 
 /**
  * This is the representation of <a href=
@@ -10,7 +10,7 @@ package eu.bittrade.libs.steem.api.wrapper.util;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public enum OperationTypes {
+public enum OperationType {
     VOTE_OPERATION, COMMENT_OPERATION,
 
     TRANSFER_OPERATION, TRANSFER_TO_VESTING_OPERATION, WITHDRAW_VESTING_OPERATION,

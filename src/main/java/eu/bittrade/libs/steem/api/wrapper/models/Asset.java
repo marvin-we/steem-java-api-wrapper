@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import eu.bittrade.libs.steem.api.wrapper.util.AssetSymbolTypes;
+import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 
 /**
  * This class is the java implementation of the <a href=
@@ -25,7 +25,7 @@ public class Asset {
     // Type is safe<int64_t> in the original code.
     private double amount;
     // Type us uint64_t in the original code.
-    private AssetSymbolTypes symbol;
+    private AssetSymbolType symbol;
     private int precision;
 
     public double getAmount() {
@@ -38,7 +38,7 @@ public class Asset {
         return precision;
     }
 
-    public AssetSymbolTypes getSymbol() {
+    public AssetSymbolType getSymbol() {
         return symbol;
     }
 
@@ -46,8 +46,8 @@ public class Asset {
         this.amount = amount;
     }
 
-    public void setSymbol(AssetSymbolTypes symbol) {
-        if (symbol.equals(AssetSymbolTypes.VESTS)) {
+    public void setSymbol(AssetSymbolType symbol) {
+        if (symbol.equals(AssetSymbolType.VESTS)) {
             this.precision = 6;
         } else {
             this.precision = 3;
@@ -73,7 +73,7 @@ class AssetDeserializer extends JsonDeserializer<Asset> {
             if (assetFields.length == 2) {
                 Asset asset = new Asset();
                 asset.setAmount(Double.valueOf(assetFields[0]));
-                asset.setSymbol(AssetSymbolTypes.valueOf(assetFields[1]));
+                asset.setSymbol(AssetSymbolType.valueOf(assetFields[1]));
                 return asset;
             }
         }

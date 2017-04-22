@@ -2,6 +2,8 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -12,6 +14,11 @@ public class AccountWitnessVoteOperation extends Operation {
     private String[] witness;
     @JsonProperty("approve")
     private Boolean approve;
+
+    public AccountWitnessVoteOperation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public String[] getAccount() {
         return account;

@@ -2,6 +2,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
 
 /**
@@ -12,6 +13,11 @@ public class FeedPublishOperation extends Operation {
     private String publisher;
     @JsonProperty("exchange_rate")
     private Price exchangeRate;
+
+    public FeedPublishOperation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public String getPublisher() {
         return publisher;

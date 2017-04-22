@@ -24,7 +24,7 @@ public abstract class BaseTest {
         // Create a new apiWrapper with your config object.
         CONFIG.setTimeout(5000);
         CONFIG.setSslVerificationDisabled(true);
-        steemApiWrapper = new SteemApiWrapper(CONFIG);
+        steemApiWrapper = new SteemApiWrapper();
     }
 
     protected void debug(final String message) {

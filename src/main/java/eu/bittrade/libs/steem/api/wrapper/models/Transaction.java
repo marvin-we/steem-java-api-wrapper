@@ -24,6 +24,7 @@ import org.bitcoinj.core.VarInt;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
@@ -72,14 +73,8 @@ public class Transaction implements IByteArray, Serializable {
     // TODO: Find out what type this is and what the use of this field is.
     private List<Object> extensions;
 
-    private SimpleDateFormat simpleDateFormat;
-
     public Transaction() {
-        // TODO clean this up. (Set the expiration date to NOW)
-        this.simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        this.simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        // TODO clean this up. (Set the expiration date to NOW)
+        // Set the expiration date to the current date and time.
         this.expirationDate = (new Timestamp(System.currentTimeMillis())).getTime();
     }
 
@@ -91,8 +86,9 @@ public class Transaction implements IByteArray, Serializable {
      * @return The expiration date as String.
      */
     public String getExpirationDate() {
-        SimpleDateFormat simpleDateFormatForJSON = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        simpleDateFormatForJSON.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat simpleDateFormatForJSON = new SimpleDateFormat(
+                SteemApiWrapperConfig.getInstance().getDateTimePattern());
+        simpleDateFormatForJSON.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
         return simpleDateFormatForJSON.format(getExpirationDateAsDate());
     }
 
@@ -167,19 +163,6 @@ public class Transaction implements IByteArray, Serializable {
     }
 
     /**
-     * Verify that the signature is canonical.
-     * 
-     * Original implementation can be found <a href=
-     * "https://github.com/Steemit/Steem-python/blob/master/Steembase/transactions.py"
-     * >here.</a>
-     */
-    private boolean isCanonical(byte[] signature) {
-        return ((signature.length == 65) && ((signature[0] & 0x80) == 0)
-                && !((signature[0] == 0) && ((signature[0] & 0x80) == 0)) && ((signature[33] & 0x80) == 0)
-                && !((signature[32] == 0) && ((signature[33] & 0x80) == 0)));
-    }
-
-    /**
      * The date has to be specified as String and needs a special format:
      * yyyy-MM-dd'T'HH:mm:ss
      * 
@@ -193,8 +176,13 @@ public class Transaction implements IByteArray, Serializable {
      *             If the given String does not patch the pattern.
      */
     public void setExpirationDate(String expirationDate) throws ParseException {
+        // TODO: Verifiy with
+        // SteemApiWrapperConfig.getInstance().getMaximumExpirationDateOffset
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(this.simpleDateFormat.parse(expirationDate + "UTC"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                SteemApiWrapperConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+        calendar.setTime(simpleDateFormat.parse(expirationDate + SteemApiWrapperConfig.getInstance().getTimeZoneId()));
         this.expirationDate = calendar.getTimeInMillis();
     }
 
@@ -250,14 +238,11 @@ public class Transaction implements IByteArray, Serializable {
      * Like {@link #sign(List) #sign(List)}, but uses the default Steem chain
      * id.
      *
-     * @param privateKeys
-     *            A list of private keys that are required to sign this
-     *            transaction.
      * @throws UnsupportedEncodingException
      *             If the used encoding is not supported on your platform.
      */
-    public void sign(List<ECKey> privateKeys) throws UnsupportedEncodingException {
-        sign(privateKeys, CHAIN_ID);
+    public void sign() throws UnsupportedEncodingException {
+        sign(CHAIN_ID);
     }
 
     /**
@@ -265,16 +250,22 @@ public class Transaction implements IByteArray, Serializable {
      * default one for STEEM. Otherwise use the {@link #sign(List) sign(List)}
      * method.
      * 
-     * @param privateKeys
-     *            A list of private keys that are required to sign this
-     *            transaction.
      * @param chainId
      *            The chain id that should be used during signing.
      * @throws UnsupportedEncodingException
      *             If the used encoding is not supported on your platform.
      */
-    public void sign(List<ECKey> privateKeys, String chainId) throws UnsupportedEncodingException {
-        for (ECKey privateKey : privateKeys) {
+    public void sign(String chainId) throws UnsupportedEncodingException {
+        // TODO Verify that all required fields are provided and throw an
+        // Exception if not. (Create InvalidSteemTransactionException)
+        // TODO Check which keys are required for the attached operations to
+        // avoid an "irrelevant signature included\nUnnecessary signature(s)
+        // detected" error.
+        for (ECKey privateKey : SteemApiWrapperConfig.getInstance().getPrivateKeys().values()) {
+            // Skip not provided keys.
+            if (privateKey == null) {
+                continue;
+            }
 
             boolean isCanonical = false;
             byte[] signedTransaction = null;
@@ -308,7 +299,7 @@ public class Transaction implements IByteArray, Serializable {
                 System.arraycopy(Utils.bigIntegerToBytes(signature.r, 32), 0, signedTransaction, 1, 32);
                 System.arraycopy(Utils.bigIntegerToBytes(signature.s, 32), 0, signedTransaction, 33, 32);
 
-                if (!isCanonical(signedTransaction)) {
+                if (isCanonical(signedTransaction)) {
                     this.expirationDate += 1;
                 } else {
                     isCanonical = true;
@@ -317,6 +308,18 @@ public class Transaction implements IByteArray, Serializable {
 
             this.signatures = ArrayUtils.add(this.signatures, Utils.HEX.encode(signedTransaction));
         }
+    }
+
+    /**
+     * Verify that the signature is canonical.
+     * 
+     * Original implementation can be found <a href=
+     * "https://github.com/kenCode-de/graphenej/blob/master/graphenej/src/main/java/de/bitsharesmunich/graphenej/Transaction.java"
+     * >here.</a>
+     */
+    private boolean isCanonical(byte[] signature) {
+        return ((signature[0] & 0x80) != 0) || (signature[0] == 0) || ((signature[1] & 0x80) != 0)
+                || ((signature[32] & 0x80) != 0) || (signature[32] == 0) || ((signature[33] & 0x80) != 0);
     }
 
     /**

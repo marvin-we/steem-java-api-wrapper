@@ -47,7 +47,6 @@ public class CommunicationHandler {
 
     private ClientManager client;
     private Session session;
-    private SteemApiWrapperConfig steemApiWrapperConfig;
     private SteemMessageHandler steemMessageHandler;
     private CountDownLatch messageLatch;
 
@@ -60,12 +59,11 @@ public class CommunicationHandler {
      * @throws SteemCommunicationException
      *             If no connection to the Steem Node could be established.
      */
-    public CommunicationHandler(SteemApiWrapperConfig steemApiWrapperConfig) throws SteemCommunicationException {
-        this.steemApiWrapperConfig = steemApiWrapperConfig;
+    public CommunicationHandler() throws SteemCommunicationException {
         this.client = ClientManager.createClient();
         this.steemMessageHandler = new SteemMessageHandler(this);
 
-        if (steemApiWrapperConfig.isSslVerificationDisabled()) {
+        if (SteemApiWrapperConfig.getInstance().isSslVerificationDisabled()) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
             sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
 
@@ -74,10 +72,10 @@ public class CommunicationHandler {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
                 SteemApiWrapperConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZone()));
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
 
         MAPPER.setDateFormat(simpleDateFormat);
-        MAPPER.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZone()));
+        MAPPER.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
         MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         reconnect();
@@ -116,9 +114,9 @@ public class CommunicationHandler {
         String rawJsonResponse = "";
         try {
             session.getBasicRemote().sendObject(requestObject);
-            if (!messageLatch.await(steemApiWrapperConfig.getTimeout(), TimeUnit.MILLISECONDS)) {
+            if (!messageLatch.await(SteemApiWrapperConfig.getInstance().getTimeout(), TimeUnit.MILLISECONDS)) {
                 String errorMessage = "Timeout occured. The websocket server was not able to answer in "
-                        + steemApiWrapperConfig.getTimeout() + " millisecond(s).";
+                        + SteemApiWrapperConfig.getInstance().getTimeout() + " millisecond(s).";
 
                 LOGGER.error(errorMessage);
                 throw new SteemTimeoutException(errorMessage);
@@ -171,8 +169,9 @@ public class CommunicationHandler {
      */
     private void reconnect() throws SteemCommunicationException {
         try {
-            session = client.connectToServer(new SteemEndpoint(), steemApiWrapperConfig.getClientEndpointConfig(),
-                    steemApiWrapperConfig.getWebsocketEndpointURI());
+            session = client.connectToServer(new SteemEndpoint(),
+                    SteemApiWrapperConfig.getInstance().getClientEndpointConfig(),
+                    SteemApiWrapperConfig.getInstance().getWebsocketEndpointURI());
             session.addMessageHandler(steemMessageHandler);
         } catch (DeploymentException | IOException e) {
             throw new SteemConnectionException("Could not connect to the server.", e);

@@ -1,14 +1,12 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
 
 /**
@@ -24,6 +22,7 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
         @Type(value = ConvertOperation.class, name = "convert"),
         @Type(value = InterestOperation.class, name = "interest"),
         @Type(value = CustomJsonOperation.class, name = "custom_json"),
+        @Type(value = CustomOperation.class, name = "custom"),
         @Type(value = AccountWitnessVoteOperation.class, name = "account_witness_vote"),
         @Type(value = FillConvertRequestOperation.class, name = "fill_convert_request"),
         @Type(value = TransferToVestingOperation.class, name = "transfer_to_vesting"),
@@ -45,14 +44,29 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
         @Type(value = AccountCreateOperation.class, name = "account_create") })
 public abstract class Operation implements IByteArray {
     /**
-     * Provide a SimpleDateFormat instance which is used when the object gets
-     * converted into a byte array.
+     * This field contains the private key type that is required for this
+     * specific operation.
      */
-    private SimpleDateFormat simpleDateFormat;
+    protected PrivateKeyType requiredPrivateKeyType;
 
-    public Operation() {
-        this.simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-        this.simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+    /**
+     * Constructor used to hide the public one and also to force the sub classes
+     * to define the required private key type.
+     * 
+     * @param requiredPrivateKeyType
+     *            The required private key type for this operation.
+     */
+    protected Operation(PrivateKeyType requiredPrivateKeyType) {
+        this.requiredPrivateKeyType = requiredPrivateKeyType;
+    }
+
+    /**
+     * Get the private key type that is required for this operation.
+     * 
+     * @return The required private key type for this operation.
+     */
+    public PrivateKeyType getRequiredPrivateKeyType() {
+        return requiredPrivateKeyType;
     }
 
     @Override

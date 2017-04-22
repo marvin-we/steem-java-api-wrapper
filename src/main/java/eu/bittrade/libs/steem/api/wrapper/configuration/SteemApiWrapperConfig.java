@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.DumpedPrivateKey;
 import org.bitcoinj.core.ECKey;
 
-import eu.bittrade.libs.steem.api.wrapper.util.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 
 /**
  * This class stores the configuration that is used for the communication to the
@@ -34,7 +34,7 @@ public class SteemApiWrapperConfig {
     private long timeout;
     private String dateTimePattern;
     private long maximumExpirationDateOffset;
-    private String timeZone;
+    private String timeZoneId;
     private String username;
     private char[] password;
     private boolean sslVerificationDisabled;
@@ -58,7 +58,7 @@ public class SteemApiWrapperConfig {
         this.password = "".toCharArray();
         this.sslVerificationDisabled = false;
         this.maximumExpirationDateOffset = 3600000L;
-        this.timeZone = "GMT";
+        this.timeZoneId = "GMT";
 
         this.privateKeys = new EnumMap<>(PrivateKeyType.class);
         for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
@@ -147,11 +147,11 @@ public class SteemApiWrapperConfig {
         new SimpleDateFormat(dateTimePattern);
         this.dateTimePattern = dateTimePattern;
         // Try to verify the timeZoneId.
-        if (!"GMT".equals(timeZoneId) && "GMT".equals(TimeZone.getTimeZone(timeZone).getID())) {
+        if (!"GMT".equals(timeZoneId) && "GMT".equals(TimeZone.getTimeZone(timeZoneId).getID())) {
             LOGGER.warn("The timezoneId {} could not be understood - UTC will now be used as a default.", timeZoneId);
-            this.timeZone = "UTC";
+            this.timeZoneId = "UTC";
         } else {
-            this.timeZone = timeZoneId;
+            this.timeZoneId = timeZoneId;
         }
     }
 
@@ -316,8 +316,8 @@ public class SteemApiWrapperConfig {
      * 
      * @return The time zone id.
      */
-    public String getTimeZone() {
-        return timeZone;
+    public String getTimeZoneId() {
+        return timeZoneId;
     }
 
     /**

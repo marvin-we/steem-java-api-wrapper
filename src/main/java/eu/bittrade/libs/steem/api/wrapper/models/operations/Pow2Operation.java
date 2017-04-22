@@ -2,6 +2,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 
 /**
@@ -15,6 +16,11 @@ public class Pow2Operation extends Operation {
     private ChainProperties properties;
     @JsonProperty("new_owner_key")
     private String newOwnerKey;
+
+    public Pow2Operation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public Object[] getWork() {
         return work;

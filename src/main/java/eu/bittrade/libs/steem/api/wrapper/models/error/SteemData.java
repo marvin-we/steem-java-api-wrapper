@@ -7,12 +7,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * @author<a href="http://steemit.com/@dez1337">dez1337</a>
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemData {
     private String name;
     // TODO: The error only contains "what" or "api" depending on the kind.
     private String what;
+    private String id;
+    private Object[] posting;
     private String type;
     private Map<String, Integer> api;
     @JsonProperty("call.method")
@@ -20,8 +22,16 @@ public class SteemData {
     @JsonProperty("call.params")
     private Object[] callParams;
 
+    public Object[] getPosting() {
+        return posting;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getWhat() {

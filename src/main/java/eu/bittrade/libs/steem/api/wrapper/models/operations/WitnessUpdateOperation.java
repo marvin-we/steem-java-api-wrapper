@@ -2,6 +2,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 
 /**
@@ -18,6 +19,11 @@ public class WitnessUpdateOperation extends Operation {
     private ChainProperties properties;
     @JsonProperty("fee")
     private String fee;
+
+    public WitnessUpdateOperation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public String getOwner() {
         return owner;

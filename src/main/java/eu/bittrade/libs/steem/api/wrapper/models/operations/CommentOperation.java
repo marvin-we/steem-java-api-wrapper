@@ -2,6 +2,8 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -20,6 +22,11 @@ public class CommentOperation extends Operation {
     private String body;
     @JsonProperty("json_metadata")
     private String jsonMetadata;
+
+    public CommentOperation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public String getParentAuthor() {
         return parentAuthor;

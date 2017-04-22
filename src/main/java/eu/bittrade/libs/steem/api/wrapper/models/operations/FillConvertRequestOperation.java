@@ -2,6 +2,8 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -14,6 +16,11 @@ public class FillConvertRequestOperation extends Operation {
     private String amountIn;
     @JsonProperty("amount_out")
     private String amountOut;
+
+    public FillConvertRequestOperation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public String getOwner() {
         return owner;

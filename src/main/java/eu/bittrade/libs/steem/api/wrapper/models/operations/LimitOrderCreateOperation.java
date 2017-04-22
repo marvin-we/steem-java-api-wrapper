@@ -10,8 +10,9 @@ import org.bitcoinj.core.VarInt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.util.OperationTypes;
 
 /**
  * This class is the java implementation of the <a href=
@@ -34,6 +35,11 @@ public class LimitOrderCreateOperation extends Operation {
     private Boolean fillOrKill;
     @JsonProperty("expiration")
     private Date expiration;
+
+    public LimitOrderCreateOperation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public String getOwner() {
         return owner;
@@ -63,7 +69,7 @@ public class LimitOrderCreateOperation extends Operation {
     public byte[] toByteArray() throws UnsupportedEncodingException {
         byte[] serializedLimitOrderCreateOperation = {};
 
-        VarInt operationType = new VarInt(OperationTypes.LIMIT_ORDER_CREATE_OPERATION.ordinal());
+        VarInt operationType = new VarInt(OperationType.LIMIT_ORDER_CREATE_OPERATION.ordinal());
         serializedLimitOrderCreateOperation = ArrayUtils.addAll(serializedLimitOrderCreateOperation,
                 operationType.encode());
 

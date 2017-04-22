@@ -12,7 +12,8 @@ import org.bitcoinj.core.VarInt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.util.OperationTypes;
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -26,6 +27,11 @@ public class VoteOperation extends Operation {
     private String permlink;
     @JsonProperty("weight")
     private short weight;
+
+    public VoteOperation() {
+        // Define the required key type for this operation.
+        super(PrivateKeyType.POSTING);
+    }
 
     public String getVoter() {
         return voter;
@@ -74,30 +80,31 @@ public class VoteOperation extends Operation {
     public byte[] toByteArray() throws UnsupportedEncodingException {
         byte[] serializedVoteOperation = {};
 
-        VarInt operationType = new VarInt(OperationTypes.VOTE_OPERATION.ordinal());
+        VarInt operationType = new VarInt(OperationType.VOTE_OPERATION.ordinal());
         serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, operationType.encode());
 
-        // Serializing the voter name is done in two steps: 1. Length as VarInt 2.
+        // Serializing the voter name is done in two steps: 1. Length as VarInt
+        // 2.
         // The account name.
         VarInt voterAccountNameLength = new VarInt(this.voter.length());
         serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, voterAccountNameLength.encode());
 
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, ByteBuffer.allocate(voter.length())
-                .put(this.voter.getBytes(StandardCharsets.US_ASCII)).array());
+        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
+                ByteBuffer.allocate(voter.length()).put(this.voter.getBytes(StandardCharsets.US_ASCII)).array());
 
         // Same procedure for the author.
         VarInt authorAccountNameLength = new VarInt(this.author.length());
         serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, authorAccountNameLength.encode());
 
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, ByteBuffer.allocate(author.length())
-                .put(this.author.getBytes(StandardCharsets.US_ASCII)).array());
+        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
+                ByteBuffer.allocate(author.length()).put(this.author.getBytes(StandardCharsets.US_ASCII)).array());
 
         // Same procedure for the permanent link.
         VarInt permaLinkLength = new VarInt(this.permlink.length());
         serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, permaLinkLength.encode());
 
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, ByteBuffer.allocate(permlink.length())
-                .put(this.permlink.getBytes(StandardCharsets.US_ASCII)).array());
+        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
+                ByteBuffer.allocate(permlink.length()).put(this.permlink.getBytes(StandardCharsets.US_ASCII)).array());
 
         serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
                 ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort(this.weight).array());

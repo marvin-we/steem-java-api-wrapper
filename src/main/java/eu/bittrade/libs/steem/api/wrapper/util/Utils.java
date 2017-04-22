@@ -3,6 +3,9 @@ package eu.bittrade.libs.steem.api.wrapper.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
+import eu.bittrade.libs.steem.api.wrapper.enums.RequestMethods;
+
 /**
  * This class contains some utility methods used by the steem api wrapper.
  * 

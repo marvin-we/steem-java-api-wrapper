@@ -10,20 +10,19 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bitcoinj.core.DumpedPrivateKey;
-import org.bitcoinj.core.ECKey;
 import org.exparity.hamcrest.date.DateMatchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
+import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
@@ -42,7 +41,6 @@ import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.VoteOperation;
-import eu.bittrade.libs.steem.api.wrapper.util.DiscussionSortType;
 
 /**
  * @author Anthony Martin
@@ -301,11 +299,9 @@ public class SteemApiWrapperTest extends BaseTest {
         transaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
         transaction.setOperations(operations);
 
-        List<ECKey> wifKeys = new ArrayList<>();
-        ECKey privateKey = DumpedPrivateKey.fromBase58(null, WIF).getKey();
-        wifKeys.add(privateKey);
+        CONFIG.setPrivateKey(PrivateKeyType.POSTING, WIF);
 
-        transaction.sign(wifKeys);
+        transaction.sign();
 
         assertEquals("expect the correct hex value", EXPECTED_RESULT, steemApiWrapper.getTransactionHex(transaction));
     }

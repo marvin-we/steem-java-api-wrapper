@@ -47,6 +47,7 @@ public class AccountActivity {
         return timestamp;
     }
 
+    //TODO: Is this only one? :o
     public Operation getOperations() {
         return operations;
     }
