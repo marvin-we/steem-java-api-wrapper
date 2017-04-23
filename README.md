@@ -18,6 +18,7 @@ The resulting JAR can be found in the target directory as usual.
 The steem-java-api-wrapper releases are pushed into the maven central repo. Due to that you can simply add a depedency to your project.
 
 ## Maven
+File: <i>pom.xml</i>
 ```Xml
 	<dependency>
             <groupId>eu.bittrade.libs</groupId>
@@ -29,11 +30,11 @@ The steem-java-api-wrapper releases are pushed into the maven central repo. Due 
 ## Gradle
 File: <i>build.gradle</i>
 ```Xml
-allprojects {
-    repositories {
-        jcenter()
-    }
-}
+	allprojects {
+		repositories {
+			jcenter()
+		}
+	}
 ```
 
 ```Xml
