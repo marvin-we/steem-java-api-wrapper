@@ -2,6 +2,8 @@ package eu.bittrade.libs.steem.api.wrapper.configuration;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.EnumMap;
 import java.util.Map;
@@ -39,6 +41,7 @@ public class SteemApiWrapperConfig {
     private char[] password;
     private boolean sslVerificationDisabled;
     private Map<PrivateKeyType, ECKey> privateKeys;
+    private Charset encodingCharset;
 
     /**
      * Default constructor that will set all default values.
@@ -59,6 +62,7 @@ public class SteemApiWrapperConfig {
         this.sslVerificationDisabled = false;
         this.maximumExpirationDateOffset = 3600000L;
         this.timeZoneId = "GMT";
+        this.encodingCharset = StandardCharsets.US_ASCII;
 
         this.privateKeys = new EnumMap<>(PrivateKeyType.class);
         for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
@@ -319,6 +323,25 @@ public class SteemApiWrapperConfig {
      */
     public String getTimeZoneId() {
         return timeZoneId;
+    }
+
+    /**
+     * Get the currently configured Charset that will be used to encode Strings.
+     * 
+     * @return The configured Charset.
+     */
+    public Charset getEncodingCharset() {
+        return encodingCharset;
+    }
+
+    /**
+     * Define the Charset that should be used to encode Strings.
+     * 
+     * @param encodingCharset
+     *            A Charset instance like StandardCharsets.US_ASCII.
+     */
+    public void setEncodingCharset(Charset encodingCharset) {
+        this.encodingCharset = encodingCharset;
     }
 
     /**
