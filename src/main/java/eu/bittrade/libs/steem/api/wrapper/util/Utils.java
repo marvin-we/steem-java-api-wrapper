@@ -1,8 +1,15 @@
 package eu.bittrade.libs.steem.api.wrapper.util;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.charset.Charset;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bitcoinj.core.VarInt;
 
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.enums.RequestMethods;
 
@@ -18,6 +25,12 @@ public class Utils {
     private Utils() {
     }
 
+    /**
+     * TODO: Is there a nicer way to solve this?
+     * 
+     * @param discussionSortType
+     * @return
+     */
     public static RequestMethods getEquivalentRequestMethod(DiscussionSortType discussionSortType) {
         switch (discussionSortType) {
         case SORT_BY_ACTIVE:
@@ -51,5 +64,53 @@ public class Utils {
                     "Unkown sort type. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).");
             return RequestMethods.GET_DISCUSSIONS_BY_ACTIVE;
         }
+    }
+
+    /**
+     * Transform a short variable into a byte array.
+     * 
+     * @param shortValue
+     *            The short value to transform.
+     * @return The byte representation of the short value.
+     */
+    public static byte[] transformShortToByteArray(int shortValue) {
+        return ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort((short) shortValue).array();
+    }
+
+    /**
+     * Get the VarInt-byte representation of a String.
+     * 
+     * Serializing a String has to be done in two steps:
+     * 
+     * <ul>
+     * <li>1. Length as VarInt</li>
+     * <li>2. The account name.</li>
+     * </ul>
+     *
+     * @param string
+     * @return
+     */
+    public static byte[] transformStringToVarIntByteArray(String string) {
+        Charset encodingCharset = SteemApiWrapperConfig.getInstance().getEncodingCharset();
+        byte[] resultingByteRepresentation = {};
+
+        VarInt stringLength = new VarInt(string.length());
+        resultingByteRepresentation = ArrayUtils.addAll(resultingByteRepresentation, stringLength.encode());
+
+        resultingByteRepresentation = ArrayUtils.addAll(resultingByteRepresentation,
+                ByteBuffer.allocate(string.length()).put(string.getBytes(encodingCharset)).array());
+
+        return resultingByteRepresentation;
+    }
+
+    /**
+     * Transform an int value into its byte representation.
+     * 
+     * @param int
+     *            value The int value to transform.
+     * @return The byte representation of the given value.
+     */
+    public static byte[] transformIntToVarIntByteArray(int intValue) {
+        return (new VarInt(intValue)).encode();
     }
 }
