@@ -18,8 +18,12 @@ public class Config {
     private long steemit100Percent;
     @JsonProperty("STEEMIT_1_PERCENT")
     private int steemit1Percent;
+    @JsonProperty("STEEMIT_1_TENTH_PERCENT")
+    private int steemit1TenthPercent;
     @JsonProperty("STEEMIT_ADDRESS_PREFIX")
     private String steemitAddressPrefix;
+    @JsonProperty("STEEMIT_ACCOUNT_RECOVERY_REQUEST_EXPIRATION_PERIOD")
+    private String steemitAccountRecoveryRequestExpirationPeriod;
     @JsonProperty("STEEMIT_APR_PERCENT_MULTIPLY_PER_BLOCK")
     private String steemitAprPercentMultiplyPerBlock;
     @JsonProperty("STEEMIT_APR_PERCENT_MULTIPLY_PER_HOUR")
@@ -241,8 +245,16 @@ public class Config {
         return steemit1Percent;
     }
 
+    public int getSteemit1TenthPercent() {
+        return steemit1TenthPercent;
+    }
+
     public String getSteemitAddressPrefix() {
         return steemitAddressPrefix;
+    }
+
+    public String getSteemitAccountRecoveryRequestExpirationPeriod() {
+        return steemitAccountRecoveryRequestExpirationPeriod;
     }
 
     public String getSteemitAprPercentMultiplyPerBlock() {
@@ -644,7 +656,7 @@ public class Config {
     public String getVestsSymbol() {
         return vestsSymbol;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

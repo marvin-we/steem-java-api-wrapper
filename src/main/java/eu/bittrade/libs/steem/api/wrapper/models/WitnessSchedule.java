@@ -19,6 +19,14 @@ public class WitnessSchedule {
     private int numScheduledWitnesses;
     @JsonProperty("top19_weight")
     private int top19Weight;
+    @JsonProperty("hardfork_required_witnesses")
+    private int hardforkRequiredWitnesses;
+    @JsonProperty("max_voted_witnesses")
+    private int maxVotedWitnesses;
+    @JsonProperty("max_runner_witnesses")
+    private int maxRunnerWitnesses;
+    @JsonProperty("max_miner_witnesses")
+    private int maxMinerWitnesses;
     @JsonProperty("timeshare_weight")
     private int timeshareWeight;
     @JsonProperty("miner_weight")
@@ -54,6 +62,22 @@ public class WitnessSchedule {
         return top19Weight;
     }
 
+    public int getHardforkRequiredWitnesses() {
+        return hardforkRequiredWitnesses;
+    }
+
+    public int getMaxVotedWitnesses() {
+        return maxVotedWitnesses;
+    }
+
+    public int getMaxRunnerWitnesses() {
+        return maxRunnerWitnesses;
+    }
+
+    public int getMaxMinerWitnesses() {
+        return maxMinerWitnesses;
+    }
+
     public int getTimeshareWeight() {
         return timeshareWeight;
     }
@@ -73,7 +97,7 @@ public class WitnessSchedule {
     public String getMajorityVersion() {
         return majorityVersion;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

@@ -94,12 +94,13 @@ public class Content {
     @JsonProperty("author_reputation")
     private String authorReputation;
     private String promoted;
+    // TODO: Fix type
+    private Object[] beneficiaries;
     @JsonProperty("body_length")
     private String bodyLength;
     // TODO: Fix type
     @JsonProperty("reblogged_by")
     private Object[] rebloggedBy;
-    
 
     public long getId() {
         return id;
@@ -272,7 +273,11 @@ public class Content {
     public String getPromoted() {
         return promoted;
     }
-    
+
+    public Object[] getBeneficiaries() {
+        return beneficiaries;
+    }
+
     public String getBodyLength() {
         return bodyLength;
     }
