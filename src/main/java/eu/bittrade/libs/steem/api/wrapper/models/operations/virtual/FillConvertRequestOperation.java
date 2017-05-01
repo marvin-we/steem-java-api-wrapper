@@ -1,8 +1,10 @@
-package eu.bittrade.libs.steem.api.wrapper.models.operations;
+package eu.bittrade.libs.steem.api.wrapper.models.operations.virtual;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -39,7 +41,7 @@ public class FillConvertRequestOperation extends Operation {
     }
 
     @Override
-    public byte[] toByteArray() {
+    public byte[] toByteArray() throws SteemInvalidTransactionException {
         // TODO Auto-generated method stub
         return null;
     }

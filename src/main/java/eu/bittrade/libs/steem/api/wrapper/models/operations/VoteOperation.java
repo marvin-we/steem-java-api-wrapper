@@ -1,19 +1,18 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import javax.activity.InvalidActivityException;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.bitcoinj.core.VarInt;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.util.Utils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -78,39 +77,23 @@ public class VoteOperation extends Operation {
     }
 
     @Override
-    public byte[] toByteArray() throws UnsupportedEncodingException {
-        byte[] serializedVoteOperation = {};
+    public byte[] toByteArray() throws SteemInvalidTransactionException {
+        try (ByteArrayOutputStream serializedVoteOperation = new ByteArrayOutputStream()) {
+            serializedVoteOperation.write(Utils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.ordinal()));
+            serializedVoteOperation.write(Utils.transformStringToVarIntByteArray(this.voter));
+            serializedVoteOperation.write(Utils.transformStringToVarIntByteArray(this.author));
+            serializedVoteOperation.write(Utils.transformStringToVarIntByteArray(this.permlink));
+            serializedVoteOperation.write(Utils.transformShortToByteArray(this.weight));
 
-        VarInt operationType = new VarInt(OperationType.VOTE_OPERATION.ordinal());
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, operationType.encode());
+            return serializedVoteOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
+    }
 
-        // Serializing the voter name is done in two steps: 1. Length as VarInt
-        // 2.
-        // The account name.
-        VarInt voterAccountNameLength = new VarInt(this.voter.length());
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, voterAccountNameLength.encode());
-
-        // TODO: Make the standard charset configurable.
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
-                ByteBuffer.allocate(voter.length()).put(this.voter.getBytes(StandardCharsets.US_ASCII)).array());
-
-        // Same procedure for the author.
-        VarInt authorAccountNameLength = new VarInt(this.author.length());
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, authorAccountNameLength.encode());
-
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
-                ByteBuffer.allocate(author.length()).put(this.author.getBytes(StandardCharsets.US_ASCII)).array());
-
-        // Same procedure for the permanent link.
-        VarInt permaLinkLength = new VarInt(this.permlink.length());
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation, permaLinkLength.encode());
-
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
-                ByteBuffer.allocate(permlink.length()).put(this.permlink.getBytes(StandardCharsets.US_ASCII)).array());
-
-        serializedVoteOperation = ArrayUtils.addAll(serializedVoteOperation,
-                ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort(this.weight).array());
-
-        return serializedVoteOperation;
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

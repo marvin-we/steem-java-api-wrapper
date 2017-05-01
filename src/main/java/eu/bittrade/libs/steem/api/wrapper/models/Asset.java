@@ -1,17 +1,20 @@
 package eu.bittrade.libs.steem.api.wrapper.models;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
+import eu.bittrade.libs.steem.api.wrapper.models.deserializer.AssetDeserializer;
+import eu.bittrade.libs.steem.api.wrapper.models.serializer.AssetSerializer;
+import eu.bittrade.libs.steem.api.wrapper.util.Utils;
 
 /**
  * This class is the java implementation of the <a href=
@@ -21,31 +24,83 @@ import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 @JsonDeserialize(using = AssetDeserializer.class)
-public class Asset {
+@JsonSerialize(using = AssetSerializer.class)
+public class Asset implements ByteTransformable {
     // Type is safe<int64_t> in the original code.
-    private double amount;
+    private long amount;
     // Type us uint64_t in the original code.
     private AssetSymbolType symbol;
-    private int precision;
+    private char precision;
 
+    /**
+     * Create an empty Asset object.
+     */
+    public Asset() {
+
+    }
+
+    /**
+     * Create a new asset object by providing all required fields.
+     * 
+     * @param amount
+     *            The amount.
+     * @param symbol
+     *            One type of
+     *            {@link eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType
+     *            AssetSymbolType}.
+     */
+    public Asset(long amount, AssetSymbolType symbol) {
+        this.amount = amount;
+        this.symbol = symbol;
+    }
+
+    /**
+     * Get the amount of this asset object.
+     * 
+     * @return The amount.
+     */
     public double getAmount() {
-        return amount;
+        return Double.valueOf(this.amount / 1000.0);
     }
 
+    /**
+     * Get the precision of this asset object.
+     * 
+     * @return The precision.
+     */
     public int getPrecision() {
-        // TODO?
-        //return "{:.{prec}f} {}".format(self["amount"], self["asset"], prec=prec)
-        return precision;
+        return (int) precision;
     }
 
+    /**
+     * Get the symbol for this asset object.
+     * 
+     * @return One type of
+     *         {@link eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType
+     *         AssetSymbolType}.
+     */
     public AssetSymbolType getSymbol() {
         return symbol;
     }
 
-    public void setAmount(double amount) {
+    /**
+     * Set the amount of this asset.
+     * 
+     * @param amount
+     *            The amount.
+     */
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 
+    /**
+     * Set the symbol of this asset.
+     * 
+     * @param symbol
+     *            One type of
+     *            {@link eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType
+     *            AssetSymbolType}.
+     */
     public void setSymbol(AssetSymbolType symbol) {
         if (symbol.equals(AssetSymbolType.VESTS)) {
             this.precision = 6;
@@ -57,27 +112,29 @@ public class Asset {
     }
 
     @Override
+    public byte[] toByteArray() throws SteemInvalidTransactionException {
+        try (ByteArrayOutputStream serializedAsset = new ByteArrayOutputStream()) {
+            serializedAsset.write(Utils.transformLongToByteArray(this.amount));
+            serializedAsset.write(this.precision);
+
+            serializedAsset.write(this.symbol.name().toUpperCase()
+                    .getBytes(SteemApiWrapperConfig.getInstance().getEncodingCharset()));
+            String filledAssetSymbol = this.symbol.name().toUpperCase();
+            byte nullByte = 0x00;
+            for (int i = filledAssetSymbol.length(); i < 7; i++) {
+                serializedAsset.write(nullByte);
+            }
+
+            return serializedAsset.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming an asset into a byte array.", e);
+        }
+    }
+
+    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-}
 
-class AssetDeserializer extends JsonDeserializer<Asset> {
-    @Override
-    public Asset deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-
-        JsonToken currentToken = p.currentToken();
-        if (currentToken != null && JsonToken.VALUE_STRING.equals(currentToken)) {
-            String[] assetFields = p.getText().split(" ");
-
-            if (assetFields.length == 2) {
-                Asset asset = new Asset();
-                asset.setAmount(Double.valueOf(assetFields[0]));
-                asset.setSymbol(AssetSymbolType.valueOf(assetFields[1]));
-                return asset;
-            }
-        }
-
-        throw new IllegalArgumentException("Found '" + currentToken + "' instead of '" + JsonToken.VALUE_STRING + "'.");
-    }
 }

@@ -2,12 +2,18 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
-import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
+import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.AuthorRewardOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.CurationRewardOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.FillConvertRequestOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.FillOrderOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.InterestOperation;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user
@@ -19,6 +25,7 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
 @JsonSubTypes({ @Type(value = VoteOperation.class, name = "vote"),
         @Type(value = CommentOperation.class, name = "comment"),
         @Type(value = AuthorRewardOperation.class, name = "author_reward"),
+        @Type(value = ClaimRewardBalanceOperation.class, name = "claim_reward_balance"),
         @Type(value = ConvertOperation.class, name = "convert"),
         @Type(value = InterestOperation.class, name = "interest"),
         @Type(value = CustomJsonOperation.class, name = "custom_json"),
@@ -42,11 +49,12 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
         @Type(value = AccountUpdateOperation.class, name = "account_update"),
         @Type(value = WitnessUpdateOperation.class, name = "witness_update"),
         @Type(value = AccountCreateOperation.class, name = "account_create") })
-public abstract class Operation implements IByteArray {
+public abstract class Operation implements ByteTransformable {
     /**
      * This field contains the private key type that is required for this
      * specific operation.
      */
+    @JsonIgnore
     protected PrivateKeyType requiredPrivateKeyType;
 
     /**

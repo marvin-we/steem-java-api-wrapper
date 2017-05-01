@@ -78,6 +78,17 @@ public class Utils {
     }
 
     /**
+     * Transform a long variable into a byte array.
+     * 
+     * @param longValue
+     *            The long value to transform.
+     * @return The byte representation of the long value.
+     */
+    public static byte[] transformLongToByteArray(long longValue) {
+        return ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(longValue).array();
+    }
+
+    /**
      * Get the VarInt-byte representation of a String.
      * 
      * Serializing a String has to be done in two steps:
@@ -88,7 +99,8 @@ public class Utils {
      * </ul>
      *
      * @param string
-     * @return
+     *            The string to transform.
+     * @return The VarInt-byte representation of the given String.
      */
     public static byte[] transformStringToVarIntByteArray(String string) {
         Charset encodingCharset = SteemApiWrapperConfig.getInstance().getEncodingCharset();
@@ -106,11 +118,22 @@ public class Utils {
     /**
      * Transform an int value into its byte representation.
      * 
-     * @param int
+     * @param intValue
      *            value The int value to transform.
      * @return The byte representation of the given value.
      */
     public static byte[] transformIntToVarIntByteArray(int intValue) {
         return (new VarInt(intValue)).encode();
+    }
+
+    /**
+     * Transform a long value into its byte representation.
+     * 
+     * @param longValue
+     *            value The long value to transform.
+     * @return The byte representation of the given value.
+     */
+    public static byte[] transformLongToVarIntByteArray(long longValue) {
+        return (new VarInt(longValue)).encode();
     }
 }

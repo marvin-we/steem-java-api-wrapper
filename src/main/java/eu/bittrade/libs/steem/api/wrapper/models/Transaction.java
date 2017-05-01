@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steem.api.wrapper.models;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.sql.Timestamp;
@@ -29,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steem.api.wrapper.interfaces.IByteArray;
+import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
@@ -38,7 +37,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
-public class Transaction implements IByteArray, Serializable {
+public class Transaction implements ByteTransformable, Serializable {
     private static final long serialVersionUID = 4821422578657270330L;
     private static final Logger LOGGER = LogManager.getLogger(Transaction.class);
 
@@ -309,7 +308,7 @@ public class Transaction implements IByteArray, Serializable {
             while (!isCanonical) {
                 try {
                     messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(this.toByteArray(chainId)));
-                } catch (UnsupportedEncodingException e) {
+                } catch (SteemInvalidTransactionException e) {
                     throw new SteemInvalidTransactionException(
                             "The required encoding is not supported by your platform.", e);
                 }
@@ -370,9 +369,12 @@ public class Transaction implements IByteArray, Serializable {
     /**
      * Like {@link #toByteArray(String) toByteArray(String)}, but uses the
      * default Steem chain id.
+     * 
+     * @throws SteemInvalidTransactionException
+     *             If the transaction can not be signed.
      */
     @Override
-    public byte[] toByteArray() throws UnsupportedEncodingException {
+    public byte[] toByteArray() throws SteemInvalidTransactionException {
         return toByteArray(CHAIN_ID);
     }
 
@@ -387,10 +389,10 @@ public class Transaction implements IByteArray, Serializable {
      * @param chainId
      *            The HEX representation of the chain Id you want to use for
      *            this transaction.
-     * @throws UnsupportedEncodingException
-     *             If your platform does not know US-ASCII.
+     * @throws SteemInvalidTransactionException
+     *             If the transaction can not be signed.
      */
-    protected byte[] toByteArray(String chainId) throws UnsupportedEncodingException {
+    protected byte[] toByteArray(String chainId) throws SteemInvalidTransactionException {
         // TODO: Use
         // https://bitcoinj.github.io/javadoc/0.12/org/bitcoinj/core/Utils.html
         // methods

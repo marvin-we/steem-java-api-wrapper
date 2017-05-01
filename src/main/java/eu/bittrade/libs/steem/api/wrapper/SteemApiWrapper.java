@@ -23,12 +23,14 @@ import eu.bittrade.libs.steem.api.wrapper.enums.SteemApis;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
 import eu.bittrade.libs.steem.api.wrapper.models.Block;
 import eu.bittrade.libs.steem.api.wrapper.models.BlockHeader;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
 import eu.bittrade.libs.steem.api.wrapper.models.Content;
+import eu.bittrade.libs.steem.api.wrapper.models.ExtendedAccount;
 import eu.bittrade.libs.steem.api.wrapper.models.FeedHistory;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.HardforkSchedule;
@@ -209,6 +211,40 @@ public class SteemApiWrapper {
         }
 
         return accountActivities;
+    }
+
+    /**
+     * 
+     * @param accountNames
+     *            A list of accounts you want to request the details for.
+     * @return A List of accounts found for the given account names.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<ExtendedAccount> getAccounts(List<AccountName> accountNames) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNTS);
+
+        // The API expects an array of arrays here.
+        String[] innerParameters = new String[accountNames.size()];
+        for (int i = 0; i < accountNames.size(); i++) {
+            innerParameters[i] = accountNames.get(i).getAccountName();
+        }
+
+        String[][] parameters = { innerParameters };
+
+        requestObject.setAdditionalParameters(parameters);
+        return communicationHandler.performRequest(requestObject, ExtendedAccount.class);
     }
 
     /**

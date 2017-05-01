@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steem.api.wrapper.util;
+package eu.bittrade.libs.steem.api.wrapper.models.deserializer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,14 +13,17 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-public class StringHashMapDeserializer extends JsonDeserializer<Map<String, Integer>> {
+/**
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
+public class AccountAuthHashMapDeserializer extends JsonDeserializer<Map<String, Integer>> {
     @Override
-    public Map<String, Integer> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public Map<String, Integer> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
 
         HashMap<String, Integer> result = new HashMap<>();
 
-        ObjectCodec codec = p.getCodec();
-        TreeNode rootNode = codec.readTree(p);
+        ObjectCodec codec = jsonParser.getCodec();
+        TreeNode rootNode = codec.readTree(jsonParser);
 
         if (rootNode.isArray()){
             for (JsonNode node : (ArrayNode) rootNode){

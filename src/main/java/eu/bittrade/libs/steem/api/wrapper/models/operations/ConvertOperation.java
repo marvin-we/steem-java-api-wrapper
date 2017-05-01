@@ -3,37 +3,52 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ConvertOperation extends Operation {
     @JsonProperty("owner")
-    private String owner;
+    private AccountName owner;
     @JsonProperty("requestid")
-    private String requestId;
+    private long requestId;
     @JsonProperty("amount")
-    private String amount;
+    private Asset amount;
 
     public ConvertOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
     }
 
-    public String getOwner() {
+    public AccountName getOwner() {
         return owner;
     }
 
-    public String getRequestId() {
+    public void setOwner(AccountName owner) {
+        this.owner = owner;
+    }
+
+    public long getRequestId() {
         return requestId;
     }
 
-    public String getAmount() {
+    public void setRequestId(long requestId) {
+        this.requestId = requestId;
+    }
+
+    public Asset getAmount() {
         return amount;
     }
 
+    public void setAmount(Asset amount) {
+        this.amount = amount;
+    }
+
     @Override
-    public byte[] toByteArray() {
+    public byte[] toByteArray() throws SteemInvalidTransactionException {
         // TODO Auto-generated method stub
         return null;
     }

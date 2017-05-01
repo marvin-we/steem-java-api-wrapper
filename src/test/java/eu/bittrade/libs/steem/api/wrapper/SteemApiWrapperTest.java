@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +23,18 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
 import eu.bittrade.libs.steem.api.wrapper.models.Content;
+import eu.bittrade.libs.steem.api.wrapper.models.ExtendedAccount;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
@@ -45,7 +50,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.VoteOperation;
 /**
  * @author Anthony Martin
  */
-public class SteemApiWrapperTest extends BaseTest {
+public class SteemApiWrapperTest extends BaseIntegrationTest {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperTest.class);
     private static final String ACCOUNT = "dez1337";
     private static final String WITNESS_ACCOUNT = "good-karma";
@@ -54,36 +59,6 @@ public class SteemApiWrapperTest extends BaseTest {
     private static final int REF_BLOCK_NUM = 34294;
     private static final long REF_BLOCK_PREFIX = 3707022213L;
     private static final String EXPIRATION_DATE = "2016-04-06T08:29:27UTC";
-
-    @Category({ PublicNode.class, PrivateNode.class })
-    @Test
-    public void getApiByName() throws Exception {
-        final String bogus = steemApiWrapper.getApiByName("bogus_api");
-        final String database = steemApiWrapper.getApiByName("database_api");
-        final String login = steemApiWrapper.getApiByName("login_api");
-        final String market_history = steemApiWrapper.getApiByName("market_history_api");
-        final String follow = steemApiWrapper.getApiByName("follow_api");
-
-        assertNull("expect that bogus api does not exist", bogus);
-        assertNotNull("expect that database api does exist", database);
-        assertNotNull("expect that login api does exist", login);
-        assertNotNull("expect that market_history api does exist", market_history);
-        assertNotNull("expect that follow api does exist", follow);
-    }
-
-    @Category(PrivateNode.class)
-    @Test
-    public void getApiByNameForSecuredApi() throws Exception {
-        final String tags = steemApiWrapper.getApiByName("tags_api");
-        final String network_node = steemApiWrapper.getApiByName("network_node_api");
-        final String network_broadcast = steemApiWrapper.getApiByName("network_broadcast_api");
-        final String chain_stats = steemApiWrapper.getApiByName("chain_stats_api");
-
-        assertNotNull("expect that tags api does exist", tags);
-        assertNotNull("expect that network_node api does exist", network_node);
-        assertNotNull("expect that network_broadcast api does exist", network_broadcast);
-        assertNotNull("expect that chain_stats api does exist", chain_stats);
-    }
 
     @Category({ PublicNode.class, PrivateNode.class })
     @Test
@@ -157,9 +132,20 @@ public class SteemApiWrapperTest extends BaseTest {
         final Asset quote = steemApiWrapper.getCurrentMedianHistoryPrice().getQuote();
 
         assertThat("expect current median price greater than zero", base.getAmount(), greaterThan(0.00));
-        assertEquals("expect current median price symbol", "SBD", base.getSymbol());
+        assertEquals("expect current median price symbol", AssetSymbolType.SBD, base.getSymbol());
         assertThat("expect current median price greater than zero", quote.getAmount(), greaterThan(0.00));
-        assertEquals("expect current median price symbol", "STEEM", quote.getSymbol());
+        assertEquals("expect current median price symbol", AssetSymbolType.STEEM, quote.getSymbol());
+    }
+
+    @Test
+    public void testGetAccounts() throws Exception {
+        final List<AccountName> accountNames = new ArrayList<>();
+        accountNames.add(new AccountName("dez1337"));
+        accountNames.add(new AccountName("inertia"));
+
+        List<ExtendedAccount> accounts = steemApiWrapper.getAccounts(accountNames);
+        
+        assertThat("Expect that two results are returned.", accounts, hasSize(2));
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
@@ -169,6 +155,36 @@ public class SteemApiWrapperTest extends BaseTest {
 
         assertTrue("expect " + WITNESS_ACCOUNT + " to be an active witness.",
                 Arrays.asList(activeWitnesses).contains(WITNESS_ACCOUNT));
+    }
+
+    @Category({ PublicNode.class, PrivateNode.class })
+    @Test
+    public void testGetApiByName() throws Exception {
+        final String bogus = steemApiWrapper.getApiByName("bogus_api");
+        final String database = steemApiWrapper.getApiByName("database_api");
+        final String login = steemApiWrapper.getApiByName("login_api");
+        final String market_history = steemApiWrapper.getApiByName("market_history_api");
+        final String follow = steemApiWrapper.getApiByName("follow_api");
+
+        assertNull("expect that bogus api does not exist", bogus);
+        assertNotNull("expect that database api does exist", database);
+        assertNotNull("expect that login api does exist", login);
+        assertNotNull("expect that market_history api does exist", market_history);
+        assertNotNull("expect that follow api does exist", follow);
+    }
+
+    @Category(PrivateNode.class)
+    @Test
+    public void testGetApiByNameForSecuredApi() throws Exception {
+        final String tags = steemApiWrapper.getApiByName("tags_api");
+        final String network_node = steemApiWrapper.getApiByName("network_node_api");
+        final String network_broadcast = steemApiWrapper.getApiByName("network_broadcast_api");
+        final String chain_stats = steemApiWrapper.getApiByName("chain_stats_api");
+
+        assertNotNull("expect that tags api does exist", tags);
+        assertNotNull("expect that network_node api does exist", network_node);
+        assertNotNull("expect that network_broadcast api does exist", network_broadcast);
+        assertNotNull("expect that chain_stats api does exist", chain_stats);
     }
 
     @Category({ PublicNode.class, PrivateNode.class })
