@@ -1,12 +1,15 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations.virtual;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
+ * This class represents a Steem "interest_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class InterestOperation extends Operation {
@@ -15,22 +18,31 @@ public class InterestOperation extends Operation {
     @JsonProperty("interest")
     private String interest;
 
-    public InterestOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
-    }
-
+    /**
+     * 
+     * @return
+     */
     public String getOwner() {
         return owner;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getInterest() {
         return interest;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        // The byte representation is not needed for virtual operations as we
+        // can't broadcast them.
+        return new byte[0];
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

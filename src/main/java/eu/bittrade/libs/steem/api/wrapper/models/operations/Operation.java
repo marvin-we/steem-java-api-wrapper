@@ -69,6 +69,14 @@ public abstract class Operation implements ByteTransformable {
     }
 
     /**
+     * Default constructor which will not set the required private key type.
+     * This constructor should only be used for virtual operations.
+     */
+    protected Operation() {
+
+    }
+
+    /**
      * Get the private key type that is required for this operation.
      * 
      * @return The required private key type for this operation.

@@ -1,19 +1,13 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations.virtual;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
-import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
-import eu.bittrade.libs.steem.api.wrapper.util.Utils;
 
 /**
  * This class represents the Steem "author_reward_operation" object.
@@ -33,108 +27,45 @@ public class AuthorRewardOperation extends Operation {
     private Asset vestingPayout;
 
     /**
-     * Create a new author reward operation.
-     */
-    public AuthorRewardOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
-    }
-
-    /**
-     * 
-     * @return
+     * @return the author
      */
     public AccountName getAuthor() {
         return author;
     }
 
     /**
-     * 
-     * @param author
-     */
-    public void setAuthor(AccountName author) {
-        this.author = author;
-    }
-
-    /**
-     * 
-     * @return
+     * @return the permlink
      */
     public String getPermlink() {
         return permlink;
     }
 
     /**
-     * 
-     * @param permlink
-     */
-    public void setPermlink(String permlink) {
-        this.permlink = permlink;
-    }
-
-    /**
-     * 
-     * @return
+     * @return the sbdPayout
      */
     public Asset getSbdPayout() {
         return sbdPayout;
     }
 
     /**
-     * 
-     * @param sbdPayout
-     */
-    public void setSbdPayout(Asset sbdPayout) {
-        this.sbdPayout = sbdPayout;
-    }
-
-    /**
-     * 
-     * @return
+     * @return the steemPayout
      */
     public Asset getSteemPayout() {
         return steemPayout;
     }
 
     /**
-     * 
-     * @param steemPayout
-     */
-    public void setSteemPayout(Asset steemPayout) {
-        this.steemPayout = steemPayout;
-    }
-
-    /**
-     * 
-     * @return
+     * @return the vestingPayout
      */
     public Asset getVestingPayout() {
         return vestingPayout;
     }
 
-    /**
-     * 
-     * @param vestingPayout
-     */
-    public void setVestingPayout(Asset vestingPayout) {
-        this.vestingPayout = vestingPayout;
-    }
-
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedAuthorRewardOperation = new ByteArrayOutputStream()) {
-            serializedAuthorRewardOperation.write(Utils.transformIntToVarIntByteArray(OperationType.AUTHOR_REWARD_OPERATION.ordinal()));
-            serializedAuthorRewardOperation.write(this.author.toByteArray());
-            serializedAuthorRewardOperation.write(Utils.transformStringToVarIntByteArray(this.permlink));
-            serializedAuthorRewardOperation.write(this.sbdPayout.toByteArray());
-            serializedAuthorRewardOperation.write(this.steemPayout.toByteArray());
-            serializedAuthorRewardOperation.write(this.vestingPayout.toByteArray());
-
-            return serializedAuthorRewardOperation.toByteArray();
-        } catch (IOException e) {
-            throw new SteemInvalidTransactionException(
-                    "A problem occured while transforming the operation into a byte array.", e);
-        }
+        // The byte representation is not needed for virtual operations as we
+        // can't broadcast them.
+        return new byte[0];
     }
 
     @Override
