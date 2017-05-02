@@ -87,6 +87,17 @@ public class Utils {
     public static byte[] transformLongToByteArray(long longValue) {
         return ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(longValue).array();
     }
+    
+    /**
+     * Change the order of a byte to little endian.
+     * 
+     * @param byteValue
+     *            The byte to transform.
+     * @return The byte in its little endian representation.
+     */
+    public static byte transformByteToLittleEndian(byte byteValue) {
+        return ByteBuffer.allocate(1).order(ByteOrder.LITTLE_ENDIAN).put(byteValue).get(0);
+    }
 
     /**
      * Get the VarInt-byte representation of a String.

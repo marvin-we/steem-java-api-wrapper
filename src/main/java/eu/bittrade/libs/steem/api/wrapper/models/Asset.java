@@ -30,7 +30,7 @@ public class Asset implements ByteTransformable {
     private long amount;
     // Type us uint64_t in the original code.
     private AssetSymbolType symbol;
-    private char precision;
+    private byte precision;
 
     /**
      * Create an empty Asset object.
@@ -50,8 +50,8 @@ public class Asset implements ByteTransformable {
      *            AssetSymbolType}.
      */
     public Asset(long amount, AssetSymbolType symbol) {
-        this.amount = amount;
-        this.symbol = symbol;
+        this.setAmount(amount);
+        this.setSymbol(symbol);
     }
 
     /**
@@ -60,7 +60,7 @@ public class Asset implements ByteTransformable {
      * @return The amount.
      */
     public double getAmount() {
-        return Double.valueOf(this.amount / 1000.0);
+        return Double.valueOf(this.amount / Math.pow(10.0, this.getPrecision()));
     }
 
     /**
@@ -115,14 +115,14 @@ public class Asset implements ByteTransformable {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAsset = new ByteArrayOutputStream()) {
             serializedAsset.write(Utils.transformLongToByteArray(this.amount));
-            serializedAsset.write(this.precision);
+            serializedAsset.write(Utils.transformByteToLittleEndian(this.precision));
 
             serializedAsset.write(this.symbol.name().toUpperCase()
                     .getBytes(SteemApiWrapperConfig.getInstance().getEncodingCharset()));
             String filledAssetSymbol = this.symbol.name().toUpperCase();
-            byte nullByte = 0x00;
+
             for (int i = filledAssetSymbol.length(); i < 7; i++) {
-                serializedAsset.write(nullByte);
+                serializedAsset.write(0x00);
             }
 
             return serializedAsset.toByteArray();

@@ -75,16 +75,19 @@ public class CommentOptionsOperation extends Operation {
     }
 
     /**
+     * Get the maximum payout accepted for this comment.
      * 
-     * @return
+     * @return The maximum payout accepted for this comment.
      */
     public Asset getMaxAcceptedPayout() {
         return maxAcceptedPayout;
     }
 
     /**
+     * Set the maximum payout accepted for this comment.
      * 
      * @param maxAcceptedPayout
+     *            The maximum payout accepted for this comment.
      */
     public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
         this.maxAcceptedPayout = maxAcceptedPayout;
