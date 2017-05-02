@@ -25,12 +25,13 @@ public class AssetDeserializer extends JsonDeserializer<Asset> {
 
             if (assetFields.length == 2) {
                 Asset asset = new Asset();
+                // Set the symbol first which calculates the precision internally.
+                asset.setSymbol(AssetSymbolType.valueOf(assetFields[1]));
                 // The amount is provided as a double value while we need a long
                 // value for the byte representation so we transform the amount
                 // into a long value here.
-                Double assetAmount = Double.valueOf(assetFields[0]) * 1000.0;
+                Double assetAmount = Double.valueOf(assetFields[0]) * Math.pow(10.0, asset.getPrecision());
                 asset.setAmount(assetAmount.longValue());
-                asset.setSymbol(AssetSymbolType.valueOf(assetFields[1]));
                 return asset;
             }
         }
