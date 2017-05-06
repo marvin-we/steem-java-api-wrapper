@@ -10,30 +10,53 @@ import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents the Steem "fill_transfer_from_savings_operation"
+ * object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
-    private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
+public class FillTransferFromSavingsOperation extends Operation {
+    private AccountName from;
+    private AccountName to;
+    private Asset amount;
+    // Original type is uint32_t here so we have to use long.
+    @JsonProperty("request_id")
+    private long requestId;
+    private String memo;
 
     /**
-     * 
-     * @return
+     * @return the from
      */
-    public AccountName getOwner() {
-        return owner;
+    public AccountName getFrom() {
+        return from;
     }
 
     /**
-     * 
-     * @return
+     * @return the to
      */
-    public Asset getInterest() {
-        return interest;
+    public AccountName getTo() {
+        return to;
+    }
+
+    /**
+     * @return the amount
+     */
+    public Asset getAmount() {
+        return amount;
+    }
+
+    /**
+     * @return the requestId
+     */
+    public long getRequestId() {
+        return requestId;
+    }
+
+    /**
+     * @return the memo
+     */
+    public String getMemo() {
+        return memo;
     }
 
     @Override

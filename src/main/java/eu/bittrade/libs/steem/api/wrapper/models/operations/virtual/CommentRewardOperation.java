@@ -2,38 +2,49 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations.virtual;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents the Steem "comment_reward_operation" object.
+ * 
+ * This operation type occurs if the payout period is over and the author of
+ * comment finally gets his reward.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
-    private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
+public class CommentRewardOperation extends Operation {
+    private AccountName author;
+    private String permlink;
+    private Asset payout;
 
     /**
+     * Get the author of the comment.
      * 
-     * @return
+     * @return The author of the comment.
      */
-    public AccountName getOwner() {
-        return owner;
+    public AccountName getAuthor() {
+        return author;
     }
 
     /**
+     * Get the permanent link to the comment.
      * 
-     * @return
+     * @return The permanent link.
      */
-    public Asset getInterest() {
-        return interest;
+    public String getPermlink() {
+        return permlink;
+    }
+
+    /**
+     * Get the amount and the currency that the author of the comment receives.
+     * 
+     * @return The payout.
+     */
+    public Asset getPayout() {
+        return payout;
     }
 
     @Override

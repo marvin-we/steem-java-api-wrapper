@@ -5,32 +5,39 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
  * This class represents a Steem "fill_order_operation" object.
  * 
+ * This operation type occurs if a order has been closed completely or if a part
+ * of the order has been closed.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillOrderOperation extends Operation {
     @JsonProperty("current_owner")
-    private String currentOwner;
+    private AccountName currentOwner;
     @JsonProperty("current_orderid")
+    // Original type is uint32_t here so we have to use long.
     private int currentOrderId;
     @JsonProperty("current_pays")
-    private String currentPays;
+    private Asset currentPays;
     @JsonProperty("open_owner")
-    private String openOwner;
+    private AccountName openOwner;
     @JsonProperty("open_orderid")
-    private int openOrderId;
+    // Original type is uint32_t here so we have to use long.
+    private long openOrderId;
     @JsonProperty("open_pays")
-    private String openPays;
+    private Asset openPays;
 
     /**
      * 
      * @return
      */
-    public String getCurrentOwner() {
+    public AccountName getCurrentOwner() {
         return currentOwner;
     }
 
@@ -46,7 +53,7 @@ public class FillOrderOperation extends Operation {
      * 
      * @return
      */
-    public String getCurrentPays() {
+    public Asset getCurrentPays() {
         return currentPays;
     }
 
@@ -54,7 +61,7 @@ public class FillOrderOperation extends Operation {
      * 
      * @return
      */
-    public String getOpenOwner() {
+    public AccountName getOpenOwner() {
         return openOwner;
     }
 
@@ -62,7 +69,7 @@ public class FillOrderOperation extends Operation {
      * 
      * @return
      */
-    public int getOpenOrderId() {
+    public long getOpenOrderId() {
         return openOrderId;
     }
 
@@ -70,7 +77,7 @@ public class FillOrderOperation extends Operation {
      * 
      * @return
      */
-    public String getOpenPays() {
+    public Asset getOpenPays() {
         return openPays;
     }
 

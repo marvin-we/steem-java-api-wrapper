@@ -2,38 +2,23 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations.virtual;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents the Steem "shutdown_witness_operation" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
+public class ShutdownWitnessOpeartion extends Operation {
     private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
 
     /**
-     * 
-     * @return
+     * @return the owner
      */
     public AccountName getOwner() {
         return owner;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public Asset getInterest() {
-        return interest;
     }
 
     @Override

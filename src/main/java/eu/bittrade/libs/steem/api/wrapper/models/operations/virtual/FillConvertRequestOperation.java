@@ -5,52 +5,63 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
  * This class represents a Steem "fill_convert_request_operation" object.
  * 
+ * This operation type occurs if a "Convert to Steem" request has been fulfilled
+ * by the blockchain.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillConvertRequestOperation extends Operation {
     @JsonProperty("owner")
-    private String owner;
+    private AccountName owner;
+    // Original type is uint32_t so we have to use long here.
     @JsonProperty("requestid")
-    private int requestId;
+    private long requestId;
     @JsonProperty("amount_in")
-    private String amountIn;
+    private Asset amountIn;
     @JsonProperty("amount_out")
-    private String amountOut;
+    private Asset amountOut;
 
     /**
+     * Get the owner of this conversion request.
      * 
-     * @return
+     * @return The owner as an AccountName instance.
      */
-    public String getOwner() {
+    public AccountName getOwner() {
         return owner;
     }
 
     /**
+     * Get the id of this request.
      * 
-     * @return
+     * @return The id of this request.
      */
-    public int getRequestId() {
+    public long getRequestId() {
         return requestId;
     }
 
     /**
+     * Get the amount and the type of the currency that has been converted
+     * within this operation.
      * 
-     * @return
+     * @return The source asset.
      */
-    public String getAmountIn() {
+    public Asset getAmountIn() {
         return amountIn;
     }
 
     /**
+     * Get the amount and the type of the target currency.
      * 
-     * @return
+     * @return The target asset.
      */
-    public String getAmountOut() {
+    public Asset getAmountOut() {
         return amountOut;
     }
 

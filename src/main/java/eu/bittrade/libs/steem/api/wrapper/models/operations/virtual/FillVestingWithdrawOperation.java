@@ -10,30 +10,44 @@ import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents the Steem "fill_vesting_withdraw_operation" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
-    private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
+public class FillVestingWithdrawOperation extends Operation {
+    @JsonProperty("from_account")
+    private AccountName fromAccount;
+    @JsonProperty("to_account")
+    private AccountName toAccount;
+    private Asset withdrawn;
+    private Asset deposited;
 
     /**
-     * 
-     * @return
+     * @return the fromAccount
      */
-    public AccountName getOwner() {
-        return owner;
+    public AccountName getFromAccount() {
+        return fromAccount;
     }
 
     /**
-     * 
-     * @return
+     * @return the toAccount
      */
-    public Asset getInterest() {
-        return interest;
+    public AccountName getToAccount() {
+        return toAccount;
+    }
+
+    /**
+     * @return the withdrawn
+     */
+    public Asset getWithdrawn() {
+        return withdrawn;
+    }
+
+    /**
+     * @return the deposited
+     */
+    public Asset getDeposited() {
+        return deposited;
     }
 
     @Override

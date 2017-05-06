@@ -2,38 +2,48 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations.virtual;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents the Steem "comment_benefactor_reward_operation" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
-    private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
+public class CommentBenefactorRewardOperation extends Operation {
+    private AccountName benefactor;
+    private AccountName author;
+    private String permlink;
+    private Asset reward;
 
     /**
-     * 
-     * @return
+     * @return the benefactor
      */
-    public AccountName getOwner() {
-        return owner;
+    public AccountName getBenefactor() {
+        return benefactor;
     }
 
     /**
-     * 
-     * @return
+     * @return the author
      */
-    public Asset getInterest() {
-        return interest;
+    public AccountName getAuthor() {
+        return author;
+    }
+
+    /**
+     * @return the permlink
+     */
+    public String getPermlink() {
+        return permlink;
+    }
+
+    /**
+     * @return the reward
+     */
+    public Asset getReward() {
+        return reward;
     }
 
     @Override

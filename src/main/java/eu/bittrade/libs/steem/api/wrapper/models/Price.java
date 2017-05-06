@@ -2,9 +2,6 @@ package eu.bittrade.libs.steem.api.wrapper.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
-
 /**
  * This class is the java implementation of the <a href=
  * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steemit/protocol/asset.hpp">Steem
@@ -12,30 +9,24 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Price implements ByteTransformable {
+public class Price {
     private Asset base;
     private Asset quote;
 
+    /**
+     * 
+     * @return
+     */
     public Asset getBase() {
         return base;
     }
 
-    public void setBase(Asset base1) {
-        base = base1;
-    }
-
+    /**
+     * 
+     * @return
+     */
     public Asset getQuote() {
         return quote;
-    }
-
-    public void setQuote(Asset quote) {
-        this.quote = quote;
-    }
-
-    @Override
-    public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override

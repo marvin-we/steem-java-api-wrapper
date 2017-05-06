@@ -5,48 +5,58 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
  * This class represents a "curation_reward_operation" object.
  * 
+ * This operation type occurs if the payout period of a post is over and the
+ * persons who liked that post receive their curation reward.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CurationRewardOperation extends Operation {
     @JsonProperty("curator")
-    private String curator;
+    private AccountName curator;
     @JsonProperty("reward")
-    private String reward;
+    private Asset reward;
     @JsonProperty("comment_author")
-    private String commentAuthor;
+    private AccountName commentAuthor;
     @JsonProperty("comment_permlink")
     private String commentPermlink;
 
     /**
+     * Get the person that receives the reward.
      * 
-     * @return
+     * @return The person that receives the reward.
      */
-    public String getCurator() {
+    public AccountName getCurator() {
         return curator;
     }
 
     /**
+     * Get the amount and the currency the curator receives.
      * 
-     * @return
+     * @return The reward.
      */
-    public String getReward() {
+    public Asset getReward() {
         return reward;
     }
 
     /**
+     * Get the author of the post or comment that this curation reward is for.
      * 
-     * @return
+     * @return The author of the post or comment.
      */
-    public String getCommentAuthor() {
+    public AccountName getCommentAuthor() {
         return commentAuthor;
     }
 
     /**
+     * Get the permanent link of the post or comment that this curation reward
+     * is for.
      * 
      * @return
      */

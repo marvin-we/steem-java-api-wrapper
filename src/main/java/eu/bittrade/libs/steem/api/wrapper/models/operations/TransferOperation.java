@@ -25,34 +25,66 @@ public class TransferOperation extends Operation {
         super(PrivateKeyType.POSTING);
     }
 
+    /**
+     * 
+     * @return
+     */
     public AccountName getFrom() {
         return from;
     }
 
+    /**
+     * 
+     * @param from
+     */
     public void setFrom(AccountName from) {
         this.from = from;
     }
 
+    /**
+     * 
+     * @return
+     */
     public AccountName getTo() {
         return to;
     }
 
+    /**
+     * 
+     * @param to
+     */
     public void setTo(AccountName to) {
         this.to = to;
     }
 
+    /**
+     * 
+     * @return
+     */
     public Asset getAmount() {
         return amount;
     }
 
+    /**
+     * 
+     * @param amount
+     */
     public void setAmount(Asset amount) {
         this.amount = amount;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getMemo() {
         return memo;
     }
 
+    /**
+     * 
+     * @param memo
+     */
     public void setMemo(String memo) {
         this.memo = memo;
     }

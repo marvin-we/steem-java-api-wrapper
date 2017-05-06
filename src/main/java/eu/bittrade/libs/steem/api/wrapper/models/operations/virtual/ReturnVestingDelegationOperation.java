@@ -10,30 +10,27 @@ import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents the Steem "return_vesting_delegation_operation" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
-    private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
+public class ReturnVestingDelegationOperation extends Operation {
+    private AccountName account;
+    @JsonProperty("vesting_shares")
+    private Asset vestingShares;
 
     /**
-     * 
-     * @return
+     * @return the account
      */
-    public AccountName getOwner() {
-        return owner;
+    public AccountName getAccount() {
+        return account;
     }
 
     /**
-     * 
-     * @return
+     * @return the vestingShares
      */
-    public Asset getInterest() {
-        return interest;
+    public Asset getVestingShares() {
+        return vestingShares;
     }
 
     @Override

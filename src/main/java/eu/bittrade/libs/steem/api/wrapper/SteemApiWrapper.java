@@ -37,6 +37,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.HardforkSchedule;
 import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steem.api.wrapper.models.OrderBook;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
+import eu.bittrade.libs.steem.api.wrapper.models.RewardFund;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.UserOrder;
@@ -967,6 +968,35 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Content.class);
+    }
+
+    /**
+     * Get all refunds for a given account.
+     * 
+     * @param accountName
+     *            The account name to requests the refunds for.
+     * @return A refund object containing the refunds for the requested account.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public RewardFund getRewardFund(AccountName accountName) throws SteemCommunicationException {
+
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_REWARD_FUND);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        Object[] parameters = { accountName.getAccountName() };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, RewardFund.class).get(0);
     }
 
     /**

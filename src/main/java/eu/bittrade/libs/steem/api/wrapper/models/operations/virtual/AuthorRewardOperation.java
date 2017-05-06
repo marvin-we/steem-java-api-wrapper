@@ -12,6 +12,9 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 /**
  * This class represents the Steem "author_reward_operation" object.
  * 
+ * This operation type occurs if the payout period is over and the author
+ * finally gets his reward.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AuthorRewardOperation extends Operation {
@@ -27,35 +30,45 @@ public class AuthorRewardOperation extends Operation {
     private Asset vestingPayout;
 
     /**
-     * @return the author
+     * Get the author who received this reward.
+     * 
+     * @return The author who received the reward.
      */
     public AccountName getAuthor() {
         return author;
     }
 
     /**
-     * @return the permlink
+     * Get the permanent link of the post for which the author is rewarded.
+     * 
+     * @return The permanent link of the article.
      */
     public String getPermlink() {
         return permlink;
     }
 
     /**
-     * @return the sbdPayout
+     * Get the SDB amount the author gets for the article.
+     * 
+     * @return The amount of SBD.
      */
     public Asset getSbdPayout() {
         return sbdPayout;
     }
 
     /**
-     * @return the steemPayout
+     * Get the Steem amount the author gets for the article.
+     * 
+     * @return The amount of Steem.
      */
     public Asset getSteemPayout() {
         return steemPayout;
     }
 
     /**
-     * @return the vestingPayout
+     * Get the Vests amount the author gets for the article.
+     * 
+     * @return The amount of Vests.
      */
     public Asset getVestingPayout() {
         return vestingPayout;

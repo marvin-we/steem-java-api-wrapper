@@ -5,35 +5,27 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents a Steem "hardfork_operation" object.
+ * 
+ * This operation type occurs if a new hardfork occurred.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
-    private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
+public class HardforkOperation extends Operation {
+    // Original type is uint32_t here so we have to use long.
+    @JsonProperty("hardfork_id")
+    private long hardforkId;
 
     /**
+     * Get the hardfork id.
      * 
-     * @return
+     * @return The hardfork Id.
      */
-    public AccountName getOwner() {
-        return owner;
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public Asset getInterest() {
-        return interest;
+    public long getHardforkId() {
+        return hardforkId;
     }
 
     @Override

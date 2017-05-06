@@ -2,38 +2,32 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations.virtual;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
- * This class represents a Steem "interest_operation" object.
+ * This class represents the Steem "liquidity_reward_operation" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class InterestOperation extends Operation {
-    @JsonProperty("owner")
+public class LiquidityRewardOperation extends Operation {
     private AccountName owner;
-    @JsonProperty("interest")
-    private Asset interest;
+    private Asset payout;
 
     /**
-     * 
-     * @return
+     * @return the owner
      */
     public AccountName getOwner() {
         return owner;
     }
 
     /**
-     * 
-     * @return
+     * @return the payout
      */
-    public Asset getInterest() {
-        return interest;
+    public Asset getPayout() {
+        return payout;
     }
 
     @Override

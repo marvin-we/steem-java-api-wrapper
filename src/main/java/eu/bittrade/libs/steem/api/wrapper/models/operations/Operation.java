@@ -10,10 +10,19 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.AuthorRewardOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.CommentBenefactorRewardOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.CommentPayoutUpdateOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.CommentRewardOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.CurationRewardOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.FillConvertRequestOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.FillOrderOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.FillTransferFromSavingsOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.FillVestingWithdrawOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.HardforkOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.InterestOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.LiquidityRewardOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.ReturnVestingDelegationOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.ShutdownWitnessOpeartion;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user
@@ -24,22 +33,18 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.InterestOper
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_ARRAY)
 @JsonSubTypes({ @Type(value = VoteOperation.class, name = "vote"),
         @Type(value = CommentOperation.class, name = "comment"),
-        @Type(value = AuthorRewardOperation.class, name = "author_reward"),
         @Type(value = ClaimRewardBalanceOperation.class, name = "claim_reward_balance"),
         @Type(value = ConvertOperation.class, name = "convert"),
-        @Type(value = InterestOperation.class, name = "interest"),
         @Type(value = CustomJsonOperation.class, name = "custom_json"),
         @Type(value = CustomOperation.class, name = "custom"),
         @Type(value = AccountWitnessVoteOperation.class, name = "account_witness_vote"),
-        @Type(value = FillConvertRequestOperation.class, name = "fill_convert_request"),
         @Type(value = TransferToVestingOperation.class, name = "transfer_to_vesting"),
-        @Type(value = CurationRewardOperation.class, name = "curation_reward"),
         @Type(value = TransferOperation.class, name = "transfer"),
         @Type(value = LimitOrderCreateOperation.class, name = "limit_order_create"),
         @Type(value = LimitOrderCancelOperation.class, name = "limit_order_cancel"),
-        @Type(value = FillOrderOperation.class, name = "fill_order"),
         @Type(value = CommentOptionsOperation.class, name = "comment_options"),
-        @Type(value = PowOperation.class, name = "pow"), @Type(value = Pow2Operation.class, name = "pow2"),
+        @Type(value = PowOperation.class, name = "pow"), 
+        @Type(value = Pow2Operation.class, name = "pow2"),
         @Type(value = FeedPublishOperation.class, name = "feed_publish"),
         @Type(value = DeleteCommentOperation.class, name = "delete_comment"),
         @Type(value = WithdrawVestingOperation.class, name = "withdraw_vesting"),
@@ -48,7 +53,22 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.InterestOper
         @Type(value = AccountWitnessProxyOperation.class, name = "account_witness_proxy"),
         @Type(value = AccountUpdateOperation.class, name = "account_update"),
         @Type(value = WitnessUpdateOperation.class, name = "witness_update"),
-        @Type(value = AccountCreateOperation.class, name = "account_create") })
+        @Type(value = AccountCreateOperation.class, name = "account_create"),
+        // Virtual Operations
+        @Type(value = AuthorRewardOperation.class, name = "author_reward"),
+        @Type(value = CommentBenefactorRewardOperation.class, name = "comment_benefactor_reward"),
+        @Type(value = CommentPayoutUpdateOperation.class, name = "comment_payout_update"),
+        @Type(value = CommentRewardOperation.class, name = "comment_reward"),
+        @Type(value = CurationRewardOperation.class, name = "curation_reward"),
+        @Type(value = FillConvertRequestOperation.class, name = "fill_convert_request"),
+        @Type(value = FillOrderOperation.class, name = "fill_order"),
+        @Type(value = FillTransferFromSavingsOperation.class, name = "fill_transfer_from_savings"),
+        @Type(value = FillVestingWithdrawOperation.class, name = "fill_vesting_withdraw"),
+        @Type(value = HardforkOperation.class, name = "hardfork"),
+        @Type(value = InterestOperation.class, name = "interest"),
+        @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
+        @Type(value = ReturnVestingDelegationOperation.class, name = "return_Vesting_delegation"),
+        @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness") })
 public abstract class Operation implements ByteTransformable {
     /**
      * This field contains the private key type that is required for this
