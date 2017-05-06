@@ -19,6 +19,7 @@ import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.enums.RequestMethods;
+import eu.bittrade.libs.steem.api.wrapper.enums.RewardFundType;
 import eu.bittrade.libs.steem.api.wrapper.enums.SteemApis;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTransformationException;
@@ -971,11 +972,11 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Get all refunds for a given account.
+     * Get detailed information of a specific reward fund.
      * 
-     * @param accountName
-     *            The account name to requests the refunds for.
-     * @return A refund object containing the refunds for the requested account.
+     * @param rewordFundType
+     *            One of the {@link eu.bittrade.libs.steem.api.wrapper.enums.RewardFundType RewardFundType}s.
+     * @return A refund object containing detailed information about the requested reward fund.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -988,12 +989,11 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public RewardFund getRewardFund(AccountName accountName) throws SteemCommunicationException {
-
+    public RewardFund getRewardFund(RewardFundType rewordFundType) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_REWARD_FUND);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        Object[] parameters = { accountName.getAccountName() };
+        Object[] parameters = { rewordFundType.name().toLowerCase() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, RewardFund.class).get(0);
