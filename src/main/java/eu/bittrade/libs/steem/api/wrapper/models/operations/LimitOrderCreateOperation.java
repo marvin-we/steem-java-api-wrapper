@@ -125,7 +125,7 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
      * 
      * @return
      */
-    public Boolean getFillOrKillAsBoolean() {
+    public Boolean getFillOrKill() {
         return fillOrKill;
     }
 
@@ -171,7 +171,7 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
             serializedLimitOrderCreateOperation.write(SteemUtils.transformIntToByteArray(this.getOrderId()));
             serializedLimitOrderCreateOperation.write(this.getAmountToSell().toByteArray());
             serializedLimitOrderCreateOperation.write(this.getMinToReceive().toByteArray());
-            serializedLimitOrderCreateOperation.write(SteemUtils.transformBooleanToByteArray(this.getFillOrKillAsBoolean()));
+            serializedLimitOrderCreateOperation.write(SteemUtils.transformBooleanToByteArray(this.getFillOrKill()));
             serializedLimitOrderCreateOperation
                     .write(SteemUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
 
