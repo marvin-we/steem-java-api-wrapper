@@ -7,6 +7,7 @@ import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
@@ -148,11 +149,13 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
     }
 
     @Override
+    @JsonIgnore
     public Date getExpirationDateAsDate() {
         return new Date(expirationDate);
     }
 
     @Override
+    @JsonIgnore
     public int getExpirationDateAsInt() {
         return (int) this.expirationDate;
     }

@@ -87,6 +87,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
     }
 
     @Override
+    @JsonIgnore
     public int getExpirationDateAsInt() {
         return (int) (expirationDate / 1000);
     }

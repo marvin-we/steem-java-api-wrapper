@@ -2,6 +2,7 @@ package eu.bittrade.libs.steem.api.wrapper;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,6 +27,7 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.enums.RewardFundType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
@@ -37,6 +39,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Content;
 import eu.bittrade.libs.steem.api.wrapper.models.ExtendedAccount;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
+import eu.bittrade.libs.steem.api.wrapper.models.RewardFund;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.Version;
@@ -60,7 +63,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
     private static final long REF_BLOCK_PREFIX = 3707022213L;
     private static final String EXPIRATION_DATE = "2016-04-06T08:29:27UTC";
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testAccountCount() throws Exception {
         final int accountCount = steemApiWrapper.getAccountCount();
@@ -68,7 +71,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect the number of accounts greater than 122908", accountCount, greaterThan(122908));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testAccountHistory() throws Exception {
         final Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
@@ -79,7 +82,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
                 firstOperation instanceof AccountCreateOperation);
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testActiveVotes() throws Exception {
         // Get the votes done by the specified account:
@@ -103,7 +106,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertTrue("expect self vote for article of account", foundSelfVote);
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Ignore("not fully implemented")
     @Test
     public void testBroadcastTransactionSynchronous() throws Exception {
@@ -112,7 +115,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertTrue("expect broadcast success: true", success);
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testConfig() throws Exception {
         final Config config = steemApiWrapper.getConfig();
@@ -125,7 +128,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertEquals("expect the init miner name to be initminer", "initminer", initMinerName);
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testCurrentMedianHistoryPrice() throws Exception {
         final Asset base = steemApiWrapper.getCurrentMedianHistoryPrice().getBase();
@@ -144,11 +147,11 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         accountNames.add(new AccountName("inertia"));
 
         List<ExtendedAccount> accounts = steemApiWrapper.getAccounts(accountNames);
-        
+
         assertThat("Expect that two results are returned.", accounts, hasSize(2));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetActiveWitnesses() throws Exception {
         final String[] activeWitnesses = steemApiWrapper.getActiveWitnesses();
@@ -157,7 +160,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
                 Arrays.asList(activeWitnesses).contains(WITNESS_ACCOUNT));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetApiByName() throws Exception {
         final String bogus = steemApiWrapper.getApiByName("bogus_api");
@@ -173,7 +176,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertNotNull("expect that follow api does exist", follow);
     }
 
-    @Category(PrivateNode.class)
+    @Category(IntegrationTest.class)
     @Test
     public void testGetApiByNameForSecuredApi() throws Exception {
         final String tags = steemApiWrapper.getApiByName("tags_api");
@@ -187,7 +190,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertNotNull("expect that chain_stats api does exist", chain_stats);
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetChainProperties() throws Exception {
         final ChainProperties properties = steemApiWrapper.getChainProperties();
@@ -196,7 +199,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect sbd interest rate", properties.getSdbInterestRate(), greaterThan(0));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetContent() throws Exception {
         final Content discussion = steemApiWrapper.getContent(ACCOUNT, PERMLINK);
@@ -205,7 +208,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertEquals("expect correct author", ACCOUNT, discussion.getAuthor());
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetContentReplies() throws Exception {
         final List<Content> replies = steemApiWrapper.getContentReplies(ACCOUNT, PERMLINK);
@@ -214,7 +217,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect replies greater than zero", replies.size(), greaterThan(0));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetDiscussionBy() throws Exception {
 
@@ -251,7 +254,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         }
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetDiscussionsByAuthorBeforeDate() throws Exception {
         final List<Content> repliesByLastUpdate = steemApiWrapper.getDiscussionsByAuthorBeforeDate(ACCOUNT, PERMLINK,
@@ -264,7 +267,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
                 repliesByLastUpdate.get(0).getPermlink());
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetDynamicGlobalProperties() throws Exception {
         final GlobalProperties properties = steemApiWrapper.getDynamicGlobalProperties();
@@ -273,7 +276,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetLiquidityQueue() throws Exception {
         final List<LiquidityQueueEntry> repliesByLastUpdate = steemApiWrapper.getLiquidityQueue(WITNESS_ACCOUNT, 5);
@@ -283,7 +286,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
                 repliesByLastUpdate.get(0).getAccount());
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetRepliesByLastUpdate() throws Exception {
         final List<Content> repliesByLastUpdate = steemApiWrapper.getRepliesByLastUpdate(ACCOUNT, PERMLINK, 9);
@@ -293,7 +296,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
                 repliesByLastUpdate.get(0).getAuthor());
     }
 
-    @Category({ PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetTransactionHex() throws Exception {
         final String EXPECTED_RESULT = "f68585abf4dce7c80457010007666f6f6261726107666f6f62617263"
@@ -322,7 +325,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertEquals("expect the correct hex value", EXPECTED_RESULT, steemApiWrapper.getTransactionHex(transaction));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetWitnessByAccount() throws Exception {
         final Witness activeWitnessesByVote = steemApiWrapper.getWitnessByAccount(WITNESS_ACCOUNT);
@@ -331,7 +334,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
                 activeWitnessesByVote.getOwner());
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetWitnessesByVote() throws Exception {
         final List<Witness> activeWitnessesByVote = steemApiWrapper.getWitnessByVote(WITNESS_ACCOUNT, 10);
@@ -341,7 +344,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
                 activeWitnessesByVote.get(0).getOwner());
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testHardforkVersion() throws Exception {
         final String hardforkVersion = steemApiWrapper.getHardforkVersion();
@@ -349,7 +352,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertNotNull("expect hardfork version", hardforkVersion);
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testInvalidAccountVotes() throws Exception {
         // Force an error response:
@@ -363,7 +366,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         }
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testLogin() throws Exception {
         final boolean success = steemApiWrapper.login("gilligan", "s.s.minnow");
@@ -371,7 +374,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertTrue("expect login to always return success: true", success);
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testLookupAccount() throws Exception {
         final List<String> accounts = steemApiWrapper.lookupAccounts(ACCOUNT, 10);
@@ -380,7 +383,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect at least one account", accounts.size(), greaterThan(0));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testLookupWitnessAccount() throws Exception {
         final List<String> accounts = steemApiWrapper.lookupWitnessAccounts("gtg", 10);
@@ -389,7 +392,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect at least one account", accounts.size(), greaterThan(0));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testMinerQueue() throws Exception {
         final String[] minerQueue = steemApiWrapper.getMinerQueue();
@@ -397,7 +400,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect the number of miners greater than 0", minerQueue.length, greaterThan(0));
     }
 
-    @Category({ PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Ignore("not fully implemented")
     @Test
     public void testNodeInfo() throws Exception {
@@ -405,7 +408,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         // TODO write assertions
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testTrendingTags() throws Exception {
         final List<TrendingTag> trendingTags = steemApiWrapper.getTrendingTags(null, 10);
@@ -414,7 +417,23 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect trending tags size > 0", trendingTags.size(), greaterThan(0));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testGetRewardFund() throws Exception {
+        final RewardFund rewardFund = steemApiWrapper.getRewardFund(RewardFundType.POST);
+
+        // Verify that all fields a used:
+        assertThat(rewardFund.getContentConstant(), notNullValue());
+        assertThat(rewardFund.getId(), notNullValue());
+        assertThat(rewardFund.getLastUpdate(), notNullValue());
+        assertThat(rewardFund.getName(), notNullValue());
+        assertThat(rewardFund.getPercentContentRewards(), notNullValue());
+        assertThat(rewardFund.getPercentCurationRewards(), notNullValue());
+        assertThat(rewardFund.getRecentClaims(), notNullValue());
+        assertThat(rewardFund.getRewardBalance(), notNullValue());
+    }
+
+    @Category({ IntegrationTest.class })
     @Test
     public void testVersion() throws Exception {
         final Version version = steemApiWrapper.getVersion();
@@ -424,7 +443,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertNotEquals("expect non-empty steem revision", "", version.getSteemRevision());
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testWitnessCount() throws Exception {
         final int witnessCount = steemApiWrapper.getWitnessCount();
@@ -432,7 +451,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertThat("expect the number of witnesses greater than 13071", witnessCount, greaterThan(13071));
     }
 
-    @Category({ PublicNode.class, PrivateNode.class })
+    @Category({ IntegrationTest.class })
     @Test
     public void testWitnessSchedule() throws Exception {
         final WitnessSchedule witnessSchedule = steemApiWrapper.getWitnessSchedule();

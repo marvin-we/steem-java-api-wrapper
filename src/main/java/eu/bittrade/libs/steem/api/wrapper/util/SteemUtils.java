@@ -150,7 +150,7 @@ public class SteemUtils {
      * @return The byte representation of the given value.
      */
     public static byte[] transformShortToByteArray(short shortValue) {
-        return ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putInt(shortValue).array();
+        return ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort(shortValue).array();
     }
 
     /**
