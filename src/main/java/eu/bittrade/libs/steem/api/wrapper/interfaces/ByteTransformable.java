@@ -2,6 +2,12 @@ package eu.bittrade.libs.steem.api.wrapper.interfaces;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 
+/**
+ * This interface is used to make sure each operation implements a method to get
+ * its byte representation.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 @FunctionalInterface
 public interface ByteTransformable {
     /**

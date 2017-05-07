@@ -12,7 +12,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.util.Utils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * This class represents the Steem "claim_reward_balance_operation" object.
@@ -126,15 +126,15 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedCommentOperation = new ByteArrayOutputStream()) {
-            serializedCommentOperation
-                    .write(Utils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
-            serializedCommentOperation.write(this.account.toByteArray());
-            serializedCommentOperation.write(this.rewardSteem.toByteArray());
-            serializedCommentOperation.write(this.rewardSbd.toByteArray());
-            serializedCommentOperation.write(this.rewardVests.toByteArray());
+        try (ByteArrayOutputStream serializedClaimRewardOperation = new ByteArrayOutputStream()) {
+            serializedClaimRewardOperation
+                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
+            serializedClaimRewardOperation.write(this.account.toByteArray());
+            serializedClaimRewardOperation.write(this.rewardSteem.toByteArray());
+            serializedClaimRewardOperation.write(this.rewardSbd.toByteArray());
+            serializedClaimRewardOperation.write(this.rewardVests.toByteArray());
 
-            return serializedCommentOperation.toByteArray();
+            return serializedClaimRewardOperation.toByteArray();
         } catch (IOException e) {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);

@@ -1,27 +1,30 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.interfaces.Expirable;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * This class is the java implementation of the <a href=
  * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steemit/protocol/steem_operations.hpp">Steem
- * limit_order_create object</a>.
+ * limit_order_create_operation</a>.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCreateOperation extends Operation {
+public class LimitOrderCreateOperation extends Operation implements Expirable {
     @JsonProperty("owner")
     private AccountName owner;
     @JsonProperty("orderid")
@@ -34,16 +37,15 @@ public class LimitOrderCreateOperation extends Operation {
     private Asset minToReceive;
     @JsonProperty("fill_or_kill")
     private Boolean fillOrKill;
-    // TODO: Type should be long for byte transformation.
     @JsonProperty("expiration")
-    private Date expiration;
+    private long expirationDate;
 
     /**
      * Create a new limit order operation.
      */
     public LimitOrderCreateOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
     }
 
     /**
@@ -70,8 +72,8 @@ public class LimitOrderCreateOperation extends Operation {
      * 
      * @return The id of this order.
      */
-    public long getOrderId() {
-        return orderId;
+    public int getOrderId() {
+        return (int)orderId;
     }
 
     /**
@@ -123,7 +125,7 @@ public class LimitOrderCreateOperation extends Operation {
      * 
      * @return
      */
-    public Boolean getFillOrKill() {
+    public Boolean getFillOrKillAsBoolean() {
         return fillOrKill;
     }
 
@@ -135,43 +137,53 @@ public class LimitOrderCreateOperation extends Operation {
         this.fillOrKill = fillOrKill;
     }
 
-    /**
-     * 
-     * @return
-     */
-    public Date getExpiration() {
-        return expiration;
+    @Override
+    public void setExpirationDate(String expirationDate) throws ParseException {
+        this.setExpirationDate(SteemUtils.transformStringToTimestamp(expirationDate));
     }
 
-    /**
-     * Define how long this order is valid. The date has to be specified
-     * as String and needs a special format: yyyy-MM-dd'T'HH:mm:ss
-     * 
-     * <p>
-     * Example: "2016-08-08T12:24:17"
-     * </p>
-     * 
-     * If not set the current time plus the maximal allowed offset is used by
-     * default.
-     * 
-     * @param expirationDate
-     *            The expiration date as its String representation.
-     * @throws ParseException
-     *             If the given String does not patch the pattern.
-     */
-    public void setExpirationDate(String expirationDate) throws ParseException {
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                SteemApiWrapperConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
-        calendar.setTime(simpleDateFormat.parse(expirationDate + SteemApiWrapperConfig.getInstance().getTimeZoneId()));
-        // TODO: this.expiration = calendar.getTimeInMillis();
+    @Override
+    public String getExpirationDate() {
+        return SteemUtils.transformDateToString(this.getExpirationDateAsDate());
+    }
+
+    @Override
+    public Date getExpirationDateAsDate() {
+        return new Date(expirationDate);
+    }
+
+    @Override
+    public int getExpirationDateAsInt() {
+        return (int) this.expirationDate;
+    }
+
+    @Override
+    public void setExpirationDate(long expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        byte[] serializedLimitOrderCreateOperation = {};
+        try (ByteArrayOutputStream serializedLimitOrderCreateOperation = new ByteArrayOutputStream()) {
+            serializedLimitOrderCreateOperation.write(
+                    SteemUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE_OPERATION.ordinal()));
+            serializedLimitOrderCreateOperation.write(this.getOwner().toByteArray());
+            serializedLimitOrderCreateOperation.write(SteemUtils.transformIntToByteArray(this.getOrderId()));
+            serializedLimitOrderCreateOperation.write(this.getAmountToSell().toByteArray());
+            serializedLimitOrderCreateOperation.write(this.getMinToReceive().toByteArray());
+            serializedLimitOrderCreateOperation.write(SteemUtils.transformBooleanToByteArray(this.getFillOrKillAsBoolean()));
+            serializedLimitOrderCreateOperation
+                    .write(SteemUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
 
-        return serializedLimitOrderCreateOperation;
+            return serializedLimitOrderCreateOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

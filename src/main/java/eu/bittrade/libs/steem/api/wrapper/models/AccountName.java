@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 import eu.bittrade.libs.steem.api.wrapper.models.serializer.AccountNameSerializer;
-import eu.bittrade.libs.steem.api.wrapper.util.Utils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * This class represents the Steem data type "account_name_type".
@@ -55,7 +55,7 @@ public class AccountName implements ByteTransformable {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        return Utils.transformStringToVarIntByteArray(accountName);
+        return SteemUtils.transformStringToVarIntByteArray(accountName);
     }
 
     @Override

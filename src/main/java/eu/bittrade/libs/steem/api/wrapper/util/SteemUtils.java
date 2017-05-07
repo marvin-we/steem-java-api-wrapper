@@ -3,6 +3,11 @@ package eu.bittrade.libs.steem.api.wrapper.util;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -18,11 +23,11 @@ import eu.bittrade.libs.steem.api.wrapper.enums.RequestMethods;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Utils {
-    private static final Logger LOGGER = LogManager.getLogger(Utils.class);
+public class SteemUtils {
+    private static final Logger LOGGER = LogManager.getLogger(SteemUtils.class);
 
     /** Add a private constructor to hide the implicit public one. */
-    private Utils() {
+    private SteemUtils() {
     }
 
     /**
@@ -87,7 +92,7 @@ public class Utils {
     public static byte[] transformLongToByteArray(long longValue) {
         return ByteBuffer.allocate(8).order(ByteOrder.LITTLE_ENDIAN).putLong(longValue).array();
     }
-    
+
     /**
      * Change the order of a byte to little endian.
      * 
@@ -130,11 +135,44 @@ public class Utils {
      * Transform an int value into its byte representation.
      * 
      * @param intValue
-     *            value The int value to transform.
+     *            The int value to transform.
      * @return The byte representation of the given value.
      */
     public static byte[] transformIntToVarIntByteArray(int intValue) {
         return (new VarInt(intValue)).encode();
+    }
+
+    /**
+     * Transform an short value into its byte representation.
+     * 
+     * @param shortValue
+     *            The short value to transform.
+     * @return The byte representation of the given value.
+     */
+    public static byte[] transformShortToByteArray(short shortValue) {
+        return ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putInt(shortValue).array();
+    }
+    
+    /**
+     * Transform an int value into its byte representation.
+     * 
+     * @param intValue
+     *            The int value to transform.
+     * @return The byte representation of the given value.
+     */
+    public static byte[] transformIntToByteArray(int intValue) {
+        return ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(intValue).array();
+    }
+
+    /**
+     * Transform a boolean value into its byte representation.
+     * 
+     * @param boolValue
+     *            The bool value to transform.
+     * @return The byte representation of the given value.
+     */
+    public static byte[] transformBooleanToByteArray(boolean boolValue) {
+        return ByteBuffer.allocate(1).order(ByteOrder.LITTLE_ENDIAN).put((byte) (boolValue ? 1 : 0 )).array();
     }
 
     /**
@@ -146,5 +184,44 @@ public class Utils {
      */
     public static byte[] transformLongToVarIntByteArray(long longValue) {
         return (new VarInt(longValue)).encode();
+    }
+
+    /**
+     * This method transform a date and returns this date in its String
+     * representation. The method is using the timezone and the date time
+     * pattern defined in the
+     * {@see eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig
+     * SteemApiWrapperConfig}.
+     * 
+     * @param date
+     *            The date in its String representation.
+     * @return
+     */
+    public static String transformDateToString(Date date) {
+        SimpleDateFormat simpleDateFormatForJSON = new SimpleDateFormat(
+                SteemApiWrapperConfig.getInstance().getDateTimePattern());
+        simpleDateFormatForJSON.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+        return simpleDateFormatForJSON.format(date);
+    }
+
+    /**
+     * This method transforms a String into a timestamp. The method is using the
+     * timezone and the date time pattern defined in the
+     * {@see eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig
+     * SteemApiWrapperConfig}.
+     * 
+     * @param dateTime
+     *            The date to transform.
+     * @return The timestamp representation of the given String.
+     * @throws ParseException
+     *             If the String could not be transformed.
+     */
+    public static long transformStringToTimestamp(String dateTime) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
+                SteemApiWrapperConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+        calendar.setTime(simpleDateFormat.parse(dateTime + SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+        return calendar.getTimeInMillis();
     }
 }

@@ -46,7 +46,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Version;
 import eu.bittrade.libs.steem.api.wrapper.models.Vote;
 import eu.bittrade.libs.steem.api.wrapper.models.Witness;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
-import eu.bittrade.libs.steem.api.wrapper.util.Utils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * This class is a wrapper for the Steem web socket API.
@@ -615,7 +615,7 @@ public class SteemApiWrapper {
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
-        requestObject.setApiMethod(Utils.getEquivalentRequestMethod(sortBy));
+        requestObject.setApiMethod(SteemUtils.getEquivalentRequestMethod(sortBy));
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         // This steem api is the most non standardized shit I've ever seen in my
         // life. Here goes the workaround:

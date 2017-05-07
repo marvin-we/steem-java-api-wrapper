@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 import eu.bittrade.libs.steem.api.wrapper.models.deserializer.AssetDeserializer;
 import eu.bittrade.libs.steem.api.wrapper.models.serializer.AssetSerializer;
-import eu.bittrade.libs.steem.api.wrapper.util.Utils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * This class is the java implementation of the <a href=
@@ -114,8 +114,8 @@ public class Asset implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAsset = new ByteArrayOutputStream()) {
-            serializedAsset.write(Utils.transformLongToByteArray(this.amount));
-            serializedAsset.write(Utils.transformByteToLittleEndian(this.precision));
+            serializedAsset.write(SteemUtils.transformLongToByteArray(this.amount));
+            serializedAsset.write(SteemUtils.transformByteToLittleEndian(this.precision));
 
             serializedAsset.write(this.symbol.name().toUpperCase()
                     .getBytes(SteemApiWrapperConfig.getInstance().getEncodingCharset()));

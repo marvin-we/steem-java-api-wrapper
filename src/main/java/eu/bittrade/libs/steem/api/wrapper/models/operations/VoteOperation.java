@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steem.api.wrapper.util.Utils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -79,11 +79,11 @@ public class VoteOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedVoteOperation = new ByteArrayOutputStream()) {
-            serializedVoteOperation.write(Utils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.ordinal()));
-            serializedVoteOperation.write(Utils.transformStringToVarIntByteArray(this.voter));
-            serializedVoteOperation.write(Utils.transformStringToVarIntByteArray(this.author));
-            serializedVoteOperation.write(Utils.transformStringToVarIntByteArray(this.permlink));
-            serializedVoteOperation.write(Utils.transformShortToByteArray(this.weight));
+            serializedVoteOperation.write(SteemUtils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.ordinal()));
+            serializedVoteOperation.write(SteemUtils.transformStringToVarIntByteArray(this.voter));
+            serializedVoteOperation.write(SteemUtils.transformStringToVarIntByteArray(this.author));
+            serializedVoteOperation.write(SteemUtils.transformStringToVarIntByteArray(this.permlink));
+            serializedVoteOperation.write(SteemUtils.transformShortToByteArray(this.weight));
 
             return serializedVoteOperation.toByteArray();
         } catch (IOException e) {

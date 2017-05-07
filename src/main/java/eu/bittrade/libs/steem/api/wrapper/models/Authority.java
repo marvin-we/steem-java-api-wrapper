@@ -16,7 +16,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.deserializer.AccountAuthHashMap
 import eu.bittrade.libs.steem.api.wrapper.models.deserializer.PublicKeyHashMapDeserializer;
 import eu.bittrade.libs.steem.api.wrapper.models.serializer.AccountAuthHashMapSerializer;
 import eu.bittrade.libs.steem.api.wrapper.models.serializer.PublicKeyHashMapSerializer;
-import eu.bittrade.libs.steem.api.wrapper.util.Utils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * This class is the java implementation of the <a href=
@@ -105,7 +105,7 @@ public class Authority implements ByteTransformable {
         try (ByteArrayOutputStream serializedAuthority = new ByteArrayOutputStream()) {
 
             // TODO: Is this correct?
-            serializedAuthority.write(Utils.transformIntToVarIntByteArray(keyAuths.size() + accountAuths.size()));
+            serializedAuthority.write(SteemUtils.transformIntToVarIntByteArray(keyAuths.size() + accountAuths.size()));
 
             if (keyAuths != null) {
 
