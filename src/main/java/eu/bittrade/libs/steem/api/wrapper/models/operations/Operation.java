@@ -41,6 +41,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.virtual.ShutdownWitn
         @Type(value = TransferToVestingOperation.class, name = "transfer_to_vesting"),
         @Type(value = TransferOperation.class, name = "transfer"),
         @Type(value = LimitOrderCreateOperation.class, name = "limit_order_create"),
+        @Type(value = LimitOrderCreate2Operation.class, name = "limit_order_create2"),
         @Type(value = LimitOrderCancelOperation.class, name = "limit_order_cancel"),
         @Type(value = CommentOptionsOperation.class, name = "comment_options"),
         @Type(value = PowOperation.class, name = "pow"), 
