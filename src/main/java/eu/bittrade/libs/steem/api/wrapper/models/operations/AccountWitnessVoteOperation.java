@@ -31,7 +31,7 @@ public class AccountWitnessVoteOperation extends Operation {
      */
     public AccountWitnessVoteOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
     }
 
     /**

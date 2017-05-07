@@ -21,10 +21,12 @@ import org.glassfish.tyrus.client.SslContextConfigurator;
 import org.glassfish.tyrus.client.SslEngineConfigurator;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.ResponseWrapperDTO;
@@ -34,6 +36,7 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steem.api.wrapper.models.error.SteemError;
+import eu.bittrade.libs.steem.api.wrapper.models.serializer.BooleanSerializer;
 
 /**
  * This class handles the communication to the Steem web socket API.
@@ -74,6 +77,12 @@ public class CommunicationHandler {
         MAPPER.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
         MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
+        SimpleModule simpleModule = new SimpleModule("BooleanAsString", new Version(1, 0, 0, null, null, null));
+        simpleModule.addSerializer(Boolean.class, new BooleanSerializer());
+        simpleModule.addSerializer(boolean.class, new BooleanSerializer());
+
+        MAPPER.registerModule(simpleModule);
+
         reconnect();
     }
 
@@ -90,7 +99,9 @@ public class CommunicationHandler {
      * @return The server response transformed into a list of given objects.
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
-     *             time (@see {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long) setTimeout()})
+     *             time (@see
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             setTimeout()})
      * @throws SteemCommunicationException
      *             If there is a connection problem.
      * @throws SteemTransformationException

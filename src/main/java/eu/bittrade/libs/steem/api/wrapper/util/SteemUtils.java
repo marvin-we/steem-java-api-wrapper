@@ -152,7 +152,7 @@ public class SteemUtils {
     public static byte[] transformShortToByteArray(short shortValue) {
         return ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putInt(shortValue).array();
     }
-    
+
     /**
      * Transform an int value into its byte representation.
      * 
@@ -172,7 +172,7 @@ public class SteemUtils {
      * @return The byte representation of the given value.
      */
     public static byte[] transformBooleanToByteArray(boolean boolValue) {
-        return ByteBuffer.allocate(1).order(ByteOrder.LITTLE_ENDIAN).put((byte) (boolValue ? 1 : 0 )).array();
+        return new byte[] { (byte) (boolValue ? 1 : 0) };
     }
 
     /**
