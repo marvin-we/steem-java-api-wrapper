@@ -23,7 +23,7 @@ File: <i>pom.xml</i>
 	<dependency>
             <groupId>eu.bittrade.libs</groupId>
             <artifactId>steem-api-wrapper</artifactId>
-            <version>0.2.0</version>
+            <version>0.2.2</version>
 	</dependency>
 ```
 
@@ -39,12 +39,12 @@ File: <i>build.gradle</i>
 
 ```Xml
 	dependencies {
-    		compile 'eu.bittrade.libs:steem-api-wrapper:0.2.0'
+    		compile 'eu.bittrade.libs:steem-api-wrapper:0.2.2'
 	}
 ```
 
 # Example
-The following code is a small example showing how to use Version 0.2.0 of the API Wrapper.
+The following code is a small example showing how to use Version 0.2.2 of the API Wrapper.
 
 ```Java
 package eu.bittrade.libs.steem.api.wrapper;
