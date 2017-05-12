@@ -26,7 +26,8 @@ public class LimitOrderCancelOperation extends Operation {
     private long orderId;
 
     /**
-     * Create a new limit order cancel operation.
+     * Create a new limit order cancel operation. This order is used to cancel
+     * an order. The balance will be returned to the owner.
      */
     public LimitOrderCancelOperation() {
         // Define the required key type for this operation.
@@ -58,7 +59,7 @@ public class LimitOrderCancelOperation extends Operation {
      * @return The order id of the order that has been canceled.
      */
     public int getOrderId() {
-        return (int)orderId;
+        return (int) orderId;
     }
 
     /**
