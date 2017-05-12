@@ -57,7 +57,6 @@ public class VoteOperationTest extends BaseTest {
                 Utils.HEX.encode(voteOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
-    @Category({ IntegrationTest.class })
     @Test
     public void testVoteOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
@@ -68,5 +67,17 @@ public class VoteOperationTest extends BaseTest {
         assertThat("Expect that the serialized transaction results in the given hex.",
                 Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(voteOperationTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
+    }
+
+    @Category({ IntegrationTest.class })
+    @Test
+    public void verifyTransaction() {
+
+    }
+
+    @Category({ IntegrationTest.class })
+    @Test
+    public void getTransactionHex() {
+
     }
 }
