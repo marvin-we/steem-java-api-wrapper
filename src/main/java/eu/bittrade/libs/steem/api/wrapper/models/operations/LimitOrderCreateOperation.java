@@ -157,7 +157,7 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
     @Override
     @JsonIgnore
     public int getExpirationDateAsInt() {
-        return (int) this.expirationDate;
+        return (int)(this.expirationDate / 1000);
     }
 
     @Override
