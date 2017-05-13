@@ -22,7 +22,7 @@ public class PublicKeyHashMapSerializer extends JsonSerializer<Map<PublicKey, In
         jsonGenerator.writeStartArray();
         for (Entry<PublicKey, Integer> keyAuth : keyAuthMap.entrySet()) {
             jsonGenerator.writeStartArray();
-            jsonGenerator.writeString(keyAuth.getKey().getPublicKey());
+            jsonGenerator.writeString(keyAuth.getKey().getAddressFromPublicKey());
             jsonGenerator.writeNumber(keyAuth.getValue());
             jsonGenerator.writeEndArray();
         }

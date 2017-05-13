@@ -30,8 +30,7 @@ public class PublicKeyHashMapDeserializer extends JsonDeserializer<Map<PublicKey
 
         if (rootNode.isArray()) {
             for (JsonNode node : (ArrayNode) rootNode) {
-                PublicKey publicKey = new PublicKey();
-                publicKey.setPublicKey((node.get(0)).asText());
+                PublicKey publicKey = new PublicKey((node.get(0)).asText());
                 result.put(publicKey, (node.get(0)).asInt());
             }
 

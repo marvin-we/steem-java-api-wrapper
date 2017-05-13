@@ -102,7 +102,7 @@ public class Authority implements ByteTransformable {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedAuthority = new ByteArrayOutputStream()) {
+       try (ByteArrayOutputStream serializedAuthority = new ByteArrayOutputStream()) {
 
             // TODO: Is this correct?
             serializedAuthority.write(SteemUtils.transformIntToVarIntByteArray(keyAuths.size() + accountAuths.size()));

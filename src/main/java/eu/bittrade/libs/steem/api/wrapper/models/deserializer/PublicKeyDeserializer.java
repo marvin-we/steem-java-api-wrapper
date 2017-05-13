@@ -19,8 +19,7 @@ public class PublicKeyDeserializer extends JsonDeserializer<PublicKey> {
 
         JsonToken currentToken = jasonParser.currentToken();
         if (currentToken != null && JsonToken.VALUE_STRING.equals(currentToken)) {
-            PublicKey publicKey = new PublicKey();
-            publicKey.setPublicKey(currentToken.asString());
+            PublicKey publicKey = new PublicKey(currentToken.asString());
             return publicKey;
         }
 

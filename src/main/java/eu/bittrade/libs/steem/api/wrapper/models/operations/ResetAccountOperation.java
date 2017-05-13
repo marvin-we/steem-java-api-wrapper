@@ -1,13 +1,18 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
  * This class represents the Steem "reset_account_operation" object.
@@ -30,7 +35,7 @@ public class ResetAccountOperation extends Operation {
      */
     public ResetAccountOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
     }
 
     /**
@@ -92,8 +97,18 @@ public class ResetAccountOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedResetAccountOperation = new ByteArrayOutputStream()) {
+            serializedResetAccountOperation
+                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.RESET_ACCOUNT_OPERATION.ordinal()));
+            serializedResetAccountOperation.write(this.getResetAccount().toByteArray());
+            serializedResetAccountOperation.write(this.getAccountToReset().toByteArray());
+            serializedResetAccountOperation.write(this.getNewOwnerAuthority().toByteArray());
+
+            return serializedResetAccountOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override
