@@ -8,13 +8,13 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
-public class ChallangeAuthorityOperation extends Operation {
+public class ChallengeAuthorityOperation extends Operation {
     private AccountName challenger;
     private AccountName challenged;
     @JsonProperty("require_owner")
     private Boolean requireOwner;
 
-    public ChallangeAuthorityOperation() {
+    public ChallengeAuthorityOperation() {
         super(PrivateKeyType.POSTING);
     }
 

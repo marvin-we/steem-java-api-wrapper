@@ -29,7 +29,7 @@ public class Authority implements ByteTransformable {
     // Type is uint32 in the original code.
     @JsonProperty("weight_threshold")
     private long weightThreshold;
-    /**
+    /*
      * In the original code the type is "account_authority_map" which looks like
      * this:
      * <p>
@@ -40,7 +40,7 @@ public class Authority implements ByteTransformable {
     @JsonDeserialize(using = AccountAuthHashMapDeserializer.class)
     @JsonProperty("account_auths")
     private Map<String, Integer> accountAuths;
-    /**
+    /*
      * In the original code the type is "key_authority_map" which looks like
      * this:
      * <p>
