@@ -10,6 +10,12 @@ import org.junit.Test;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.VoteOperation;
 
+/**
+ * Test the transaction object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ *
+ */
 public class TransactionTest {
     @Test
     public void testTransactionSerializationWithoutChainId() throws Exception {
