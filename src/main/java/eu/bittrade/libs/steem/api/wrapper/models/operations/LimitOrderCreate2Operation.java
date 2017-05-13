@@ -70,7 +70,7 @@ public class LimitOrderCreate2Operation extends Operation implements Expirable {
      * @return the orderId
      */
     public int getOrderId() {
-        return (int)orderId;
+        return (int) orderId;
     }
 
     /**
@@ -143,7 +143,7 @@ public class LimitOrderCreate2Operation extends Operation implements Expirable {
 
     @Override
     public int getExpirationDateAsInt() {
-        return (int) this.expirationDate;
+        return (int)(this.expirationDate / 1000);
     }
 
     @Override
@@ -159,6 +159,7 @@ public class LimitOrderCreate2Operation extends Operation implements Expirable {
             serializedLimitOrderCreate2Operation.write(this.getOwner().toByteArray());
             serializedLimitOrderCreate2Operation.write(SteemUtils.transformIntToByteArray(this.getOrderId()));
             serializedLimitOrderCreate2Operation.write(this.getAmountToSell().toByteArray());
+            serializedLimitOrderCreate2Operation.write(this.getExchangeRate().toByteArray());
             serializedLimitOrderCreate2Operation.write(SteemUtils.transformBooleanToByteArray(this.getFillOrKill()));
             serializedLimitOrderCreate2Operation
                     .write(SteemUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
