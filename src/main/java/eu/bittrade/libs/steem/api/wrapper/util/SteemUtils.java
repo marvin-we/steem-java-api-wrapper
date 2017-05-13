@@ -60,13 +60,11 @@ public class SteemUtils {
             return RequestMethods.GET_DISCUSSIONS_BY_PROMOTED;
         case SORT_BY_TRENDING:
             return RequestMethods.GET_DISCUSSIONS_BY_TRENDING;
-        case SORT_BY_TRENDING_30_DAYS:
-            return RequestMethods.GET_DISCUSSIONS_BY_TRENDING30;
         case SORT_BY_VOTES:
             return RequestMethods.GET_DISCUSSIONS_BY_VOTES;
         default:
             LOGGER.warn(
-                    "Unkown sort type. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).");
+                    "Unkown sort type '{}'. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).", discussionSortType);
             return RequestMethods.GET_DISCUSSIONS_BY_ACTIVE;
         }
     }

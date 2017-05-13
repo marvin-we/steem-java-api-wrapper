@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -204,36 +205,18 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
     @Test
     public void testGetDiscussionBy() throws Exception {
 
-        final DiscussionSortType[] activeTypes = new DiscussionSortType[] { DiscussionSortType.SORT_BY_TRENDING,
-                DiscussionSortType.SORT_BY_TRENDING_30_DAYS, DiscussionSortType.SORT_BY_CREATED,
-                DiscussionSortType.SORT_BY_ACTIVE, DiscussionSortType.SORT_BY_CASHOUT, DiscussionSortType.SORT_BY_VOTES,
+        final DiscussionSortType[] sortTypes = new DiscussionSortType[] { DiscussionSortType.SORT_BY_TRENDING,
+                DiscussionSortType.SORT_BY_CREATED, DiscussionSortType.SORT_BY_ACTIVE,
+                DiscussionSortType.SORT_BY_CASHOUT, DiscussionSortType.SORT_BY_VOTES,
                 DiscussionSortType.SORT_BY_CHILDREN, DiscussionSortType.SORT_BY_HOT, DiscussionSortType.SORT_BY_BLOG,
-                DiscussionSortType.SORT_BY_PROMOTED };
-
-        final DiscussionSortType[] inactiveTypes = new DiscussionSortType[] { DiscussionSortType.SORT_BY_PAYOUT,
+                DiscussionSortType.SORT_BY_PROMOTED, DiscussionSortType.SORT_BY_PAYOUT,
                 DiscussionSortType.SORT_BY_FEED };
 
-        final DiscussionSortType[] invalidTypes = new DiscussionSortType[] { DiscussionSortType.SORT_BY_COMMENTS };
-
-        for (final DiscussionSortType type : activeTypes) {
+        for (final DiscussionSortType type : sortTypes) {
             final List<Content> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
             assertNotNull("expect discussions", discussions);
-            assertThat("expect discussions in " + type + " greater than zero", discussions.size(), greaterThan(0));
-        }
-
-        for (final DiscussionSortType type : inactiveTypes) {
-            final List<Content> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
-            assertNotNull("expect discussions", discussions);
-            assertEquals("expect discussions in " + type + " of zero", 0, discussions.size());
-        }
-
-        for (final DiscussionSortType type : invalidTypes) {
-            try {
-                steemApiWrapper.getDiscussionsBy("steemit", 1, type);
-                fail("did not expect discussions in " + type + " to return valid");
-            } catch (SteemResponseError e) {
-                // success
-            }
+            assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
+                    greaterThanOrEqualTo(0));
         }
     }
 
