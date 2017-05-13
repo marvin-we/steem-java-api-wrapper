@@ -21,8 +21,8 @@ import eu.bittrade.libs.steem.api.wrapper.models.Price;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
- * This is a copy of the Steem Piston test. Have a look at <a href=
- * "https://github.com/steemit/steem-python/blob/master/tests/steem/test_transactions.py">GitHub</a>
+ * Test a Steem "limit order create 2 operation" and verify the results against
+ * the api.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
