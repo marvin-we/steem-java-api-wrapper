@@ -731,7 +731,7 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Get the hardfork version.
+     * Get the hardfork version the node you are connected to is using.
      * 
      * @return The hardfork version that the connected node is running on.
      * @throws SteemCommunicationException
@@ -975,8 +975,11 @@ public class SteemApiWrapper {
      * Get detailed information of a specific reward fund.
      * 
      * @param rewordFundType
-     *            One of the {@link eu.bittrade.libs.steem.api.wrapper.enums.RewardFundType RewardFundType}s.
-     * @return A refund object containing detailed information about the requested reward fund.
+     *            One of the
+     *            {@link eu.bittrade.libs.steem.api.wrapper.enums.RewardFundType
+     *            RewardFundType}s.
+     * @return A refund object containing detailed information about the
+     *         requested reward fund.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the

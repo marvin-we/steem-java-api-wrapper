@@ -9,62 +9,85 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
 
+/**
+ * This class represents the Steem "reset_account_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class ResetAccountOperation extends Operation {
     @JsonProperty("reset_account")
     private AccountName resetAccount;
     @JsonProperty("account_to_reset")
     private AccountName accountToReset;
     @JsonProperty("new_owner_authority")
-    private Authority newOwwnerAuthority;
+    private Authority newOwnerAuthority;
 
+    /**
+     * Create a new reset account operation. This operation allows the
+     * {@link #resetAccount resetAccount} to change the owner authority of the
+     * {@link #accountToReset accountToReset} to the {@link #newOwnerAuthority
+     * newOwnerAuthority} after 60 days of inactivity.
+     */
     public ResetAccountOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
     }
 
     /**
-     * @return the resetAccount
+     * Get the account that performed the account reset.
+     * 
+     * @return The account that performed the account reset.
      */
     public AccountName getResetAccount() {
         return resetAccount;
     }
 
     /**
+     * Set the account that will perform the account reset.
+     * 
      * @param resetAccount
-     *            the resetAccount to set
+     *            The account that will perform the account reset.
      */
     public void setResetAccount(AccountName resetAccount) {
         this.resetAccount = resetAccount;
     }
 
     /**
-     * @return the accountToReset
+     * Get the account that has been resettet with this operation.
+     * 
+     * @return The account that has been resettet with this operation.
      */
     public AccountName getAccountToReset() {
         return accountToReset;
     }
 
     /**
+     * Set the account that will get resettet with this operation.
+     * 
      * @param accountToReset
-     *            the accountToReset to set
+     *            The account that will get resettet with this operation.
      */
     public void setAccountToReset(AccountName accountToReset) {
         this.accountToReset = accountToReset;
     }
 
     /**
-     * @return the newOwwnerAuthority
+     * Get the new owner authority of the account.
+     * 
+     * @return The new owner authority of the account.
      */
-    public Authority getNewOwwnerAuthority() {
-        return newOwwnerAuthority;
+    public Authority getNewOwnerAuthority() {
+        return newOwnerAuthority;
     }
 
     /**
+     * Set the new owner authority of the account.
+     * 
      * @param newOwwnerAuthority
-     *            the newOwwnerAuthority to set
+     *            The new owner authority of the account.
      */
-    public void setNewOwwnerAuthority(Authority newOwwnerAuthority) {
-        this.newOwwnerAuthority = newOwwnerAuthority;
+    public void setNewOwnerAuthority(Authority newOwnerAuthority) {
+        this.newOwnerAuthority = newOwnerAuthority;
     }
 
     @Override
