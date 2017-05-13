@@ -2,6 +2,8 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
@@ -46,6 +48,10 @@ public class CustomJsonOperation extends Operation {
         return id;
     }
 
+    /**
+     * 
+     * @param id Must be less than 32 characters long.
+     */
     public void setId(String id) {
         this.id = id;
     }
@@ -54,6 +60,10 @@ public class CustomJsonOperation extends Operation {
         return json;
     }
 
+    /**
+     * 
+     * @param json Must be proper utf8 / JSON string.
+     */
     public void setJson(String json) {
         this.json = json;
     }
@@ -62,5 +72,10 @@ public class CustomJsonOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

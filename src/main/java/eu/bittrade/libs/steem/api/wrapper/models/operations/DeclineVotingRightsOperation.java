@@ -2,23 +2,15 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
-/**
- * @author <a href="http://steemit.com/@dez1337">dez1337</a>
- */
-public class AccountWitnessProxyOperation extends Operation {
-    @JsonProperty("account")
+public class DeclineVotingRightsOperation extends Operation {
     private AccountName account;
-    @JsonProperty("proxy")
-    private AccountName proxy;
+    private Boolean decline;
 
-    public AccountWitnessProxyOperation() {
-        // Define the required key type for this operation.
+    public DeclineVotingRightsOperation() {
         super(PrivateKeyType.POSTING);
     }
 
@@ -38,18 +30,18 @@ public class AccountWitnessProxyOperation extends Operation {
     }
 
     /**
-     * @return the proxy
+     * @return the decline
      */
-    public AccountName getProxy() {
-        return proxy;
+    public Boolean getDecline() {
+        return decline;
     }
 
     /**
-     * @param proxy
-     *            the proxy to set
+     * @param decline
+     *            the decline to set
      */
-    public void setProxy(AccountName proxy) {
-        this.proxy = proxy;
+    public void setDecline(Boolean decline) {
+        this.decline = decline;
     }
 
     @Override

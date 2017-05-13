@@ -17,7 +17,13 @@ public class MarketOrder {
     private String realPrice;
     private int steem;
     private int sdb;
-
+    /* TODO
+    price                order_price;
+    double               real_price; // dollars per steem
+    share_type           steem;
+    share_type           sbd;
+    fc::time_point_sec   created;
+*/
     public String getCreated() {
         return created;
     }
