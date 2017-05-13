@@ -88,7 +88,7 @@ public class ResetAccountOperation extends Operation {
     /**
      * Set the new owner authority of the account.
      * 
-     * @param newOwwnerAuthority
+     * @param newOwnerAuthority
      *            The new owner authority of the account.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
