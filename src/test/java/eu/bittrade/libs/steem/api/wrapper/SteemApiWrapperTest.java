@@ -3,6 +3,8 @@ package eu.bittrade.libs.steem.api.wrapper;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -14,7 +16,6 @@ import static org.junit.Assert.fail;
 
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 public class SteemApiWrapperTest extends BaseIntegrationTest {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperTest.class);
     private static final String ACCOUNT = "dez1337";
-    private static final String WITNESS_ACCOUNT = "good-karma";
+    private static final String WITNESS_ACCOUNT = "riverhead";
     private static final String PERMLINK = "steem-api-wrapper-for-java-update1";
 
     @Category({ IntegrationTest.class })
@@ -140,8 +141,10 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
     public void testGetActiveWitnesses() throws Exception {
         final String[] activeWitnesses = steemApiWrapper.getActiveWitnesses();
 
-        assertTrue("expect " + WITNESS_ACCOUNT + " to be an active witness.",
-                Arrays.asList(activeWitnesses).contains(WITNESS_ACCOUNT));
+        // The active witness changes from time to time, so we just check if
+        // something is returned.
+        assertThat(activeWitnesses.length, greaterThan(0));
+        assertThat(activeWitnesses[0], not(isEmptyOrNullString()));
     }
 
     @Category({ IntegrationTest.class })
@@ -180,7 +183,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         final ChainProperties properties = steemApiWrapper.getChainProperties();
 
         assertNotNull("expect properties", properties);
-        assertThat("expect sbd interest rate", properties.getSdbInterestRate(), greaterThan(0));
+        assertThat("expect sbd interest rate", properties.getSdbInterestRate(), greaterThanOrEqualTo(0));
     }
 
     @Category({ IntegrationTest.class })
