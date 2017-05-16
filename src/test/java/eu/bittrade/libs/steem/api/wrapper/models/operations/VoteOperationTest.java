@@ -9,15 +9,13 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
- * Test a Steem "vote operation" and verify the results against the api.
+ * Test the transformation of a Steem "vote operation".
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -65,17 +63,5 @@ public class VoteOperationTest extends BaseTest {
         assertThat("Expect that the serialized transaction results in the given hex.",
                 Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(voteOperationTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void verifyTransaction() {
-
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void getTransactionHex() {
-
     }
 }

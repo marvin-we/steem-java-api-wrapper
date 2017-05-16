@@ -18,7 +18,7 @@ public abstract class BaseTest {
     protected static final String EXPIRATION_DATE = "2016-04-06T08:29:27UTC";
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUp() throws Exception {
         CONFIG.setPrivateKey(PrivateKeyType.POSTING, PRIVATE_POSTING_KEY);
         CONFIG.setPrivateKey(PrivateKeyType.ACTIVE, PRIVATE_ACTIVE_KEY);
     }
