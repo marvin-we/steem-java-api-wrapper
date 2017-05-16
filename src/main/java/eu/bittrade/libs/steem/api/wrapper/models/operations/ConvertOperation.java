@@ -1,15 +1,22 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
+ * This class represents the Steem "convert_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ConvertOperation extends Operation {
@@ -23,7 +30,7 @@ public class ConvertOperation extends Operation {
 
     /**
      * This operation instructs the blockchain to start a conversion between
-     * STEEM and SBD, The funds are deposited after STEEMIT_CONVERSION_DELAY
+     * STEEM and SBD, The funds are deposited after STEEMIT_CONVERSION_DELAY.
      */
     public ConvertOperation() {
         // Define the required key type for this operation.
@@ -56,8 +63,18 @@ public class ConvertOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedConvertOperation = new ByteArrayOutputStream()) {
+            serializedConvertOperation
+                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.CONVERT_OPERATION.ordinal()));
+            serializedConvertOperation.write(this.getOwner().toByteArray());
+            serializedConvertOperation.write(SteemUtils.transformIntToByteArray((int) this.getRequestId()));
+            serializedConvertOperation.write(this.getAmount().toByteArray());
+
+            return serializedConvertOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override

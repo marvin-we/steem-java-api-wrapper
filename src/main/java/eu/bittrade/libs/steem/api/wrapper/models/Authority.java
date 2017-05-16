@@ -2,7 +2,9 @@ package eu.bittrade.libs.steem.api.wrapper.models;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -31,26 +33,28 @@ public class Authority implements ByteTransformable {
     private long weightThreshold;
     /*
      * In the original code the type is "account_authority_map" which looks like
-     * this:
-     * <p>
-     * flat_map< account_name_type, weight_type, string_less >
-     * </p>
+     * this: <p> flat_map< account_name_type, weight_type, string_less > </p>
      */
     @JsonSerialize(using = AccountAuthHashMapSerializer.class)
     @JsonDeserialize(using = AccountAuthHashMapDeserializer.class)
     @JsonProperty("account_auths")
-    private Map<String, Integer> accountAuths;
+    private Map<AccountName, Integer> accountAuths;
     /*
      * In the original code the type is "key_authority_map" which looks like
-     * this:
-     * <p>
-     * flat_map< public_key_type, weight_type >
-     * </p>
+     * this: <p> flat_map< public_key_type, weight_type > </p>
      */
     @JsonSerialize(using = PublicKeyHashMapSerializer.class)
     @JsonDeserialize(using = PublicKeyHashMapDeserializer.class)
     @JsonProperty("key_auths")
     private Map<PublicKey, Integer> keyAuths;
+
+    /**
+     * Constructor thats set required values to avoid null pointer exceptions.
+     */
+    public Authority() {
+        this.setAccountAuths(new HashMap<>());
+        this.setKeyAuths(new HashMap<>());
+    }
 
     /**
      * 
@@ -72,7 +76,7 @@ public class Authority implements ByteTransformable {
      * 
      * @return
      */
-    public Map<String, Integer> getAccountAuths() {
+    public Map<AccountName, Integer> getAccountAuths() {
         return accountAuths;
     }
 
@@ -80,7 +84,7 @@ public class Authority implements ByteTransformable {
      * 
      * @param accountAuths
      */
-    public void setAccountAuths(Map<String, Integer> accountAuths) {
+    public void setAccountAuths(Map<AccountName, Integer> accountAuths) {
         this.accountAuths = accountAuths;
     }
 
@@ -102,17 +106,28 @@ public class Authority implements ByteTransformable {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-       try (ByteArrayOutputStream serializedAuthority = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream serializedAuthority = new ByteArrayOutputStream()) {
+            // serializedAuthority.write(SteemUtils
+            // .transformIntToByteArray(this.getKeyAuths().size() +
+            // this.getAccountAuths().size()));
+            serializedAuthority.write((byte) (this.getKeyAuths().size() + this.getAccountAuths().size()));
+            
+            if ((this.getKeyAuths().size() + this.getAccountAuths().size()) > 0) {
+                serializedAuthority.write(SteemUtils.transformIntToByteArray((int) this.getWeightThreshold()));
 
-            // TODO: Is this correct?
-            serializedAuthority.write(SteemUtils.transformIntToVarIntByteArray(keyAuths.size() + accountAuths.size()));
+                //serializedAuthority.write(SteemUtils.transformIntToByteArray(accountAuths.size()));
+                serializedAuthority.write((byte) accountAuths.size());
+                for (Entry<AccountName, Integer> accountAuth : this.getAccountAuths().entrySet()) {
+                    serializedAuthority.write(accountAuth.getKey().toByteArray());
+                    serializedAuthority.write(SteemUtils.transformShortToByteArray(accountAuth.getValue()));
+                }
 
-            if (keyAuths != null) {
-
-            }
-
-            if (accountAuths != null) {
-
+                //serializedAuthority.write(SteemUtils.transformIntToByteArray(keyAuths.size()));
+                serializedAuthority.write((byte) keyAuths.size());
+                for (Entry<PublicKey, Integer> keyAuth : this.getKeyAuths().entrySet()) {
+                    serializedAuthority.write(keyAuth.getKey().toByteArray());
+                    serializedAuthority.write(SteemUtils.transformShortToByteArray(keyAuth.getValue()));
+                }
             }
 
             return serializedAuthority.toByteArray();

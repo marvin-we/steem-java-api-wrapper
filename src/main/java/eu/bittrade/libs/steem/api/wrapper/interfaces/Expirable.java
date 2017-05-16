@@ -52,7 +52,7 @@ public interface Expirable {
      * @param expirationDate
      *            The expiration date as its String representation.
      * @throws ParseException
-     *             If the given String does not patch the pattern.
+     *             If the given String does not match the pattern.
      */
     public void setExpirationDate(String expirationDate) throws ParseException;
 
@@ -60,7 +60,8 @@ public interface Expirable {
      * Set the expiration date by providing a timestamp.
      * 
      * @param expirationDate
-     *            The expiration date as a Timestamp.
+     *            The expiration date as a timestamp.
      */
+    @JsonIgnore
     public void setExpirationDate(long expirationDate);
 }

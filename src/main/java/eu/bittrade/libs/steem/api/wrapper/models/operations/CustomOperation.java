@@ -1,6 +1,5 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -23,7 +22,7 @@ public class CustomOperation extends Operation {
     private int id;
     // Original type is vector< char >.
     @JsonProperty("data")
-    private Charset data;
+    private String data;
 
     public CustomOperation() {
         // Define the required key type for this operation.
@@ -61,9 +60,13 @@ public class CustomOperation extends Operation {
     }
 
     /**
-     * @return the data
+     * Get the data that this operation contains. <b>Notice</b> that the
+     * original type of this field is "vector< char >" and that its returned as
+     * a String.
+     * 
+     * @return the data The data transfered with this operation.
      */
-    public Charset getData() {
+    public String getData() {
         return data;
     }
 
@@ -71,7 +74,7 @@ public class CustomOperation extends Operation {
      * @param data
      *            the data to set
      */
-    public void setData(Charset data) {
+    public void setData(String data) {
         this.data = data;
     }
 
