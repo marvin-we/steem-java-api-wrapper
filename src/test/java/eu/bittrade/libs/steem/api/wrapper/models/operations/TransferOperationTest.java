@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
@@ -58,7 +59,8 @@ public class TransferOperationTest extends BaseTest {
         transferOperationSteem.setAmount(steemAmount);
         transferOperationSteem.setMemo("Test SteemJ");
 
-        Operation[] operations = { transferOperationSbd };
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(transferOperationSbd);
 
         transferOperationTransaction = new Transaction();
         transferOperationTransaction.setExpirationDate(EXPIRATION_DATE);

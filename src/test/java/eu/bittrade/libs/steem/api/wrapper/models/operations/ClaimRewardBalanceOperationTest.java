@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
@@ -59,7 +60,8 @@ public class ClaimRewardBalanceOperationTest extends BaseTest {
 
         claimRewardBalanceOperation.setRewardVests(vestsReward);
 
-        Operation[] operations = { claimRewardBalanceOperation };
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(claimRewardBalanceOperation);
 
         claimRewardBalanceOperationTransaction = new Transaction();
         claimRewardBalanceOperationTransaction.setExpirationDate(EXPIRATION_DATE);

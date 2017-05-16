@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
@@ -36,7 +37,8 @@ public class VoteOperationTest extends BaseTest {
         voteOperation.setVoter("foobara");
         voteOperation.setWeight((short) 1000);
 
-        Operation[] operations = { voteOperation };
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
 
         voteOperationTransaction = new Transaction();
         voteOperationTransaction.setExpirationDate(EXPIRATION_DATE);

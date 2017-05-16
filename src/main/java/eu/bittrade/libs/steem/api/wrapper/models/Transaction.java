@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -70,8 +69,8 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
     private long refBlockPrefix;
     @JsonProperty("expiration")
     private long expirationDate;
-    private Operation[] operations;
-    protected String[] signatures;
+    private List<Operation> operations;
+    protected List<String> signatures;
     // TODO: Find out what type this is and what the use of this field is.
     private List<Object> extensions;
 
@@ -109,7 +108,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
      * 
      * @return All operations.
      */
-    public Operation[] getOperations() {
+    public List<Operation> getOperations() {
         return operations;
     }
 
@@ -138,7 +137,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
      * @return An array of currently appended signatures.
      */
     @JsonProperty("signatures")
-    protected String[] getSignatures() {
+    protected List<String> getSignatures() {
         return this.signatures;
     }
 
@@ -184,7 +183,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
      * @param operations
      *            A list of operations.
      */
-    public void setOperations(Operation[] operations) {
+    public void setOperations(List<Operation> operations) {
         this.operations = operations;
     }
 
@@ -258,7 +257,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
                 + SteemApiWrapperConfig.getInstance().getMaximumExpirationDateOffset()) {
             LOGGER.warn("The configured expiration date for this transaction is to far "
                     + "in the future and may not be accepted by the Steem node.");
-        } else if (this.operations == null || this.operations.length == 0) {
+        } else if (this.operations == null || this.operations.isEmpty()) {
             throw new SteemInvalidTransactionException("At least one operation is required to sign the transaction.");
         } else if (this.refBlockNum == 0) {
             throw new SteemInvalidTransactionException("The refBlockNum field needs to be set.");
@@ -328,7 +327,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
                 }
             }
 
-            this.signatures = ArrayUtils.add(this.signatures, Utils.HEX.encode(signedTransaction));
+            this.signatures.add(Utils.HEX.encode(signedTransaction));
         }
     }
 
@@ -366,7 +365,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
             serializedTransaction.write(SteemUtils.transformShortToByteArray(this.getRefBlockNum()));
             serializedTransaction.write(SteemUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
             serializedTransaction.write(SteemUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
-            serializedTransaction.write(SteemUtils.transformLongToVarIntByteArray(this.getOperations().length));
+            serializedTransaction.write(SteemUtils.transformLongToVarIntByteArray(this.getOperations().size()));
             for (Operation operation : this.getOperations()) {
                 serializedTransaction.write(operation.toByteArray());
             }

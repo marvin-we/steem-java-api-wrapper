@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
@@ -39,7 +40,8 @@ public class LimitOrderCancelOperationTest extends BaseTest {
         limitOrderCancelOperation.setOwner(new AccountName("dez1337"));
         limitOrderCancelOperation.setOrderId(492995L);
 
-        Operation[] operations = { limitOrderCancelOperation };
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(limitOrderCancelOperation);
 
         limitOrderCancelOperationTransaction = new Transaction();
         limitOrderCancelOperationTransaction.setExpirationDate(EXPIRATION_DATE);

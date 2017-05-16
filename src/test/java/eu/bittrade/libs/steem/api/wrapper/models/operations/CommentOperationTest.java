@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
@@ -48,7 +49,8 @@ public class CommentOperationTest extends BaseTest {
         commentOperation.setPermlink("re-steem-java-api-v0-2-0-has-been-released-update-6");
         commentOperation.setTitle("-");
 
-        Operation[] operations = { commentOperation };
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(commentOperation);
 
         commentOperationTransaction = new Transaction();
         commentOperationTransaction.setExpirationDate(EXPIRATION_DATE);

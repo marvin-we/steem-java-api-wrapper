@@ -31,7 +31,7 @@ public class VoteOperationIntegrationTest extends BaseIntegrationTest {
         Block blockContainingVoteOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation voteOperation = blockContainingVoteOperation.getTransactions().get(TRANSACTION_INDEX)
-                .getOperations()[OPERATION_INDEX];
+                .getOperations().get(OPERATION_INDEX);
 
         assertThat(voteOperation, instanceOf(VoteOperation.class));
         assertThat(((VoteOperation) voteOperation).getAuthor(), equalTo(EXPECTED_AUTHOR));

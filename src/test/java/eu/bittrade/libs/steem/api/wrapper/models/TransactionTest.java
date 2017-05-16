@@ -3,6 +3,8 @@ package eu.bittrade.libs.steem.api.wrapper.models;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.util.ArrayList;
+
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.Test;
@@ -29,7 +31,8 @@ public class TransactionTest {
         voteOperation.setVoter("xeroc");
         voteOperation.setWeight((short) 10000);
 
-        Operation[] operations = { voteOperation };
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
 
         Transaction transaction = new Transaction();
         transaction.setExpirationDate("2016-08-08T12:24:17");
