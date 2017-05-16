@@ -23,6 +23,11 @@ public class CustomJsonOperation extends Operation {
     @JsonProperty("json")
     private String json;
 
+    /**
+     * serves the same purpose as custom_operation but also supports required
+     * posting authorities. Unlike custom_operation, this operation is designed
+     * to be human readable/developer friendly.
+     */
     public CustomJsonOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
@@ -50,7 +55,8 @@ public class CustomJsonOperation extends Operation {
 
     /**
      * 
-     * @param id Must be less than 32 characters long.
+     * @param id
+     *            Must be less than 32 characters long.
      */
     public void setId(String id) {
         this.id = id;
@@ -62,7 +68,8 @@ public class CustomJsonOperation extends Operation {
 
     /**
      * 
-     * @param json Must be proper utf8 / JSON string.
+     * @param json
+     *            Must be proper utf8 / JSON string.
      */
     public void setJson(String json) {
         this.json = json;
@@ -73,7 +80,7 @@ public class CustomJsonOperation extends Operation {
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

@@ -80,23 +80,30 @@ public class WitnessUpdateOperation extends Operation {
     }
 
     /**
-     * TODO: Is this the URL to the node?
+     * Get the URL that has been added to this witness update operation. In most
+     * of the cases this URL is a link to a comment that describes the update.
      * 
-     * @return the url
+     * @return The URL that has been added to this witness update operation.
      */
     public String getUrl() {
         return url;
     }
 
     /**
+     * Set the URL that should be added to this witness update operation. In
+     * most of the cases this URL is a link to a comment that describes the
+     * update.
+     * 
      * @param url
-     *            the url to set
+     *            The URL that should be added to this witness update operation.
      */
     public void setUrl(String url) {
         this.url = url;
     }
 
     /**
+     * TODO:
+     * 
      * @return the blockSigningKey
      */
     public PublicKey getBlockSigningKey() {
@@ -104,6 +111,8 @@ public class WitnessUpdateOperation extends Operation {
     }
 
     /**
+     * TODO:
+     * 
      * @param blockSigningKey
      *            the blockSigningKey to set
      */
@@ -112,6 +121,8 @@ public class WitnessUpdateOperation extends Operation {
     }
 
     /**
+     * TODO:
+     * 
      * @return the properties
      */
     public ChainProperties getProperties() {
@@ -119,6 +130,8 @@ public class WitnessUpdateOperation extends Operation {
     }
 
     /**
+     * TODO:
+     * 
      * @param properties
      *            the properties to set
      */

@@ -17,6 +17,8 @@ import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
+ * This class represents the Steem "transfer_to_vesting_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class TransferToVestingOperation extends Operation {
