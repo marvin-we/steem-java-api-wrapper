@@ -87,7 +87,7 @@ public class TransferOperationTest extends BaseTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testVoteOperationTransactionHex()
+    public void testTransferOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         transferOperationTransaction.sign();
 

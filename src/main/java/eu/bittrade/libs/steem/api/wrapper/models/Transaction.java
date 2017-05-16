@@ -74,6 +74,14 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
     // TODO: Find out what type this is and what the use of this field is.
     private List<Object> extensions;
 
+    /**
+     * Create a new Transaction.
+     */
+    public Transaction() {
+        // Set default values to avoid null pointer exceptions.
+        this.signatures = new ArrayList<>();
+    }
+
     @Override
     public String getExpirationDate() {
         return SteemUtils.transformDateToString(getExpirationDateAsDate());
