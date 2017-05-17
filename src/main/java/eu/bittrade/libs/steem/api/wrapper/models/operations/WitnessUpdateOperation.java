@@ -17,6 +17,8 @@ import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
+ * This class represents the Steem "witness_update_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class WitnessUpdateOperation extends Operation {

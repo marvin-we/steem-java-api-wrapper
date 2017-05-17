@@ -15,6 +15,8 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
 
 /**
+ * This class represents the Steem "vote_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class VoteOperation extends Operation {
