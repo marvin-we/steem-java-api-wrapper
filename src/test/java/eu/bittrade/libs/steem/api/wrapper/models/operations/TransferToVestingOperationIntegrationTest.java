@@ -31,13 +31,16 @@ public class TransferToVestingOperationIntegrationTest extends BaseIntegrationTe
     public void testOperationParsing() throws SteemCommunicationException {
         Block blockContainingTransferToVestingOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
-        Operation transferToVestingOperation = blockContainingTransferToVestingOperation.getTransactions().get(TRANSACTION_INDEX)
-                .getOperations().get(OPERATION_INDEX);
+        Operation transferToVestingOperation = blockContainingTransferToVestingOperation.getTransactions()
+                .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(transferToVestingOperation, instanceOf(TransferToVestingOperation.class));
-        assertThat(((TransferToVestingOperation) transferToVestingOperation).getAmount().getAmount(), equalTo(EXPECTED_AMOUNT));
-        assertThat(((TransferToVestingOperation) transferToVestingOperation).getFrom().getAccountName(), equalTo(EXPECTED_FROM));
-        assertThat(((TransferToVestingOperation) transferToVestingOperation).getTo().getAccountName(), equalTo(EXPECTED_TO));
+        assertThat(((TransferToVestingOperation) transferToVestingOperation).getAmount().getAmount(),
+                equalTo(EXPECTED_AMOUNT));
+        assertThat(((TransferToVestingOperation) transferToVestingOperation).getFrom().getAccountName(),
+                equalTo(EXPECTED_FROM));
+        assertThat(((TransferToVestingOperation) transferToVestingOperation).getTo().getAccountName(),
+                equalTo(EXPECTED_TO));
     }
 
     @Category({ IntegrationTest.class })
