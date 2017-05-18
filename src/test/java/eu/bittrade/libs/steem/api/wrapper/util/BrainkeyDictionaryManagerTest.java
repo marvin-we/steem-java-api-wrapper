@@ -5,6 +5,12 @@ import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.Test;
 
+/**
+ * Test the brain key dictionary import.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ *
+ */
 public class BrainkeyDictionaryManagerTest {
     private static final int NUMBER_OF_WORDS = 49744;
 

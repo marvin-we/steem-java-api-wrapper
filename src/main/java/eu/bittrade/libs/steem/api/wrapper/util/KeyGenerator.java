@@ -7,6 +7,7 @@ import java.security.Security;
 import java.util.ArrayList;
 
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemKeyHandlingException;
@@ -74,6 +75,16 @@ public class KeyGenerator {
      */
     public ECKey getPrivateKey() {
         return privateKey;
+    }
+
+    /**
+     * Get the uncompressed private key in a WI-Format.
+     * 
+     * @return The uncompressed private key in a WI-Format.
+     */
+    public String getPrivateKeyAsWIF() {
+        return this.getPrivateKey().decompress()
+                .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58();
     }
 
     /**
