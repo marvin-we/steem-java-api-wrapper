@@ -16,7 +16,7 @@ import org.apache.logging.log4j.core.util.IOUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 class BrainkeyDictionaryManager {
-    private static final Logger LOGGER = LogManager.getLogger(SteemUtils.class);
+    private static final Logger LOGGER = LogManager.getLogger(BrainkeyDictionaryManager.class);
 
     private static final String DICTIONARY_FILE_NAME = "dictionary.txt";
     private static final String DICTIONARY_DELIMITER = ",";

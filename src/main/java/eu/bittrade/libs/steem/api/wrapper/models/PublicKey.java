@@ -28,7 +28,9 @@ import eu.bittrade.libs.steem.api.wrapper.models.deserializer.PublicKeyDeseriali
 @JsonDeserialize(using = PublicKeyDeserializer.class)
 public class PublicKey implements ByteTransformable {
     private static final Logger LOGGER = LogManager.getLogger(PublicKey.class);
+
     private static final int CHECKSUM_BYTES = 4;
+    private static final String STEEM_DEFAULT_PREFIX = "STM";
 
     private ECKey publicKey;
     private String prefix;
@@ -102,6 +104,7 @@ public class PublicKey implements ByteTransformable {
      */
     public PublicKey(ECKey publicKey) {
         this.setPublicKey(publicKey);
+        this.prefix = STEEM_DEFAULT_PREFIX;
     }
 
     /**
