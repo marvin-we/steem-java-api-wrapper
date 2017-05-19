@@ -74,7 +74,7 @@ public class ChainProperties implements ByteTransformable {
         try (ByteArrayOutputStream serializedChainProperties = new ByteArrayOutputStream()) {
             serializedChainProperties.write(this.getAccountCreationFee().toByteArray());
             serializedChainProperties.write(SteemUtils.transformIntToByteArray((int) this.getMaximumBlockSize()));
-            serializedChainProperties.write(SteemUtils.transformIntToByteArray((int) this.getSdbInterestRate()));
+            serializedChainProperties.write(SteemUtils.transformShortToByteArray(this.getSdbInterestRate()));
 
             return serializedChainProperties.toByteArray();
         } catch (IOException e) {

@@ -12,11 +12,13 @@ import org.spongycastle.crypto.digests.RIPEMD160Digest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.primitives.Bytes;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 import eu.bittrade.libs.steem.api.wrapper.models.deserializer.PublicKeyDeserializer;
+import eu.bittrade.libs.steem.api.wrapper.models.serializer.PublicKeySerializer;
 
 /**
  * This class is the java implementation of the <a href=
@@ -26,6 +28,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.deserializer.PublicKeyDeseriali
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 @JsonDeserialize(using = PublicKeyDeserializer.class)
+@JsonSerialize(using = PublicKeySerializer.class)
 public class PublicKey implements ByteTransformable {
     private static final Logger LOGGER = LogManager.getLogger(PublicKey.class);
 
@@ -112,6 +115,7 @@ public class PublicKey implements ByteTransformable {
      * 
      * @return The address.
      */
+    @JsonIgnore
     public String getAddressFromPublicKey() {
         try {
             // Recreate the address from the public key.

@@ -55,7 +55,7 @@ public class WitnessUpdateOperation extends Operation {
      */
     public WitnessUpdateOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
     }
 
     /**
