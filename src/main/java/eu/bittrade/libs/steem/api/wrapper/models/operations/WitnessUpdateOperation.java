@@ -104,38 +104,39 @@ public class WitnessUpdateOperation extends Operation {
     }
 
     /**
-     * TODO:
+     * Get the public key of the key pair that will be used to sign blocks.
      * 
-     * @return the blockSigningKey
+     * @return The public key of the key pair that will be used to sign blocks.
      */
     public PublicKey getBlockSigningKey() {
         return blockSigningKey;
     }
 
     /**
-     * TODO:
+     * Set the public key of the key pair that will be used to sign blocks.
      * 
      * @param blockSigningKey
-     *            the blockSigningKey to set
+     *            The public key of the key pair that will be used to sign
+     *            blocks.
      */
     public void setBlockSigningKey(PublicKey blockSigningKey) {
         this.blockSigningKey = blockSigningKey;
     }
 
     /**
-     * TODO:
+     * Get the chain properties that this witness is using.
      * 
-     * @return the properties
+     * @return The chain properties used by this witness.
      */
     public ChainProperties getProperties() {
         return properties;
     }
 
     /**
-     * TODO:
+     * Set the chain properties that should be used.
      * 
      * @param properties
-     *            the properties to set
+     *            The chain properties used by this witness.
      */
     public void setProperties(ChainProperties properties) {
         this.properties = properties;

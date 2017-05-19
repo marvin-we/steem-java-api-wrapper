@@ -62,14 +62,14 @@ public class CommentOperationTest extends BaseTest {
     }
 
     @Test
-    public void testcommentOperationToByteArray()
+    public void testCommentOperationToByteArray()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(commentOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     @Test
-    public void testcommentOperationTransactionHex()
+    public void testCommentOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         commentOperationTransaction.sign();
 
