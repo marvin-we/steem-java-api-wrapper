@@ -2,19 +2,21 @@
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
+# Full Documentation
+- Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki) for full documentation, examples, operational details and other information.
+- Or have a look at the JavaDoc.
+
+# Communication
+- Please contact me on [Steemit.com](https://steemit.com/@dez1337)
+- Or create an [Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues) here on GitHub
+
 # Contributors
 - [inertia](https://steemit.com/@inertia) provided a bunch of unit tests to this project.
 - An article from [Kyle](https://steemit.com/@klye) has been used to improve the documentation of the methods.
 - The [guide](https://steemit.com/steem/@xeroc/steem-transaction-signing-in-a-nutshell) from [xeroc](https://steemit.com/@xeroc) shows how to create and sign transactions.
 
-# How to build the project
-The project requires Maven and Java to be installed on your machine. It can be build with the default maven command:
->mvn clean package
-
-The resulting JAR can be found in the target directory as usual.
-
-# How to incldude the steem-java-api-wrapper to your project
-The steem-java-api-wrapper releases are pushed into the maven central repo. Due to that you can simply add a depedency to your project.
+# Binaries
+SteemJ binaries are pushed into the maven central repository and can be integrated with a bunch of build management tools like Maven.
 
 ## Maven
 File: <i>pom.xml</i>
@@ -22,28 +24,24 @@ File: <i>pom.xml</i>
 	<dependency>
             <groupId>eu.bittrade.libs</groupId>
             <artifactId>steem-api-wrapper</artifactId>
-            <version>0.2.2</version>
+            <version>0.2.3</version>
 	</dependency>
 ```
 
-## Gradle
-File: <i>build.gradle</i>
-```Xml
-	allprojects {
-		repositories {
-			jcenter()
-		}
-	}
-```
+Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki/How-to-add-SteemJ-to-your-project) to find examples for Maven, Ivy, Gradle and others.
 
-```Xml
-	dependencies {
-    		compile 'eu.bittrade.libs:steem-api-wrapper:0.2.2'
-	}
-```
+# How to build the project
+The project requires Maven and Java to be installed on your machine. It can be build with the default maven command:
+
+>mvn clean package
+
+The resulting JAR can be found in the target directory as usual.
+
+# Bugs and Feedback
+For bugs or feature requests please create a [GitHub Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues). For general discussions or questions you can also reply to one of the SteemJ update posts on [Steemit.com](https://steemit.com/@dez1337).
 
 # Example
-The following code is a small example showing how to use Version 0.2.2 of the API Wrapper.
+The following code is a small example showing how to use Version 0.2.3 of the API Wrapper.
 
 ```Java
 package eu.bittrade.libs.steem.api.wrapper;
