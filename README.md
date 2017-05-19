@@ -1,5 +1,4 @@
-# steem-java-api-wrapper
-A Java API-Wrapper for the Steem websocket API. 
+![SteemJ Logo](https://camo.githubusercontent.com/a325dd7ebceee15b8ca3fd57383c4e8330cc0425/687474703a2f2f696d6775722e636f6d2f784a4c514e31752e706e67)
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
