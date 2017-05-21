@@ -29,34 +29,70 @@ public class ConvertOperation extends Operation {
     private Asset amount;
 
     /**
-     * This operation instructs the blockchain to start a conversion between
-     * STEEM and SBD, The funds are deposited after STEEMIT_CONVERSION_DELAY.
+     * Create a new convert operation. This operation instructs the blockchain
+     * to start a conversion between STEEM and SBD, The funds are deposited
+     * after STEEMIT_CONVERSION_DELAY.
      */
     public ConvertOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
+        // Set default values.
+        this.setRequestId(0);
     }
 
+    /**
+     * Get the account which performed the conversion.
+     * 
+     * @return The account which performed the conversion.
+     */
     public AccountName getOwner() {
         return owner;
     }
 
+    /**
+     * Set the account for which the operation should be performed.
+     * 
+     * @param owner
+     *            The account for which the operation should be performed.
+     */
     public void setOwner(AccountName owner) {
         this.owner = owner;
     }
 
+    /**
+     * Get the id of this conversion request.
+     * 
+     * @return The id of this conversion request.
+     */
     public long getRequestId() {
         return requestId;
     }
 
+    /**
+     * Set the id of this conversion request. The id has to be unique.
+     * 
+     * @param requestId
+     *            The id of this conversion request.
+     */
     public void setRequestId(long requestId) {
         this.requestId = requestId;
     }
 
+    /**
+     * Get the SBD or STEEM amount that has been converted.
+     * 
+     * @return The SBD or STEEM amount that has been converted.
+     */
     public Asset getAmount() {
         return amount;
     }
 
+    /**
+     * Set the amount of SBD or STEEM that should be converted.
+     * 
+     * @param amount
+     *            The amount of SBD or STEEM that should be converted.
+     */
     public void setAmount(Asset amount) {
         this.amount = amount;
     }

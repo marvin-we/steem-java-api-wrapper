@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.VarInt;
 
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.enums.RequestMethods;
 
@@ -117,7 +117,7 @@ public class SteemUtils {
      * @return The VarInt-byte representation of the given String.
      */
     public static byte[] transformStringToVarIntByteArray(String string) {
-        Charset encodingCharset = SteemApiWrapperConfig.getInstance().getEncodingCharset();
+        Charset encodingCharset = SteemJConfig.getInstance().getEncodingCharset();
         byte[] resultingByteRepresentation = {};
 
         VarInt stringLength = new VarInt(string.length());
@@ -188,7 +188,7 @@ public class SteemUtils {
      * This method transform a date and returns this date in its String
      * representation. The method is using the timezone and the date time
      * pattern defined in the
-     * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig
+     * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig
      * SteemApiWrapperConfig}.
      * 
      * @param date
@@ -197,15 +197,15 @@ public class SteemUtils {
      */
     public static String transformDateToString(Date date) {
         SimpleDateFormat simpleDateFormatForJSON = new SimpleDateFormat(
-                SteemApiWrapperConfig.getInstance().getDateTimePattern());
-        simpleDateFormatForJSON.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+                SteemJConfig.getInstance().getDateTimePattern());
+        simpleDateFormatForJSON.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
         return simpleDateFormatForJSON.format(date);
     }
 
     /**
      * This method transforms a String into a timestamp. The method is using the
      * timezone and the date time pattern defined in the
-     * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig
+     * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig
      * SteemApiWrapperConfig}.
      * 
      * @param dateTime
@@ -217,9 +217,9 @@ public class SteemUtils {
     public static long transformStringToTimestamp(String dateTime) throws ParseException {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                SteemApiWrapperConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
-        calendar.setTime(simpleDateFormat.parse(dateTime + SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+                SteemJConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
+        calendar.setTime(simpleDateFormat.parse(dateTime + SteemJConfig.getInstance().getTimeZoneId()));
         return calendar.getTimeInMillis();
     }
 }

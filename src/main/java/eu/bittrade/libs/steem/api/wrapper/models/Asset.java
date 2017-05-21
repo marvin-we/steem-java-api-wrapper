@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
@@ -118,7 +118,7 @@ public class Asset implements ByteTransformable {
             serializedAsset.write(SteemUtils.transformByteToLittleEndian(this.precision));
 
             serializedAsset.write(this.symbol.name().toUpperCase()
-                    .getBytes(SteemApiWrapperConfig.getInstance().getEncodingCharset()));
+                    .getBytes(SteemJConfig.getInstance().getEncodingCharset()));
             String filledAssetSymbol = this.symbol.name().toUpperCase();
 
             for (int i = filledAssetSymbol.length(); i < 7; i++) {

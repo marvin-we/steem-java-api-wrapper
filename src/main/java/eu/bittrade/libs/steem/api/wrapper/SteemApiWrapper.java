@@ -16,7 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import eu.bittrade.libs.steem.api.wrapper.communication.CommunicationHandler;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.GetDiscussionParametersDTO;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.DiscussionSortType;
 import eu.bittrade.libs.steem.api.wrapper.enums.RequestMethods;
 import eu.bittrade.libs.steem.api.wrapper.enums.RewardFundType;
@@ -65,7 +65,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -76,12 +76,12 @@ public class SteemApiWrapper {
     public SteemApiWrapper() throws SteemCommunicationException {
         this.communicationHandler = new CommunicationHandler();
 
-        if (!("").equals(String.valueOf(SteemApiWrapperConfig.getInstance().getPassword()))
-                && !("").equals(SteemApiWrapperConfig.getInstance().getUsername())) {
+        if (!("").equals(String.valueOf(SteemJConfig.getInstance().getPassword()))
+                && !("").equals(SteemJConfig.getInstance().getUsername())) {
 
             LOGGER.info("Calling the login method with the prodvided credentials before checking the available apis.");
-            if (login(SteemApiWrapperConfig.getInstance().getUsername(),
-                    String.valueOf(SteemApiWrapperConfig.getInstance().getPassword()))) {
+            if (login(SteemJConfig.getInstance().getUsername(),
+                    String.valueOf(SteemJConfig.getInstance().getPassword()))) {
                 LOGGER.info("You have been logged in.");
             } else {
                 LOGGER.error("Login failed. The following check of available apis will be done as a anonymous user.");
@@ -109,7 +109,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -148,7 +148,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -181,7 +181,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -224,7 +224,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -259,7 +259,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -289,7 +289,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -315,7 +315,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -345,7 +345,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -379,7 +379,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -407,7 +407,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -433,7 +433,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -459,7 +459,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -489,7 +489,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -519,7 +519,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -545,7 +545,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -571,7 +571,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -603,7 +603,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -645,7 +645,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -662,8 +662,8 @@ public class SteemApiWrapper {
 
         // Verify that the date has the correct format.
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                SteemApiWrapperConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+                SteemJConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
         Date beforeDate;
         try {
             beforeDate = simpleDateFormat.parse(date);
@@ -685,7 +685,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -712,7 +712,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -738,7 +738,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -766,7 +766,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -797,7 +797,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -824,7 +824,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -851,7 +851,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -880,7 +880,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -908,7 +908,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -952,7 +952,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -984,7 +984,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1014,7 +1014,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1046,7 +1046,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1072,7 +1072,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1100,7 +1100,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1132,7 +1132,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1158,7 +1158,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1184,7 +1184,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1210,7 +1210,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1242,7 +1242,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1251,8 +1251,8 @@ public class SteemApiWrapper {
      *             </ul>
      */
     public Boolean login() throws SteemCommunicationException {
-        return login(SteemApiWrapperConfig.getInstance().getUsername(),
-                String.valueOf(SteemApiWrapperConfig.getInstance().getPassword()));
+        return login(SteemJConfig.getInstance().getUsername(),
+                String.valueOf(SteemJConfig.getInstance().getPassword()));
     }
 
     /**
@@ -1272,7 +1272,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1302,7 +1302,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1332,7 +1332,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON
@@ -1362,7 +1362,7 @@ public class SteemApiWrapper {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the API Wrapper is unable to transform the JSON

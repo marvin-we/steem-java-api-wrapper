@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemKeyHandlingException;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
 
@@ -108,7 +108,7 @@ public class KeyGenerator {
             MessageDigest messageDigest256 = MessageDigest.getInstance("SHA-256");
 
             byte[] hashedBrainKeyAndSequence = messageDigest512
-                    .digest(brainKeyAndSquence.getBytes(SteemApiWrapperConfig.getInstance().getEncodingCharset()));
+                    .digest(brainKeyAndSquence.getBytes(SteemJConfig.getInstance().getEncodingCharset()));
             this.privateKey = ECKey.fromPrivate(messageDigest256.digest(hashedBrainKeyAndSequence));
         } catch (NoSuchAlgorithmException e) {
             throw new SteemKeyHandlingException(

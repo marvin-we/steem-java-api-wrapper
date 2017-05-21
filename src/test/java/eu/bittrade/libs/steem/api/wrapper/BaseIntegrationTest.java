@@ -6,14 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
 
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 
 /**
  * @author Anthony Martin
  */
 public abstract class BaseIntegrationTest extends BaseTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseIntegrationTest.class);
-    protected static final SteemApiWrapperConfig CONFIG = SteemApiWrapperConfig.getInstance();
+    protected static final SteemJConfig CONFIG = SteemJConfig.getInstance();
 
     protected static SteemApiWrapper steemApiWrapper;
     

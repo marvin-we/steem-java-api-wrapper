@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steem.api.wrapper.communication.dto.ResponseWrapperDTO;
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTimeoutException;
@@ -62,7 +62,7 @@ public class CommunicationHandler {
         this.client = ClientManager.createClient();
         this.steemMessageHandler = new SteemMessageHandler(this);
 
-        if (SteemApiWrapperConfig.getInstance().isSslVerificationDisabled()) {
+        if (SteemJConfig.getInstance().isSslVerificationDisabled()) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
             sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
 
@@ -70,11 +70,11 @@ public class CommunicationHandler {
         }
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                SteemApiWrapperConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+                SteemJConfig.getInstance().getDateTimePattern());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
 
         MAPPER.setDateFormat(simpleDateFormat);
-        MAPPER.setTimeZone(TimeZone.getTimeZone(SteemApiWrapperConfig.getInstance().getTimeZoneId()));
+        MAPPER.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
         MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 
         SimpleModule simpleModule = new SimpleModule("BooleanAsString", new Version(1, 0, 0, null, null, null));
@@ -100,7 +100,7 @@ public class CommunicationHandler {
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
      *             time (@see
-     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig#setTimeout(long)
+     *             {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig#setTimeout(long)
      *             setTimeout()})
      * @throws SteemCommunicationException
      *             If there is a connection problem.
@@ -121,9 +121,9 @@ public class CommunicationHandler {
         String rawJsonResponse = "";
         try {
             session.getBasicRemote().sendObject(requestObject);
-            if (!messageLatch.await(SteemApiWrapperConfig.getInstance().getTimeout(), TimeUnit.MILLISECONDS)) {
+            if (!messageLatch.await(SteemJConfig.getInstance().getTimeout(), TimeUnit.MILLISECONDS)) {
                 String errorMessage = "Timeout occured. The websocket server was not able to answer in "
-                        + SteemApiWrapperConfig.getInstance().getTimeout() + " millisecond(s).";
+                        + SteemJConfig.getInstance().getTimeout() + " millisecond(s).";
 
                 LOGGER.error(errorMessage);
                 throw new SteemTimeoutException(errorMessage);
@@ -177,8 +177,8 @@ public class CommunicationHandler {
     private void reconnect() throws SteemCommunicationException {
         try {
             session = client.connectToServer(new SteemEndpoint(),
-                    SteemApiWrapperConfig.getInstance().getClientEndpointConfig(),
-                    SteemApiWrapperConfig.getInstance().getWebsocketEndpointURI());
+                    SteemJConfig.getInstance().getClientEndpointConfig(),
+                    SteemJConfig.getInstance().getWebsocketEndpointURI());
             session.addMessageHandler(steemMessageHandler);
         } catch (DeploymentException | IOException e) {
             throw new SteemCommunicationException("Could not connect to the server.", e);

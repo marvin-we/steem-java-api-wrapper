@@ -20,7 +20,7 @@ import org.bitcoinj.core.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
+import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
@@ -259,10 +259,10 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
             // The expiration date is not set by the user so we do it on our own
             // by adding the maximal allowed offset to the current time.
             this.setExpirationDate((new Timestamp(System.currentTimeMillis())).getTime()
-                    + SteemApiWrapperConfig.getInstance().getMaximumExpirationDateOffset() - 60000L);
+                    + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L);
             LOGGER.debug("No expiration date has been provided so the latest possible time is used.");
         } else if (this.expirationDate > (new Timestamp(System.currentTimeMillis())).getTime()
-                + SteemApiWrapperConfig.getInstance().getMaximumExpirationDateOffset()) {
+                + SteemJConfig.getInstance().getMaximumExpirationDateOffset()) {
             LOGGER.warn("The configured expiration date for this transaction is to far "
                     + "in the future and may not be accepted by the Steem node.");
         } else if (this.operations == null || this.operations.isEmpty()) {
@@ -279,7 +279,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
         List<PrivateKeyType> requiredPrivateKeyTypes = new ArrayList<>();
         for (Operation operation : this.operations) {
             if (!requiredPrivateKeyTypes.contains(operation.getRequiredPrivateKeyType())) {
-                if (SteemApiWrapperConfig.getInstance().getPrivateKey(operation.getRequiredPrivateKeyType()) == null) {
+                if (SteemJConfig.getInstance().getPrivateKey(operation.getRequiredPrivateKeyType()) == null) {
                     throw new SteemInvalidTransactionException("The operation of type "
                             + operation.getClass().getSimpleName() + " requires a private key of type "
                             + operation.getRequiredPrivateKeyType().toString() + ".");
@@ -289,7 +289,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
         }
 
         for (PrivateKeyType requiredKeyType : requiredPrivateKeyTypes) {
-            ECKey privateKey = SteemApiWrapperConfig.getInstance().getPrivateKey(requiredKeyType);
+            ECKey privateKey = SteemJConfig.getInstance().getPrivateKey(requiredKeyType);
             boolean isCanonical = false;
             byte[] signedTransaction = null;
 

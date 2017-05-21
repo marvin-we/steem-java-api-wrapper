@@ -10,10 +10,8 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
@@ -77,7 +75,7 @@ public class WitnessUpdateOperationTest extends BaseTest {
     }
 
     @Test
-    public void testWitnessUpdateOperationOperationToByteArray()
+    public void testWitnessUpdateOperationToByteArray()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(witnessUpdateOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
@@ -96,16 +94,4 @@ public class WitnessUpdateOperationTest extends BaseTest {
                         Sha256Hash.wrap(Sha256Hash.hash(witnessUpdateOperationTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void verifyTransaction() {
-
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void getTransactionHex() {
-
-    }
-}
+}   
