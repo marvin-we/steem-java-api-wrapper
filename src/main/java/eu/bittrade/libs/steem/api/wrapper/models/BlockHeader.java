@@ -15,17 +15,17 @@ import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 public class BlockHeader {
     // Original type is "block_id_type" which wraps a ripemd160 hash. We use an
     // byte array to cover this type.
-    private byte[] previous;
-    private long timestamp;
-    private String witness;
+    protected byte[] previous;
+    protected long timestamp;
+    protected String witness;
     // Original type is "checksum_type" which wraps a ripemd160 hash. We use an
     // byte array to cover this type.
     @JsonProperty("transaction_merkle_root")
-    private String transactionMerkleRoot;
+    protected byte[] transactionMerkleRoot;
     // TODO: Original type is block_header_extensions_type which is an array of
     // block_header_extensions.
-    private Object[] extensions;
-
+    protected Object[] extensions;
+    
     /**
      * @return the previous
      */
@@ -93,7 +93,7 @@ public class BlockHeader {
     /**
      * @return the transactionMerkleRoot
      */
-    public String getTransactionMerkleRoot() {
+    public byte[] getTransactionMerkleRoot() {
         return transactionMerkleRoot;
     }
 
@@ -101,7 +101,7 @@ public class BlockHeader {
      * @param transactionMerkleRoot
      *            the transactionMerkleRoot to set
      */
-    public void setTransactionMerkleRoot(String transactionMerkleRoot) {
+    public void setTransactionMerkleRoot(byte[] transactionMerkleRoot) {
         this.transactionMerkleRoot = transactionMerkleRoot;
     }
 

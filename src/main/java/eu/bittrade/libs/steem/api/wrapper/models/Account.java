@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steem.api.wrapper.models;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -116,7 +115,7 @@ public class Account {
     private int withdrawRoutes;
     // Original type is vector<share_type>
     @JsonProperty("proxied_vsf_votes")
-    private ArrayList<Long> proxiedVsfVotes;
+    private List<Long> proxiedVsfVotes;
     // Original type is uint16, but we have to use int here.
     @JsonProperty("witnesses_voted_for")
     private int witnessesVotedFor;

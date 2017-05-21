@@ -16,14 +16,15 @@ public abstract class BaseIntegrationTest {
     protected static final SteemJConfig CONFIG = SteemJConfig.getInstance();
 
     protected static SteemApiWrapper steemApiWrapper;
-    
+
     @BeforeClass
-    public static void setUpSteemApi() throws Exception  {
+    public static void setUpSteemApi() throws Exception {
         // Change the default settings if needed.
         CONFIG.setWebsocketEndpointURI(new URI("wss://this.piston.rocks"));
         // Create a new apiWrapper with your config object.
         CONFIG.setTimeout(5000);
         CONFIG.setSslVerificationDisabled(true);
+
         steemApiWrapper = new SteemApiWrapper();
     }
 

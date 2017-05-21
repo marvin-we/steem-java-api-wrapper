@@ -160,4 +160,19 @@ public class PublicKey implements ByteTransformable {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
+    @Override
+    public boolean equals(Object otherPublicKey) {
+        if (this == otherPublicKey)
+            return true;
+        if (otherPublicKey == null || !(otherPublicKey instanceof PublicKey))
+            return false;
+        PublicKey otherKey = (PublicKey) otherPublicKey;
+        return this.getPublicKey().equals(otherKey.getPublicKey());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getPublicKey().hashCode();
+    }
 }
