@@ -28,52 +28,70 @@ public class AccountWitnessVoteOperation extends Operation {
 
     /**
      * Create a new account witness vote operation.
+     * 
+     * All accounts with a VFS can vote for or against any witness.
+     *
+     * If a proxy is specified then all existing votes are removed.
      */
     public AccountWitnessVoteOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.ACTIVE);
+        // Set default values:
+        this.setApprove(true);
     }
 
     /**
-     * @return the account
+     * Get the account name that has performed the vote.
+     * 
+     * @return The account name that has performed the vote.
      */
     public AccountName getAccount() {
         return account;
     }
 
     /**
+     * Set the account name that should perform the vote.
+     * 
      * @param account
-     *            the account to set
+     *            The account name that should perform the vote.
      */
     public void setAccount(AccountName account) {
         this.account = account;
     }
 
     /**
-     * @return the witness
+     * Get the witness that has been voted for.
+     * 
+     * @return The witness that has been voted for.
      */
     public AccountName getWitness() {
         return witness;
     }
 
     /**
+     * Set the witness that should be voted for.
+     * 
      * @param witness
-     *            the witness to set
+     *            The witness that should be voted for.
      */
     public void setWitness(AccountName witness) {
         this.witness = witness;
     }
 
     /**
-     * @return the approve
+     * Get the information if this vote has been approved or not.
+     * 
+     * @return The information if this vote has been approved or not.
      */
     public Boolean getApprove() {
         return approve;
     }
 
     /**
+     * Define if this vote is approved or not.
+     * 
      * @param approve
-     *            the approve to set
+     *            Define if this vote is approved or not.
      */
     public void setApprove(Boolean approve) {
         this.approve = approve;

@@ -127,12 +127,12 @@ public class ClaimRewardBalanceOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedClaimRewardOperation = new ByteArrayOutputStream()) {
-            serializedClaimRewardOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
-            serializedClaimRewardOperation.write(this.account.toByteArray());
-            serializedClaimRewardOperation.write(this.rewardSteem.toByteArray());
-            serializedClaimRewardOperation.write(this.rewardSbd.toByteArray());
-            serializedClaimRewardOperation.write(this.rewardVests.toByteArray());
+            serializedClaimRewardOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
+            serializedClaimRewardOperation.write(this.getAccount().toByteArray());
+            serializedClaimRewardOperation.write(this.getRewardSteem().toByteArray());
+            serializedClaimRewardOperation.write(this.getRewardSbd().toByteArray());
+            serializedClaimRewardOperation.write(this.getRewardVests().toByteArray());
 
             return serializedClaimRewardOperation.toByteArray();
         } catch (IOException e) {

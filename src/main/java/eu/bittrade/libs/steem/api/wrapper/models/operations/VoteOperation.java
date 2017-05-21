@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
@@ -21,43 +22,91 @@ import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
  */
 public class VoteOperation extends Operation {
     @JsonProperty("voter")
-    private String voter;
+    private AccountName voter;
     @JsonProperty("author")
-    private String author;
+    private AccountName author;
     @JsonProperty("permlink")
     private String permlink;
     @JsonProperty("weight")
     private short weight;
 
+    /**
+     * Create a new vote operation to vote for a comment or a post.
+     */
     public VoteOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
+        // Set default values:
+        try {
+            this.setWeight((short) 0);
+        } catch (InvalidActivityException e) {
+            throw new RuntimeException("The weight was to high - This should never happen!", e);
+        }
     }
 
-    public String getVoter() {
+    /**
+     * Get the account that has performed the vote.
+     * 
+     * @return The account that has performed the vote.
+     */
+    public AccountName getVoter() {
         return voter;
     }
 
-    public String getAuthor() {
+    /**
+     * Get the author of the post or comment that has been voted for.
+     * 
+     * @return The author of the post or comment that has been voted for.
+     */
+    public AccountName getAuthor() {
         return author;
     }
 
+    /**
+     * Get the permanent link of the post or comment that has been voted for.
+     * 
+     * @return
+     */
     public String getPermlink() {
         return permlink;
     }
 
+    /**
+     * Get the weight with that the user has voted for a comment or post.
+     * 
+     * @return
+     */
     public short getWeight() {
         return weight;
     }
 
-    public void setVoter(String voter) {
+    /**
+     * Set the account name that should perform the vote.
+     * 
+     * @param voter
+     *            The account name that should perform the vote.
+     */
+    public void setVoter(AccountName voter) {
         this.voter = voter;
     }
 
-    public void setAuthor(String author) {
+    /**
+     * Set the author of the post or comment that should be voted for.
+     * 
+     * @param author
+     *            The author of the post or comment that should be voted for.
+     */
+    public void setAuthor(AccountName author) {
         this.author = author;
     }
 
+    /**
+     * Set the permanent link of the post or comment that should be voted for.
+     * 
+     * @param permlink
+     *            The permanent link of the post or comment that should be voted
+     *            for.
+     */
     public void setPermlink(String permlink) {
         this.permlink = permlink;
     }
@@ -81,11 +130,12 @@ public class VoteOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedVoteOperation = new ByteArrayOutputStream()) {
-            serializedVoteOperation.write(SteemJUtils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.ordinal()));
-            serializedVoteOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.voter));
-            serializedVoteOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.author));
-            serializedVoteOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.permlink));
-            serializedVoteOperation.write(SteemJUtils.transformShortToByteArray(this.weight));
+            serializedVoteOperation
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.ordinal()));
+            serializedVoteOperation.write(this.getVoter().toByteArray());
+            serializedVoteOperation.write(this.getAuthor().toByteArray());
+            serializedVoteOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
+            serializedVoteOperation.write(SteemJUtils.transformShortToByteArray(this.getWeight()));
 
             return serializedVoteOperation.toByteArray();
         } catch (IOException e) {

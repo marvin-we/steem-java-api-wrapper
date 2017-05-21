@@ -49,78 +49,103 @@ public class LimitOrderCreate2Operation extends Operation implements Expirable {
     public LimitOrderCreate2Operation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.ACTIVE);
+        // Set default values.
+        this.setOrderId(0);
+        this.setFillOrKill(false);
+        this.setExpirationDate(System.currentTimeMillis());
     }
 
     /**
-     * @return the owner
+     * Get the account the order should be created for.
+     * 
+     * @return The account to create the order for.
      */
     public AccountName getOwner() {
         return owner;
     }
 
     /**
+     * Get the account to create the order for.
+     * 
      * @param owner
-     *            the owner to set
+     *            The account to create the order for.
      */
     public void setOwner(AccountName owner) {
         this.owner = owner;
     }
 
     /**
-     * @return the orderId
+     * Get the id of this order.
+     * 
+     * @return The id of this order.
      */
     public int getOrderId() {
         return (int) orderId;
     }
 
     /**
+     * Set the id of this order. The only limitation for this id is that it has
+     * to be free, meaning that there is no other open order with this id.
+     * 
      * @param orderId
-     *            the orderId to set
+     *            The id of this order.
      */
     public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
 
     /**
-     * @return the amountToSell
+     * Get the amount to sell within this order.
+     * 
+     * @return The amount to sell within this order.
      */
     public Asset getAmountToSell() {
         return amountToSell;
     }
 
     /**
+     * Set the amount to sell within this order.
+     * 
      * @param amountToSell
-     *            the amountToSell to set
+     *            The amount to sell within this order.
      */
     public void setAmountToSell(Asset amountToSell) {
         this.amountToSell = amountToSell;
     }
 
     /**
-     * @return the fillOrKill
+     * Was this order a fill or kill order?
+     * 
+     * @return true if this order was a fill or kill order.
      */
     public Boolean getFillOrKill() {
         return fillOrKill;
     }
 
     /**
+     * Define if this order is a fill or kill order.
+     * 
      * @param fillOrKill
-     *            the fillOrKill to set
+     *            True if this order is a fill or kill order.
      */
     public void setFillOrKill(Boolean fillOrKill) {
         this.fillOrKill = fillOrKill;
     }
 
     /**
-     * @return the exchangeRate
+     * Get the exchange rate (price.base / price.quote) used for this order.
+     * 
+     * @return The exchange rate used for this order.
      */
     public Price getExchangeRate() {
         return exchangeRate;
     }
 
     /**
+     * Set the exchange rate (price.base / price.quote) used for this order.
+     * 
      * @param exchangeRate
-     *            the exchangeRate to set
+     *            The exchange rate used for this order.
      */
     public void setExchangeRate(Price exchangeRate) {
         this.exchangeRate = exchangeRate;
@@ -143,7 +168,7 @@ public class LimitOrderCreate2Operation extends Operation implements Expirable {
 
     @Override
     public int getExpirationDateAsInt() {
-        return (int)(this.expirationDate / 1000);
+        return (int) (this.expirationDate / 1000);
     }
 
     @Override

@@ -30,7 +30,8 @@ public class TransferOperation extends Operation {
     private String memo;
 
     /**
-     * Create a new transfer operation.
+     * Create a new transfer operation. Use this operation to transfer an asset
+     * from one account to another.
      */
     public TransferOperation() {
         // Define the required key type for this operation.

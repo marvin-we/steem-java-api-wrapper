@@ -32,6 +32,8 @@ public class LimitOrderCancelOperation extends Operation {
     public LimitOrderCancelOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.ACTIVE);
+        // Set default values:
+        this.setOrderId(0);
     }
 
     /**

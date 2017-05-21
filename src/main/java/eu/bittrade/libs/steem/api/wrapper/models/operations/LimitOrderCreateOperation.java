@@ -47,6 +47,10 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
     public LimitOrderCreateOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.ACTIVE);
+        // Set default values:
+        this.setOrderId(0);
+        this.setFillOrKill(false);
+        this.setExpirationDate(System.currentTimeMillis());
     }
 
     /**
@@ -74,11 +78,12 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
      * @return The id of this order.
      */
     public int getOrderId() {
-        return (int)orderId;
+        return (int) orderId;
     }
 
     /**
-     * Set the id of this order.
+     * Set the id of this order. The only limitation for this id is that it has
+     * to be free, meaning that there is no other open order with this id.
      * 
      * @param orderId
      *            The id of this order.
@@ -107,32 +112,39 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
     }
 
     /**
+     * Get the amount that the owner has received.
      * 
-     * @return
+     * @return The amount that the owner has received.
      */
     public Asset getMinToReceive() {
         return minToReceive;
     }
 
     /**
+     * Set the amount that should be received for the asset that will be sold.
      * 
      * @param minToReceive
+     *            The amount that should be received for the asset that will be
+     *            sold.
      */
     public void setMinToReceive(Asset minToReceive) {
         this.minToReceive = minToReceive;
     }
 
     /**
+     * Was this order a fill or kill order?
      * 
-     * @return
+     * @return true if this order was a fill or kill order.
      */
     public Boolean getFillOrKill() {
         return fillOrKill;
     }
 
     /**
+     * Define if this order is a fill or kill order.
      * 
      * @param fillOrKill
+     *            True if this order is a fill or kill order.
      */
     public void setFillOrKill(Boolean fillOrKill) {
         this.fillOrKill = fillOrKill;
@@ -157,7 +169,7 @@ public class LimitOrderCreateOperation extends Operation implements Expirable {
     @Override
     @JsonIgnore
     public int getExpirationDateAsInt() {
-        return (int)(this.expirationDate / 1000);
+        return (int) (this.expirationDate / 1000);
     }
 
     @Override
