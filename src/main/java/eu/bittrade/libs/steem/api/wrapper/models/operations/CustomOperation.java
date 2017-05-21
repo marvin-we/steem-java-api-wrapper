@@ -61,7 +61,7 @@ public class CustomOperation extends Operation {
 
     /**
      * Get the data that this operation contains. <b>Notice</b> that the
-     * original type of this field is "vector< char >" and that its returned as
+     * original type of this field is "vector&lt; char &gt;" and that its returned as
      * a String.
      * 
      * @return the data The data transfered with this operation.
