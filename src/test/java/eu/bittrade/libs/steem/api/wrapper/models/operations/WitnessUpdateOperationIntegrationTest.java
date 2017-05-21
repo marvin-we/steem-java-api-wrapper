@@ -13,8 +13,8 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException
 import eu.bittrade.libs.steem.api.wrapper.models.Block;
 
 /**
- * Verify the functionality of the "vote operation" under the use of real api
- * calls.
+ * Verify the functionality of the "witness update operation" under the use of
+ * real api calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

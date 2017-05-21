@@ -21,7 +21,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
- * Test a Steem "comment operation" and verify the results against the api.
+ * Test a Steem "convert operation" and verify the results against the api.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
