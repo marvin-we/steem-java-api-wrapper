@@ -73,7 +73,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public SteemApiWrapper() throws SteemCommunicationException {
+    public SteemApiWrapper() throws SteemCommunicationException {        
         this.communicationHandler = new CommunicationHandler();
 
         if (!("").equals(String.valueOf(SteemJConfig.getInstance().getPassword()))

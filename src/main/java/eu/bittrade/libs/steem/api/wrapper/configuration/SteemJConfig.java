@@ -29,7 +29,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 public class SteemJConfig {
     private static final Logger LOGGER = LogManager.getLogger(SteemJConfig.class);
 
-    private static SteemJConfig steemApiWrapperConfigInstance;
+    private static SteemJConfig steemJConfigInstance;
 
     private ClientEndpointConfig clientEndpointConfig;
     private URI websocketEndpointURI;
@@ -57,8 +57,8 @@ public class SteemJConfig {
         }
         this.timeout = 1000;
         this.dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
-        this.username = "";
-        this.password = "".toCharArray();
+        this.username = System.getProperty("steemj.api.username", "");
+        this.password = System.getProperty("steemj.api.password", "").toCharArray();
         this.sslVerificationDisabled = false;
         this.maximumExpirationDateOffset = 3600000L;
         this.timeZoneId = "GMT";
@@ -66,7 +66,12 @@ public class SteemJConfig {
 
         this.privateKeys = new EnumMap<>(PrivateKeyType.class);
         for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
-            this.privateKeys.put(privateKeyType, null);
+            String wifPrivateKey = System.getProperty("steemj.key." + privateKeyType.name().toLowerCase());
+            if (wifPrivateKey == null || wifPrivateKey.isEmpty()) {
+                this.privateKeys.put(privateKeyType, null);
+            } else {
+                this.privateKeys.put(privateKeyType, DumpedPrivateKey.fromBase58(null, wifPrivateKey).getKey());
+            }
         }
     }
 
@@ -347,15 +352,27 @@ public class SteemJConfig {
     /**
      * Receive a
      * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig
-     * SteemApiWrapperConfig} instance.
+     * SteemJConfig} instance.
      * 
-     * @return A SteemApiWrapperConfig instance.
+     * @return A SteemJConfig instance.
      */
     public static SteemJConfig getInstance() {
-        if (steemApiWrapperConfigInstance == null) {
-            steemApiWrapperConfigInstance = new SteemJConfig();
+        if (steemJConfigInstance == null) {
+            steemJConfigInstance = new SteemJConfig();
         }
 
-        return steemApiWrapperConfigInstance;
+        return steemJConfigInstance;
+    }
+
+    /**
+     * Overrides the current
+     * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig
+     * SteemJConfig} instance and returns a new one.
+     * 
+     * @return A SteemJConfig instance.
+     */
+    public static SteemJConfig getNewInstance() {
+        steemJConfigInstance = new SteemJConfig();
+        return steemJConfigInstance;
     }
 }

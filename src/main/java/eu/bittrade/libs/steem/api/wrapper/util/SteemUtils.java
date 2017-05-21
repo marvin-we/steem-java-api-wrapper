@@ -189,7 +189,7 @@ public class SteemUtils {
      * representation. The method is using the timezone and the date time
      * pattern defined in the
      * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig
-     * SteemApiWrapperConfig}.
+     * SteemJConfig}.
      * 
      * @param date
      *            The date in its String representation.
@@ -206,7 +206,7 @@ public class SteemUtils {
      * This method transforms a String into a timestamp. The method is using the
      * timezone and the date time pattern defined in the
      * {@link eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig
-     * SteemApiWrapperConfig}.
+     * SteemJConfig}.
      * 
      * @param dateTime
      *            The date to transform.
