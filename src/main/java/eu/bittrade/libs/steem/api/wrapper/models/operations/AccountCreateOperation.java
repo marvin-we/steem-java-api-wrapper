@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -179,7 +179,7 @@ public class AccountCreateOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAccountCreateOperation = new ByteArrayOutputStream()) {
             serializedAccountCreateOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_CREATE_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_CREATE_OPERATION.ordinal()));
             serializedAccountCreateOperation.write(this.fee.toByteArray());
             serializedAccountCreateOperation.write(this.creator.toByteArray());
             serializedAccountCreateOperation.write(this.newAccountName.toByteArray());
@@ -187,7 +187,7 @@ public class AccountCreateOperation extends Operation {
             serializedAccountCreateOperation.write(this.active.toByteArray());
             serializedAccountCreateOperation.write(this.posting.toByteArray());
             serializedAccountCreateOperation.write(this.memoKey.toByteArray());
-            serializedAccountCreateOperation.write(SteemUtils.transformStringToVarIntByteArray(this.jsonMetadata));
+            serializedAccountCreateOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
 
             return serializedAccountCreateOperation.toByteArray();
         } catch (IOException e) {

@@ -12,7 +12,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "feed_publish_operation" object.
@@ -78,7 +78,7 @@ public class FeedPublishOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedFeedPublishOperation = new ByteArrayOutputStream()) {
             serializedFeedPublishOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.FEED_PUBLISH_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.FEED_PUBLISH_OPERATION.ordinal()));
             serializedFeedPublishOperation.write(this.getPublisher().toByteArray());
             serializedFeedPublishOperation.write(this.getExchangeRate().toByteArray());
 

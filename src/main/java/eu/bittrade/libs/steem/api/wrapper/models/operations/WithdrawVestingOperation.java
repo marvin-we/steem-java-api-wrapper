@@ -12,7 +12,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "withdraw_vesting_operation" object.
@@ -91,7 +91,7 @@ public class WithdrawVestingOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedWithdrawVestingOperation = new ByteArrayOutputStream()) {
             serializedWithdrawVestingOperation.write(
-                    SteemUtils.transformIntToVarIntByteArray(OperationType.WITHDRAW_VESTING_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.WITHDRAW_VESTING_OPERATION.ordinal()));
             serializedWithdrawVestingOperation.write(this.getAccount().toByteArray());
             serializedWithdrawVestingOperation.write(this.getVestingShares().toByteArray());
 

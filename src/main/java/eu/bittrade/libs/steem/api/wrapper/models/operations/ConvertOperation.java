@@ -12,7 +12,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "convert_operation" object.
@@ -101,9 +101,9 @@ public class ConvertOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedConvertOperation = new ByteArrayOutputStream()) {
             serializedConvertOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.CONVERT_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CONVERT_OPERATION.ordinal()));
             serializedConvertOperation.write(this.getOwner().toByteArray());
-            serializedConvertOperation.write(SteemUtils.transformIntToByteArray((int) this.getRequestId()));
+            serializedConvertOperation.write(SteemJUtils.transformIntToByteArray((int) this.getRequestId()));
             serializedConvertOperation.write(this.getAmount().toByteArray());
 
             return serializedConvertOperation.toByteArray();

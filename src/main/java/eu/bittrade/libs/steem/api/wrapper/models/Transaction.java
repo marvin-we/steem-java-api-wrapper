@@ -26,7 +26,7 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.Expirable;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents a Steem Transaction and also provides methods to sign a
@@ -84,7 +84,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
 
     @Override
     public String getExpirationDate() {
-        return SteemUtils.transformDateToString(getExpirationDateAsDate());
+        return SteemJUtils.transformDateToString(getExpirationDateAsDate());
     }
 
     @Override
@@ -172,7 +172,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
 
     @Override
     public void setExpirationDate(String expirationDate) throws ParseException {
-        this.setExpirationDate(SteemUtils.transformStringToTimestamp(expirationDate));
+        this.setExpirationDate(SteemJUtils.transformStringToTimestamp(expirationDate));
     }
 
     /**
@@ -370,10 +370,10 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
             if (chainId != null && !chainId.isEmpty()) {
                 serializedTransaction.write(Utils.HEX.decode(chainId));
             }
-            serializedTransaction.write(SteemUtils.transformShortToByteArray(this.getRefBlockNum()));
-            serializedTransaction.write(SteemUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
-            serializedTransaction.write(SteemUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
-            serializedTransaction.write(SteemUtils.transformLongToVarIntByteArray(this.getOperations().size()));
+            serializedTransaction.write(SteemJUtils.transformShortToByteArray(this.getRefBlockNum()));
+            serializedTransaction.write(SteemJUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
+            serializedTransaction.write(SteemJUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
+            serializedTransaction.write(SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size()));
 
             for (Operation operation : this.getOperations()) {
                 serializedTransaction.write(operation.toByteArray());

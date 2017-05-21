@@ -11,7 +11,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "comment_operation" object.
@@ -179,14 +179,14 @@ public class CommentOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentOperation = new ByteArrayOutputStream()) {
             serializedCommentOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPERATION.ordinal()));
             serializedCommentOperation.write(this.parentAuthor.toByteArray());
-            serializedCommentOperation.write(SteemUtils.transformStringToVarIntByteArray(this.parentPermlink));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.parentPermlink));
             serializedCommentOperation.write(this.author.toByteArray());
-            serializedCommentOperation.write(SteemUtils.transformStringToVarIntByteArray(this.permlink));
-            serializedCommentOperation.write(SteemUtils.transformStringToVarIntByteArray(this.title));
-            serializedCommentOperation.write(SteemUtils.transformStringToVarIntByteArray(this.body));
-            serializedCommentOperation.write(SteemUtils.transformStringToVarIntByteArray(this.jsonMetadata));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.permlink));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.title));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.body));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
 
             return serializedCommentOperation.toByteArray();
         } catch (IOException e) {

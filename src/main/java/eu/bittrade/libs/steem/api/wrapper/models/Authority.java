@@ -18,7 +18,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.deserializer.AccountAuthHashMap
 import eu.bittrade.libs.steem.api.wrapper.models.deserializer.PublicKeyHashMapDeserializer;
 import eu.bittrade.libs.steem.api.wrapper.models.serializer.AccountAuthHashMapSerializer;
 import eu.bittrade.libs.steem.api.wrapper.models.serializer.PublicKeyHashMapSerializer;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class is the java implementation of the <a href=
@@ -107,26 +107,26 @@ public class Authority implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAuthority = new ByteArrayOutputStream()) {
-            // serializedAuthority.write(SteemUtils
+            // serializedAuthority.write(SteemJUtils
             // .transformIntToByteArray(this.getKeyAuths().size() +
             // this.getAccountAuths().size()));
             serializedAuthority.write((byte) (this.getKeyAuths().size() + this.getAccountAuths().size()));
             
             if ((this.getKeyAuths().size() + this.getAccountAuths().size()) > 0) {
-                serializedAuthority.write(SteemUtils.transformIntToByteArray((int) this.getWeightThreshold()));
+                serializedAuthority.write(SteemJUtils.transformIntToByteArray((int) this.getWeightThreshold()));
 
-                //serializedAuthority.write(SteemUtils.transformIntToByteArray(accountAuths.size()));
+                //serializedAuthority.write(SteemJUtils.transformIntToByteArray(accountAuths.size()));
                 serializedAuthority.write((byte) accountAuths.size());
                 for (Entry<AccountName, Integer> accountAuth : this.getAccountAuths().entrySet()) {
                     serializedAuthority.write(accountAuth.getKey().toByteArray());
-                    serializedAuthority.write(SteemUtils.transformShortToByteArray(accountAuth.getValue()));
+                    serializedAuthority.write(SteemJUtils.transformShortToByteArray(accountAuth.getValue()));
                 }
 
-                //serializedAuthority.write(SteemUtils.transformIntToByteArray(keyAuths.size()));
+                //serializedAuthority.write(SteemJUtils.transformIntToByteArray(keyAuths.size()));
                 serializedAuthority.write((byte) keyAuths.size());
                 for (Entry<PublicKey, Integer> keyAuth : this.getKeyAuths().entrySet()) {
                     serializedAuthority.write(keyAuth.getKey().toByteArray());
-                    serializedAuthority.write(SteemUtils.transformShortToByteArray(keyAuth.getValue()));
+                    serializedAuthority.write(SteemJUtils.transformShortToByteArray(keyAuth.getValue()));
                 }
             }
 

@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "witness_update_operation" object.
@@ -165,9 +165,9 @@ public class WitnessUpdateOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedWitnessUpdateOperation = new ByteArrayOutputStream()) {
             serializedWitnessUpdateOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.WITNESS_UPDATE_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.WITNESS_UPDATE_OPERATION.ordinal()));
             serializedWitnessUpdateOperation.write(this.getOwner().toByteArray());
-            serializedWitnessUpdateOperation.write(SteemUtils.transformStringToVarIntByteArray(this.getUrl()));
+            serializedWitnessUpdateOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getUrl()));
             serializedWitnessUpdateOperation.write(this.getBlockSigningKey().toByteArray());
             serializedWitnessUpdateOperation.write(this.getProperties().toByteArray());
             serializedWitnessUpdateOperation.write(this.getFee().toByteArray());

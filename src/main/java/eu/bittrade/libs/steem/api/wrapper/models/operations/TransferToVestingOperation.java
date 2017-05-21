@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "transfer_to_vesting_operation" object.
@@ -108,7 +108,7 @@ public class TransferToVestingOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedTransferToVestingOperation = new ByteArrayOutputStream()) {
             serializedTransferToVestingOperation.write(
-                    SteemUtils.transformIntToVarIntByteArray(OperationType.TRANSFER_TO_VESTING_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.TRANSFER_TO_VESTING_OPERATION.ordinal()));
             serializedTransferToVestingOperation.write(this.getFrom().toByteArray());
             serializedTransferToVestingOperation.write(this.getTo().toByteArray());
             serializedTransferToVestingOperation.write(this.getAmount().toByteArray());

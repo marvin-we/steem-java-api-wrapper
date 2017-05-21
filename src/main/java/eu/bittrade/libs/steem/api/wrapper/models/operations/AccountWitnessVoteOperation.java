@@ -11,7 +11,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "account_witness_vote_operation" object.
@@ -83,10 +83,10 @@ public class AccountWitnessVoteOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAccountWitnessVoteOperation = new ByteArrayOutputStream()) {
             serializedAccountWitnessVoteOperation.write(
-                    SteemUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_WITNESS_VOTE_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_WITNESS_VOTE_OPERATION.ordinal()));
             serializedAccountWitnessVoteOperation.write(this.getAccount().toByteArray());
             serializedAccountWitnessVoteOperation.write(this.getWitness().toByteArray());
-            serializedAccountWitnessVoteOperation.write(SteemUtils.transformBooleanToByteArray(this.getApprove()));
+            serializedAccountWitnessVoteOperation.write(SteemJUtils.transformBooleanToByteArray(this.getApprove()));
 
             return serializedAccountWitnessVoteOperation.toByteArray();
         } catch (IOException e) {

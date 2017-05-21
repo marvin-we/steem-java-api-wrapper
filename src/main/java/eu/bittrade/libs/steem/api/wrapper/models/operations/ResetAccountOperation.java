@@ -12,7 +12,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "reset_account_operation" object.
@@ -99,7 +99,7 @@ public class ResetAccountOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedResetAccountOperation = new ByteArrayOutputStream()) {
             serializedResetAccountOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.RESET_ACCOUNT_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.RESET_ACCOUNT_OPERATION.ordinal()));
             serializedResetAccountOperation.write(this.getResetAccount().toByteArray());
             serializedResetAccountOperation.write(this.getAccountToReset().toByteArray());
             serializedResetAccountOperation.write(this.getNewOwnerAuthority().toByteArray());

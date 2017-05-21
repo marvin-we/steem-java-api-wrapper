@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -72,7 +72,7 @@ public class BlockHeader {
      *             If the given String does not patch the pattern.
      */
     public void setTimestamp(String timestamp) throws ParseException {
-        this.timestamp = SteemUtils.transformStringToTimestamp(timestamp);
+        this.timestamp = SteemJUtils.transformStringToTimestamp(timestamp);
     }
 
     /**

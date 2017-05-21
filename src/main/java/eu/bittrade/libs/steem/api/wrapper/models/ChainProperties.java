@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -73,8 +73,8 @@ public class ChainProperties implements ByteTransformable {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedChainProperties = new ByteArrayOutputStream()) {
             serializedChainProperties.write(this.getAccountCreationFee().toByteArray());
-            serializedChainProperties.write(SteemUtils.transformIntToByteArray((int) this.getMaximumBlockSize()));
-            serializedChainProperties.write(SteemUtils.transformShortToByteArray(this.getSdbInterestRate()));
+            serializedChainProperties.write(SteemJUtils.transformIntToByteArray((int) this.getMaximumBlockSize()));
+            serializedChainProperties.write(SteemJUtils.transformShortToByteArray(this.getSdbInterestRate()));
 
             return serializedChainProperties.toByteArray();
         } catch (IOException e) {

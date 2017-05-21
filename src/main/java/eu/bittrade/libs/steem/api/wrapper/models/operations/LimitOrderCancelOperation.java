@@ -11,7 +11,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "limit_order_cancel_operation" object.
@@ -76,9 +76,9 @@ public class LimitOrderCancelOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedLimitOrderCancelOperation = new ByteArrayOutputStream()) {
             serializedLimitOrderCancelOperation.write(
-                    SteemUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CANCEL_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CANCEL_OPERATION.ordinal()));
             serializedLimitOrderCancelOperation.write(this.getOwner().toByteArray());
-            serializedLimitOrderCancelOperation.write(SteemUtils.transformIntToByteArray(this.getOrderId()));
+            serializedLimitOrderCancelOperation.write(SteemJUtils.transformIntToByteArray(this.getOrderId()));
 
             return serializedLimitOrderCancelOperation.toByteArray();
         } catch (IOException e) {

@@ -16,7 +16,7 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.Expirable;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class is the java implementation of the <a href=
@@ -128,12 +128,12 @@ public class LimitOrderCreate2Operation extends Operation implements Expirable {
 
     @Override
     public void setExpirationDate(String expirationDate) throws ParseException {
-        this.setExpirationDate(SteemUtils.transformStringToTimestamp(expirationDate));
+        this.setExpirationDate(SteemJUtils.transformStringToTimestamp(expirationDate));
     }
 
     @Override
     public String getExpirationDate() {
-        return SteemUtils.transformDateToString(this.getExpirationDateAsDate());
+        return SteemJUtils.transformDateToString(this.getExpirationDateAsDate());
     }
 
     @Override
@@ -155,14 +155,14 @@ public class LimitOrderCreate2Operation extends Operation implements Expirable {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedLimitOrderCreate2Operation = new ByteArrayOutputStream()) {
             serializedLimitOrderCreate2Operation.write(
-                    SteemUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE2_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE2_OPERATION.ordinal()));
             serializedLimitOrderCreate2Operation.write(this.getOwner().toByteArray());
-            serializedLimitOrderCreate2Operation.write(SteemUtils.transformIntToByteArray(this.getOrderId()));
+            serializedLimitOrderCreate2Operation.write(SteemJUtils.transformIntToByteArray(this.getOrderId()));
             serializedLimitOrderCreate2Operation.write(this.getAmountToSell().toByteArray());
             serializedLimitOrderCreate2Operation.write(this.getExchangeRate().toByteArray());
-            serializedLimitOrderCreate2Operation.write(SteemUtils.transformBooleanToByteArray(this.getFillOrKill()));
+            serializedLimitOrderCreate2Operation.write(SteemJUtils.transformBooleanToByteArray(this.getFillOrKill()));
             serializedLimitOrderCreate2Operation
-                    .write(SteemUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
+                    .write(SteemJUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
 
             return serializedLimitOrderCreate2Operation.toByteArray();
         } catch (IOException e) {

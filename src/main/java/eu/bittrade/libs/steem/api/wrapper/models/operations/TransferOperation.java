@@ -12,7 +12,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "transfer_operation" object.
@@ -117,11 +117,11 @@ public class TransferOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedTransferOperation = new ByteArrayOutputStream()) {
             serializedTransferOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.TRANSFER_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.TRANSFER_OPERATION.ordinal()));
             serializedTransferOperation.write(this.getFrom().toByteArray());
             serializedTransferOperation.write(this.getTo().toByteArray());
             serializedTransferOperation.write(this.getAmount().toByteArray());
-            serializedTransferOperation.write(SteemUtils.transformStringToVarIntByteArray(this.getMemo()));
+            serializedTransferOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getMemo()));
 
             return serializedTransferOperation.toByteArray();
         } catch (IOException e) {

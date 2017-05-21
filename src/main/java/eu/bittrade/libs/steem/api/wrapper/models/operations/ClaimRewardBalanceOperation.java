@@ -12,7 +12,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.util.SteemUtils;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "claim_reward_balance_operation" object.
@@ -128,7 +128,7 @@ public class ClaimRewardBalanceOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedClaimRewardOperation = new ByteArrayOutputStream()) {
             serializedClaimRewardOperation
-                    .write(SteemUtils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
             serializedClaimRewardOperation.write(this.account.toByteArray());
             serializedClaimRewardOperation.write(this.rewardSteem.toByteArray());
             serializedClaimRewardOperation.write(this.rewardSbd.toByteArray());
