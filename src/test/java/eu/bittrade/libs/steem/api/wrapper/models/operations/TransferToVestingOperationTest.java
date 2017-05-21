@@ -16,10 +16,10 @@ import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
- * Test a Steem "transfer to vesting operation" and verify the results against the api.
+ * Test a Steem "transfer to vesting operation" and verify the results against
+ * the api.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -30,7 +30,6 @@ public class TransferToVestingOperationTest extends BaseTest {
             + "000000000f68585abf4dce7c8045701030764657a313333370764657a31333337010000000000000003535445454d000000";
 
     private static TransferToVestingOperation transferToVestingOperation;
-    private static Transaction transferToVestingOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -46,34 +45,25 @@ public class TransferToVestingOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(transferToVestingOperation);
 
-        transferToVestingOperationTransaction = new Transaction();
-        transferToVestingOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        transferToVestingOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        transferToVestingOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        transferToVestingOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
     public void testTransferToVestingOperationToByteArray()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
-                Utils.HEX.encode(transferToVestingOperation.toByteArray()),
-                equalTo(EXPECTED_BYTE_REPRESENTATION));
+                Utils.HEX.encode(transferToVestingOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     @Test
     public void testTransferToVestingOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        transferToVestingOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(transferToVestingOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
-        assertThat(
-                "Expect that the serialized transaction results in the given hex.", Utils.HEX.encode(Sha256Hash
-                        .wrap(Sha256Hash.hash(transferToVestingOperationTransaction.toByteArray())).getBytes()),
+        assertThat("Expect that the serialized transaction results in the given hex.",
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

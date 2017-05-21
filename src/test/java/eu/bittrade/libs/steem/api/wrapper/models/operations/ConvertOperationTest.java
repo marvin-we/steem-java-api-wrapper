@@ -10,15 +10,12 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "convert operation" and verify the results against the api.
@@ -32,7 +29,6 @@ public class ConvertOperationTest extends BaseTest {
             + "000000000000f68585abf4dce7c8045701080764657a31333337390500000100000000000000035342440000000000";
 
     private static ConvertOperation convertOperation;
-    private static Transaction convertOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -49,13 +45,7 @@ public class ConvertOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(convertOperation);
 
-        convertOperationTransaction = new Transaction();
-        convertOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        convertOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        convertOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        convertOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -68,26 +58,12 @@ public class ConvertOperationTest extends BaseTest {
     @Test
     public void testConvertOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        convertOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(convertOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX
-                        .encode(Sha256Hash.wrap(Sha256Hash.hash(convertOperationTransaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void verifyTransaction() {
-
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void getTransactionHex() {
-
     }
 }

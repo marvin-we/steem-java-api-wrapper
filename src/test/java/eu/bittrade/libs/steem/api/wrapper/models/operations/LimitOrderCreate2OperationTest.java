@@ -10,16 +10,13 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "limit order create 2 operation" and verify the results against
@@ -36,7 +33,6 @@ public class LimitOrderCreate2OperationTest extends BaseTest {
             + "00000003534244000000000a0000000000000003535445454d000000e7c8045700";
 
     private static LimitOrderCreate2Operation limitOrderCreate2Operation;
-    private static Transaction limitOrderCreate2OperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -69,13 +65,7 @@ public class LimitOrderCreate2OperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(limitOrderCreate2Operation);
 
-        limitOrderCreate2OperationTransaction = new Transaction();
-        limitOrderCreate2OperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        limitOrderCreate2OperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        limitOrderCreate2OperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        limitOrderCreate2OperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -88,26 +78,12 @@ public class LimitOrderCreate2OperationTest extends BaseTest {
     @Test
     public void testLimitOrderCreate2OperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        limitOrderCreate2OperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(limitOrderCreate2OperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
-        assertThat(
-                "Expect that the serialized transaction results in the given hex.", Utils.HEX.encode(Sha256Hash
-                        .wrap(Sha256Hash.hash(limitOrderCreate2OperationTransaction.toByteArray())).getBytes()),
+        assertThat("Expect that the serialized transaction results in the given hex.",
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void verifyTransaction() {
-
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void getTransactionHex() {
-
     }
 }

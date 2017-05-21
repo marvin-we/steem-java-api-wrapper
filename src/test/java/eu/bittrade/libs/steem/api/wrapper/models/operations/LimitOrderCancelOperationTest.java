@@ -10,13 +10,10 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "limit order cancel operation" and verify the results against
@@ -31,7 +28,6 @@ public class LimitOrderCancelOperationTest extends BaseTest {
             + "00000000000f68585abf4dcf0c8045701060764657a31333337c385070000";
 
     private static LimitOrderCancelOperation limitOrderCancelOperation;
-    private static Transaction limitOrderCancelOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -43,13 +39,7 @@ public class LimitOrderCancelOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(limitOrderCancelOperation);
 
-        limitOrderCancelOperationTransaction = new Transaction();
-        limitOrderCancelOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        limitOrderCancelOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        limitOrderCancelOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        limitOrderCancelOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -62,26 +52,12 @@ public class LimitOrderCancelOperationTest extends BaseTest {
     @Test
     public void testLimitOrderCreateOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        limitOrderCancelOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(limitOrderCancelOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
-        assertThat(
-                "Expect that the serialized transaction results in the given hex.", Utils.HEX.encode(Sha256Hash
-                        .wrap(Sha256Hash.hash(limitOrderCancelOperationTransaction.toByteArray())).getBytes()),
+        assertThat("Expect that the serialized transaction results in the given hex.",
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void verifyTransaction() {
-
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void getTransactionHex() {
-
     }
 }

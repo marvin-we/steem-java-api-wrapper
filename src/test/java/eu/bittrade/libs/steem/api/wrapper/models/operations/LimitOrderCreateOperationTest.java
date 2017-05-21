@@ -10,15 +10,12 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "limit order create operation" and verify the results against
@@ -33,7 +30,6 @@ public class LimitOrderCreateOperationTest extends BaseTest {
             + "657a31333337c3850700010000000000000003534244000000000a0000000000000003535445454d000000e7c8045700";
 
     private static LimitOrderCreateOperation limitOrderCreateOperation;
-    private static Transaction limitOrderCreateOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -58,13 +54,7 @@ public class LimitOrderCreateOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(limitOrderCreateOperation);
 
-        limitOrderCreateOperationTransaction = new Transaction();
-        limitOrderCreateOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        limitOrderCreateOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        limitOrderCreateOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        limitOrderCreateOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -77,26 +67,12 @@ public class LimitOrderCreateOperationTest extends BaseTest {
     @Test
     public void testLimitOrderCreateOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        limitOrderCreateOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(limitOrderCreateOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
-        assertThat(
-                "Expect that the serialized transaction results in the given hex.", Utils.HEX.encode(Sha256Hash
-                        .wrap(Sha256Hash.hash(limitOrderCreateOperationTransaction.toByteArray())).getBytes()),
+        assertThat("Expect that the serialized transaction results in the given hex.",
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void verifyTransaction() {
-
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void getTransactionHex() {
-
     }
 }

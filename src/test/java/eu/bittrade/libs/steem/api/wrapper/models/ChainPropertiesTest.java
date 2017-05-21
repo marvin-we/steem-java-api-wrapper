@@ -15,7 +15,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
  *
  */
 public class ChainPropertiesTest {
-    private final String EXPECTED_BYTE_REPRESENTATION = "881300000000000003535445454d0000ffff000000000000";
+    private final String EXPECTED_BYTE_REPRESENTATION = "881300000000000003535445454d0000ffff00000000";
 
     @Test
     public void testSteemChainPropertiesToByteArray() throws Exception {

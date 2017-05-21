@@ -16,7 +16,6 @@ import eu.bittrade.libs.steem.api.wrapper.BaseTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "comment operation" and verify the results against the api.
@@ -36,7 +35,6 @@ public class CommentOperationTest extends BaseTest {
             + "656d4a027b7d00";
 
     private static CommentOperation commentOperation;
-    private static Transaction commentOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -52,13 +50,7 @@ public class CommentOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOperation);
 
-        commentOperationTransaction = new Transaction();
-        commentOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        commentOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        commentOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        commentOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -71,14 +63,12 @@ public class CommentOperationTest extends BaseTest {
     @Test
     public void testCommentOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        commentOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(commentOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX
-                        .encode(Sha256Hash.wrap(Sha256Hash.hash(commentOperationTransaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 

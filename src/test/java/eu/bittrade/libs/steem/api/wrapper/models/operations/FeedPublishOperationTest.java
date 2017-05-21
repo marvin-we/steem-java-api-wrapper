@@ -10,16 +10,13 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "feed public operation" and verify the results against the api.
@@ -35,7 +32,6 @@ public class FeedPublishOperationTest extends BaseTest {
             + "00000000640000000000000003535445454d000000";
 
     private static FeedPublishOperation feedPublishOperation;
-    private static Transaction feedPublishOperationOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -58,13 +54,7 @@ public class FeedPublishOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(feedPublishOperation);
 
-        feedPublishOperationOperationTransaction = new Transaction();
-        feedPublishOperationOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        feedPublishOperationOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        feedPublishOperationOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        feedPublishOperationOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -77,26 +67,12 @@ public class FeedPublishOperationTest extends BaseTest {
     @Test
     public void testFeedPublishOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        feedPublishOperationOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(feedPublishOperationOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash
-                        .wrap(Sha256Hash.hash(feedPublishOperationOperationTransaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void verifyTransaction() {
-
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void getTransactionHex() {
-
     }
 }

@@ -14,7 +14,6 @@ import org.junit.Test;
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test the transformation of a Steem "vote operation".
@@ -28,7 +27,6 @@ public class VoteOperationTest extends BaseTest {
             + "00000000f68585abf4dcf0c80457010007666f6f6261726107666f6f6261726307666f6f62617264e80300";
 
     private static VoteOperation voteOperation;
-    private static Transaction voteOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -41,13 +39,7 @@ public class VoteOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        voteOperationTransaction = new Transaction();
-        voteOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        voteOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        voteOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        voteOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -59,12 +51,12 @@ public class VoteOperationTest extends BaseTest {
     @Test
     public void testVoteOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        voteOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(voteOperationTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
+                equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(voteOperationTransaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

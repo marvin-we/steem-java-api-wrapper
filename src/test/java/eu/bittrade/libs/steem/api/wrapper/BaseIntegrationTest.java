@@ -11,7 +11,7 @@ import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 /**
  * @author Anthony Martin
  */
-public abstract class BaseIntegrationTest extends BaseTest {
+public abstract class BaseIntegrationTest {
     private static final Logger LOGGER = LogManager.getLogger(BaseIntegrationTest.class);
     protected static final SteemJConfig CONFIG = SteemJConfig.getInstance();
 
@@ -19,7 +19,6 @@ public abstract class BaseIntegrationTest extends BaseTest {
     
     @BeforeClass
     public static void setUpSteemApi() throws Exception  {
-        setUp();
         // Change the default settings if needed.
         CONFIG.setWebsocketEndpointURI(new URI("wss://this.piston.rocks"));
         // Create a new apiWrapper with your config object.

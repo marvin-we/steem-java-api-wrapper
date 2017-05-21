@@ -18,7 +18,6 @@ import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "witness update operation" and verify the results against the
@@ -37,7 +36,6 @@ public class WitnessUpdateOperationTest extends BaseTest {
             + "3535445454d0000000001000000000000000000000003535445454d000000";
 
     private static WitnessUpdateOperation witnessUpdateOperation;
-    private static Transaction witnessUpdateOperationTransaction;
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -65,13 +63,7 @@ public class WitnessUpdateOperationTest extends BaseTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(witnessUpdateOperation);
 
-        witnessUpdateOperationTransaction = new Transaction();
-        witnessUpdateOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        witnessUpdateOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        witnessUpdateOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        witnessUpdateOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -84,14 +76,12 @@ public class WitnessUpdateOperationTest extends BaseTest {
     @Test
     public void testWitnessUpdateOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        witnessUpdateOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(witnessUpdateOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(
-                        Sha256Hash.wrap(Sha256Hash.hash(witnessUpdateOperationTransaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
-}   
+}
