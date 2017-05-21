@@ -26,9 +26,9 @@ public class TransactionTest {
         final String EXPECTED_HASH = "582176b1daf89984bc8b4fdcb24ff1433d1eb114a8c4bf20fb22ad580d035889";
 
         VoteOperation voteOperation = new VoteOperation();
-        voteOperation.setAuthor("xeroc");
+        voteOperation.setAuthor(new AccountName("xeroc"));
         voteOperation.setPermlink("piston");
-        voteOperation.setVoter("xeroc");
+        voteOperation.setVoter(new AccountName("xeroc"));
         voteOperation.setWeight((short) 10000);
 
         ArrayList<Operation> operations = new ArrayList<>();

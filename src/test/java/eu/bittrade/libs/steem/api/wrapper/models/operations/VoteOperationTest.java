@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
@@ -32,9 +33,9 @@ public class VoteOperationTest extends BaseTest {
     @BeforeClass
     public static void setup() throws Exception {
         voteOperation = new VoteOperation();
-        voteOperation.setAuthor("foobarc");
+        voteOperation.setAuthor(new AccountName("foobarc"));
         voteOperation.setPermlink("foobard");
-        voteOperation.setVoter("foobara");
+        voteOperation.setVoter(new AccountName("foobara"));
         voteOperation.setWeight((short) 1000);
 
         ArrayList<Operation> operations = new ArrayList<>();
