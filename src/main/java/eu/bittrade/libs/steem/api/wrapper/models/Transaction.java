@@ -374,6 +374,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
             serializedTransaction.write(SteemUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
             serializedTransaction.write(SteemUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
             serializedTransaction.write(SteemUtils.transformLongToVarIntByteArray(this.getOperations().size()));
+
             for (Operation operation : this.getOperations()) {
                 serializedTransaction.write(operation.toByteArray());
             }

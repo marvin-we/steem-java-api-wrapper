@@ -27,11 +27,11 @@ public class Price implements ByteTransformable {
     }
 
     /**
-     * @param base1
+     * @param base
      *            the base to set
      */
-    public void setBase(Asset base1) {
-        base = base1;
+    public void setBase(Asset base) {
+        this.base = base;
     }
 
     /**
