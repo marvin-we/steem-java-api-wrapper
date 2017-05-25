@@ -11,7 +11,7 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steem.api.wrapper.BaseTest;
+import eu.bittrade.libs.steem.api.wrapper.BaseUnitTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Price;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCreate2OperationTest extends BaseTest {
+public class LimitOrderCreate2OperationTest extends BaseUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "150764657a31333337bf85070001000000000000000353424400000000010000"
             + "000000000003534244000000000a0000000000000003535445454d000000e7c80457";
     final String EXPECTED_TRANSACTION_HASH = "e9bcd1316cd72a43190a8c10c7aab8fbc87a0287bb8ca0e9b449f50c6330a4de";

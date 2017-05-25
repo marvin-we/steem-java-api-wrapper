@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steem.api.wrapper.BaseTest;
+import eu.bittrade.libs.steem.api.wrapper.BaseUnitTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
@@ -26,7 +26,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ClaimRewardBalanceOperationTest extends BaseTest {
+public class ClaimRewardBalanceOperationTest extends BaseUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "2706737465656d4a020000000000000003535445454d000001000000000000"
             + "00035342440000000003000000000000000656455354530000";
     final String EXPECTED_TRANSACTION_HASH = "b7310d6d135eaf871e211c8a472e21c02aa913d71d6e467776e5d4fd3228c239";

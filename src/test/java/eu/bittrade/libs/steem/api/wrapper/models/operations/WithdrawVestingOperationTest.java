@@ -11,7 +11,7 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steem.api.wrapper.BaseTest;
+import eu.bittrade.libs.steem.api.wrapper.BaseUnitTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class WithdrawVestingOperationTest extends BaseTest {
+public class WithdrawVestingOperationTest extends BaseUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "040764657a31333337e8030000000000000656455354530000";
     final String EXPECTED_TRANSACTION_HASH = "f695518ab66b5d27cfe7560b483e3dc3a1d1cc87512862c75c4345d14b7d03fb";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000"

@@ -11,7 +11,7 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steem.api.wrapper.BaseTest;
+import eu.bittrade.libs.steem.api.wrapper.BaseUnitTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
@@ -25,7 +25,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class WitnessUpdateOperationTest extends BaseTest {
+public class WitnessUpdateOperationTest extends BaseUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "0b0764657a313333371c68747470733a2f2f737465656d69742e636f6d2f4"
             + "064657a3133333703f4a7be25c7664b349b34c16ffc9c9ddcd44d02dd732fa789afd2f5d05c8a70a588130000000000"
             + "0003535445454d0000000001000000000000000000000003535445454d0000";

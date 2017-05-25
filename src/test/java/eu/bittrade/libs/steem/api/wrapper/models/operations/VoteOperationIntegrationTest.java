@@ -4,12 +4,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseIntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Block;
 
 /**
@@ -24,30 +27,57 @@ public class VoteOperationIntegrationTest extends BaseIntegrationTest {
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_AUTHOR = "sarita";
     private static final String EXPECTED_VOTER = "ned";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8"
+            + "c8045701000764657a313333370764657a3133333728737465656d6a2d7"
+            + "6302d322d342d6861732d6265656e2d72656c65617365642d7570646174"
+            + "652d39e80300011b2c91031ff0d1e1e56607644da79f7c837af4f234155"
+            + "19babeea2061538aed5461e15475edaa2d7ee61346936ca276ed0a14444" + "64cd25e947956ba9f15496e28a";
+
+    /**
+     * <b>Attention:</b> This test class requires a valid posting key for the
+     * used "voter". If no posting key is provided or the posting key is not
+     * valid an Exception will be thrown. The private key is passed as a -D
+     * parameter during test execution.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
+    public VoteOperationIntegrationTest() throws Exception {
+        VoteOperation voteOperation = new VoteOperation();
+        voteOperation.setAuthor(new AccountName("dez1337"));
+        voteOperation.setPermlink("steemj-v0-2-4-has-been-released-update-9");
+        voteOperation.setVoter(new AccountName("dez1337"));
+        voteOperation.setWeight((short) 1000);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
+
+        transaction.setOperations(operations);
+        transaction.sign();
+    }
 
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
         Block blockContainingVoteOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
-        Operation voteOperation = blockContainingVoteOperation.getTransactions().get(TRANSACTION_INDEX)
-                .getOperations().get(OPERATION_INDEX);
+        Operation voteOperation = blockContainingVoteOperation.getTransactions().get(TRANSACTION_INDEX).getOperations()
+                .get(OPERATION_INDEX);
 
         assertThat(voteOperation, instanceOf(VoteOperation.class));
-        assertThat(((VoteOperation) voteOperation).getAuthor(), equalTo(EXPECTED_AUTHOR));
-        assertThat(((VoteOperation) voteOperation).getVoter(), equalTo(EXPECTED_VOTER));
+        assertThat(((VoteOperation) voteOperation).getAuthor().getAccountName(), equalTo(EXPECTED_AUTHOR));
+        assertThat(((VoteOperation) voteOperation).getVoter().getAccountName(), equalTo(EXPECTED_VOTER));
     }
 
     @Category({ IntegrationTest.class })
     @Test
-    public void verifyTransaction() {
-        // TODO: Verify a Transaction containing a vote operation against the
-        // api.
+    public void verifyTransaction() throws Exception {
+        assertThat(steemApiWrapper.verifyAuthority(transaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
-    public void getTransactionHex() {
-        // TODO: Use an API call to get the hex value of the transaction.
+    public void getTransactionHex() throws Exception {
+        assertThat(steemApiWrapper.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

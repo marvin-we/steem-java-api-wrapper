@@ -2,8 +2,6 @@ package eu.bittrade.libs.steem.api.wrapper;
 
 import java.net.URI;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.BeforeClass;
 
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
@@ -11,8 +9,7 @@ import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 /**
  * @author Anthony Martin
  */
-public abstract class BaseIntegrationTest {
-    private static final Logger LOGGER = LogManager.getLogger(BaseIntegrationTest.class);
+public abstract class BaseIntegrationTest extends BaseTest {
     protected static final SteemJConfig CONFIG = SteemJConfig.getInstance();
 
     protected static SteemApiWrapper steemApiWrapper;
@@ -26,9 +23,5 @@ public abstract class BaseIntegrationTest {
         CONFIG.setSslVerificationDisabled(true);
 
         steemApiWrapper = new SteemApiWrapper();
-    }
-
-    protected void debug(final String message) {
-        LOGGER.info(message);
     }
 }

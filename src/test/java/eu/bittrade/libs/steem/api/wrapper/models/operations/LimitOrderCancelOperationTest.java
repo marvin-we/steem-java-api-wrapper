@@ -11,7 +11,7 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steem.api.wrapper.BaseTest;
+import eu.bittrade.libs.steem.api.wrapper.BaseUnitTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
@@ -21,7 +21,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCancelOperationTest extends BaseTest {
+public class LimitOrderCancelOperationTest extends BaseUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "060764657a31333337c3850700";
     final String EXPECTED_TRANSACTION_HASH = "8206897b01c87e6ef07fcf39259ce27b19050d2f2a5603c1c1b075a1498a0c05";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000"
