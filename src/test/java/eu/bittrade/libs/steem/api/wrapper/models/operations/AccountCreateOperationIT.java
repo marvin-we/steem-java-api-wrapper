@@ -35,13 +35,13 @@ public class AccountCreateOperationIT extends BaseIntegrationTest {
     private static final String EXPECTED_CREATOR = "steem";
     private static final PublicKey EXPECTED_OWNER_KEY = new PublicKey(
             "STM7LkKo3FU1w7m6ce4W5rfhdNUKd7CprHrZXnmNeU3SX2ggSikdw");
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c80457010910270000000000000"
-            + "3535445454d00000764657a3133333706737465656d6a01000000000102fe8cc11cc8251de6977636b55c1"
-            + "ab8a9d12b0b26154ac78e56e7c4257d8bcf69010001000000000102fe8cc11cc8251de6977636b55c1ab8a"
-            + "9d12b0b26154ac78e56e7c4257d8bcf69010001000000000103b453f46013fdbccb90b09ba169c388c34d8"
-            + "4454a3b9fbec68d5a7819a734fca001000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34"
-            + "bb74f3c62699e0000011b61e550291a0e9ee3639b94aa307f06af6f9171e16a23786aa4e3f4f130728f365"
-            + "9d677e1a88d4e663b7e827aa1346a001098a8e6939cc72646d8abce2513f088";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c804570109102700000000000003"
+            + "535445454d00000764657a3133333706737465656d6a010000000001026f6231b8ed1c5e964b42967759757"
+            + "f8bb879d68e7b09d9ea6eedec21de6fa4c4010001000000000102fe8cc11cc8251de6977636b55c1ab8a9d1"
+            + "2b0b26154ac78e56e7c4257d8bcf69010001000000000103b453f46013fdbccb90b09ba169c388c34d84454"
+            + "a3b9fbec68d5a7819a734fca001000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34bb74f"
+            + "3c62699e0000011b45bfc693eb47ee2f002d0c2a6f432ce023e0dda97c2e76692a063b241752df0b37bd558"
+            + "982f2978e7923b44ba4c349845e3bd3dff50ce7785051918162dc64bc";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -85,7 +85,7 @@ public class AccountCreateOperationIT extends BaseIntegrationTest {
         owner.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
-        owner.setKeyAuths(activeKeyAuth);
+        owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 
         accountCreateOperation.setOwner(owner);

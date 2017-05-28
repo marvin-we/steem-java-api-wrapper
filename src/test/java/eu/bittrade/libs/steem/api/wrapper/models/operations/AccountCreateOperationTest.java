@@ -29,17 +29,17 @@ import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
  */
 public class AccountCreateOperationTest extends BaseUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "09102700000000000003535445454d00000764657a3133333706737465656d"
-            + "6a01000000000102fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e56e7c4257d8bcf690100010000000001"
+            + "6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9ea6eedec21de6fa4c40100010000000001"
             + "02fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e56e7c4257d8bcf69010001000000000103b453f46013fd"
             + "bccb90b09ba169c388c34d84454a3b9fbec68d5a7819a734fca001000314aa202c9158990b3ec51a1aa49b2ab5d300c9"
             + "7b391df3beb34bb74f3c62699e00";
-    final String EXPECTED_TRANSACTION_HASH = "84e642930ecc8eed4bdee32c68a6d08959c1ee52e9cdf2c139f994a5ba1b5f33";
-    final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000000"
-            + "00000000f68585abf4dce7c804570109102700000000000003535445454d00000764657a3133333706737465656d6a01"
-            + "000000000102fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e56e7c4257d8bcf69010001000000000102fe"
-            + "8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e56e7c4257d8bcf69010001000000000103b453f46013fdbccb"
-            + "90b09ba169c388c34d84454a3b9fbec68d5a7819a734fca001000314aa202c9158990b3ec51a1aa49b2ab5d300c97b39"
-            + "1df3beb34bb74f3c62699e0000";
+    final String EXPECTED_TRANSACTION_HASH = "c591fd5f4ccdb9eecf93a5b2b23f176171e7497b4ca363722db5a91c4c335ddf";
+    final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000000"
+            + "000000000f68585abf4dcf4c804570109102700000000000003535445454d00000764657a3133333706737465656d6a"
+            + "010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9ea6eedec21de6fa4c401000100000000010"
+            + "2fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e56e7c4257d8bcf69010001000000000103b453f46013fd"
+            + "bccb90b09ba169c388c34d84454a3b9fbec68d5a7819a734fca001000314aa202c9158990b3ec51a1aa49b2ab5d300c"
+            + "97b391df3beb34bb74f3c62699e0000";
 
     private static AccountCreateOperation accountCreateOperation;
 
@@ -76,7 +76,7 @@ public class AccountCreateOperationTest extends BaseUnitTest {
         owner.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
-        owner.setKeyAuths(activeKeyAuth);
+        owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 
         accountCreateOperation.setOwner(owner);

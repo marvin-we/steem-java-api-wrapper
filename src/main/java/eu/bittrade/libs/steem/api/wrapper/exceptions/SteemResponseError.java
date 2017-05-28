@@ -10,7 +10,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.error.SteemError;
 public class SteemResponseError extends SteemCommunicationException {
     private static final long serialVersionUID = 147694337695115012L;
 
-    private SteemError steemError;
+    private final transient SteemError steemError;
 
     public SteemResponseError(SteemError steemError) {
         super();

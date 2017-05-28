@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.Expirable;
@@ -293,7 +294,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
             boolean isCanonical = false;
             byte[] signedTransaction = null;
 
-            Sha256Hash messageAsHash = null;
+            Sha256Hash messageAsHash;
             while (!isCanonical) {
                 try {
                     messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(this.toByteArray(chainId)));
@@ -319,7 +320,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
                 }
 
                 if (recId == null) {
-                    throw new RuntimeException("Could not construct a recoverable key. This should never happen.");
+                    throw new SteemFatalErrorException("Could not construct a recoverable key. This should never happen.");
                 }
 
                 int headerByte = recId + 27 + (privateKey.isCompressed() ? 4 : 0);

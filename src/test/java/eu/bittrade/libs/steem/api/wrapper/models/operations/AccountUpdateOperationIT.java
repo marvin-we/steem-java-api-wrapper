@@ -4,13 +4,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseIntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.models.Authority;
 import eu.bittrade.libs.steem.api.wrapper.models.Block;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
 
@@ -28,10 +35,56 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
     private static final PublicKey EXPECTED_PUBLIC_KEY = new PublicKey(
             "STM5PcXipEAThkBhkXawSqL1mqTVU9iRNLasAw9sbYnkRApAxbTWR");
     private static final int EXPECTED_WEIGHT_THRESHOLD = 0;
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcecc80457010a06737465656d"
+            + "6a010100000000010245afe8ba78a2023ef69af6d3ecbbf26e37f5f5b9c1a8b37f80f4a1b761a75e5"
+            + "90100010100000000010309b5f14e6ca97187ae2a2cdf4c6e7b15b5a434bf53ffcea6642f28e1aa53"
+            + "36c101000101000000000102a2a9e8a0ec260cfef0e7708d88a99f90809db2a61ea2a87dddb062d5f"
+            + "59a011c01000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34bb74f3c62699e0000"
+            + "011b6320cce3e0fdf9ef40b83842cd4e729306706841f0430c687a782f55c5e089041c4551451ca57"
+            + "8dcea99bd92ed382f8a014f22e9fa4047b47023a1d0ea04d274";
 
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
+
+        AccountUpdateOperation accountUpdateOperation = new AccountUpdateOperation();
+
+        accountUpdateOperation.setAccount(new AccountName("steemj"));
+        accountUpdateOperation.setMemoKey(new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp"));
+
+        Authority posting = new Authority();
+        posting.setAccountAuths(new HashMap<>());
+        Map<PublicKey, Integer> postingKeyAuth = new HashMap<>();
+        postingKeyAuth.put(new PublicKey("STM688NyXXSjXmXCy4FSaPH5L2FitugsKU9PbLn5ZiUQr3GaztmCL"), 1);
+        posting.setKeyAuths(postingKeyAuth);
+        posting.setWeightThreshold(1);
+
+        accountUpdateOperation.setPosting(posting);
+
+        Authority active = new Authority();
+        active.setAccountAuths(new HashMap<>());
+        Map<PublicKey, Integer> activeKeyAuth = new HashMap<>();
+        activeKeyAuth.put(new PublicKey("STM6uWaRvGTtvKTdciKU3rtBbeq3ZfBopvjewQdngeAG31EGSXA2f"), 1);
+        active.setKeyAuths(activeKeyAuth);
+        active.setWeightThreshold(1);
+
+        accountUpdateOperation.setActive(active);
+
+        Authority owner = new Authority();
+        owner.setAccountAuths(new HashMap<>());
+        Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
+        ownerKeyAuth.put(new PublicKey("STM5RBRDAfpq4RrWGtLAyMf2qQaiS9abkU2nmDegQiH3P1vMbP2Lq"), 1);
+        owner.setKeyAuths(ownerKeyAuth);
+        owner.setWeightThreshold(1);
+
+        accountUpdateOperation.setOwner(owner);
+        accountUpdateOperation.setJsonMetadata("");
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(accountUpdateOperation);
+
+        transaction.setOperations(operations);
+        transaction.sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -53,15 +106,14 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void verifyTransaction() {
-        // TODO: Verify a Transaction containing a vote operation against the
-        // api.
+    @Ignore
+    public void verifyTransaction() throws Exception {
+        assertThat(steemApiWrapper.verifyAuthority(transaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
-    public void getTransactionHex() {
-        // TODO: Use an API call to get the hex value of the transaction.
+    public void getTransactionHex() throws Exception {
+        assertThat(steemApiWrapper.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
-
 }

@@ -10,6 +10,7 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 
 import eu.bittrade.libs.steem.api.wrapper.configuration.SteemJConfig;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemKeyHandlingException;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
 
@@ -40,7 +41,7 @@ public class KeyGenerator {
         try {
             setBrainKey(suggestBrainKey());
         } catch (SteemKeyHandlingException e) {
-            throw new RuntimeException("The generated brain key was not valid - This should never happen.", e);
+            throw new SteemFatalErrorException("The generated brain key was not valid - This should never happen.", e);
         }
 
         setPrivateKey(this.getBrainKey(), 0);

@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
@@ -40,7 +41,7 @@ public class VoteOperation extends Operation {
         try {
             this.setWeight((short) 0);
         } catch (InvalidActivityException e) {
-            throw new RuntimeException("The weight was to high - This should never happen!", e);
+            throw new SteemFatalErrorException("The weight was to high - This should never happen!", e);
         }
     }
 

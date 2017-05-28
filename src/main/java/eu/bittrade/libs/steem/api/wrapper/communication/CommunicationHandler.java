@@ -154,7 +154,7 @@ public class CommunicationHandler {
 
             return MAPPER.convertValue(response.getResult(), type);
         } catch (JsonParseException | JsonMappingException e) {
-            LOGGER.debug("Could not parse the response. Trying to transform it to an error object.");
+            LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
 
             try {
                 // TODO: Find a better solution for errors in general.

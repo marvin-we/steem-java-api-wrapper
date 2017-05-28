@@ -37,12 +37,12 @@ public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest 
             "STM6uWaRvGTtvKTdciKU3rtBbeq3ZfBopvjewQdngeAG31EGSXA2f");
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c804570129f4010000"
             + "0000000003535445454d00001f6900312400000006564553545300000764657a3133333706737"
-            + "465656d6a01000000000102fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e56e7c4"
-            + "257d8bcf69010001000000000102fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e5"
+            + "465656d6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9ea6eedec"
+            + "21de6fa4c4010001000000000102fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e5"
             + "6e7c4257d8bcf69010001000000000103b453f46013fdbccb90b09ba169c388c34d84454a3b9f"
             + "bec68d5a7819a734fca001000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34"
-            + "bb74f3c62699e000000011c5557fe77dbb9ccf5de513ed227cde7a47fa2695cbde7a7ecbbd1d3"
-            + "1db2d8ae793439c08974dca369b4be8cd138ce27e914896a8ee97f685ae3dc529f2195e5da";
+            + "bb74f3c62699e000000011c6dbbad1d44a8cef307da8a7c542f2b442394edce566fe5680ce369"
+            + "ebf04276452e74669c28cfb6d7906d120adb2e52a38419ec09d51d2f88574f59e1f07cc4c9";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -88,7 +88,7 @@ public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest 
         owner.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
-        owner.setKeyAuths(activeKeyAuth);
+        owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 
         accountCreateWithDelegationOperation.setOwner(owner);
