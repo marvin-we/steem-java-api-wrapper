@@ -19,8 +19,8 @@ import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Block;
 
 /**
- * Verify the functionality of the "vote operation" under the use of real api
- * calls.
+ * Verify the functionality of the "comment options operation" under the use of
+ * real api calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -32,7 +32,11 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
     private static final String EXPECTED_PERMANENT_LINK = "giving-a-farewell-speech";
     private static final boolean EXPECTED_VOTES_ALLOWED = true;
     private static final Asset EXPECTED_ASSET = new Asset();
-    private static final String EXPECTED_TRANSACTION_HEX = "f";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcedc8045701130764657a"
+            + "3133333728737465656d6a2d76302d322d342d6861732d6265656e2d72656c65617365642d757"
+            + "0646174652d3900ca9a3b000000000353424400000000102701010000011c06dfac5938938a83"
+            + "85cbc3aec6f27ae22993820349d93b4060af92386305517c0f3c85a04b34b074226b8b5bb6384"
+            + "2ee3cb208a52b6c0c01e6b8d0d838a38aba";
 
     /**
      * <b>Attention:</b> This test class requires a valid posting key of the

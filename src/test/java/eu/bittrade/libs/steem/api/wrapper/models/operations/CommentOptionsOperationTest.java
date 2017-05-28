@@ -16,15 +16,16 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
 /**
- * Test the transformation of a Steem "vote operation".
+ * Test the transformation of a Steem "comment options operation".
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommentOptionsOperationTest extends BaseUnitTest {
-    final String EXPECTED_BYTE_REPRESENTATION = "0007666f6f6261726107666f6f6261726307666f6f62617264e803";
-    final String EXPECTED_TRANSACTION_HASH = "baeec6f72307dec3a7ffa78b6aa56ebd8eb9fa1390d69653d76613646fecc058";
-    final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000000"
-            + "00000000f68585abf4dcf0c80457010007666f6f6261726107666f6f6261726307666f6f62617264e80300";
+    final String EXPECTED_BYTE_REPRESENTATION = "1303666f6f0f72652d666f6f626172646f6f62617200ca9a3b000000000353424400000000a709000100";
+    final String EXPECTED_TRANSACTION_HASH = "045068dd57f3d3b82c1392c25f3601697c7b96e260ca34cef39cca6918ab5f7b";
+    final String EXPECTED_TRANSACTION_SERIALIZATION = "000000000000000000000000000000000000000000000000000000000000"
+            + "0000f68585abf4dce8c80457011303666f6f0f72652d666f6f626172646f6f62617200ca9a3b000000000353424400000000"
+            + "a70900010000";
 
     private static CommentOptionsOperation commentOptionsOperation;
 

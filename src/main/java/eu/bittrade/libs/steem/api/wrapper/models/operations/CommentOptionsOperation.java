@@ -29,12 +29,12 @@ public class CommentOptionsOperation extends Operation {
     private String permlink;
     @JsonProperty("max_accepted_payout")
     private Asset maxAcceptedPayout;
+    @JsonProperty("percent_steem_dollars")
+    private Short percentSteemDollars;
     @JsonProperty("allow_votes")
     private Boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
     private Boolean allowCurationRewards;
-    @JsonProperty("percent_steem_dollars")
-    private Short percentSteemDollars;
     // TODO: Fix type: comment_options_extensions_type
     @JsonProperty("extensions")
     private List<Object> extensions;
@@ -167,7 +167,7 @@ public class CommentOptionsOperation extends Operation {
      * @return The percent of Steem Dollars.
      */
     public int getPercentSteemDollars() {
-        return (int)percentSteemDollars;
+        return (int) percentSteemDollars;
     }
 
     /**
@@ -210,15 +210,14 @@ public class CommentOptionsOperation extends Operation {
             serializedCommentOptionsOperation.write(this.getAuthor().toByteArray());
             serializedCommentOptionsOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
             serializedCommentOptionsOperation.write(this.getMaxAcceptedPayout().toByteArray());
+            serializedCommentOptionsOperation
+                    .write(SteemJUtils.transformShortToByteArray(this.getPercentSteemDollars()));
             serializedCommentOptionsOperation.write(SteemJUtils.transformBooleanToByteArray(this.getAllowVotes()));
             serializedCommentOptionsOperation
                     .write(SteemJUtils.transformBooleanToByteArray(this.getAllowCurationRewards()));
-            serializedCommentOptionsOperation
-                    .write(SteemJUtils.transformShortToByteArray(this.getPercentSteemDollars()));
-            // TODO: Handle Extensions.For now we just
-            // append an empty byte.
-            //byte[] extension = { 0x00 };
-            //serializedCommentOptionsOperation.write(extension);
+            // TODO: Handle Extensions.For now we just append an empty byte.
+            byte[] extension = { 0x00 };
+            serializedCommentOptionsOperation.write(extension);
 
             return serializedCommentOptionsOperation.toByteArray();
         } catch (IOException e) {
