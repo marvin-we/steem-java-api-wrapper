@@ -69,10 +69,10 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
     private long refBlockPrefix;
     @JsonProperty("expiration")
     private long expirationDate;
-    private List<Operation> operations;
-    protected List<String> signatures;
+    private transient List<Operation> operations;
+    protected transient List<String> signatures;
     // TODO: Find out what type this is and what the use of this field is.
-    private List<Object> extensions;
+    private transient List<Object> extensions;
 
     /**
      * Create a new Transaction.
