@@ -10,4 +10,5 @@ buildNumber.properties
 .idea
 log4j2.xml
 steem-api-wrapper.iml
+accountDetailsUsedDuringTests.properties
 
