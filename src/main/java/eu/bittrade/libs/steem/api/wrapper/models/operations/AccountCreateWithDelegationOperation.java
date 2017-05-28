@@ -1,16 +1,29 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
+/**
+ * This class represents the Steem "account_create_with_delegation_operation"
+ * object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class AccountCreateWithDelegationOperation extends Operation {
     private Asset fee;
     private Asset delegation;
@@ -26,166 +39,249 @@ public class AccountCreateWithDelegationOperation extends Operation {
     private String jsonMetadata;
     // TODO: Original type is "extension_type" which is an array of
     // "future_extion".
-    private Object[] extensions;
+    private List<Object> extensions;
 
+    /**
+     * Create a new create account with delegation operation. Use this operation
+     * to create a new account.
+     */
     public AccountCreateWithDelegationOperation() {
+        // Define the required key type for this operation.
         super(PrivateKeyType.ACTIVE);
     }
 
     /**
-     * @return the fee
+     * Get the fee the {@link #creator creator} has paid to create this new
+     * account.
+     * 
+     * @return The fee.
      */
     public Asset getFee() {
         return fee;
     }
 
     /**
+     * Set the fee you are willing to pay to create a new acocunt.
+     * 
      * @param fee
-     *            the fee to set
+     *            The fee.
      */
     public void setFee(Asset fee) {
         this.fee = fee;
     }
 
     /**
-     * @return the delegation
+     * Get the amount of VESTS the {@link #creator creator} has delegated to the
+     * {{@link #newAccountName newAccountName}.
+     * 
+     * @return The amount of VESTS delegated to the new account.
      */
     public Asset getDelegation() {
         return delegation;
     }
 
     /**
+     * Set the amount of VESTS the {@link #creator creator} has delegated to the
+     * {{@link #newAccountName newAccountName}.
+     * 
      * @param delegation
-     *            the delegation to set
+     *            The amount of VESTS delegated to the new account.
      */
     public void setDelegation(Asset delegation) {
         this.delegation = delegation;
     }
 
     /**
-     * @return the creator
+     * Get the account name of the user who created a new account.
+     * 
+     * @return The account name of the user who created a new account.
      */
     public AccountName getCreator() {
         return creator;
     }
 
     /**
+     * Set the account name of the user who created a new account.
+     * 
      * @param creator
-     *            the creator to set
+     *            The account name of the user who created a new account.
      */
     public void setCreator(AccountName creator) {
         this.creator = creator;
     }
 
     /**
-     * @return the newAccountName
+     * Get the account name of the user which has been created.
+     * 
+     * @return The account name of the user which has been created.
      */
     public AccountName getNewAccountName() {
         return newAccountName;
     }
 
     /**
+     * Set the account name of the account that should be created.
+     * 
      * @param newAccountName
-     *            the newAccountName to set
+     *            The account name of the user which should be created.
      */
     public void setNewAccountName(AccountName newAccountName) {
         this.newAccountName = newAccountName;
     }
 
     /**
-     * @return the owner
+     * Get the owner {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @return The owner authority.
      */
     public Authority getOwner() {
         return owner;
     }
 
     /**
+     * Set the owner {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
      * @param owner
-     *            the owner to set
+     *            The owner authority.
      */
     public void setOwner(Authority owner) {
         this.owner = owner;
     }
 
     /**
-     * @return the active
+     * Get the active {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @return The active authority.
      */
     public Authority getActive() {
         return active;
     }
 
     /**
+     * Set the active {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
      * @param active
-     *            the active to set
+     *            The active authority.
      */
     public void setActive(Authority active) {
         this.active = active;
     }
 
     /**
-     * @return the posting
+     * Get the posting
+     * {@link eu.bittrade.libs.steem.api.wrapper.models.Authority Authority} of
+     * the {@link #newAccountName newAccountName}.
+     * 
+     * @return The posting authority.
      */
     public Authority getPosting() {
         return posting;
     }
 
     /**
+     * Set the posting
+     * {@link eu.bittrade.libs.steem.api.wrapper.models.Authority Authority} of
+     * the {@link #newAccountName newAccountName}.
+     * 
      * @param posting
-     *            the posting to set
+     *            The posting authority.
      */
     public void setPosting(Authority posting) {
         this.posting = posting;
     }
 
     /**
-     * @return the memoKey
+     * Get the memo {@link eu.bittrade.libs.steem.api.wrapper.models.PublicKey
+     * PublicKey} of the {@link #newAccountName newAccountName}.
+     * 
+     * @return The memo key.
      */
     public PublicKey getMemoKey() {
         return memoKey;
     }
 
     /**
+     * Set the memo {@link eu.bittrade.libs.steem.api.wrapper.models.PublicKey
+     * PublicKey} of the {@link #newAccountName newAccountName}.
+     * 
      * @param memoKey
-     *            the memoKey to set
+     *            The memo key.
      */
     public void setMemoKey(PublicKey memoKey) {
         this.memoKey = memoKey;
     }
 
     /**
-     * @return the jsonMetadata
+     * Get the json metadata which have been added to this operation.
+     * 
+     * @return The json metadata which have been added to this operation.
      */
     public String getJsonMetadata() {
         return jsonMetadata;
     }
 
     /**
+     * Add json metadata to this operation.
+     * 
      * @param jsonMetadata
-     *            the jsonMetadata to set
+     *            The json metadata.
      */
     public void setJsonMetadata(String jsonMetadata) {
         this.jsonMetadata = jsonMetadata;
     }
 
     /**
-     * @return the extensions
+     * Get the list of configured extensions.
+     * 
+     * @return All extensions.
      */
-    public Object[] getExtensions() {
+    public List<Object> getExtensions() {
+        if (extensions == null) {
+            extensions = new ArrayList<>();
+        }
+
         return extensions;
     }
 
     /**
+     * Extensions are currently not supported and will be ignored.
+     * 
      * @param extensions
-     *            the extensions to set
+     *            Define a list of extensions.
      */
-    public void setExtensions(Object[] extensions) {
+    public void setExtensions(List<Object> extensions) {
         this.extensions = extensions;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedAccountCreateWithDelegationOperation = new ByteArrayOutputStream()) {
+            serializedAccountCreateWithDelegationOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.ACCOUNT_CREATE_WITH_DELEGATION_OPERATION.ordinal()));
+            serializedAccountCreateWithDelegationOperation.write(this.getFee().toByteArray());
+            serializedAccountCreateWithDelegationOperation.write(this.getDelegation().toByteArray());
+            serializedAccountCreateWithDelegationOperation.write(this.getCreator().toByteArray());
+            serializedAccountCreateWithDelegationOperation.write(this.getNewAccountName().toByteArray());
+            serializedAccountCreateWithDelegationOperation.write(this.getOwner().toByteArray());
+            serializedAccountCreateWithDelegationOperation.write(this.getActive().toByteArray());
+            serializedAccountCreateWithDelegationOperation.write(this.getPosting().toByteArray());
+            serializedAccountCreateWithDelegationOperation.write(this.getMemoKey().toByteArray());
+            serializedAccountCreateWithDelegationOperation
+                    .write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
+
+            // TODO: Handle Extensions.For now we just append an empty byte.
+            byte[] extension = { 0x00 };
+            serializedAccountCreateWithDelegationOperation.write(extension);
+
+            return serializedAccountCreateWithDelegationOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override

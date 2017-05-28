@@ -17,6 +17,8 @@ import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
+ * This class represents the Steem "account_create_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AccountCreateOperation extends Operation {
@@ -40,7 +42,8 @@ public class AccountCreateOperation extends Operation {
     private String jsonMetadata;
 
     /**
-     * Create a new create account operation.
+     * Create a new create account operation. Use this operation to create a new
+     * account.
      */
     public AccountCreateOperation() {
         // Define the required key type for this operation.
@@ -48,128 +51,163 @@ public class AccountCreateOperation extends Operation {
     }
 
     /**
+     * Get the fee the {@link #creator creator} has paid to create this new
+     * account.
      * 
-     * @return
+     * @return The fee.
      */
     public Asset getFee() {
         return fee;
     }
 
     /**
+     * Set the fee you are willing to pay to create a new acocunt.
      * 
      * @param fee
+     *            The fee.
      */
     public void setFee(Asset fee) {
         this.fee = fee;
     }
 
     /**
+     * Get the account name of the user who created a new account.
      * 
-     * @return
+     * @return The account name of the user who created a new account.
      */
     public AccountName getCreator() {
         return creator;
     }
 
     /**
+     * Set the account name of the user who created a new account.
      * 
      * @param creator
+     *            The account name of the user who created a new account.
      */
     public void setCreator(AccountName creator) {
         this.creator = creator;
     }
 
     /**
+     * Get the account name of the user which has been created.
      * 
-     * @return
+     * @return The account name of the user which has been created.
      */
     public AccountName getNewAccountName() {
         return newAccountName;
     }
 
     /**
+     * Set the account name of the account that should be created.
      * 
      * @param newAccountName
+     *            The account name of the user which should be created.
      */
     public void setNewAccountName(AccountName newAccountName) {
         this.newAccountName = newAccountName;
     }
 
     /**
+     * Get the owner {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
-     * @return
+     * @return The owner authority.
      */
     public Authority getOwner() {
         return owner;
     }
 
     /**
+     * Set the owner {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
      * @param owner
+     *            The owner authority.
      */
     public void setOwner(Authority owner) {
         this.owner = owner;
     }
 
     /**
+     * Get the active {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
-     * @return
+     * @return The active authority.
      */
     public Authority getActive() {
         return active;
     }
 
     /**
+     * Set the active {@link eu.bittrade.libs.steem.api.wrapper.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
      * @param active
+     *            The active authority.
      */
     public void setActive(Authority active) {
         this.active = active;
     }
 
     /**
+     * Get the posting
+     * {@link eu.bittrade.libs.steem.api.wrapper.models.Authority Authority} of
+     * the {@link #newAccountName newAccountName}.
      * 
-     * @return
+     * @return The posting authority.
      */
     public Authority getPosting() {
         return posting;
     }
 
     /**
+     * Set the posting
+     * {@link eu.bittrade.libs.steem.api.wrapper.models.Authority Authority} of
+     * the {@link #newAccountName newAccountName}.
      * 
      * @param posting
+     *            The posting authority.
      */
     public void setPosting(Authority posting) {
         this.posting = posting;
     }
 
     /**
+     * Get the memo {@link eu.bittrade.libs.steem.api.wrapper.models.PublicKey
+     * PublicKey} of the {@link #newAccountName newAccountName}.
      * 
-     * @return
+     * @return The memo key.
      */
     public PublicKey getMemoKey() {
         return memoKey;
     }
 
     /**
+     * Set the memo {@link eu.bittrade.libs.steem.api.wrapper.models.PublicKey
+     * PublicKey} of the {@link #newAccountName newAccountName}.
      * 
      * @param memoKey
+     *            The memo key.
      */
     public void setMemoKey(PublicKey memoKey) {
         this.memoKey = memoKey;
     }
 
     /**
+     * Get the json metadata which have been added to this operation.
      * 
-     * @return
+     * @return The json metadata which have been added to this operation.
      */
     public String getJsonMetadata() {
         return jsonMetadata;
     }
 
     /**
+     * Add json metadata to this operation.
      * 
      * @param jsonMetadata
+     *            The json metadata.
      */
     public void setJsonMetadata(String jsonMetadata) {
         this.jsonMetadata = jsonMetadata;
