@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exparity.hamcrest.date.DateMatchers;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -51,11 +52,16 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 /**
  * @author Anthony Martin
  */
-public class SteemApiWrapperTest extends BaseIntegrationTest {
-    private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperTest.class);
+public class SteemApiWrapperIT extends BaseIntegrationTest {
+    private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperIT.class);
     private static final String ACCOUNT = "dez1337";
     private static final String WITNESS_ACCOUNT = "riverhead";
     private static final String PERMLINK = "steem-api-wrapper-for-java-update1";
+
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupIntegrationTestEnvironment();
+    }
 
     @Category({ IntegrationTest.class })
     @Test
@@ -125,6 +131,7 @@ public class SteemApiWrapperTest extends BaseIntegrationTest {
         assertEquals("expect current median price symbol", AssetSymbolType.STEEM, quote.getSymbol());
     }
 
+    @Category({ IntegrationTest.class })
     @Test
     public void testGetAccounts() throws Exception {
         final List<AccountName> accountNames = new ArrayList<>();

@@ -33,8 +33,10 @@ public class WithdrawVestingOperationTest extends BaseUnitTest {
     private static WithdrawVestingOperation withdrawVestingOperation;
     private static Transaction withdrawVestingOperationTransaction;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         withdrawVestingOperation = new WithdrawVestingOperation();
         withdrawVestingOperation.setAccount(new AccountName("dez1337"));
 

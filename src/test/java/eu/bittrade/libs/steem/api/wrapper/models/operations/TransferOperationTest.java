@@ -10,10 +10,8 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseUnitTest;
-import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
@@ -35,8 +33,10 @@ public class TransferOperationTest extends BaseUnitTest {
     private static TransferOperation transferOperationSbd;
     private static TransferOperation transferOperationSteem;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         Asset sbdAmount = new Asset();
         sbdAmount.setAmount(1L);
         sbdAmount.setSymbol(AssetSymbolType.SBD);
@@ -77,7 +77,6 @@ public class TransferOperationTest extends BaseUnitTest {
                 Utils.HEX.encode(transferOperationSteem.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION_STEEM));
     }
 
-    @Category({ IntegrationTest.class })
     @Test
     public void testTransferOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {

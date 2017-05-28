@@ -14,7 +14,10 @@ public class ProveAuthorityOperation extends Operation {
     private Boolean requireOwner;
 
     public ProveAuthorityOperation() {
+        // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
+        // Set default values:
+        this.setRequireOwner(false);
     }
 
     /**

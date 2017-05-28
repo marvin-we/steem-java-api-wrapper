@@ -34,8 +34,10 @@ public class LimitOrderCreate2OperationTest extends BaseUnitTest {
 
     private static LimitOrderCreate2Operation limitOrderCreate2Operation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         limitOrderCreate2Operation = new LimitOrderCreate2Operation();
 
         Asset base = new Asset();

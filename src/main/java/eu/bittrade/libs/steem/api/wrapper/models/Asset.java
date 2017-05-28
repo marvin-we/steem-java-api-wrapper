@@ -59,7 +59,7 @@ public class Asset implements ByteTransformable {
      * 
      * @return The amount.
      */
-    public double getAmount() {
+    public Double getAmount() {
         return Double.valueOf(this.amount / Math.pow(10.0, this.getPrecision()));
     }
 
@@ -68,7 +68,7 @@ public class Asset implements ByteTransformable {
      * 
      * @return The precision.
      */
-    public int getPrecision() {
+    public Integer getPrecision() {
         return (int) precision;
     }
 
@@ -117,8 +117,8 @@ public class Asset implements ByteTransformable {
             serializedAsset.write(SteemJUtils.transformLongToByteArray(this.amount));
             serializedAsset.write(SteemJUtils.transformByteToLittleEndian(this.precision));
 
-            serializedAsset.write(this.symbol.name().toUpperCase()
-                    .getBytes(SteemJConfig.getInstance().getEncodingCharset()));
+            serializedAsset
+                    .write(this.symbol.name().toUpperCase().getBytes(SteemJConfig.getInstance().getEncodingCharset()));
             String filledAssetSymbol = this.symbol.name().toUpperCase();
 
             for (int i = filledAssetSymbol.length(); i < 7; i++) {
@@ -137,4 +137,23 @@ public class Asset implements ByteTransformable {
         return ToStringBuilder.reflectionToString(this);
     }
 
+    @Override
+    public boolean equals(Object otherAsset) {
+        if (this == otherAsset)
+            return true;
+        if (otherAsset == null || !(otherAsset instanceof Asset))
+            return false;
+        Asset other = (Asset) otherAsset;
+        return (this.getAmount().equals(other.getAmount()) && this.getSymbol().equals(other.getSymbol())
+                && this.getPrecision().equals(other.getPrecision()));
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = 31 * hashCode + (this.getAmount() == null ? 0 : this.getAmount().hashCode());
+        hashCode = 31 * hashCode + (this.getSymbol() == null ? 0 : this.getSymbol().hashCode());
+        hashCode = 31 * hashCode + (this.getPrecision() == null ? 0 : this.getPrecision().hashCode());
+        return hashCode;
+    }
 }

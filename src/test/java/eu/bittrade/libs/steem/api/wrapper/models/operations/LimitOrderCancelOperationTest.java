@@ -29,8 +29,10 @@ public class LimitOrderCancelOperationTest extends BaseUnitTest {
 
     private static LimitOrderCancelOperation limitOrderCancelOperation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         limitOrderCancelOperation = new LimitOrderCancelOperation();
 
         limitOrderCancelOperation.setOwner(new AccountName("dez1337"));

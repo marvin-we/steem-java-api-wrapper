@@ -36,8 +36,10 @@ public class CommentOperationTest extends BaseUnitTest {
 
     private static CommentOperation commentOperation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         commentOperation = new CommentOperation();
         commentOperation.setAuthor(new AccountName("dez1337"));
         commentOperation.setBody("Test SteemJ");

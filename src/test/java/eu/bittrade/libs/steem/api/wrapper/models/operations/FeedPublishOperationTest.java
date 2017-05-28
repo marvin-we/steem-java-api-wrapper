@@ -33,8 +33,10 @@ public class FeedPublishOperationTest extends BaseUnitTest {
 
     private static FeedPublishOperation feedPublishOperation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         feedPublishOperation = new FeedPublishOperation();
         feedPublishOperation.setPublisher(new AccountName("dez1337"));
 

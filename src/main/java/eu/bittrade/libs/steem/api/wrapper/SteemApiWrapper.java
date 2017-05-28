@@ -73,7 +73,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public SteemApiWrapper() throws SteemCommunicationException {        
+    public SteemApiWrapper() throws SteemCommunicationException {
         this.communicationHandler = new CommunicationHandler();
 
         if (!("").equals(String.valueOf(SteemJConfig.getInstance().getPassword()))
@@ -661,8 +661,7 @@ public class SteemApiWrapper {
         requestObject.setSteemApi(SteemApis.DATABASE_API);
 
         // Verify that the date has the correct format.
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                SteemJConfig.getInstance().getDateTimePattern());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
         Date beforeDate;
         try {
@@ -1377,7 +1376,9 @@ public class SteemApiWrapper {
 
         Object[] parameters = { signedTransaction };
         requestObject.setAdditionalParameters(parameters);
-
+        // TODO: The method does not simply return false, it throws an error
+        // describing the problem. The reason should be logged as info and the
+        // this method should only return false.
         return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
     }
 }

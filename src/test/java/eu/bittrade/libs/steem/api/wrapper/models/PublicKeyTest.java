@@ -22,7 +22,7 @@ public class PublicKeyTest extends BaseUnitTest {
     private static PublicKey publicKey;
 
     @BeforeClass
-    public static void setup() throws Exception {
+    public static void prepareTestClass() throws Exception {
         publicKey = new PublicKey(ADDRESS);
     }
 

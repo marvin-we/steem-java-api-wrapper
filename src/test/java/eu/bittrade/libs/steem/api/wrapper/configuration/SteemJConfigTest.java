@@ -9,6 +9,9 @@ import org.junit.Test;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 
+/**
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class SteemJConfigTest {
     private static final String STEEMJ_API_USERNAME = "dez1337";
     private static final String STEEMJ_API_PASSWORD = "test1234";

@@ -16,42 +16,42 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
 /**
- * Test the transformation of a Steem "vote operation".
+ * Test the transformation of a Steem "account witness operation".
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class VoteOperationTest extends BaseUnitTest {
-    final String EXPECTED_BYTE_REPRESENTATION = "0007666f6f6261726107666f6f6261726307666f6f62617264e803";
-    final String EXPECTED_TRANSACTION_HASH = "baeec6f72307dec3a7ffa78b6aa56ebd8eb9fa1390d69653d76613646fecc058";
+public class AccountWitnessVoteOperationTest extends BaseUnitTest {
+    final String EXPECTED_BYTE_REPRESENTATION = "0c0764657a313333370a676f6f642d6b61726d6101";
+    final String EXPECTED_TRANSACTION_HASH = "6d5dc43ba5d427e3aba3671ae06961c1090a952c3fc4397a61ea1feaf2b961b2";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000000"
-            + "00000000f68585abf4dcf0c80457010007666f6f6261726107666f6f6261726307666f6f62617264e80300";
+            + "00000000f68585abf4dcebc80457010c0764657a313333370a676f6f642d6b61726d610100";
 
-    private static VoteOperation voteOperation;
+    private static AccountWitnessVoteOperation accountWitnessVoteOperation;
 
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironment();
 
-        voteOperation = new VoteOperation();
-        voteOperation.setAuthor(new AccountName("foobarc"));
-        voteOperation.setPermlink("foobard");
-        voteOperation.setVoter(new AccountName("foobara"));
-        voteOperation.setWeight((short) 1000);
+        accountWitnessVoteOperation = new AccountWitnessVoteOperation();
+        accountWitnessVoteOperation.setAccount(new AccountName("dez1337"));
+        accountWitnessVoteOperation.setWitness(new AccountName("good-karma"));
+        accountWitnessVoteOperation.setApprove(true);
 
         ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(voteOperation);
+        operations.add(accountWitnessVoteOperation);
 
         transaction.setOperations(operations);
     }
 
     @Test
-    public void testVoteOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    public void testAccountWitnessVoteOperationToByteArray()
+            throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
-                Utils.HEX.encode(voteOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                Utils.HEX.encode(accountWitnessVoteOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     @Test
-    public void testVoteOperationTransactionHex()
+    public void testAccountWitnessVoteOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         transaction.sign();
 

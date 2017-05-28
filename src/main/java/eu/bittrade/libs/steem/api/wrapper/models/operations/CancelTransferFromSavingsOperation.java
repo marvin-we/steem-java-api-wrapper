@@ -58,5 +58,4 @@ public class CancelTransferFromSavingsOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-
 }

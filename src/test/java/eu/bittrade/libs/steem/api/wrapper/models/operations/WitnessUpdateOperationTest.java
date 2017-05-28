@@ -37,8 +37,10 @@ public class WitnessUpdateOperationTest extends BaseUnitTest {
 
     private static WitnessUpdateOperation witnessUpdateOperation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         witnessUpdateOperation = new WitnessUpdateOperation();
         witnessUpdateOperation
                 .setBlockSigningKey(new PublicKey("STM8gyvJtYyv5ZbT2ZxbAtgufQ5ovV2bq6EQp4YDTzQuSwyg7Ckry"));

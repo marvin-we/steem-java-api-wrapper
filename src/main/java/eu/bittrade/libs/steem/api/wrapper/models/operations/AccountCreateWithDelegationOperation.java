@@ -22,8 +22,8 @@ public class AccountCreateWithDelegationOperation extends Operation {
     private Authority posting;
     @JsonProperty("memo_key")
     private PublicKey memoKey;
-    @JsonProperty("memo_key")
-    private String json_metadata;
+    @JsonProperty("json_metadata")
+    private String jsonMetadata;
     // TODO: Original type is "extension_type" which is an array of
     // "future_extion".
     private Object[] extensions;
@@ -153,18 +153,18 @@ public class AccountCreateWithDelegationOperation extends Operation {
     }
 
     /**
-     * @return the json_metadata
+     * @return the jsonMetadata
      */
-    public String getJson_metadata() {
-        return json_metadata;
+    public String getJsonMetadata() {
+        return jsonMetadata;
     }
 
     /**
-     * @param json_metadata
-     *            the json_metadata to set
+     * @param jsonMetadata
+     *            the jsonMetadata to set
      */
-    public void setJson_metadata(String json_metadata) {
-        this.json_metadata = json_metadata;
+    public void setJsonMetadata(String jsonMetadata) {
+        this.jsonMetadata = jsonMetadata;
     }
 
     /**

@@ -31,8 +31,10 @@ public class LimitOrderCreateOperationTest extends BaseUnitTest {
 
     private static LimitOrderCreateOperation limitOrderCreateOperation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         limitOrderCreateOperation = new LimitOrderCreateOperation();
 
         Asset amountToSell = new Asset();

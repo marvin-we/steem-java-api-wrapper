@@ -10,8 +10,8 @@ import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class BaseTest {
-    private static final Logger LOGGER = LogManager.getLogger(BaseTest.class);
+public abstract class BaseTest {
+    protected static final Logger LOGGER = LogManager.getLogger(BaseTest.class);
 
     protected static final short REF_BLOCK_NUM = (short) 34294;
     protected static final long REF_BLOCK_PREFIX = 3707022213L;
@@ -19,7 +19,7 @@ public class BaseTest {
 
     protected static Transaction transaction;
 
-    protected BaseTest() {
+    protected static void setupBasicTestEnvironment() {
         try {
             transaction = new Transaction();
             transaction.setExpirationDate(EXPIRATION_DATE);

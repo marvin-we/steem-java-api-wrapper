@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -19,13 +20,19 @@ import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountUpdateOperationIntegrationTest extends BaseIntegrationTest {
+public class AccountUpdateOperationIT extends BaseIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681154;
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_ACCOUNT = "virekolosa";
-    private static final PublicKey EXPECTED_PUBLIC_KEY = new PublicKey("STM5PcXipEAThkBhkXawSqL1mqTVU9iRNLasAw9sbYnkRApAxbTWR");
+    private static final PublicKey EXPECTED_PUBLIC_KEY = new PublicKey(
+            "STM5PcXipEAThkBhkXawSqL1mqTVU9iRNLasAw9sbYnkRApAxbTWR");
     private static final int EXPECTED_WEIGHT_THRESHOLD = 0;
+
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupIntegrationTestEnvironment();
+    }
 
     @Category({ IntegrationTest.class })
     @Test
@@ -38,7 +45,8 @@ public class AccountUpdateOperationIntegrationTest extends BaseIntegrationTest {
         assertThat(accountUpdateOperation, instanceOf(AccountUpdateOperation.class));
         assertThat(((AccountUpdateOperation) accountUpdateOperation).getAccount().getAccountName().toString(),
                 equalTo(EXPECTED_ACCOUNT));
-        System.out.println(((PublicKey)(((AccountUpdateOperation) accountUpdateOperation).getActive().getKeyAuths().keySet().toArray())[0]).getAddressFromPublicKey());
+        System.out.println(((PublicKey) (((AccountUpdateOperation) accountUpdateOperation).getActive().getKeyAuths()
+                .keySet().toArray())[0]).getAddressFromPublicKey());
         assertThat(((AccountUpdateOperation) accountUpdateOperation).getActive().getKeyAuths().get(EXPECTED_PUBLIC_KEY),
                 equalTo(EXPECTED_WEIGHT_THRESHOLD));
     }

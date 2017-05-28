@@ -37,8 +37,10 @@ public class ClaimRewardBalanceOperationTest extends BaseUnitTest {
     private static ClaimRewardBalanceOperation claimRewardBalanceOperation;
     private static Transaction claimRewardBalanceOperationTransaction;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         claimRewardBalanceOperation = new ClaimRewardBalanceOperation();
         claimRewardBalanceOperation.setAccount(new AccountName("steemJ"));
 

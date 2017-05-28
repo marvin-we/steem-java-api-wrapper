@@ -16,42 +16,41 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
 /**
- * Test the transformation of a Steem "vote operation".
+ * Test the transformation of a Steem "delete comment operation".
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class VoteOperationTest extends BaseUnitTest {
-    final String EXPECTED_BYTE_REPRESENTATION = "0007666f6f6261726107666f6f6261726307666f6f62617264e803";
-    final String EXPECTED_TRANSACTION_HASH = "baeec6f72307dec3a7ffa78b6aa56ebd8eb9fa1390d69653d76613646fecc058";
-    final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000000"
-            + "00000000f68585abf4dcf0c80457010007666f6f6261726107666f6f6261726307666f6f62617264e80300";
+public class DeleteCommentOperationTest extends BaseUnitTest {
+    final String EXPECTED_BYTE_REPRESENTATION = "1107666f6f626172630a72652d666f6f62617264";
+    final String EXPECTED_TRANSACTION_HASH = "44bf9b3ec6aa4430ee7d9da3baf9e4d276758fca7fcef00ad433559d4f54155a";
+    final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000000"
+            + "000000000f68585abf4dce9c80457011107666f6f626172630a72652d666f6f6261726400";
 
-    private static VoteOperation voteOperation;
+    private static DeleteCommentOperation deleteCommentOperation;
 
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironment();
 
-        voteOperation = new VoteOperation();
-        voteOperation.setAuthor(new AccountName("foobarc"));
-        voteOperation.setPermlink("foobard");
-        voteOperation.setVoter(new AccountName("foobara"));
-        voteOperation.setWeight((short) 1000);
+        deleteCommentOperation = new DeleteCommentOperation();
+        deleteCommentOperation.setAuthor(new AccountName("foobarc"));
+        deleteCommentOperation.setPermlink("re-foobard");
 
         ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(voteOperation);
+        operations.add(deleteCommentOperation);
 
         transaction.setOperations(operations);
     }
 
     @Test
-    public void testVoteOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    public void testDeleteCommentOperationToByteArray()
+            throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
-                Utils.HEX.encode(voteOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                Utils.HEX.encode(deleteCommentOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     @Test
-    public void testVoteOperationTransactionHex()
+    public void testDeleteCommentOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         transaction.sign();
 

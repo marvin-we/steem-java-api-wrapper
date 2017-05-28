@@ -31,8 +31,10 @@ public class TransferToVestingOperationTest extends BaseUnitTest {
 
     private static TransferToVestingOperation transferToVestingOperation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         Asset steemAmount = new Asset();
         steemAmount.setAmount(1L);
         steemAmount.setSymbol(AssetSymbolType.STEEM);

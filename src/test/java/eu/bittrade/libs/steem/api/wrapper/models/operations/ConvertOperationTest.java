@@ -30,8 +30,10 @@ public class ConvertOperationTest extends BaseUnitTest {
 
     private static ConvertOperation convertOperation;
 
-    @BeforeClass
-    public static void setup() throws Exception {
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupUnitTestEnvironment();
+
         convertOperation = new ConvertOperation();
 
         Asset amount = new Asset();

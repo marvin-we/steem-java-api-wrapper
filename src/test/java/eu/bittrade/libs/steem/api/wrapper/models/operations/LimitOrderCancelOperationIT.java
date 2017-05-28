@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -16,41 +17,40 @@ import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Block;
 
 /**
- * Verify the functionality of the "vote operation" under the use of real api
- * calls.
+ * Verify the functionality of the "limit order cancel operation" under the use
+ * of real api calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class VoteOperationIntegrationTest extends BaseIntegrationTest {
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681456;
+public class LimitOrderCancelOperationIT extends BaseIntegrationTest {
+    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681453;
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
-    private static final String EXPECTED_AUTHOR = "sarita";
-    private static final String EXPECTED_VOTER = "ned";
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8"
-            + "c8045701000764657a313333370764657a3133333728737465656d6a2d7"
-            + "6302d322d342d6861732d6265656e2d72656c65617365642d7570646174"
-            + "652d39e80300011b2c91031ff0d1e1e56607644da79f7c837af4f234155"
-            + "19babeea2061538aed5461e15475edaa2d7ee61346936ca276ed0a14444" + "64cd25e947956ba9f15496e28a";
+    private static final String EXPECTED_AUTHOR = "fnait";
+    private static final int EXPECTED_ORDER_ID = -1721858468;
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c8045701060764657a313333372"
+            + "04e000000011b1044e4094a14f65d84a8da327d5fec0c740ce4f39b892105786686911eac09051373042e9"
+            + "6fce01763a9cb2a004019dc38b278e8fae12f86198f60e28c981f2c";
 
     /**
-     * <b>Attention:</b> This test class requires a valid posting key for the
-     * used "voter". If no posting key is provided or the posting key is not
-     * valid an Exception will be thrown. The private key is passed as a -D
-     * parameter during test execution.
+     * <b>Attention:</b> This test class requires a valid active key of the used
+     * "owner". If no active key is provided or the active key is not valid an
+     * Exception will be thrown. The active key is passed as a -D parameter
+     * during test execution.
      * 
      * @throws Exception
      *             If something went wrong.
      */
-    public VoteOperationIntegrationTest() throws Exception {
-        VoteOperation voteOperation = new VoteOperation();
-        voteOperation.setAuthor(new AccountName("dez1337"));
-        voteOperation.setPermlink("steemj-v0-2-4-has-been-released-update-9");
-        voteOperation.setVoter(new AccountName("dez1337"));
-        voteOperation.setWeight((short) 1000);
+    @BeforeClass()
+    public static void prepareTestClass() throws Exception {
+        setupIntegrationTestEnvironment();
+
+        LimitOrderCancelOperation limitOrderCancelOperation = new LimitOrderCancelOperation();
+        limitOrderCancelOperation.setOrderId(20000);
+        limitOrderCancelOperation.setOwner(new AccountName("dez1337"));
 
         ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(voteOperation);
+        operations.add(limitOrderCancelOperation);
 
         transaction.setOperations(operations);
         transaction.sign();
@@ -64,9 +64,9 @@ public class VoteOperationIntegrationTest extends BaseIntegrationTest {
         Operation voteOperation = blockContainingVoteOperation.getTransactions().get(TRANSACTION_INDEX).getOperations()
                 .get(OPERATION_INDEX);
 
-        assertThat(voteOperation, instanceOf(VoteOperation.class));
-        assertThat(((VoteOperation) voteOperation).getAuthor().getAccountName(), equalTo(EXPECTED_AUTHOR));
-        assertThat(((VoteOperation) voteOperation).getVoter().getAccountName(), equalTo(EXPECTED_VOTER));
+        assertThat(voteOperation, instanceOf(LimitOrderCancelOperation.class));
+        assertThat(((LimitOrderCancelOperation) voteOperation).getOwner().getAccountName(), equalTo(EXPECTED_AUTHOR));
+        assertThat(((LimitOrderCancelOperation) voteOperation).getOrderId(), equalTo(EXPECTED_ORDER_ID));
     }
 
     @Category({ IntegrationTest.class })
