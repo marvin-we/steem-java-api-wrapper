@@ -129,20 +129,41 @@ public class Account {
     private Date lastBandwidthUpdate;
     // Original type is safe<int64_t>;
     @JsonProperty("average_market_bandwidth")
-    private long AverageMarketBandwidth;
+    private long averageMarketBandwidth;
+    // Original type is safe<int64_t>;
+    @JsonProperty("lifetime_market_bandwidth")
+    private long lifetimeMarketBandwidth;
     @JsonProperty("last_market_bandwidth_update")
     private Date lastMarketBandwidthUpdate;
     @JsonProperty("last_post")
     private Date lastPost;
     @JsonProperty("last_root_post")
     private Date lastRootPost;
-    // Original type is safe<int64_t>;
+    /**
+     * Original type is safe<int64_t>;
+     * 
+     * @deprecated Has been removed with HF 19. Depending on the version of the
+     *             used Steem Node the value of this field may be null.
+     */
+    @Deprecated
     @JsonProperty("post_bandwidth")
     private long postBandwidth;
-    // Original type is safe<int64_t>;
+    /**
+     * Original type is safe<int64_t>;
+     * 
+     * @deprecated Has been removed with HF 19. Depending on the version of the
+     *             used Steem Node the value of this field may be null.
+     */
+    @Deprecated
     @JsonProperty("new_average_bandwidth")
     private long newAverageBandwidth;
-    // Original type is safe<int64_t>;
+    /**
+     * Original type is safe<int64_t>;
+     * 
+     * @deprecated Has been removed with HF 19. Depending on the version of the
+     *             used Steem Node the value of this field may be null.
+     */
+    @Deprecated
     @JsonProperty("new_average_market_bandwidth")
     private long newAverageMarketBandwidth;
 
@@ -367,7 +388,11 @@ public class Account {
     }
 
     public long getAverageMarketBandwidth() {
-        return AverageMarketBandwidth;
+        return averageMarketBandwidth;
+    }
+
+    public long getLifetimeMarketBandwidth() {
+        return lifetimeMarketBandwidth;
     }
 
     public Date getLastMarketBandwidthUpdate() {

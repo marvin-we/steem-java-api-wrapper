@@ -18,14 +18,14 @@ public class AssetDeserializer extends JsonDeserializer<Asset> {
     @Override
     public Asset deserialize(JsonParser jasonParser, DeserializationContext deserializationContext)
             throws IOException, JsonProcessingException {
-
         JsonToken currentToken = jasonParser.currentToken();
         if (currentToken != null && JsonToken.VALUE_STRING.equals(currentToken)) {
             String[] assetFields = jasonParser.getText().split(" ");
 
             if (assetFields.length == 2) {
                 Asset asset = new Asset();
-                // Set the symbol first which calculates the precision internally.
+                // Set the symbol first which calculates the precision
+                // internally.
                 asset.setSymbol(AssetSymbolType.valueOf(assetFields[1]));
                 // The amount is provided as a double value while we need a long
                 // value for the byte representation so we transform the amount

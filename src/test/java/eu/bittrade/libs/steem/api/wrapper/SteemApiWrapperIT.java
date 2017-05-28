@@ -108,7 +108,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testConfig() throws Exception {
+    public void testGetConfig() throws Exception {
         final Config config = steemApiWrapper.getConfig();
         final boolean isTestNet = config.getIsTestNet();
         final String steemitNullAccount = config.getSteemitNullAccount();
@@ -173,15 +173,13 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category(IntegrationTest.class)
     @Test
     public void testGetApiByNameForSecuredApi() throws Exception {
-        final String tags = steemApiWrapper.getApiByName("tags_api");
-        final String network_node = steemApiWrapper.getApiByName("network_node_api");
-        final String network_broadcast = steemApiWrapper.getApiByName("network_broadcast_api");
-        final String chain_stats = steemApiWrapper.getApiByName("chain_stats_api");
+        final String database = steemApiWrapper.getApiByName("database_api");
+        final String networkBroadcast = steemApiWrapper.getApiByName("network_broadcast_api");
+        final String login = steemApiWrapper.getApiByName("login_api");
 
-        assertNotNull("expect that tags api does exist", tags);
-        assertNotNull("expect that network_node api does exist", network_node);
-        assertNotNull("expect that network_broadcast api does exist", network_broadcast);
-        assertNotNull("expect that chain_stats api does exist", chain_stats);
+        assertNotNull("expect that network_node api does exist", database);
+        assertNotNull("expect that network_broadcast api does exist", networkBroadcast);
+        assertNotNull("expect that chain_stats api does exist", login);
     }
 
     @Category({ IntegrationTest.class })
