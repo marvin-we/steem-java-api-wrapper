@@ -51,4 +51,23 @@ public class AssetTest {
         assertThat("Expect that the asset object has the given byte representation.",
                 Utils.HEX.encode(vestsAsset.toByteArray()), equalTo(EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION));
     }
+    
+    @Test
+    public void testAssetEqualsMethod() {
+        
+        Asset asset = new Asset();
+        asset.setAmount(115);
+        asset.setSymbol(AssetSymbolType.SBD);
+        
+        Asset sameAsset = new Asset();
+        sameAsset.setAmount(115);
+        sameAsset.setSymbol(AssetSymbolType.SBD);
+        
+        Asset differentAsset = new Asset();
+        differentAsset.setAmount(100);
+        differentAsset.setSymbol(AssetSymbolType.STEEM);
+
+        assertThat(asset.equals(sameAsset), equalTo(true));
+        assertThat(sameAsset.equals(differentAsset), equalTo(false));
+    }
 }

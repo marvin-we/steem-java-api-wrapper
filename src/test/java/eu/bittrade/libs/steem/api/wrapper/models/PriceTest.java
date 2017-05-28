@@ -33,4 +33,43 @@ public class PriceTest {
         assertThat("Expect that the price object has the given byte representation.",
                 Utils.HEX.encode(price.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
+    
+    @Test
+    public void testPriceEqualsMethod() {
+        Asset base = new Asset();
+        base.setAmount(115);
+        base.setSymbol(AssetSymbolType.SBD);
+        Asset quote = new Asset();
+        quote.setAmount(100);
+        quote.setSymbol(AssetSymbolType.STEEM);
+
+        Price price = new Price();
+        price.setBase(base);
+        price.setQuote(quote);
+        
+        Asset anotherBase = new Asset();
+        anotherBase.setAmount(115);
+        anotherBase.setSymbol(AssetSymbolType.SBD);
+        Asset anotherQuote = new Asset();
+        anotherQuote.setAmount(100);
+        anotherQuote.setSymbol(AssetSymbolType.STEEM);
+
+        Price anotherPrice = new Price();
+        anotherPrice.setBase(anotherBase);
+        anotherPrice.setQuote(anotherQuote);
+        
+        Asset defferentBase = new Asset();
+        defferentBase.setAmount(115);
+        defferentBase.setSymbol(AssetSymbolType.SBD);
+        Asset differentQuote = new Asset();
+        differentQuote.setAmount(1230);
+        differentQuote.setSymbol(AssetSymbolType.STEEM);
+
+        Price differentPrice = new Price();
+        differentPrice.setBase(defferentBase);
+        differentPrice.setQuote(differentQuote);
+        
+        assertThat(price.equals(anotherPrice), equalTo(true));
+        assertThat(anotherPrice.equals(differentPrice), equalTo(false));
+    }
 }
