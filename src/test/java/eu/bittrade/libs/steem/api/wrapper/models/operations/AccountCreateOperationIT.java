@@ -35,7 +35,13 @@ public class AccountCreateOperationIT extends BaseIntegrationTest {
     private static final String EXPECTED_CREATOR = "steem";
     private static final PublicKey EXPECTED_OWNER_KEY = new PublicKey(
             "STM7LkKo3FU1w7m6ce4W5rfhdNUKd7CprHrZXnmNeU3SX2ggSikdw");
-    private static final String EXPECTED_TRANSACTION_HEX = "f";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c80457010910270000000000000"
+            + "3535445454d00000764657a3133333706737465656d6a01000000000102fe8cc11cc8251de6977636b55c1"
+            + "ab8a9d12b0b26154ac78e56e7c4257d8bcf69010001000000000102fe8cc11cc8251de6977636b55c1ab8a"
+            + "9d12b0b26154ac78e56e7c4257d8bcf69010001000000000103b453f46013fdbccb90b09ba169c388c34d8"
+            + "4454a3b9fbec68d5a7819a734fca001000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34"
+            + "bb74f3c62699e0000011b61e550291a0e9ee3639b94aa307f06af6f9171e16a23786aa4e3f4f130728f365"
+            + "9d677e1a88d4e663b7e827aa1346a001098a8e6939cc72646d8abce2513f088";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -55,7 +61,7 @@ public class AccountCreateOperationIT extends BaseIntegrationTest {
         accountCreateOperation.setCreator(new AccountName("dez1337"));
         accountCreateOperation.setJsonMetadata("");
         accountCreateOperation.setMemoKey(new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp"));
-        accountCreateOperation.setNewAccountName(new AccountName("steemJ"));
+        accountCreateOperation.setNewAccountName(new AccountName("steemj"));
 
         Authority posting = new Authority();
         posting.setAccountAuths(new HashMap<>());
@@ -115,7 +121,6 @@ public class AccountCreateOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemApiWrapper.getTransactionHex(transaction),
-         equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemApiWrapper.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

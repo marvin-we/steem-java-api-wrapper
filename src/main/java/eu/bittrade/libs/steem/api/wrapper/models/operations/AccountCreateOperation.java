@@ -180,13 +180,13 @@ public class AccountCreateOperation extends Operation {
         try (ByteArrayOutputStream serializedAccountCreateOperation = new ByteArrayOutputStream()) {
             serializedAccountCreateOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_CREATE_OPERATION.ordinal()));
-            serializedAccountCreateOperation.write(this.fee.toByteArray());
-            serializedAccountCreateOperation.write(this.creator.toByteArray());
-            serializedAccountCreateOperation.write(this.newAccountName.toByteArray());
-            serializedAccountCreateOperation.write(this.owner.toByteArray());
-            serializedAccountCreateOperation.write(this.active.toByteArray());
-            serializedAccountCreateOperation.write(this.posting.toByteArray());
-            serializedAccountCreateOperation.write(this.memoKey.toByteArray());
+            serializedAccountCreateOperation.write(this.getFee().toByteArray());
+            serializedAccountCreateOperation.write(this.getCreator().toByteArray());
+            serializedAccountCreateOperation.write(this.getNewAccountName().toByteArray());
+            serializedAccountCreateOperation.write(this.getOwner().toByteArray());
+            serializedAccountCreateOperation.write(this.getActive().toByteArray());
+            serializedAccountCreateOperation.write(this.getPosting().toByteArray());
+            serializedAccountCreateOperation.write(this.getMemoKey().toByteArray());
             serializedAccountCreateOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
 
             return serializedAccountCreateOperation.toByteArray();

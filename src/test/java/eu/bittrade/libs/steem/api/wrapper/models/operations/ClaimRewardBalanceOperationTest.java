@@ -18,7 +18,6 @@ import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "claim rewards balance operation" and verify the results against
@@ -35,7 +34,6 @@ public class ClaimRewardBalanceOperationTest extends BaseUnitTest {
             + "534244000000000300000000000000065645535453000000";
 
     private static ClaimRewardBalanceOperation claimRewardBalanceOperation;
-    private static Transaction claimRewardBalanceOperationTransaction;
 
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
@@ -65,13 +63,7 @@ public class ClaimRewardBalanceOperationTest extends BaseUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(claimRewardBalanceOperation);
 
-        claimRewardBalanceOperationTransaction = new Transaction();
-        claimRewardBalanceOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        claimRewardBalanceOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        claimRewardBalanceOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // TODO: Add extensions when supported.
-        // transaction.setExtensions(extensions);
-        claimRewardBalanceOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -84,14 +76,12 @@ public class ClaimRewardBalanceOperationTest extends BaseUnitTest {
     @Test
     public void testClaimRewardBalanceOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        claimRewardBalanceOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(claimRewardBalanceOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
-        assertThat(
-                "Expect that the serialized transaction results in the given hex.", Utils.HEX.encode(Sha256Hash
-                        .wrap(Sha256Hash.hash(claimRewardBalanceOperationTransaction.toByteArray())).getBytes()),
+        assertThat("Expect that the serialized transaction results in the given hex.",
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 

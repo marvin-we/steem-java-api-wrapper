@@ -16,7 +16,6 @@ import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 
 /**
  * Test a Steem "withdraw vesting operation" and verify the results against the
@@ -31,7 +30,6 @@ public class WithdrawVestingOperationTest extends BaseUnitTest {
             + "00000000000000000000f68585abf4dce9c8045701040764657a31333337e803000000000000065645535453000000";
 
     private static WithdrawVestingOperation withdrawVestingOperation;
-    private static Transaction withdrawVestingOperationTransaction;
 
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
@@ -48,14 +46,9 @@ public class WithdrawVestingOperationTest extends BaseUnitTest {
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(withdrawVestingOperation);
-
-        withdrawVestingOperationTransaction = new Transaction();
-        withdrawVestingOperationTransaction.setExpirationDate(EXPIRATION_DATE);
-        withdrawVestingOperationTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        withdrawVestingOperationTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
         // TODO: Add extensions when supported.
         // transaction.setExtensions(extensions);
-        withdrawVestingOperationTransaction.setOperations(operations);
+        transaction.setOperations(operations);
     }
 
     @Test
@@ -68,14 +61,12 @@ public class WithdrawVestingOperationTest extends BaseUnitTest {
     @Test
     public void testWithdrawVestingOperationTransactionHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        withdrawVestingOperationTransaction.sign();
+        transaction.sign();
 
-        assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(withdrawVestingOperationTransaction.toByteArray()),
+        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
                 equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(
-                        Sha256Hash.wrap(Sha256Hash.hash(withdrawVestingOperationTransaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }
