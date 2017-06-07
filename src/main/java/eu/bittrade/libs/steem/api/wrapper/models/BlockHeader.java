@@ -1,6 +1,8 @@
 package eu.bittrade.libs.steem.api.wrapper.models;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -22,10 +24,10 @@ public class BlockHeader {
     // byte array to cover this type.
     @JsonProperty("transaction_merkle_root")
     protected byte[] transactionMerkleRoot;
-    // TODO: Original type is block_header_extensions_type which is an array of
-    // block_header_extensions.
-    protected Object[] extensions;
-    
+    // Original type is "block_header_extensions_type" which is an array of
+    // "block_header_extensions".
+    protected List<BlockHeaderExtensions> extensions;
+
     /**
      * @return the previous
      */
@@ -106,17 +108,27 @@ public class BlockHeader {
     }
 
     /**
-     * @return the extensions
+     * Get the list of configured extensions.
+     * 
+     * @return All extensions.
      */
-    public Object[] getExtensions() {
+    public List<BlockHeaderExtensions> getExtensions() {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
+            extensions = new ArrayList<>();
+            extensions.add(new BlockHeaderExtensions());
+        }
         return extensions;
     }
 
     /**
+     * Extensions are currently not supported and will be ignored.
+     * 
      * @param extensions
-     *            the extensions to set
+     *            Define a list of extensions.
      */
-    public void setExtensions(Object[] extensions) {
+    public void setExtensions(List<BlockHeaderExtensions> extensions) {
         this.extensions = extensions;
     }
 

@@ -72,8 +72,8 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
     private long expirationDate;
     private transient List<Operation> operations;
     protected transient List<String> signatures;
-    // TODO: Find out what type this is and what the use of this field is.
-    private transient List<Object> extensions;
+    // Original type is "extension_type" which is an array of "future_extions".
+    private List<FutureExtensions> extensions;
 
     /**
      * Create a new Transaction.
@@ -105,9 +105,12 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
      * 
      * @return All extensions.
      */
-    public List<Object> getExtensions() {
-        if (extensions == null) {
+    public List<FutureExtensions> getExtensions() {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
             extensions = new ArrayList<>();
+            extensions.add(new FutureExtensions());
         }
         return extensions;
     }
@@ -182,7 +185,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
      * @param extensions
      *            Define a list of extensions.
      */
-    public void setExtensions(List<Object> extensions) {
+    public void setExtensions(List<FutureExtensions> extensions) {
         this.extensions = extensions;
     }
 
@@ -320,7 +323,8 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
                 }
 
                 if (recId == null) {
-                    throw new SteemFatalErrorException("Could not construct a recoverable key. This should never happen.");
+                    throw new SteemFatalErrorException(
+                            "Could not construct a recoverable key. This should never happen.");
                 }
 
                 int headerByte = recId + 27 + (privateKey.isCompressed() ? 4 : 0);
@@ -379,10 +383,10 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
             for (Operation operation : this.getOperations()) {
                 serializedTransaction.write(operation.toByteArray());
             }
-            // TODO: Understand what this field is used for. For now we just
-            // append an empty byte.
-            byte[] extension = { 0x00 };
-            serializedTransaction.write(extension);
+
+            for (FutureExtensions futureExtensions : this.getExtensions()) {
+                serializedTransaction.write(futureExtensions.toByteArray());
+            }
 
             return serializedTransaction.toByteArray();
         } catch (IOException e) {

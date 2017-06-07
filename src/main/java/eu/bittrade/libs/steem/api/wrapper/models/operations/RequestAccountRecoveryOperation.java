@@ -1,5 +1,8 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +11,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
+import eu.bittrade.libs.steem.api.wrapper.models.FutureExtensions;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -19,8 +23,8 @@ public class RequestAccountRecoveryOperation extends Operation {
     private AccountName accountToRecover;
     @JsonProperty("new_owner_authority")
     private Authority newOwnerAuthority;
-    // TODO: Original type is "extension_type" which is an array of "future_extion".
-    private Object[] extensions;
+    // Original type is "extension_type" which is an array of "future_extions".
+    private List<FutureExtensions> extensions;
 
     // account_name_type recovery_account; /// < The recovery account is listed
     // as
@@ -38,7 +42,7 @@ public class RequestAccountRecoveryOperation extends Operation {
     /// < known by the account to recover and
     /// will be confirmed in a
     /// recover_account_operation
-    // 
+    //
     // extensions_type extensions; /// < Extensions. Not currently used.
 
     public RequestAccountRecoveryOperation() {
@@ -92,22 +96,35 @@ public class RequestAccountRecoveryOperation extends Operation {
     }
 
     /**
-     * @return the extensions
+     * Get the list of configured extensions.
+     * 
+     * @return All extensions.
      */
-    public Object[] getExtensions() {
+    public List<FutureExtensions> getExtensions() {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
+            extensions = new ArrayList<>();
+            extensions.add(new FutureExtensions());
+        }
         return extensions;
     }
 
     /**
+     * Extensions are currently not supported and will be ignored.
+     * 
      * @param extensions
-     *            the extensions to set
+     *            Define a list of extensions.
      */
-    public void setExtensions(Object[] extensions) {
+    public void setExtensions(List<FutureExtensions> extensions) {
         this.extensions = extensions;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
+        for (FutureExtensions futureExtensions : this.getExtensions()) {
+            //serializedAccountCreateWithDelegationOperation.write(futureExtensions.toByteArray());
+        }
         // TODO Auto-generated method stub
         return null;
     }

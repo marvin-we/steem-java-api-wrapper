@@ -2,6 +2,7 @@ package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,6 +13,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.models.FutureExtensions;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
@@ -24,9 +26,8 @@ public class ChangeRecoveryAccountOperation extends Operation {
     private AccountName accountToRecover;
     @JsonProperty("new_recovery_account")
     private AccountName newRecoveryAccount;
-    // TODO: Original type is "extension_type" which is an array of
-    // "future_extion".
-    private List<Object> extensions;
+    // Original type is "extension_type" which is an array of "future_extions".
+    private List<FutureExtensions> extensions;
 
     /**
      * Create a new change recovery account operation.
@@ -97,7 +98,13 @@ public class ChangeRecoveryAccountOperation extends Operation {
      * 
      * @return The extensions added to this operation.
      */
-    public List<Object> getExtensions() {
+    public List<FutureExtensions> getExtensions() {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
+            extensions = new ArrayList<>();
+            extensions.add(new FutureExtensions());
+        }
         return extensions;
     }
 
@@ -107,23 +114,21 @@ public class ChangeRecoveryAccountOperation extends Operation {
      * @param extensions
      *            The extensions added to this operation.
      */
-    public void setExtensions(List<Object> extensions) {
+    public void setExtensions(List<FutureExtensions> extensions) {
         this.extensions = extensions;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedChangeRecoveryAccountOperation = new ByteArrayOutputStream()) {
-            serializedChangeRecoveryAccountOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.CHANGE_RECOVERY_ACCOUNT_OPERATION.ordinal()));
+            serializedChangeRecoveryAccountOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.CHANGE_RECOVERY_ACCOUNT_OPERATION.ordinal()));
             serializedChangeRecoveryAccountOperation.write(this.getAccountToRecover().toByteArray());
             serializedChangeRecoveryAccountOperation.write(this.getNewRecoveryAccount().toByteArray());
+            for (FutureExtensions futureExtensions : this.getExtensions()) {
+                serializedChangeRecoveryAccountOperation.write(futureExtensions.toByteArray());
+            }
 
-            // TODO: Handle Extensions.For now we just append an empty byte.
-            byte[] extension = { 0x00 };
-            serializedChangeRecoveryAccountOperation.write(extension);
-
-            
             return serializedChangeRecoveryAccountOperation.toByteArray();
         } catch (IOException e) {
             throw new SteemInvalidTransactionException(

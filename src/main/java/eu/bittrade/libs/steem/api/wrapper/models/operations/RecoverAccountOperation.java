@@ -1,5 +1,8 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +11,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
+import eu.bittrade.libs.steem.api.wrapper.models.FutureExtensions;
 
 public class RecoverAccountOperation extends Operation {
     @JsonProperty("account_to_recover")
@@ -16,8 +20,8 @@ public class RecoverAccountOperation extends Operation {
     private Authority newOwnerAuthority;
     @JsonProperty("recent_owner_authority")
     private Authority recentOwnerAuthority;
-    // TODO: Original type is "extension_type" which is an array of "future_extion".
-    private Object[] extensions;
+    // Original type is "extension_type" which is an array of "future_extions".
+    private List<FutureExtensions> extensions;
 
     public RecoverAccountOperation() {
         super(PrivateKeyType.POSTING);
@@ -25,6 +29,7 @@ public class RecoverAccountOperation extends Operation {
 
     /**
      * The account to be recovered
+     * 
      * @return the accountToRecover
      */
     public AccountName getAccountToRecover() {
@@ -40,7 +45,9 @@ public class RecoverAccountOperation extends Operation {
     }
 
     /**
-     * The new owner authority as specified in the request account recovery operation.
+     * The new owner authority as specified in the request account recovery
+     * operation.
+     * 
      * @return the newOwnerAuthority
      */
     public Authority getNewOwnerAuthority() {
@@ -55,7 +62,10 @@ public class RecoverAccountOperation extends Operation {
         this.newOwnerAuthority = newOwnerAuthority;
     }
 
-    /**A previous owner authority that the account holder will use to prove past ownership of the account to be recovered.
+    /**
+     * A previous owner authority that the account holder will use to prove past
+     * ownership of the account to be recovered.
+     * 
      * @return the recentOwnerAuthority
      */
     public Authority getRecentOwnerAuthority() {
@@ -71,24 +81,36 @@ public class RecoverAccountOperation extends Operation {
     }
 
     /**
-     * @return the extensions
+     * Get the list of configured extensions.
+     * 
+     * @return All extensions.
      */
-    public Object[] getExtensions() {
+    public List<FutureExtensions> getExtensions() {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
+            extensions = new ArrayList<>();
+            extensions.add(new FutureExtensions());
+        }
         return extensions;
     }
 
     /**
-     * Extensions. Not currently used.
+     * Extensions are currently not supported and will be ignored.
+     * 
      * @param extensions
-     *            the extensions to set
+     *            Define a list of extensions.
      */
-    public void setExtensions(Object[] extensions) {
+    public void setExtensions(List<FutureExtensions> extensions) {
         this.extensions = extensions;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
+        for (FutureExtensions futureExtensions : this.getExtensions()) {
+            //serializedAccountCreateWithDelegationOperation.write(futureExtensions.toByteArray());
+        }
+        
         return null;
     }
 

@@ -15,6 +15,7 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
+import eu.bittrade.libs.steem.api.wrapper.models.FutureExtensions;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
@@ -37,9 +38,8 @@ public class AccountCreateWithDelegationOperation extends Operation {
     private PublicKey memoKey;
     @JsonProperty("json_metadata")
     private String jsonMetadata;
-    // TODO: Original type is "extension_type" which is an array of
-    // "future_extion".
-    private List<Object> extensions;
+    // Original type is "extension_type" which is an array of "future_extions".
+    private List<FutureExtensions> extensions;
 
     /**
      * Create a new create account with delegation operation. Use this operation
@@ -239,11 +239,13 @@ public class AccountCreateWithDelegationOperation extends Operation {
      * 
      * @return All extensions.
      */
-    public List<Object> getExtensions() {
-        if (extensions == null) {
+    public List<FutureExtensions> getExtensions() {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
             extensions = new ArrayList<>();
+            extensions.add(new FutureExtensions());
         }
-
         return extensions;
     }
 
@@ -253,7 +255,7 @@ public class AccountCreateWithDelegationOperation extends Operation {
      * @param extensions
      *            Define a list of extensions.
      */
-    public void setExtensions(List<Object> extensions) {
+    public void setExtensions(List<FutureExtensions> extensions) {
         this.extensions = extensions;
     }
 
@@ -272,10 +274,9 @@ public class AccountCreateWithDelegationOperation extends Operation {
             serializedAccountCreateWithDelegationOperation.write(this.getMemoKey().toByteArray());
             serializedAccountCreateWithDelegationOperation
                     .write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
-
-            // TODO: Handle Extensions.For now we just append an empty byte.
-            byte[] extension = { 0x00 };
-            serializedAccountCreateWithDelegationOperation.write(extension);
+            for (FutureExtensions futureExtensions : this.getExtensions()) {
+                serializedAccountCreateWithDelegationOperation.write(futureExtensions.toByteArray());
+            }
 
             return serializedAccountCreateWithDelegationOperation.toByteArray();
         } catch (IOException e) {

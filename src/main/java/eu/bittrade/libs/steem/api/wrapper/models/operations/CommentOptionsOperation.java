@@ -15,6 +15,7 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
+import eu.bittrade.libs.steem.api.wrapper.models.CommentOptionsExtension;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
@@ -35,9 +36,10 @@ public class CommentOptionsOperation extends Operation {
     private Boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
     private Boolean allowCurationRewards;
-    // TODO: Fix type: comment_options_extensions_type
+    // Original type is "comment_options_extensions_type" which is a list of
+    // "comment_options_extension".
     @JsonProperty("extensions")
-    private List<Object> extensions;
+    private List<CommentOptionsExtension> extensions;
 
     /**
      * Create a new comment options operation. Use this operation to define
@@ -184,11 +186,13 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @return All extensions.
      */
-    public List<Object> getExtensions() {
-        if (extensions == null) {
+    public List<CommentOptionsExtension> getExtensions() {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
             extensions = new ArrayList<>();
+            extensions.add(new CommentOptionsExtension());
         }
-
         return extensions;
     }
 
@@ -198,7 +202,7 @@ public class CommentOptionsOperation extends Operation {
      * @param extensions
      *            Define a list of extensions.
      */
-    public void setExtensions(List<Object> extensions) {
+    public void setExtensions(List<CommentOptionsExtension> extensions) {
         this.extensions = extensions;
     }
 
@@ -215,9 +219,9 @@ public class CommentOptionsOperation extends Operation {
             serializedCommentOptionsOperation.write(SteemJUtils.transformBooleanToByteArray(this.getAllowVotes()));
             serializedCommentOptionsOperation
                     .write(SteemJUtils.transformBooleanToByteArray(this.getAllowCurationRewards()));
-            // TODO: Handle Extensions.For now we just append an empty byte.
-            byte[] extension = { 0x00 };
-            serializedCommentOptionsOperation.write(extension);
+            for (CommentOptionsExtension futureExtensions : this.getExtensions()) {
+                serializedCommentOptionsOperation.write(futureExtensions.toByteArray());
+            }
 
             return serializedCommentOptionsOperation.toByteArray();
         } catch (IOException e) {
