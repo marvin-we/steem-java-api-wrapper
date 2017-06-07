@@ -1,13 +1,23 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
+/**
+ * This class represents the Steem "set_reset_account_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class SetResetAccountOperation extends Operation {
     private AccountName account;
     @JsonProperty("current_reset_account")
@@ -15,51 +25,75 @@ public class SetResetAccountOperation extends Operation {
     @JsonProperty("reset_account")
     private AccountName resetAccount;
 
+    /**
+     * Create a new set reset account operation.
+     * 
+     * This operation allows the {@link #account account} owner to control which
+     * account has the power to execute the 'reset_account_operation' after 60
+     * days.
+     */
     public SetResetAccountOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.OWNER);
     }
 
     /**
-     * @return the account
+     * Get the account which the "set reset account operation" has been executed
+     * for.
+     * 
+     * @return The account which the "set reset account operation" has been
+     *         executed for.
      */
     public AccountName getAccount() {
         return account;
     }
 
     /**
+     * Define for which account this "set reset account operation" is for.
+     * 
      * @param account
-     *            the account to set
+     *            The account which the "set reset account operation" has been
+     *            executed for.
      */
     public void setAccount(AccountName account) {
         this.account = account;
     }
 
     /**
-     * @return the currentResetAccount
+     * Get the current reset account of the {@link #account account}. For newly
+     * created accounts this is <i> new AccountName("null") </i> in most cases.
+     * 
+     * @return The current reset account for the {@link #account account}.
      */
     public AccountName getCurrentResetAccount() {
         return currentResetAccount;
     }
 
     /**
+     * Set the current reset account of the {@link #account account}. For newly
+     * created accounts this is <i> new AccountName("null") </i> in most cases.
+     * 
      * @param currentResetAccount
-     *            the currentResetAccount to set
+     *            The current reset account for the {@link #account account}.
      */
     public void setCurrentResetAccount(AccountName currentResetAccount) {
         this.currentResetAccount = currentResetAccount;
     }
 
     /**
-     * @return the resetAccount
+     * Get the new reset account which has been set with this operation.
+     * 
+     * @return The new reset account which has been set with this operation.
      */
     public AccountName getResetAccount() {
         return resetAccount;
     }
 
     /**
+     * Set the new reset account for the {@link #account account}.
+     * 
      * @param resetAccount
-     *            the resetAccount to set
+     *            The new reset account which has been set with this operation.
      */
     public void setResetAccount(AccountName resetAccount) {
         this.resetAccount = resetAccount;
@@ -67,8 +101,18 @@ public class SetResetAccountOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedSetResetAccountOperation = new ByteArrayOutputStream()) {
+            serializedSetResetAccountOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.SET_RESET_ACCOUNT_OPERATION.ordinal()));
+            serializedSetResetAccountOperation.write(this.getAccount().toByteArray());
+            serializedSetResetAccountOperation.write(this.getCurrentResetAccount().toByteArray());
+            serializedSetResetAccountOperation.write(this.getResetAccount().toByteArray());
+
+            return serializedSetResetAccountOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override
