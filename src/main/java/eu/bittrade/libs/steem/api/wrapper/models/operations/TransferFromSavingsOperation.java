@@ -1,14 +1,24 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
+/**
+ * This class represents the Steem "transfer_from_savings_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class TransferFromSavingsOperation extends Operation {
     private AccountName from;
     // Original type is uint32_t so we use long here.
@@ -18,56 +28,78 @@ public class TransferFromSavingsOperation extends Operation {
     private Asset amount;
     private String memo;
 
+    /**
+     * Create a new transfer from savings operation. Use this operation to
+     * transfer an {@link #amount amount} from the savings of the {@link #from
+     * from} account to the {@link #to to} account.
+     */
     public TransferFromSavingsOperation() {
-        super(PrivateKeyType.POSTING);
+        // Define the required key type for this operation.
+        super(PrivateKeyType.ACTIVE);
+        // Set default values.
+        this.setRequestId(0);
     }
 
     /**
-     * @return the from
+     * Get the account which transfered the amount.
+     * 
+     * @return The account which transfered the amount.
      */
     public AccountName getFrom() {
         return from;
     }
 
     /**
+     * Set the account which wants to transfer the amount.
+     * 
      * @param from
-     *            the from to set
+     *            The account which transfered the amount.
      */
     public void setFrom(AccountName from) {
         this.from = from;
     }
 
     /**
-     * @return the requestId
+     * Get the id of this request.
+     * 
+     * @return The id of this request.
      */
-    public long getRequestId() {
-        return requestId;
+    public int getRequestId() {
+        return (int) requestId;
     }
 
     /**
+     * Set the id of this request. <b>Attention:</b> The id has to be unique.
+     * 
      * @param requestId
-     *            the requestId to set
+     *            The id of this request.
      */
     public void setRequestId(long requestId) {
         this.requestId = requestId;
     }
 
     /**
-     * @return the to
+     * Get the account which received the transfered amount.
+     * 
+     * @return The account which received the transfered amount.
      */
     public AccountName getTo() {
         return to;
     }
 
     /**
+     * Set the account which should receive the amount.
+     * 
      * @param to
-     *            the to to set
+     *            The account which received the transfered amount.
      */
     public void setTo(AccountName to) {
         this.to = to;
     }
 
     /**
+     * Get the transfered amount.
+     * 
      * @return the amount
      */
     public Asset getAmount() {
@@ -75,23 +107,29 @@ public class TransferFromSavingsOperation extends Operation {
     }
 
     /**
+     * Set the amount to transfer.
+     * 
      * @param amount
-     *            the amount to set
+     *            The transfered amount.
      */
     public void setAmount(Asset amount) {
         this.amount = amount;
     }
 
     /**
-     * @return the memo
+     * Get the message added to this operation.
+     * 
+     * @return The message added to this operation.
      */
     public String getMemo() {
         return memo;
     }
 
     /**
+     * Add an additional message to this operation.
+     * 
      * @param memo
-     *            the memo to set
+     *            The message added to this operation.
      */
     public void setMemo(String memo) {
         this.memo = memo;
@@ -99,8 +137,20 @@ public class TransferFromSavingsOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedTransferFromSavingsOperation = new ByteArrayOutputStream()) {
+            serializedTransferFromSavingsOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.TRANSFER_FROM_SAVINGS_OPERATION.ordinal()));
+            serializedTransferFromSavingsOperation.write(this.getFrom().toByteArray());
+            serializedTransferFromSavingsOperation.write(SteemJUtils.transformIntToByteArray(this.getRequestId()));
+            serializedTransferFromSavingsOperation.write(this.getTo().toByteArray());
+            serializedTransferFromSavingsOperation.write(this.getAmount().toByteArray());
+            serializedTransferFromSavingsOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getMemo()));
+
+            return serializedTransferFromSavingsOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override
