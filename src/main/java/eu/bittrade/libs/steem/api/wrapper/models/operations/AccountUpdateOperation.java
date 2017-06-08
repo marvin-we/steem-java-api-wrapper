@@ -36,7 +36,7 @@ public class AccountUpdateOperation extends Operation {
 
     /**
      * Create a new create account update operation. Use this operation to
-     * update the keys of a existing account.
+     * update the keys of an existing account.
      */
     public AccountUpdateOperation() {
         // Define the required key type for this operation.
