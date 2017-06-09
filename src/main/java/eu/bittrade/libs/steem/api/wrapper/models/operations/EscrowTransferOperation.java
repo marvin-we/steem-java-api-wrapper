@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -9,12 +11,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
+/**
+ * This class represents the Steem "escrow_transfer_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class EscrowTransferOperation extends Operation {
     private AccountName from;
     private AccountName to;
@@ -34,6 +42,30 @@ public class EscrowTransferOperation extends Operation {
     @JsonProperty("json_meta")
     private String jsonMeta;
 
+    /**
+     * Create a new escrow transfer operation.
+     * 
+     * The purpose of this operation is to enable someone to send money
+     * contingently to another individual. The funds leave the {@link #from
+     * from} account and go into a temporary balance where they are held until
+     * {@link #from from} releases it to {@link #to to} or {@link #to to}
+     * refunds it to {@link #from from}.
+     *
+     * In the event of a dispute the {@link #agent agent} can divide the funds
+     * between the to/from account. Disputes can be raised any time before or on
+     * the dispute deadline time, after the escrow has been approved by all
+     * parties.
+     *
+     * This operation only creates a proposed escrow transfer. Both the
+     * {@link #agent agent} and {@link #to to} must agree to the terms of the
+     * arrangement by approving the escrow.
+     *
+     * The escrow agent is paid the fee on approval of all parties. It is up to
+     * the escrow agent to determine the fee.
+     *
+     * Escrow transactions are uniquely identified by 'from' and 'escrow_id',
+     * the 'escrow_id' is defined by the sender.
+     */
     public EscrowTransferOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
@@ -52,105 +84,135 @@ public class EscrowTransferOperation extends Operation {
     }
 
     /**
-     * @return the from
+     * Get the account who wants to transfer the fund to the {@link #to to}
+     * account.
+     * 
+     * @return The account who wants to transfer the fund.
      */
     public AccountName getFrom() {
         return from;
     }
 
     /**
+     * Set the account who wants to transfer the fund to the {@link #to to}
+     * account.
+     * 
      * @param from
-     *            the from to set
+     *            The account who wants to transfer the fund.
      */
     public void setFrom(AccountName from) {
         this.from = from;
     }
 
     /**
-     * @return the to
+     * Get the account who should receive the funds.
+     * 
+     * @return The account who should receive the funds.
      */
     public AccountName getTo() {
         return to;
     }
 
     /**
+     * Set the account who should receive the funds.
+     * 
      * @param to
-     *            the to to set
+     *            The account who should receive the funds.
      */
     public void setTo(AccountName to) {
         this.to = to;
     }
 
     /**
-     * @return the agent
+     * Get the agent account.
+     * 
+     * @return The agent account.
      */
     public AccountName getAgent() {
         return agent;
     }
 
     /**
+     * Set the agent account.
+     * 
      * @param agent
-     *            the agent to set
+     *            The agent account.
      */
     public void setAgent(AccountName agent) {
         this.agent = agent;
     }
 
     /**
-     * @return the escrowId
+     * Get the unique id of this escrow operation.
+     * 
+     * @return The unique id of this escrow operation.
      */
     public long getEscrowId() {
         return escrowId;
     }
 
     /**
+     * Set the unique id of this escrow operation.
+     * 
      * @param escrowId
-     *            the escrowId to set
+     *            The unique id of this escrow operation.
      */
     public void setEscrowId(long escrowId) {
         this.escrowId = escrowId;
     }
 
     /**
-     * @return the sbdAmount
+     * Get the SDB amount that has been transfered.
+     * 
+     * @return The SDB amount that has been transfered.
      */
     public Asset getSbdAmount() {
         return sbdAmount;
     }
 
     /**
+     * Set the SDB amount that should be transfered.
+     * 
      * @param sbdAmount
-     *            the sbdAmount to set
+     *            The SDB amount that has been transfered.
      */
     public void setSbdAmount(Asset sbdAmount) {
         this.sbdAmount = sbdAmount;
     }
 
     /**
-     * @return the steemAmount
+     * Get the STEEM amount that has been transfered.
+     * 
+     * @return The STEEM amount that has been transfered.
      */
     public Asset getSteemAmount() {
         return steemAmount;
     }
 
     /**
+     * Set the STEEM amount that has been transfered.
+     * 
      * @param steemAmount
-     *            the steemAmount to set
+     *            The STEEM amount that has been transfered.
      */
     public void setSteemAmount(Asset steemAmount) {
         this.steemAmount = steemAmount;
     }
 
     /**
-     * @return the fee
+     * Get the fee that has been paid to the agent.
+     * 
+     * @return The fee that will be paid to the agent.
      */
     public Asset getFee() {
         return fee;
     }
 
     /**
+     * Set the fee that will be paid to the agent.
+     * 
      * @param fee
-     *            the fee to set
+     *            The fee that will be paid to the agent.
      */
     public void setFee(Asset fee) {
         this.fee = fee;
@@ -275,15 +337,19 @@ public class EscrowTransferOperation extends Operation {
     }
 
     /**
-     * @return the jsonMeta
+     * Get the json metadata that has been added to this operation.
+     * 
+     * @return The json metadata that has been added to this operation.
      */
     public String getJsonMeta() {
         return jsonMeta;
     }
 
     /**
+     * Set the json metadata that has been added to this operation.
+     * 
      * @param jsonMeta
-     *            the jsonMeta to set
+     *            The json metadata that has been added to this operation.
      */
     public void setJsonMeta(String jsonMeta) {
         this.jsonMeta = jsonMeta;
@@ -291,8 +357,27 @@ public class EscrowTransferOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedEscrowTransferOperation = new ByteArrayOutputStream()) {
+            serializedEscrowTransferOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_TRANSFER_OPERATION.ordinal()));
+            serializedEscrowTransferOperation.write(this.getFrom().toByteArray());
+            serializedEscrowTransferOperation.write(this.getTo().toByteArray());
+            serializedEscrowTransferOperation.write(this.getAgent().toByteArray());
+            serializedEscrowTransferOperation.write(SteemJUtils.transformLongToByteArray(this.getEscrowId()));
+            serializedEscrowTransferOperation.write(this.getSbdAmount().toByteArray());
+            serializedEscrowTransferOperation.write(this.getSteemAmount().toByteArray());
+            serializedEscrowTransferOperation.write(this.getFee().toByteArray());
+            serializedEscrowTransferOperation
+                    .write(SteemJUtils.transformIntToByteArray(this.getRatificationDeadlineDateAsInt()));
+            serializedEscrowTransferOperation
+                    .write(SteemJUtils.transformIntToByteArray(this.getEscrowExpirationDateAsInt()));
+            serializedEscrowTransferOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMeta()));
+
+            return serializedEscrowTransferOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override
