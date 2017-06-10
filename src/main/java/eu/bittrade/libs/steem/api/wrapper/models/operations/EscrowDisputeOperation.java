@@ -8,6 +8,11 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
+/**
+ * This class represents the Steem "escrow_dispute_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class EscrowDisputeOperation extends Operation {
     private AccountName from;
     private AccountName to;
@@ -17,6 +22,13 @@ public class EscrowDisputeOperation extends Operation {
     @JsonProperty("escrow_id")
     private long escrowId;
 
+    /**
+     * Create a new escrow dispute operation.
+     * 
+     * If either the sender or receiver of an escrow payment has an issue, they
+     * can raise it for dispute. Once a payment is in dispute, the agent has
+     * authority over who gets what.
+     */
     public EscrowDisputeOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
@@ -70,7 +82,8 @@ public class EscrowDisputeOperation extends Operation {
     }
 
     /**
-     *  Either to or agent
+     * Either to or agent
+     * 
      * @return the who
      */
     public AccountName getWho() {

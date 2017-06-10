@@ -10,6 +10,11 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 
+/**
+ * This class represents the Steem "escrow_release_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class EscrowReleaseOperation extends Operation {
     private AccountName from;
     private AccountName to;
@@ -24,6 +29,24 @@ public class EscrowReleaseOperation extends Operation {
     @JsonProperty("steem_amount")
     private Asset steemAmount;
 
+    /**
+     * Create a new escrow release operation. This operation can be used by
+     * anyone associated with the escrow transfer to release funds if they have
+     * permission.
+     *
+     * <p>
+     * The permission scheme is as follows:
+     * <ul>
+     * <li>If there is no dispute and escrow has not expired, either party can
+     * release funds to the other.</li>
+     * <li>If escrow expires and there is no dispute, either party can release
+     * funds to either party.</li>
+     * <li>If there is a dispute regardless of expiration, the agent can release
+     * funds to either party following whichever agreement was in place between
+     * the parties.</li>
+     * </ul>
+     * <p>
+     */
     public EscrowReleaseOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);

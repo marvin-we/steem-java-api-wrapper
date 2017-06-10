@@ -8,6 +8,11 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
+/**
+ * This class represents the Steem "escrow_approve_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class EscrowApproveOperation extends Operation {
     private AccountName from;
     private AccountName to;
@@ -18,6 +23,14 @@ public class EscrowApproveOperation extends Operation {
     private long escrowId;
     private Boolean approve;
 
+    /**
+     * Create a new escrow approve operation.
+     * 
+     * The agent and to accounts must approve an escrow transaction for it to be
+     * valid on the blockchain. Once a part approves the escrow, the cannot
+     * revoke their approval. Subsequent escrow approve operations, regardless
+     * of the approval, will be rejected.
+     */
     public EscrowApproveOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
