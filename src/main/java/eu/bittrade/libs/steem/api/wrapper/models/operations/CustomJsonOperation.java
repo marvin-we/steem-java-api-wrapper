@@ -11,6 +11,8 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
 /**
+ * This class represents the Steem "custom_json_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CustomJsonOperation extends Operation {
@@ -37,18 +39,34 @@ public class CustomJsonOperation extends Operation {
         return requiredAuths;
     }
 
+    /**
+     * 
+     * @param requiredAuths
+     */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
         this.requiredAuths = requiredAuths;
     }
 
+    /**
+     * 
+     * @return
+     */
     public List<AccountName> getRequiredPostingAuths() {
         return requiredPostingAuths;
     }
 
+    /**
+     * 
+     * @param requiredPostingAuths
+     */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
         this.requiredPostingAuths = requiredPostingAuths;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getId() {
         return id;
     }
@@ -62,6 +80,10 @@ public class CustomJsonOperation extends Operation {
         this.id = id;
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getJson() {
         return json;
     }

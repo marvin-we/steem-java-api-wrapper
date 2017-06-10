@@ -1,14 +1,22 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
+ * This class represents the Steem "set_withdraw_vesting_route_operation"
+ * object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SetWithdrawVestingRouteOperation extends Operation {
@@ -22,66 +30,98 @@ public class SetWithdrawVestingRouteOperation extends Operation {
     @JsonProperty("auto_vest")
     private Boolean autoVest;
 
+    /**
+     * Create a new set withdraw vesting route operation.
+     * 
+     * This operation allows an account to setup a vesting withdraw but with the
+     * additional request for the funds to be transferred directly to another
+     * account's balance rather than the withdrawing account. In addition, those
+     * funds can be immediately vested again, circumventing the conversion from
+     * vests to steem and back, guaranteeing they maintain their value.
+     */
     public SetWithdrawVestingRouteOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);
+        // Set default values:
+        this.setPercent(0);
+        this.setAutoVest(false);
     }
 
     /**
-     * @return the fromAccount
+     * Get the account whose funds will be transfered to the {@link #toAccount
+     * toAccount}.
+     * 
+     * @return The account whose funds will be transfered.
      */
     public AccountName getFromAccount() {
         return fromAccount;
     }
 
     /**
+     * Set the account whose funds will be transfered to the {@link #toAccount
+     * toAccount}.
+     * 
      * @param fromAccount
-     *            the fromAccount to set
+     *            The account whose funds will be transfered.
      */
     public void setFromAccount(AccountName fromAccount) {
         this.fromAccount = fromAccount;
     }
 
     /**
-     * @return the toAccount
+     * Get the account to which the funds have been redirected.
+     * 
+     * @return The account to which the funds getting redirected.
      */
     public AccountName getToAccount() {
         return toAccount;
     }
 
     /**
+     * Set the account to which the funds getting redirected.
+     * 
      * @param toAccount
-     *            the toAccount to set
+     *            The account to which the funds getting redirected.
      */
     public void setToAccount(AccountName toAccount) {
         this.toAccount = toAccount;
     }
 
     /**
-     * @return the percent
+     * Get the information which percentage of the reward has been transfered to
+     * the {@link #toAccount toAccount}.
+     * 
+     * @return The redirected percentage.
      */
     public int getPercent() {
         return percent;
     }
 
     /**
+     * Define which percentage of the reward should be transfered to the
+     * {@link #toAccount toAccount}.
+     * 
      * @param percent
-     *            the percent to set
+     *            The percentage to redirect.
      */
     public void setPercent(int percent) {
         this.percent = percent;
     }
 
     /**
-     * @return the autoVest
+     * Get the information if the routed funds have been directly reinvested.
+     * 
+     * @return True if the funds should be reinvested or false if not.
      */
     public Boolean getAutoVest() {
         return autoVest;
     }
 
     /**
+     * Define if the routed funds should be directly reinvested.
+     * 
      * @param autoVest
-     *            the autoVest to set
+     *            True if the funds should be reinvested or false if not.
      */
     public void setAutoVest(Boolean autoVest) {
         this.autoVest = autoVest;
@@ -89,8 +129,20 @@ public class SetWithdrawVestingRouteOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedSetWithdrawVestingRouteOperation = new ByteArrayOutputStream()) {
+            serializedSetWithdrawVestingRouteOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.SET_WITHDRAW_VESTING_ROUTE_OPERATION.ordinal()));
+            serializedSetWithdrawVestingRouteOperation.write(this.getFromAccount().toByteArray());
+            serializedSetWithdrawVestingRouteOperation.write(this.getToAccount().toByteArray());
+            serializedSetWithdrawVestingRouteOperation.write(SteemJUtils.transformShortToByteArray(this.getPercent()));
+            serializedSetWithdrawVestingRouteOperation
+                    .write(SteemJUtils.transformBooleanToByteArray(this.getAutoVest()));
+
+            return serializedSetWithdrawVestingRouteOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override
