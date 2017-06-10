@@ -1,14 +1,19 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "escrow_release_operation" object.
@@ -65,131 +70,155 @@ public class EscrowReleaseOperation extends Operation {
     }
 
     /**
-     * @return the from
+     * Get the account who wants to transfer the fund to the {@link #to to}
+     * account.
+     * 
+     * @return The account who wants to transfer the fund.
      */
     public AccountName getFrom() {
         return from;
     }
 
     /**
+     * Set the account who wants to transfer the fund to the {@link #to to}
+     * account.
+     * 
      * @param from
-     *            the from to set
+     *            The account who wants to transfer the fund.
      */
     public void setFrom(AccountName from) {
         this.from = from;
     }
 
     /**
-     * the original 'to'
+     * Get the account who should receive the funds.
      * 
-     * @return the to
+     * @return The account who should receive the funds.
      */
     public AccountName getTo() {
         return to;
     }
 
     /**
+     * Set the account who should receive the funds.
+     * 
      * @param to
-     *            the to to set
+     *            The account who should receive the funds.
      */
     public void setTo(AccountName to) {
         this.to = to;
     }
 
     /**
-     * @return the agent
+     * Get the agent account.
+     * 
+     * @return The agent account.
      */
     public AccountName getAgent() {
         return agent;
     }
 
     /**
+     * Set the agent account.
+     * 
      * @param agent
-     *            the agent to set
+     *            The agent account.
      */
     public void setAgent(AccountName agent) {
         this.agent = agent;
     }
 
     /**
-     * @return the who
+     * Get the account that is attempting to release the funds.
+     * 
+     * @return The account that is attempting to release the funds.
      */
     public AccountName getWho() {
         return who;
     }
 
     /**
-     * the account that is attempting to release the funds, determines valid
-     * 'receiver'
+     * Set the account that is attempting to release the funds, determines valid
+     * 'receiver'.
      * 
      * @param who
-     *            the who to set
+     *            The account that is attempting to release the funds.
      */
     public void setWho(AccountName who) {
         this.who = who;
     }
 
     /**
-     * the account that should receive funds (might be from, might be to)
+     * Get the account that has received funds (might be from, might be to).
      * 
-     * @return the receiver
+     * @return The account that has received funds.
      */
     public AccountName getReceiver() {
         return receiver;
     }
 
     /**
+     * Set the account that should receive funds (might be from, might be to).
+     * 
      * @param receiver
-     *            the receiver to set
+     *            The account that should receive funds.
      */
     public void setReceiver(AccountName receiver) {
         this.receiver = receiver;
     }
 
     /**
-     * @return the escrowId
+     * Get the unique id of this escrow operation.
+     * 
+     * @return The unique id of this escrow operation.
      */
     public long getEscrowId() {
         return escrowId;
     }
 
     /**
+     * Set the unique id of this escrow operation.
+     * 
      * @param escrowId
-     *            the escrowId to set
+     *            The unique id of this escrow operation.
      */
     public void setEscrowId(long escrowId) {
         this.escrowId = escrowId;
     }
 
     /**
-     * the amount of sbd to release
+     * Get the amount of SBD to release.
      * 
-     * @return the sbdAmount
+     * @return The amount of SBD to release.
      */
     public Asset getSbdAmount() {
         return sbdAmount;
     }
 
     /**
+     * Set the amount of SBD to release.
+     * 
      * @param sbdAmount
-     *            the sbdAmount to set
+     *            The amount of SBD to release.
      */
     public void setSbdAmount(Asset sbdAmount) {
         this.sbdAmount = sbdAmount;
     }
 
     /**
-     * the amount of steem to release
+     * Get the amount of STEEM to release.
      * 
-     * @return the steemAmount
+     * @return The amount of STEEM to release.
      */
     public Asset getSteemAmount() {
         return steemAmount;
     }
 
     /**
+     * Set the amount of STEEM to release.
+     * 
      * @param steemAmount
-     *            the steemAmount to set
+     *            The amount of STEEM to release.
      */
     public void setSteemAmount(Asset steemAmount) {
         this.steemAmount = steemAmount;
@@ -197,8 +226,23 @@ public class EscrowReleaseOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedEscrowReleaseOperation = new ByteArrayOutputStream()) {
+            serializedEscrowReleaseOperation
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_APPROVE_OPERATION.ordinal()));
+            serializedEscrowReleaseOperation.write(this.getFrom().toByteArray());
+            serializedEscrowReleaseOperation.write(this.getTo().toByteArray());
+            serializedEscrowReleaseOperation.write(this.getAgent().toByteArray());
+            serializedEscrowReleaseOperation.write(this.getWho().toByteArray());
+            serializedEscrowReleaseOperation.write(this.getReceiver().toByteArray());
+            serializedEscrowReleaseOperation.write(SteemJUtils.transformLongToByteArray(this.getEscrowId()));
+            serializedEscrowReleaseOperation.write(this.getSbdAmount().toByteArray());
+            serializedEscrowReleaseOperation.write(this.getSteemAmount().toByteArray());
+
+            return serializedEscrowReleaseOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override
