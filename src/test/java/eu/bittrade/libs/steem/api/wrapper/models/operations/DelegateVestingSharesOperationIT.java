@@ -30,7 +30,7 @@ public class DelegateVestingSharesOperationIT extends BaseIntegrationTest {
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_FROM_ACCOUNT = "dez1337";
     private static final String EXPECTED_TO_ACCOUNT = "steemj";
-    private static final double EXPECTED_AMOUNT = 4142872164L;
+    private static final double EXPECTED_AMOUNT = 4142.872164;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c8045701280764657a31333337067374656"
             + "56d6ac4f4f51800000000065645535453000000011c7b28a34479885c3ca12abcd180577382cf2d7d05a4f64219587"
             + "c9cc8ae87f2707ace6d2297830935a1c21922b51c2647af44f3baaf7a0a860f55f4fefdbf2cc4";

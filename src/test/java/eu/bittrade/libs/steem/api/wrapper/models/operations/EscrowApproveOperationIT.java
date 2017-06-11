@@ -27,7 +27,7 @@ public class EscrowApproveOperationIT extends BaseIntegrationTest {
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_FROM = "anonymtest";
-    private static final long EXPECTED_ESCROW_ID = 72526562;
+    private static final int EXPECTED_ESCROW_ID = 72526562;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c80457011f0764657a313333"
             + "370764657a3133333706737465656d6a0764657a31333337220000000100011c332f9e5eb7bbe20ba13"
             + "1e73ef6b399c09b6c109b6873b6fc333570e087cd25271ce54a4070c8a012ef6e1e0f050a1f7c992a1f"

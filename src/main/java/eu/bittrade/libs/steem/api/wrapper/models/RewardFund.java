@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.CurveId;
+
 /**
  * This class is the java implementation of the Steem "reward_fund_object".
  * 
@@ -33,6 +35,11 @@ public class RewardFund {
     // Original type is uint16_t so we use int here.
     @JsonProperty("percent_content_rewards")
     private int percentContentRewards;
+    // TODO: Original type is curve id.
+    @JsonProperty("author_reward_curve")
+    private CurveId authorRewardCurve;
+    @JsonProperty("curation_reward_curve")
+    private CurveId curationRewardCurve;
 
     /**
      * @return the id
@@ -88,6 +95,20 @@ public class RewardFund {
      */
     public int getPercentContentRewards() {
         return percentContentRewards;
+    }
+
+    /**
+     * @return the authorRewardCurve
+     */
+    public CurveId getAuthorRewardCurve() {
+        return authorRewardCurve;
+    }
+
+    /**
+     * @return the curationRewardCurve
+     */
+    public CurveId getCurationRewardCurve() {
+        return curationRewardCurve;
     }
 
     @Override

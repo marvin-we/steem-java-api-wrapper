@@ -65,6 +65,8 @@ public class GlobalProperties {
     private String pendingRewardedVestingShares;
     @JsonProperty("pending_rewarded_vesting_steem")
     private String pendingRewardedVestingSteem;
+    @JsonProperty("vote_power_reserve_rate")
+    private int votePowerReserveRate;
 
     public int getId() {
         return id;
@@ -181,6 +183,17 @@ public class GlobalProperties {
 
     public String getPendingRewardedVestingSteem() {
         return pendingRewardedVestingSteem;
+    }
+
+    /**
+     * The number of votes regenerated per day. Any user voting slower than this
+     * rate will be "wasting" voting power through spillover; any user voting
+     * faster than this rate will have their votes reduced.
+     *
+     * @return The number of votes regenerated per day.
+     */
+    public int getVotePowerReserveRate() {
+        return votePowerReserveRate;
     }
 
     @Override

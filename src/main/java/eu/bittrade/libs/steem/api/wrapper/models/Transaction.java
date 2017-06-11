@@ -73,7 +73,7 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
     private transient List<Operation> operations;
     protected transient List<String> signatures;
     // Original type is "extension_type" which is an array of "future_extions".
-    private List<FutureExtensions> extensions;
+    private transient List<FutureExtensions> extensions;
 
     /**
      * Create a new Transaction.
