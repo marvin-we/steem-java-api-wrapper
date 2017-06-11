@@ -1,14 +1,18 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "custom_json_operation" object.
@@ -99,8 +103,31 @@ public class CustomJsonOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedCustomOperation = new ByteArrayOutputStream()) {
+            serializedCustomOperation
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_JSON_OPERATION.ordinal()));
+
+            serializedCustomOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
+
+            for (AccountName accountName : this.getRequiredAuths()) {
+                serializedCustomOperation.write(accountName.toByteArray());
+            }
+
+            serializedCustomOperation
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredPostingAuths().size()));
+
+            for (AccountName accountName : this.getRequiredPostingAuths()) {
+                serializedCustomOperation.write(accountName.toByteArray());
+            }
+
+            serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getId()));
+            serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getJson()));
+
+            return serializedCustomOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override

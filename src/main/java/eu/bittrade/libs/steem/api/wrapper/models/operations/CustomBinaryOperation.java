@@ -1,15 +1,18 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "custom_binary_operation" object.
@@ -30,11 +33,11 @@ public class CustomBinaryOperation extends Operation {
     @JsonProperty("required_auths")
     private List<Authority> requiredAuths;
     private String id;
-    private List<Character> data;
+    private String data;
 
     public CustomBinaryOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(null);
     }
 
     /**
@@ -118,7 +121,7 @@ public class CustomBinaryOperation extends Operation {
     /**
      * @return the data
      */
-    public List<Character> getData() {
+    public String getData() {
         return data;
     }
 
@@ -126,14 +129,48 @@ public class CustomBinaryOperation extends Operation {
      * @param data
      *            the data to set
      */
-    public void setData(List<Character> data) {
+    public void setData(String data) {
         this.data = data;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedCustomBinaryOperation = new ByteArrayOutputStream()) {
+            serializedCustomBinaryOperation
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_BINARY_OPERATION.ordinal()));
+            
+            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredOwnerAuths().size()));
+
+            for (AccountName accountName : this.getRequiredOwnerAuths()) {
+                serializedCustomBinaryOperation.write(accountName.toByteArray());
+            }
+            
+            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredActiveAuths().size()));
+
+            for (AccountName accountName : this.getRequiredActiveAuths()) {
+                serializedCustomBinaryOperation.write(accountName.toByteArray());
+            }
+            
+            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredPostingAuths().size()));
+
+            for (AccountName accountName : this.getRequiredPostingAuths()) {
+                serializedCustomBinaryOperation.write(accountName.toByteArray());
+            }
+            
+            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
+
+            for (Authority authority : this.getRequiredAuths()) {
+                serializedCustomBinaryOperation.write(authority.toByteArray());
+            }
+            
+            serializedCustomBinaryOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getId()));
+            serializedCustomBinaryOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getData()));
+
+            return serializedCustomBinaryOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override

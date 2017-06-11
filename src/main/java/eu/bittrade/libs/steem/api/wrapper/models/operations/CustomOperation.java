@@ -1,14 +1,17 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
+import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.util.SteemJUtils;
 
 /**
  * This class represents the Steem "custom_operation" object.
@@ -26,13 +29,21 @@ public class CustomOperation extends Operation {
     @JsonProperty("data")
     private String data;
 
+    /**
+     * Create a new custom operation.
+     */
     public CustomOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(null);
+        // Set default values:
+        this.setId(0);
     }
 
     /**
-     * @return the requiredAuths
+     * Get the list of accounts name whose private active keys were required to
+     * sign this transaction.
+     * 
+     * @return The list of accounts name whose private active keys were required
      */
     public List<AccountName> getRequiredAuths() {
         return requiredAuths;
@@ -82,8 +93,24 @@ public class CustomOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedCustomOperation = new ByteArrayOutputStream()) {
+            serializedCustomOperation
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_OPERATION.ordinal()));
+
+            serializedCustomOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
+
+            for (AccountName accountName : this.getRequiredAuths()) {
+                serializedCustomOperation.write(accountName.toByteArray());
+            }
+
+            serializedCustomOperation.write(SteemJUtils.transformShortToByteArray(this.getId()));
+            serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getData()));
+
+            return serializedCustomOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override

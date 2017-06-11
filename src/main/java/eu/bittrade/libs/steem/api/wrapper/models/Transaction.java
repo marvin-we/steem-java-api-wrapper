@@ -282,6 +282,12 @@ public class Transaction implements ByteTransformable, Serializable, Expirable {
         // detected" error.
         List<PrivateKeyType> requiredPrivateKeyTypes = new ArrayList<>();
         for (Operation operation : this.operations) {
+            // Skip validation for Operations that do not need a specific
+            // private key type.
+            if (operation.getRequiredPrivateKeyType() == null) {
+                continue;
+            }
+
             if (!requiredPrivateKeyTypes.contains(operation.getRequiredPrivateKeyType())) {
                 if (SteemJConfig.getInstance().getPrivateKey(operation.getRequiredPrivateKeyType()) == null) {
                     throw new SteemInvalidTransactionException("The operation of type "

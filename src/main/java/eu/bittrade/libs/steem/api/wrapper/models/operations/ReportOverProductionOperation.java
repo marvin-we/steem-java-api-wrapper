@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steem.api.wrapper.enums.OperationType;
-import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.SignedBlockHeader;
@@ -42,7 +41,7 @@ public class ReportOverProductionOperation extends Operation {
      * of the block producer to the reporter.
      */
     public ReportOverProductionOperation() {
-        super(PrivateKeyType.OWNER);
+        super(null);
     }
 
     /**

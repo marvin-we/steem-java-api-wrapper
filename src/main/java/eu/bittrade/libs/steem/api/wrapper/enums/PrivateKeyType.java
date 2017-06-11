@@ -6,5 +6,5 @@ package eu.bittrade.libs.steem.api.wrapper.enums;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum PrivateKeyType {
-    POSTING, ACTIVE, OWNER, MEMO
+    POSTING, ACTIVE, OWNER, MEMO, NONE
 }
