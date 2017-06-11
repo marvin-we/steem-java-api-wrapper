@@ -11,6 +11,8 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
 /**
+ * This class represents the Steem "custom_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CustomOperation extends Operation {
@@ -61,8 +63,8 @@ public class CustomOperation extends Operation {
 
     /**
      * Get the data that this operation contains. <b>Notice</b> that the
-     * original type of this field is "vector&lt; char &gt;" and that its returned as
-     * a String.
+     * original type of this field is "vector&lt; char &gt;" and that its
+     * returned as a String.
      * 
      * @return the data The data transfered with this operation.
      */

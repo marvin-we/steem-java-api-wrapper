@@ -9,6 +9,8 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 
 /**
+ * This class represents the Steem "pow2_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Pow2Operation extends Operation {

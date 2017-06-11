@@ -8,11 +8,19 @@ import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 
+/**
+ * This class represents the Steem "prove_authority_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class ProveAuthorityOperation extends Operation {
     private AccountName challenged;
     @JsonProperty("require_owner")
     private Boolean requireOwner;
 
+    /**
+     * Create a new prove authority operation.
+     */
     public ProveAuthorityOperation() {
         // Define the required key type for this operation.
         super(PrivateKeyType.POSTING);

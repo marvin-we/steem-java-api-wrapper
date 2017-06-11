@@ -4,18 +4,24 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.util.ArrayList;
+
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steem.api.wrapper.BaseIntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
+import eu.bittrade.libs.steem.api.wrapper.enums.AssetSymbolType;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
+import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Block;
 
 /**
- * Verify the functionality of the "escrow transfer operation" under the use of real api
- * calls.
+ * Verify the functionality of the "escrow transfer operation" under the use of
+ * real api calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -24,12 +30,47 @@ public class EscrowTransferOperationIT extends BaseIntegrationTest {
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_FROM = "xtar";
-    private static final long EXPECTED_ESCROW_ID = 20618239L;
+    private static final int EXPECTED_ESCROW_ID = 20618239;
     private static final int EXPECTED_ESCROW_EXPIRATION = 1490215341;
-    
+    private static final String EXPECTED_TRANSACTION_HEX = "0";
+
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
+
+        EscrowTransferOperation escrowTransferOperation = new EscrowTransferOperation();
+
+        escrowTransferOperation.setAgent(new AccountName("steemj"));
+        escrowTransferOperation.setFrom(new AccountName("dez1337"));
+        escrowTransferOperation.setTo(new AccountName("dez1337"));
+        escrowTransferOperation.setEscrowExpirationDate(1490215341);
+        escrowTransferOperation.setEscrowId(34);
+        escrowTransferOperation.setRatificationDeadlineDate(1490215340);
+        escrowTransferOperation.setJsonMeta("");
+
+        Asset sbdAmount = new Asset();
+        sbdAmount.setAmount(1L);
+        sbdAmount.setSymbol(AssetSymbolType.SBD);
+
+        escrowTransferOperation.setSbdAmount(sbdAmount);
+
+        Asset steemAmount = new Asset();
+        steemAmount.setAmount(10L);
+        steemAmount.setSymbol(AssetSymbolType.STEEM);
+
+        escrowTransferOperation.setSteemAmount(steemAmount);
+
+        Asset fee = new Asset();
+        fee.setAmount(1L);
+        fee.setSymbol(AssetSymbolType.STEEM);
+
+        escrowTransferOperation.setFee(fee);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(escrowTransferOperation);
+
+        transaction.setOperations(operations);
+        transaction.sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -44,18 +85,21 @@ public class EscrowTransferOperationIT extends BaseIntegrationTest {
         assertThat(((EscrowTransferOperation) escrowTransferOperation).getFrom().getAccountName(),
                 equalTo(EXPECTED_FROM));
         assertThat(((EscrowTransferOperation) escrowTransferOperation).getEscrowId(), equalTo(EXPECTED_ESCROW_ID));
-        assertThat(((EscrowTransferOperation) escrowTransferOperation).getEscrowExpirationDateAsInt(), equalTo(EXPECTED_ESCROW_EXPIRATION));
+        assertThat(((EscrowTransferOperation) escrowTransferOperation).getEscrowExpirationDateAsInt(),
+                equalTo(EXPECTED_ESCROW_EXPIRATION));
     }
 
     @Category({ IntegrationTest.class })
     @Test
+    @Ignore
     public void verifyTransaction() throws Exception {
-        // TODO
+        assertThat(steemApiWrapper.verifyAuthority(transaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
+    @Ignore
     public void getTransactionHex() throws Exception {
-        // TODO
+        assertThat(steemApiWrapper.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

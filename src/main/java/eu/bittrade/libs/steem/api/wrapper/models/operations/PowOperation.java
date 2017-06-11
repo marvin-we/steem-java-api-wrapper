@@ -1,7 +1,5 @@
 package eu.bittrade.libs.steem.api.wrapper.models.operations;
 
-import java.math.BigInteger;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,25 +11,33 @@ import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Pow;
 
 /**
+ * This class represents the Steem "pow_operation" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class PowOperation extends Operation {
     @JsonProperty("worker_account")
     private AccountName workerAccount;
     @JsonProperty("block_id")
-    // TODO: Original type is block_id_type
+    // Original type is "checksum_type" which wraps a ripemd160 hash. We use an
+    // byte array to cover this type.
     private String blockId;
     // Original type is uint64_t.
     @JsonProperty("nonce")
-    private BigInteger nonce;
+    private long nonce;
     @JsonProperty("work")
     private Pow work;
     @JsonProperty("props")
     private ChainProperties properties;
 
+    /**
+     * Create a mew pow operation.
+     */
     public PowOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
+        // Set default values:
+        this.setNonce(0);
     }
 
     /**
@@ -67,7 +73,7 @@ public class PowOperation extends Operation {
     /**
      * @return the nonce
      */
-    public BigInteger getNonce() {
+    public long getNonce() {
         return nonce;
     }
 
@@ -75,7 +81,7 @@ public class PowOperation extends Operation {
      * @param nonce
      *            the nonce to set
      */
-    public void setNonce(BigInteger nonce) {
+    public void setNonce(long nonce) {
         this.nonce = nonce;
     }
 

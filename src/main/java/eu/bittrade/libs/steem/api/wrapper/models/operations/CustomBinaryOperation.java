@@ -11,6 +11,11 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionExce
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
 
+/**
+ * This class represents the Steem "custom_binary_operation" object.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class CustomBinaryOperation extends Operation {
     // Original type is flat_set< account_name_type >.
     @JsonProperty("required_owner_auths")

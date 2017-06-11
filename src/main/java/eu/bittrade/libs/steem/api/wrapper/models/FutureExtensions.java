@@ -5,8 +5,11 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
+import eu.bittrade.libs.steem.api.wrapper.models.serializer.FutureExtensionsSerializer;
 
 /**
  * This class represents a "future_extensions_type" object which has no member
@@ -14,6 +17,7 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonSerialize(using = FutureExtensionsSerializer.class)
 public class FutureExtensions implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {

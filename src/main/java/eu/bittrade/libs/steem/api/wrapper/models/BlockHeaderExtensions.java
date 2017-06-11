@@ -5,12 +5,16 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
+import eu.bittrade.libs.steem.api.wrapper.models.serializer.BlockHeaderExtensionsSerializer;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonSerialize(using = BlockHeaderExtensionsSerializer.class)
 public class BlockHeaderExtensions implements ByteTransformable {
     /*
      * TODO: Implement members. This object looks like this:

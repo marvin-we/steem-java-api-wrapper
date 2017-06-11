@@ -38,7 +38,7 @@ public class EscrowApproveOperation extends Operation {
      */
     public EscrowApproveOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
         // Apply default values:
         this.setEscrowId(30);
         this.setApprove(true);
@@ -128,8 +128,8 @@ public class EscrowApproveOperation extends Operation {
      * 
      * @return The unique id of this escrow operation.
      */
-    public long getEscrowId() {
-        return escrowId;
+    public int getEscrowId() {
+        return (int) escrowId;
     }
 
     /**
@@ -171,7 +171,7 @@ public class EscrowApproveOperation extends Operation {
             serializedEscrowApproveOperation.write(this.getTo().toByteArray());
             serializedEscrowApproveOperation.write(this.getAgent().toByteArray());
             serializedEscrowApproveOperation.write(this.getWho().toByteArray());
-            serializedEscrowApproveOperation.write(SteemJUtils.transformLongToByteArray(this.getEscrowId()));
+            serializedEscrowApproveOperation.write(SteemJUtils.transformIntToByteArray(this.getEscrowId()));
             serializedEscrowApproveOperation.write(SteemJUtils.transformBooleanToByteArray(this.getApprove()));
 
             return serializedEscrowApproveOperation.toByteArray();

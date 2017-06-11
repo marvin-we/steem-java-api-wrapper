@@ -54,7 +54,7 @@ public class EscrowReleaseOperation extends Operation {
      */
     public EscrowReleaseOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
         // Apply default values:
         this.setEscrowId(30);
 
@@ -172,8 +172,8 @@ public class EscrowReleaseOperation extends Operation {
      * 
      * @return The unique id of this escrow operation.
      */
-    public long getEscrowId() {
-        return escrowId;
+    public int getEscrowId() {
+        return (int) escrowId;
     }
 
     /**
@@ -228,13 +228,13 @@ public class EscrowReleaseOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedEscrowReleaseOperation = new ByteArrayOutputStream()) {
             serializedEscrowReleaseOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_APPROVE_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_RELEASE_OPERATION.ordinal()));
             serializedEscrowReleaseOperation.write(this.getFrom().toByteArray());
             serializedEscrowReleaseOperation.write(this.getTo().toByteArray());
             serializedEscrowReleaseOperation.write(this.getAgent().toByteArray());
             serializedEscrowReleaseOperation.write(this.getWho().toByteArray());
             serializedEscrowReleaseOperation.write(this.getReceiver().toByteArray());
-            serializedEscrowReleaseOperation.write(SteemJUtils.transformLongToByteArray(this.getEscrowId()));
+            serializedEscrowReleaseOperation.write(SteemJUtils.transformIntToByteArray(this.getEscrowId()));
             serializedEscrowReleaseOperation.write(this.getSbdAmount().toByteArray());
             serializedEscrowReleaseOperation.write(this.getSteemAmount().toByteArray());
 
