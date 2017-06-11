@@ -41,7 +41,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      */
     public SetWithdrawVestingRouteOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
         // Set default values:
         this.setPercent(0);
         this.setAutoVest(false);

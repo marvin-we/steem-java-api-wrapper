@@ -32,7 +32,7 @@ public class CancelTransferFromSavingsOperation extends Operation {
      * TransferFromSavingsOperation}.
      */
     public CancelTransferFromSavingsOperation() {
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
         // Set default values.
         this.setRequestId(0);
     }

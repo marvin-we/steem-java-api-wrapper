@@ -30,7 +30,7 @@ public class AccountWitnessProxyOperation extends Operation {
      */
     public AccountWitnessProxyOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.ACTIVE);
     }
 
     /**
