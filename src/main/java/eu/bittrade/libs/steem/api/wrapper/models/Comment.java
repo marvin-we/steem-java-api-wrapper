@@ -1,289 +1,349 @@
 package eu.bittrade.libs.steem.api.wrapper.models;
 
+import java.math.BigInteger;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * This class represents the Steem "comment_api_obj".
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Content {
+public class Comment {
+    // Original type is comment_id_type.
     private long id;
-    @JsonProperty("author")
-    private String author;
-    @JsonProperty("permlink")
-    private String permlink;
-    @JsonProperty("category")
     private String category;
     @JsonProperty("parent_author")
-    private String parentAuthor;
+    private AccountName parentAuthor;
     @JsonProperty("parent_permlink")
     private String parentPermlink;
-    @JsonProperty("title")
+    private AccountName author;
+    private String permlink;
     private String title;
-    @JsonProperty("body")
     private String body;
     @JsonProperty("json_metadata")
     private String jsonMetadata;
     @JsonProperty("last_update")
     private Date lastUpdate;
-    @JsonProperty("created")
     private Date created;
-    @JsonProperty("active")
-    private String active;
+    private Date active;
     @JsonProperty("last_payout")
     private Date lastPayout;
-    @JsonProperty("depth")
-    private int depth;
-    @JsonProperty("children")
+    // Original type is uint8_t.
+    private short depth;
+    // Orignal type is uint32_t.
     private int children;
+    @Deprecated
     @JsonProperty("children_rshares2")
     private String childrenRshares2;
+    // Original type is safe<int64_t>.
     @JsonProperty("net_rshares")
-    private String netRshares;
+    private long netRshares;
+    // Original type is safe<int64_t>.
     @JsonProperty("abs_rshares")
-    private String absRshares;
+    private long absRshares;
+    // Original type is safe<int64_t>.
     @JsonProperty("vote_rshares")
-    private String voteRshares;
+    private long voteRshares;
+    // Original type is safe<int64_t>.
     @JsonProperty("children_abs_rshares")
-    private String childrenAbsRshares;
+    private long childrenAbsRshares;
     @JsonProperty("cashout_time")
-    private String cashoutTime;
+    private Date cashoutTime;
     @JsonProperty("max_cashout_time")
-    private String maxCashoutTime;
+    private Date maxCashoutTime;
+    // TODO: Original type is uint64_t, but long seems to be not enough here -->
+    // "Can not deserialize value of type long from String
+    // "16089511318360462253": not a valid Long value"
     @JsonProperty("total_vote_weight")
-    private String totalVoteWeight;
+    private BigInteger totalVoteWeight;
+    // Original type is uint64_t.
     @JsonProperty("reward_weight")
     private long rewardWeight;
     @JsonProperty("total_payout_value")
-    private String totalPayoutValue;
+    private Asset totalPayoutValue;
     @JsonProperty("curator_payout_value")
-    private String curatorPayoutValue;
+    private Asset curatorPayoutValue;
+    // Original type is safe<int64_t>.
     @JsonProperty("author_rewards")
     private long authorRewards;
+    // Original type is int32_t.
     @JsonProperty("net_votes")
     private int netVotes;
+    // Original type is comment_id_type.
     @JsonProperty("root_comment")
     private long rootComment;
-    @JsonProperty("mode")
+    @Deprecated
     private String mode;
     @JsonProperty("max_accepted_payout")
-    private String maxAcceptedPayout;
+    private Asset maxAcceptedPayout;
+    // Original type is uint16_t.
     @JsonProperty("percent_steem_dollars")
-    private int percentSteemDollars;
+    private short percentSteemDollars;
     @JsonProperty("allow_replies")
     private Boolean allowReplies;
     @JsonProperty("allow_votes")
     private Boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
     private Boolean allowCurationRewards;
-    @JsonProperty("url")
-    private String url;
-    @JsonProperty("root_title")
-    private String rootTitle;
-    @JsonProperty("pending_payout_value")
-    private String pendingPayoutValue;
-    @JsonProperty("total_pending_payout_value")
-    private String totalPendingPayoutValue;
-    @JsonProperty("active_votes")
-    private List<ActiveVote> activeVotes;
-    private List<Content> replies;
-    @JsonProperty("author_reputation")
-    private String authorReputation;
-    private String promoted;
     // TODO: Fix type
+    // bip::vector< beneficiary_route_type, allocator< beneficiary_route_type >
+    // > beneficiaries;
     private Object[] beneficiaries;
-    @JsonProperty("body_length")
-    private String bodyLength;
-    // TODO: Fix type
-    @JsonProperty("reblogged_by")
-    private Object[] rebloggedBy;
 
+    /**
+     * @return the id
+     */
     public long getId() {
         return id;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getPermlink() {
-        return permlink;
-    }
-
+    /**
+     * @return the category
+     */
     public String getCategory() {
         return category;
     }
 
-    public String getParentAuthor() {
+    /**
+     * @return the parentAuthor
+     */
+    public AccountName getParentAuthor() {
         return parentAuthor;
     }
 
+    /**
+     * @return the parentPermlink
+     */
     public String getParentPermlink() {
         return parentPermlink;
     }
 
+    /**
+     * @return the author
+     */
+    public AccountName getAuthor() {
+        return author;
+    }
+
+    /**
+     * @return the permlink
+     */
+    public String getPermlink() {
+        return permlink;
+    }
+
+    /**
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * @return the body
+     */
     public String getBody() {
         return body;
     }
 
+    /**
+     * @return the jsonMetadata
+     */
     public String getJsonMetadata() {
         return jsonMetadata;
     }
 
+    /**
+     * @return the lastUpdate
+     */
     public Date getLastUpdate() {
         return lastUpdate;
     }
 
+    /**
+     * @return the created
+     */
     public Date getCreated() {
         return created;
     }
 
-    public String getActive() {
+    /**
+     * @return the active
+     */
+    public Date getActive() {
         return active;
     }
 
+    /**
+     * @return the lastPayout
+     */
     public Date getLastPayout() {
         return lastPayout;
     }
 
-    public int getDepth() {
+    /**
+     * @return the depth
+     */
+    public short getDepth() {
         return depth;
     }
 
+    /**
+     * @return the children
+     */
     public int getChildren() {
         return children;
     }
 
+    /**
+     * @return the childrenRshares2
+     */
     public String getChildrenRshares2() {
         return childrenRshares2;
     }
 
-    public String getNetRshares() {
+    /**
+     * @return the netRshares
+     */
+    public long getNetRshares() {
         return netRshares;
     }
 
-    public String getAbsRshares() {
+    /**
+     * @return the absRshares
+     */
+    public long getAbsRshares() {
         return absRshares;
     }
 
-    public String getVoteRshares() {
+    /**
+     * @return the voteRshares
+     */
+    public long getVoteRshares() {
         return voteRshares;
     }
 
-    public String getChildrenAbsRshares() {
+    /**
+     * @return the childrenAbsRshares
+     */
+    public long getChildrenAbsRshares() {
         return childrenAbsRshares;
     }
 
-    public String getCashoutTime() {
+    /**
+     * @return the cashoutTime
+     */
+    public Date getCashoutTime() {
         return cashoutTime;
     }
 
-    public String getMaxCashoutTime() {
+    /**
+     * @return the maxCashoutTime
+     */
+    public Date getMaxCashoutTime() {
         return maxCashoutTime;
     }
 
-    public String getTotalVoteWeight() {
+    /**
+     * @return the totalVoteWeight
+     */
+    public BigInteger getTotalVoteWeight() {
         return totalVoteWeight;
     }
 
+    /**
+     * @return the rewardWeight
+     */
     public long getRewardWeight() {
         return rewardWeight;
     }
 
-    public String getTotalPayoutValue() {
+    /**
+     * @return the totalPayoutValue
+     */
+    public Asset getTotalPayoutValue() {
         return totalPayoutValue;
     }
 
-    public String getCuratorPayoutValue() {
+    /**
+     * @return the curatorPayoutValue
+     */
+    public Asset getCuratorPayoutValue() {
         return curatorPayoutValue;
     }
 
+    /**
+     * @return the authorRewards
+     */
     public long getAuthorRewards() {
         return authorRewards;
     }
 
+    /**
+     * @return the netVotes
+     */
     public int getNetVotes() {
         return netVotes;
     }
 
+    /**
+     * @return the rootComment
+     */
     public long getRootComment() {
         return rootComment;
     }
 
+    /**
+     * @return the mode
+     */
     public String getMode() {
         return mode;
     }
 
-    public String getMaxAcceptedPayout() {
+    /**
+     * @return the maxAcceptedPayout
+     */
+    public Asset getMaxAcceptedPayout() {
         return maxAcceptedPayout;
     }
 
-    public int getPercentSteemDollars() {
+    /**
+     * @return the percentSteemDollars
+     */
+    public short getPercentSteemDollars() {
         return percentSteemDollars;
     }
 
+    /**
+     * @return the allowReplies
+     */
     public Boolean getAllowReplies() {
         return allowReplies;
     }
 
+    /**
+     * @return the allowVotes
+     */
     public Boolean getAllowVotes() {
         return allowVotes;
     }
 
+    /**
+     * @return the allowCurationRewards
+     */
     public Boolean getAllowCurationRewards() {
         return allowCurationRewards;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public String getRootTitle() {
-        return rootTitle;
-    }
-
-    public String getPendingPayoutValue() {
-        return pendingPayoutValue;
-    }
-
-    public String getTotalPendingPayoutValue() {
-        return totalPendingPayoutValue;
-    }
-
-    public List<ActiveVote> getActiveVotes() {
-        return activeVotes;
-    }
-
-    public List<Content> getReplies() {
-        return replies;
-    }
-
-    public String getAuthorReputation() {
-        return authorReputation;
-    }
-
-    public String getPromoted() {
-        return promoted;
-    }
-
+    /**
+     * @return the beneficiaries
+     */
     public Object[] getBeneficiaries() {
         return beneficiaries;
-    }
-
-    public String getBodyLength() {
-        return bodyLength;
-    }
-
-    public Object[] getRebloggedBy() {
-        return rebloggedBy;
     }
 
     @Override

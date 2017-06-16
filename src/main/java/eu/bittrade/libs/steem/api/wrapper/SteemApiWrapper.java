@@ -30,7 +30,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Block;
 import eu.bittrade.libs.steem.api.wrapper.models.BlockHeader;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
-import eu.bittrade.libs.steem.api.wrapper.models.Content;
+import eu.bittrade.libs.steem.api.wrapper.models.Discussion;
 import eu.bittrade.libs.steem.api.wrapper.models.ExtendedAccount;
 import eu.bittrade.libs.steem.api.wrapper.models.FeedHistory;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
@@ -497,14 +497,14 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Content getContent(String author, String permlink) throws SteemCommunicationException {
+    public Discussion getContent(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { author, permlink };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Content.class).get(0);
+        return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
     }
 
     /**
@@ -527,14 +527,14 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Content> getContentReplies(String author, String permlink) throws SteemCommunicationException {
+    public List<Discussion> getContentReplies(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { author, permlink };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Content.class);
+        return communicationHandler.performRequest(requestObject, Discussion.class);
     }
 
     /**
@@ -611,7 +611,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Content> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
+    public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
@@ -625,7 +625,7 @@ public class SteemApiWrapper {
         Object[] parameters = { getDiscussionParameterDTO };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Content.class);
+        return communicationHandler.performRequest(requestObject, Discussion.class);
     }
 
     /**
@@ -653,7 +653,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Content> getDiscussionsByAuthorBeforeDate(String author, String permlink, String date, int limit)
+    public List<Discussion> getDiscussionsByAuthorBeforeDate(String author, String permlink, String date, int limit)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
@@ -673,7 +673,7 @@ public class SteemApiWrapper {
         String[] parameters = { author, permlink, simpleDateFormat.format(beforeDate), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Content.class);
+        return communicationHandler.performRequest(requestObject, Discussion.class);
     }
 
     /**
@@ -959,7 +959,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Content> getRepliesByLastUpdate(String username, String permlink, int limit)
+    public List<Discussion> getRepliesByLastUpdate(String username, String permlink, int limit)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
@@ -967,7 +967,7 @@ public class SteemApiWrapper {
         Object[] parameters = { username, permlink, String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Content.class);
+        return communicationHandler.performRequest(requestObject, Discussion.class);
     }
 
     /**

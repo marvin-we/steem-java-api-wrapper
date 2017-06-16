@@ -36,7 +36,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
-import eu.bittrade.libs.steem.api.wrapper.models.Content;
+import eu.bittrade.libs.steem.api.wrapper.models.Discussion;
 import eu.bittrade.libs.steem.api.wrapper.models.ExtendedAccount;
 import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
@@ -194,16 +194,16 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetContent() throws Exception {
-        final Content discussion = steemApiWrapper.getContent(ACCOUNT, PERMLINK);
+        final Discussion discussion = steemApiWrapper.getContent(ACCOUNT, PERMLINK);
 
         assertNotNull("expect discussion", discussion);
-        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor());
+        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor().getAccountName());
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void testGetContentReplies() throws Exception {
-        final List<Content> replies = steemApiWrapper.getContentReplies(ACCOUNT, PERMLINK);
+        final List<Discussion> replies = steemApiWrapper.getContentReplies(ACCOUNT, PERMLINK);
 
         assertNotNull("expect replies", replies);
         assertThat("expect replies greater than zero", replies.size(), greaterThan(0));
@@ -221,7 +221,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
                 DiscussionSortType.SORT_BY_FEED };
 
         for (final DiscussionSortType type : sortTypes) {
-            final List<Content> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
+            final List<Discussion> discussions = steemApiWrapper.getDiscussionsBy("steemit", 1, type);
             assertNotNull("expect discussions", discussions);
             assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
                     greaterThanOrEqualTo(0));
@@ -231,12 +231,12 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetDiscussionsByAuthorBeforeDate() throws Exception {
-        final List<Content> repliesByLastUpdate = steemApiWrapper.getDiscussionsByAuthorBeforeDate(ACCOUNT, PERMLINK,
+        final List<Discussion> repliesByLastUpdate = steemApiWrapper.getDiscussionsByAuthorBeforeDate(ACCOUNT, PERMLINK,
                 "2017-02-10T22:00:06", 8);
 
         assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
-        assertEquals("expect " + ACCOUNT + " to be the first returned author", repliesByLastUpdate.get(0).getAuthor(),
-                ACCOUNT);
+        assertEquals("expect " + ACCOUNT + " to be the first returned author",
+                repliesByLastUpdate.get(0).getAuthor().getAccountName(), ACCOUNT);
         assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK,
                 repliesByLastUpdate.get(0).getPermlink());
     }
@@ -263,44 +263,11 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetRepliesByLastUpdate() throws Exception {
-        final List<Content> repliesByLastUpdate = steemApiWrapper.getRepliesByLastUpdate(ACCOUNT, PERMLINK, 9);
+        final List<Discussion> repliesByLastUpdate = steemApiWrapper.getRepliesByLastUpdate(ACCOUNT, PERMLINK, 9);
 
         assertEquals("expect that 9 results are returned", repliesByLastUpdate.size(), 9);
         assertEquals("expect " + ACCOUNT + " to be the first returned author", ACCOUNT,
-                repliesByLastUpdate.get(0).getAuthor());
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetTransactionHex() throws Exception {
-        // This is quite hard to test as we change the time while trying to find
-        // a canonical signature.
-        /*
-         * final String EXPECTED_RESULT =
-         * "e7c80457010007666f6f6261726107666f6f6261726307666f6f62617264e8030001202e09123f732a438ef6d6138484d7adedfdcf4a4f3d171f7fcafe836efa2a3c8877290bd34c67eded824ac0cc39e33d154d0617f64af936a83c442f62aef08fec";
-         * 
-         * 
-         * VoteOperation voteOperation = new VoteOperation();
-         * voteOperation.setAuthor("foobarc");
-         * voteOperation.setPermlink("foobard");
-         * voteOperation.setVoter("foobara"); voteOperation.setWeight((short)
-         * 1000);
-         * 
-         * Operation[] operations = { voteOperation };
-         * 
-         * Transaction transaction = new Transaction();
-         * transaction.setExpirationDate(EXPIRATION_DATE);
-         * transaction.setRefBlockNum(REF_BLOCK_NUM);
-         * transaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-         * transaction.setOperations(operations);
-         * 
-         * CONFIG.setPrivateKey(PrivateKeyType.POSTING, WIF);
-         * 
-         * transaction.sign();
-         * 
-         * assertEquals("expect the correct hex value", EXPECTED_RESULT,
-         * steemApiWrapper.getTransactionHex(transaction));
-         */
+                repliesByLastUpdate.get(0).getAuthor().getAccountName());
     }
 
     @Category({ IntegrationTest.class })
