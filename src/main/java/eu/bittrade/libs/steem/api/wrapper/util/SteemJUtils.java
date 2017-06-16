@@ -1,5 +1,9 @@
 package eu.bittrade.libs.steem.api.wrapper.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
@@ -64,7 +68,8 @@ public class SteemJUtils {
             return RequestMethods.GET_DISCUSSIONS_BY_VOTES;
         default:
             LOGGER.warn(
-                    "Unkown sort type '{}'. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).", discussionSortType);
+                    "Unkown sort type '{}'. The resulting discussions are now sorted by the values of the 'active' field (SORT_BY_ACTIVE).",
+                    discussionSortType);
             return RequestMethods.GET_DISCUSSIONS_BY_ACTIVE;
         }
     }
@@ -120,8 +125,8 @@ public class SteemJUtils {
         Charset encodingCharset = SteemJConfig.getInstance().getEncodingCharset();
         byte[] resultingByteRepresentation = {};
 
-        VarInt stringLength = new VarInt(string.length());
-        resultingByteRepresentation = ArrayUtils.addAll(resultingByteRepresentation, stringLength.encode());
+        resultingByteRepresentation = ArrayUtils.addAll(resultingByteRepresentation,
+                transformLongToVarIntByteArray(Integer.toUnsignedLong(string.length())));
 
         resultingByteRepresentation = ArrayUtils.addAll(resultingByteRepresentation,
                 ByteBuffer.allocate(string.length()).put(string.getBytes(encodingCharset)).array());
@@ -137,7 +142,25 @@ public class SteemJUtils {
      * @return The byte representation of the given value.
      */
     public static byte[] transformIntToVarIntByteArray(int intValue) {
-        return (new VarInt(intValue)).encode();
+        try {
+            int value = intValue;
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            DataOutput out = new DataOutputStream(byteArrayOutputStream);
+
+            while ((value & 0xFFFFFF80) != 0L) {
+                out.writeByte((value & 0x7F) | 0x80);
+                value >>>= 7;
+            }
+
+            out.writeByte(intValue & 0x7F);
+
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            LOGGER.error("Could not transform the given int value into its VarInt representation - "
+                    + "Using BitcoinJ as Fallback. This could cause problems for values > 127.", e);
+            return (new VarInt(intValue)).encode();
+        }
     }
 
     /**
@@ -181,7 +204,25 @@ public class SteemJUtils {
      * @return The byte representation of the given value.
      */
     public static byte[] transformLongToVarIntByteArray(long longValue) {
-        return (new VarInt(longValue)).encode();
+        try {
+            long value = longValue;
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            DataOutput out = new DataOutputStream(byteArrayOutputStream);
+
+            while ((value & 0xFFFFFFFFFFFFFF80L) != 0L) {
+                out.writeByte(((int) value & 0x7F) | 0x80);
+                value >>>= 7;
+            }
+
+            out.writeByte((int) value & 0x7F);
+
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            LOGGER.error("Could not transform the given long value into its VarInt representation - "
+                    + "Using BitcoinJ as Fallback. This could cause problems for values > 127.", e);
+            return (new VarInt(longValue)).encode();
+        }
     }
 
     /**
@@ -216,8 +257,7 @@ public class SteemJUtils {
      */
     public static long transformStringToTimestamp(String dateTime) throws ParseException {
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                SteemJConfig.getInstance().getDateTimePattern());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
         calendar.setTime(simpleDateFormat.parse(dateTime + SteemJConfig.getInstance().getTimeZoneId()));
         return calendar.getTimeInMillis();
