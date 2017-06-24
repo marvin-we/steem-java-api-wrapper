@@ -146,7 +146,7 @@
 					<includes>
 						<include>**/*.*</include>
 					</includes>
-					<excludedGroups>eu.bittrade.libs.steem.api.wrapper.IntegrationTest</excludedGroups>
+					<excludedGroups>eu.bittrade.libs.steemj.IntegrationTest</excludedGroups>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -156,7 +156,7 @@
 				<configuration>
 					<argLine>${failsafeArgLine}</argLine>
 					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-					<groups>eu.bittrade.libs.steem.api.wrapper.IntegrationTest</groups>
+					<groups>eu.bittrade.libs.steemj.IntegrationTest</groups>
 					<systemPropertiesFile>${project.build.testOutputDirectory}/accountDetailsUsedDuringTests.properties</systemPropertiesFile>
 				</configuration>
 				<executions>
