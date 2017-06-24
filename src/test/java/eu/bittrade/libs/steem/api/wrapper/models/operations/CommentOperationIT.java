@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.BaseIntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Block;
+import eu.bittrade.libs.steem.api.wrapper.models.SignedBlockWithInfo;
 
 /**
  * Verify the functionality of the "comment operation" under the use of real api
@@ -104,7 +104,7 @@ public class CommentOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        Block blockContainingCommentOperationOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingCommentOperationOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation commentOperation = blockContainingCommentOperationOperation.getTransactions().get(TRANSACTION_INDEX)
                 .getOperations().get(OPERATION_INDEX);

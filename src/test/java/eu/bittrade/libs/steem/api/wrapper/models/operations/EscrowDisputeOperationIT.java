@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.BaseIntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Block;
+import eu.bittrade.libs.steem.api.wrapper.models.SignedBlockWithInfo;
 
 /**
  * Verify the functionality of the "escrow dispute operation" under the use of
@@ -54,7 +54,7 @@ public class EscrowDisputeOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        Block blockContainingEscrowDisputeOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingEscrowDisputeOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation escrowDisputeOperation = blockContainingEscrowDisputeOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

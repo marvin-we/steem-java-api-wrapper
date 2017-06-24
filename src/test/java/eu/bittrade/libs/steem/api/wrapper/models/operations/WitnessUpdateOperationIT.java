@@ -14,7 +14,7 @@ import eu.bittrade.libs.steem.api.wrapper.BaseIntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.IntegrationTest;
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
-import eu.bittrade.libs.steem.api.wrapper.models.Block;
+import eu.bittrade.libs.steem.api.wrapper.models.SignedBlockWithInfo;
 
 /**
  * Verify the functionality of the "witness update operation" under the use of
@@ -61,7 +61,7 @@ public class WitnessUpdateOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        Block blockContainingWitnessUpdateOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingWitnessUpdateOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation witnessUpdateOperation = blockContainingWitnessUpdateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

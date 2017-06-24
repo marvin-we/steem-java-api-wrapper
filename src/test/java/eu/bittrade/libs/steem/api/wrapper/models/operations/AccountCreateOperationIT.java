@@ -19,8 +19,8 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.Asset;
 import eu.bittrade.libs.steem.api.wrapper.models.Authority;
-import eu.bittrade.libs.steem.api.wrapper.models.Block;
 import eu.bittrade.libs.steem.api.wrapper.models.PublicKey;
+import eu.bittrade.libs.steem.api.wrapper.models.SignedBlockWithInfo;
 
 /**
  * Verify the functionality of the "account create operation" under the use of
@@ -100,7 +100,7 @@ public class AccountCreateOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        Block blockContainingAccountCreateOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingAccountCreateOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation accountCreateOperation = blockContainingAccountCreateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

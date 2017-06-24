@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
 
@@ -14,23 +18,52 @@ import eu.bittrade.libs.steem.api.wrapper.interfaces.ByteTransformable;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+// @JsonDeserialize(using = CommentPayoutBeneficiariesDeserializer.class)
 public class CommentPayoutBeneficiaries implements ByteTransformable {
+    @JsonIgnore
+    private int index;
     private List<BeneficiaryRouteType> beneficiaries;
 
     /**
-     * Get the beneficiaries of this comment.
+     * Default constructor if no inner elements are present.
+     */
+    public CommentPayoutBeneficiaries() {
+    }
+
+    /**
      * 
-     * @return The beneficiaries of this comment.
+     * @param innerCommentOptionsExtension
+     */
+    @JsonCreator
+    public CommentPayoutBeneficiaries(@JsonProperty int index) {
+        this.index = index;
+    }
+
+    /**
+     * @return the index
+     */
+    public int getIndex() {
+        return index;
+    }
+
+    /**
+     * @param index
+     *            the index to set
+     */
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    /**
+     * @return the beneficiaries
      */
     public List<BeneficiaryRouteType> getBeneficiaries() {
         return beneficiaries;
     }
 
     /**
-     * Set the beneficiaries of this comment.
-     * 
      * @param beneficiaries
-     *            The beneficiaries of this comment.
+     *            the beneficiaries to set
      */
     public void setBeneficiaries(List<BeneficiaryRouteType> beneficiaries) {
         this.beneficiaries = beneficiaries;
@@ -40,9 +73,10 @@ public class CommentPayoutBeneficiaries implements ByteTransformable {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentPayoutBeneficiaries = new ByteArrayOutputStream()) {
 
-            for (BeneficiaryRouteType veneficiaryRouteType : this.getBeneficiaries()) {
-                serializedCommentPayoutBeneficiaries.write(veneficiaryRouteType.toByteArray());
-            }
+            // TODO for (BeneficiaryRouteType veneficiaryRouteType :
+            // this.getBeneficiaries()) {
+            // serializedCommentPayoutBeneficiaries.write(veneficiaryRouteType.toByteArray());
+            // }
 
             return serializedCommentPayoutBeneficiaries.toByteArray();
         } catch (IOException e) {

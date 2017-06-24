@@ -22,6 +22,51 @@ public class SignedBlockWithInfo extends SignedBlock {
     @JsonProperty("transaction_ids")
     private List<byte[]> transactionIds;
 
+    /**
+     * @return the blockId
+     */
+    public byte[] getBlockId() {
+        return blockId;
+    }
+
+    /**
+     * @param blockId
+     *            the blockId to set
+     */
+    public void setBlockId(byte[] blockId) {
+        this.blockId = blockId;
+    }
+
+    /**
+     * @return the signingKey
+     */
+    public PublicKey getSigningKey() {
+        return signingKey;
+    }
+
+    /**
+     * @param signingKey
+     *            the signingKey to set
+     */
+    public void setSigningKey(PublicKey signingKey) {
+        this.signingKey = signingKey;
+    }
+
+    /**
+     * @return the transactionIds
+     */
+    public List<byte[]> getTransactionIds() {
+        return transactionIds;
+    }
+
+    /**
+     * @param transactionIds
+     *            the transactionIds to set
+     */
+    public void setTransactionIds(List<byte[]> transactionIds) {
+        this.transactionIds = transactionIds;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

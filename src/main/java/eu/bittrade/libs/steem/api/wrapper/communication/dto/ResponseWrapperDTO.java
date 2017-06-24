@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * As every response starts with a id and a result element, this wrapper class
+ * As every response starts with an id and a result element, this wrapper class
  * can carry every kind of responses.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

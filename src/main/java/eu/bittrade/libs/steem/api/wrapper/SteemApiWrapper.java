@@ -26,7 +26,6 @@ import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemTransformationExceptio
 import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
 import eu.bittrade.libs.steem.api.wrapper.models.AccountName;
 import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
-import eu.bittrade.libs.steem.api.wrapper.models.Block;
 import eu.bittrade.libs.steem.api.wrapper.models.BlockHeader;
 import eu.bittrade.libs.steem.api.wrapper.models.ChainProperties;
 import eu.bittrade.libs.steem.api.wrapper.models.Config;
@@ -39,6 +38,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steem.api.wrapper.models.OrderBook;
 import eu.bittrade.libs.steem.api.wrapper.models.Price;
 import eu.bittrade.libs.steem.api.wrapper.models.RewardFund;
+import eu.bittrade.libs.steem.api.wrapper.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
 import eu.bittrade.libs.steem.api.wrapper.models.TrendingTag;
 import eu.bittrade.libs.steem.api.wrapper.models.UserOrder;
@@ -387,14 +387,14 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Block getBlock(long blockNumber) throws SteemCommunicationException {
+    public SignedBlockWithInfo getBlock(long blockNumber) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_BLOCK);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { String.valueOf(blockNumber) };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Block.class).get(0);
+        return communicationHandler.performRequest(requestObject, SignedBlockWithInfo.class).get(0);
     }
 
     /**

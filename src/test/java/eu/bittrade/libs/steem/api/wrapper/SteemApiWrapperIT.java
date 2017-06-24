@@ -1,8 +1,11 @@
 package eu.bittrade.libs.steem.api.wrapper;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
@@ -10,7 +13,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -23,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exparity.hamcrest.date.DateMatchers;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -47,6 +50,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.Vote;
 import eu.bittrade.libs.steem.api.wrapper.models.Witness;
 import eu.bittrade.libs.steem.api.wrapper.models.WitnessSchedule;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.AccountCreateOperation;
+import eu.bittrade.libs.steem.api.wrapper.models.operations.AccountCreateWithDelegationOperation;
 import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 
 /**
@@ -55,6 +59,7 @@ import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
 public class SteemApiWrapperIT extends BaseIntegrationTest {
     private static final Logger LOGGER = LogManager.getLogger(SteemApiWrapperIT.class);
     private static final String ACCOUNT = "dez1337";
+    private static final String ACCOUNT_TWO = "randowhale";
     private static final String WITNESS_ACCOUNT = "riverhead";
     private static final String PERMLINK = "steem-api-wrapper-for-java-update1";
 
@@ -63,6 +68,13 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         setupIntegrationTestEnvironment();
     }
 
+    @Category({ IntegrationTest.class })
+    @Test
+    @Ignore
+    public void testGetBlock() throws Exception {
+       // TODO: Implement
+    }
+    
     @Category({ IntegrationTest.class })
     @Test
     public void testAccountCount() throws Exception {
@@ -74,12 +86,20 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testAccountHistory() throws Exception {
-        final Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
-        assertEquals("expect response to contain 10 results", 11, accountHistory.size());
+        final Map<Integer, AccountActivity> accountHistorySetOne = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
+        assertEquals("expect response to contain 10 results", 11, accountHistorySetOne.size());
 
-        Operation firstOperation = accountHistory.get(0).getOperations();
+        Operation firstOperation = accountHistorySetOne.get(0).getOperations();
         assertTrue("the first operation for each account is the 'account_create_operation'",
                 firstOperation instanceof AccountCreateOperation);
+
+        final Map<Integer, AccountActivity> accountHistorySetTwo = steemApiWrapper.getAccountHistory(ACCOUNT_TWO, 1000,
+                1000);
+        assertEquals("expect response to contain 1001 results", 1001, accountHistorySetTwo.size());
+
+        assertThat(accountHistorySetTwo.get(0).getOperations(), instanceOf(AccountCreateWithDelegationOperation.class));
+        assertThat(((AccountCreateWithDelegationOperation) accountHistorySetTwo.get(0).getOperations()).getCreator()
+                .getAccountName(), equalTo(new AccountName("anonsteem").getAccountName()));
     }
 
     @Category({ IntegrationTest.class })
