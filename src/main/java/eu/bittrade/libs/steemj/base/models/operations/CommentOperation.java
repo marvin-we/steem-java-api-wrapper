@@ -180,13 +180,13 @@ public class CommentOperation extends Operation {
         try (ByteArrayOutputStream serializedCommentOperation = new ByteArrayOutputStream()) {
             serializedCommentOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPERATION.ordinal()));
-            serializedCommentOperation.write(this.parentAuthor.toByteArray());
-            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.parentPermlink));
-            serializedCommentOperation.write(this.author.toByteArray());
-            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.permlink));
-            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.title));
-            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.body));
-            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
+            serializedCommentOperation.write(this.getParentAuthor().toByteArray());
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getParentPermlink()));
+            serializedCommentOperation.write(this.getAuthor().toByteArray());
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getTitle()));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getBody()));
+            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));
 
             return serializedCommentOperation.toByteArray();
         } catch (IOException e) {

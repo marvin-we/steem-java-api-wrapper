@@ -1,12 +1,17 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class represents the Steem "prove_authority_operation" object.
@@ -23,7 +28,7 @@ public class ProveAuthorityOperation extends Operation {
      */
     public ProveAuthorityOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(PrivateKeyType.OWNER);
         // Set default values:
         this.setRequireOwner(false);
     }
@@ -60,8 +65,17 @@ public class ProveAuthorityOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        try (ByteArrayOutputStream serializedProveAuthorityOperation = new ByteArrayOutputStream()) {
+            serializedProveAuthorityOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.PROVE_AUTHORITY_OPERATION.ordinal()));
+            serializedProveAuthorityOperation.write(this.getChallenged().toByteArray());
+            serializedProveAuthorityOperation.write(SteemJUtils.transformBooleanToByteArray(this.getRequireOwner()));
+
+            return serializedProveAuthorityOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
     }
 
     @Override

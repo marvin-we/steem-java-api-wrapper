@@ -273,7 +273,7 @@ public class AccountCreateWithDelegationOperation extends Operation {
             serializedAccountCreateWithDelegationOperation.write(this.getPosting().toByteArray());
             serializedAccountCreateWithDelegationOperation.write(this.getMemoKey().toByteArray());
             serializedAccountCreateWithDelegationOperation
-                    .write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
+                    .write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedAccountCreateWithDelegationOperation.write(futureExtensions.toByteArray());
             }

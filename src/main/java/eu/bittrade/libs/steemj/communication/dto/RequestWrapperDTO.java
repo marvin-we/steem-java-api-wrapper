@@ -37,7 +37,7 @@ public class RequestWrapperDTO {
 
     private static final String JSONRPC = "2.0";
     private static final String METHOD = "call";
-    private Object[] params;
+
     private int id;
 
     /**
@@ -110,7 +110,7 @@ public class RequestWrapperDTO {
      * @return The final params fields, used for this request.
      */
     public Object[] getParams() {
-        params = new Object[3];
+        Object[] params = new Object[3];
         params[0] = getSteemApi().toString().toLowerCase();
         params[1] = getApiMethod().toString().toLowerCase();
         params[2] = additionalParameters;

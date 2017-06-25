@@ -151,9 +151,8 @@ public class AccountCreateOperation extends Operation {
     }
 
     /**
-     * Get the posting
-     * {@link eu.bittrade.libs.steemj.base.models.Authority Authority} of
-     * the {@link #newAccountName newAccountName}.
+     * Get the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
      * @return The posting authority.
      */
@@ -162,9 +161,8 @@ public class AccountCreateOperation extends Operation {
     }
 
     /**
-     * Set the posting
-     * {@link eu.bittrade.libs.steemj.base.models.Authority Authority} of
-     * the {@link #newAccountName newAccountName}.
+     * Set the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
      * @param posting
      *            The posting authority.
@@ -225,7 +223,8 @@ public class AccountCreateOperation extends Operation {
             serializedAccountCreateOperation.write(this.getActive().toByteArray());
             serializedAccountCreateOperation.write(this.getPosting().toByteArray());
             serializedAccountCreateOperation.write(this.getMemoKey().toByteArray());
-            serializedAccountCreateOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.jsonMetadata));
+            serializedAccountCreateOperation
+                    .write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));
 
             return serializedAccountCreateOperation.toByteArray();
         } catch (IOException e) {
