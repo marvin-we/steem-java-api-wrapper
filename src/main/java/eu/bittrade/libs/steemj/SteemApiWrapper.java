@@ -863,7 +863,7 @@ public class SteemApiWrapper {
     public HardforkSchedule getNextScheduledHarfork() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 

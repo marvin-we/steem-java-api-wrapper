@@ -37,6 +37,7 @@ import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
 import eu.bittrade.libs.steemj.base.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
@@ -79,11 +80,26 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
+    public void testGetNextScheduledHarfork() throws Exception {
+        final HardforkSchedule hardforkSchedule = steemApiWrapper.getNextScheduledHarfork();
+
+        assertTrue(hardforkSchedule.getHardforkVersion().matches("[0-9\\.]+"));
+        assertTrue(hardforkSchedule.getLiveTime().matches("[0-9\\-:T]+"));
+    }
+
+    @Category({ IntegrationTest.class })
+    @Test
     public void testGetBlock() throws Exception {
         final SignedBlockWithInfo signedBlockWithInfo = steemApiWrapper.getBlock(12347123L);
-        
+
         assertThat(signedBlockWithInfo.getTimestamp(), equalTo(0L));
         assertThat(signedBlockWithInfo.getWitness(), equalTo("abit"));
+
+        final SignedBlockWithInfo signedBlockWithInfoWithExtension = steemApiWrapper.getBlock(12615532L);
+
+        assertThat(signedBlockWithInfoWithExtension.getTimestamp(), equalTo(0L));
+        assertThat(signedBlockWithInfoWithExtension.getWitness(), equalTo("dragosroua"));
+        assertThat(signedBlockWithInfoWithExtension.getExtensions().get(0).getHardforkVersionVote().getHfVersion(), equalTo("0.19.0"));
     }
 
     @Category({ IntegrationTest.class })
