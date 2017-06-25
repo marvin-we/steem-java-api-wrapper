@@ -24,7 +24,7 @@ File: <i>pom.xml</i>
 	<dependency>
             <groupId>eu.bittrade.libs</groupId>
             <artifactId>steem-api-wrapper</artifactId>
-            <version>0.2.3</version>
+            <version>0.3.0</version>
 	</dependency>
 ```
 
@@ -41,13 +41,16 @@ The resulting JAR can be found in the target directory as usual. Please notice t
 For bugs or feature requests please create a [GitHub Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues). For general discussions or questions you can also reply to one of the SteemJ update posts on [Steemit.com](https://steemit.com/@dez1337).
 
 # Example
-The following code is a small example showing how to use Version 0.2.3 of the API Wrapper.
+The following code is a small example showing how to use Version 0.3.0 of the API Wrapper.
+
+<b>Attention!</b> The private keys provided in this sample a actually not correct and will result in an error if not changed.
 
 ```Java
-package eu.bittrade.libs.steem.api.wrapper;
+package eu.bittrade.libs.steemj;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,26 +59,27 @@ import javax.activity.InvalidActivityException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import eu.bittrade.libs.steem.api.wrapper.configuration.SteemApiWrapperConfig;
-import eu.bittrade.libs.steem.api.wrapper.enums.PrivateKeyType;
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steem.api.wrapper.exceptions.SteemResponseError;
-import eu.bittrade.libs.steem.api.wrapper.models.AccountActivity;
-import eu.bittrade.libs.steem.api.wrapper.models.ActiveVote;
-import eu.bittrade.libs.steem.api.wrapper.models.GlobalProperties;
-import eu.bittrade.libs.steem.api.wrapper.models.Transaction;
-import eu.bittrade.libs.steem.api.wrapper.models.Vote;
-import eu.bittrade.libs.steem.api.wrapper.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steem.api.wrapper.models.operations.Operation;
-import eu.bittrade.libs.steem.api.wrapper.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.base.models.AccountActivity;
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.ActiveVote;
+import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.Transaction;
+import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
-public class SteemAPIUsageExample {
-    private static final Logger LOGGER = LogManager.getLogger(SteemAPIUsageExample.class);
+public class SteemJExample {
+    private static final Logger LOGGER = LogManager.getLogger(SteemJExample.class);
 
     public static void main(String args[]) {
         // Change the default settings if needed.
-        SteemApiWrapperConfig myConfig = SteemApiWrapperConfig.getInstance();
+        SteemJConfig myConfig = SteemJConfig.getInstance();
 
         myConfig.setTimeout(100000L);
         try {
@@ -101,18 +105,20 @@ public class SteemAPIUsageExample {
 
             // Perform a transaction
             VoteOperation voteOperation = new VoteOperation();
-            voteOperation.setAuthor("dez1337");
+            voteOperation.setAuthor(new AccountName("dez1337"));
             voteOperation.setPermlink("steem-java-api-learned-to-speak-graphene-update-5");
-            voteOperation.setVoter("dez1337");
+            voteOperation.setVoter(new AccountName("dez1337"));
             try {
-            voteOperation.setWeight((short) 10000);
+                voteOperation.setWeight((short) 10000);
             } catch (InvalidActivityException e) {
                 LOGGER.error("Weight was to high.", e);
             }
 
-            Operation[] operations = { voteOperation };
+            ArrayList<Operation> operations = new ArrayList<>();
+            operations.add(voteOperation);
 
-            // Get the current RefBlockNum and RefBlockPrefix from the global properties.
+            // Get the current RefBlockNum and RefBlockPrefix from the global
+            // properties.
             GlobalProperties globalProperties = steemApiWrapper.getDynamicGlobalProperties();
             int refBlockNum = (globalProperties.getHeadBlockNumber() & 0xFFFF);
 
@@ -127,12 +133,13 @@ public class SteemAPIUsageExample {
                 LOGGER.error("A propblem occured while signing your Transaction.", e);
             }
             steemApiWrapper.broadcastTransaction(transaction);
-            
-            LOGGER.info("The HEX representation of this transaction it {}.", steemApiWrapper.getTransactionHex(transaction));
 
+            LOGGER.info("The HEX representation of this transaction it {}.",
+                    steemApiWrapper.getTransactionHex(transaction));
 
             // Get the current Price
-            LOGGER.info("The current price in the internal market is {}.", steemApiWrapper.getCurrentMedianHistoryPrice().getBase().getAmount());
+            LOGGER.info("The current price in the internal market is {}.",
+                    steemApiWrapper.getCurrentMedianHistoryPrice().getBase().getAmount());
 
             // Get votes
             List<Vote> votes = steemApiWrapper.getAccountVotes("dez1337");
