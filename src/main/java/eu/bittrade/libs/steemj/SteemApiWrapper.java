@@ -46,6 +46,15 @@ import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+import eu.bittrade.libs.steemj.plugins.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.plugins.follow.model.AccountReputation;
+import eu.bittrade.libs.steemj.plugins.follow.model.BlogEntry;
+import eu.bittrade.libs.steemj.plugins.follow.model.CommentBlogEntry;
+import eu.bittrade.libs.steemj.plugins.follow.model.CommentFeedEntry;
+import eu.bittrade.libs.steemj.plugins.follow.model.FeedEntry;
+import eu.bittrade.libs.steemj.plugins.follow.model.FollowApiObject;
+import eu.bittrade.libs.steemj.plugins.follow.model.FollowCountApiObject;
+import eu.bittrade.libs.steemj.plugins.follow.model.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -196,13 +205,6 @@ public class SteemApiWrapper {
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
         String[] parameters = { accountName, String.valueOf(from), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
-
-        // TODO: Do this for every method?
-        // if (response == null || response.isEmpty()) {
-        // LOGGER.warn("The response was empty - The node may not provide this
-        // method.");
-        // return null;
-        // }
 
         Map<Integer, AccountActivity> accountActivities = new HashMap<>();
 
@@ -974,8 +976,7 @@ public class SteemApiWrapper {
      * Get detailed information of a specific reward fund.
      * 
      * @param rewordFundType
-     *            One of the
-     *            {@link eu.bittrade.libs.steemj.enums.RewardFundType
+     *            One of the {@link eu.bittrade.libs.steemj.enums.RewardFundType
      *            RewardFundType}s.
      * @return A refund object containing detailed information about the
      *         requested reward fund.
@@ -1380,5 +1381,326 @@ public class SteemApiWrapper {
         // describing the problem. The reason should be logged as info and the
         // this method should only return false.
         return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
+    }
+
+    /**
+     * Get a list of account names which follow the <b>startFollower</b>.
+     * 
+     * @param following
+     *            The account name that started to follow the
+     *            <b>startFollower</b>. If you want to receive all followers you
+     *            need to use the same account name for both fields.
+     * @param startFollower
+     *            The account name for which the followers are returned.
+     * @param type
+     *            The follow type.
+     * @param limit
+     *            The maximum number of results returned.
+     * @return A list of account names which follow the <b>startFollower</b>.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<FollowApiObject> getFollowers(AccountName following, AccountName startFollower, FollowType type,
+            short limit) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { following.getAccountName(), startFollower.getAccountName(),
+                type.toString().toLowerCase(), limit };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
+    }
+
+    /**
+     * Get a list of account names which follow the <b>startFollower</b>.
+     * 
+     * @param following
+     *            The account name that started to follow the
+     *            <b>startFollower</b>. If you want to receive all followers you
+     *            need to use the same account name for both fields.
+     * @param startFollower
+     *            The account name for which the followers are returned.
+     * @param type
+     *            The follow type.
+     * @param limit
+     *            The maximum number of results returned.
+     * @return A list of account names which follow the <b>startFollower</b>.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<FollowApiObject> getFollowing(AccountName following, AccountName startFollower, FollowType type,
+            short limit) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FOLLOWING);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { following.getAccountName(), startFollower.getAccountName(),
+                type.toString().toLowerCase(), limit };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
+    }
+
+    /**
+     * Get the amount of accounts following the given account and the number of
+     * accounts this account follows. Both values are wrapped in a
+     * FollowCountApiObject.
+     * 
+     * @param account
+     *            The account to get the number of followers / following
+     *            accounts for.
+     * @return The number of followers / following accounts
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public FollowCountApiObject getFollowCount(AccountName account) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FOLLOW_COUNT);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { account.getAccountName() };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FollowCountApiObject.class).get(0);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param account
+     * @param entryId
+     * @param limit
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<FeedEntry> getFeedEntries(AccountName account, int entryId, short limit)
+            throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FEED_ENTRIES);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { account.getAccountName(), entryId, limit };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FeedEntry.class);
+    }
+
+    /**
+     * TODO
+     * 
+     * @param account
+     * @param entryId
+     * @param limit
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<CommentFeedEntry> getFeed(AccountName account, int entryId, short limit)
+            throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_FEED);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { account.getAccountName(), entryId, limit };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, CommentFeedEntry.class);
+    }
+
+    /**
+     * 
+     * @param account
+     * @param entryId
+     * @param limit
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<BlogEntry> getBlogEntries(AccountName account, int entryId, short limit)
+            throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOG_ENTRIES);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { account.getAccountName(), entryId, limit };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, BlogEntry.class);
+
+    }
+
+    /**
+     * 
+     * @param account
+     * @param entryId
+     * @param limit
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<CommentBlogEntry> getBlog(AccountName account, int entryId, short limit)
+            throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOG);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { account.getAccountName(), entryId, limit };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, CommentBlogEntry.class);
+    }
+
+    /**
+     * 
+     * @param lowerBoundName
+     * @param limit
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<AccountReputation> getAccountReputations(AccountName lowerBoundName, int limit)
+            throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { lowerBoundName.getAccountName(), limit };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, AccountReputation.class);
+    }
+
+    /**
+     * Gets list of accounts that have reblogged a particular post.
+     * 
+     * @param author
+     * @param permlink
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<AccountName> getRebloggedBy(AccountName author, String permlink) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { author.getAccountName(), permlink };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, AccountName.class);
+    }
+
+    /**
+     * 
+     * Gets a list of authors that have had their content reblogged on a given
+     * blog account.
+     * 
+     * @param blogAccount
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<PostsPerAuthorPair> getBlogAuthors(AccountName blogAccount) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_BLOG_AUTHORS);
+        requestObject.setSteemApi(SteemApis.FOLLOW_API);
+
+        Object[] parameters = { blogAccount.getAccountName() };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
     }
 }

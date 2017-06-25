@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models.serializer;
+package eu.bittrade.libs.steemj.plugins.follow.model.serializer;
 
 import java.io.IOException;
 
@@ -7,14 +7,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
+import eu.bittrade.libs.steemj.plugins.follow.enums.FollowType;
+
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class BooleanSerializer extends JsonSerializer<Boolean> {
-
+public class FollowTypeSerializer extends JsonSerializer<FollowType> {
     @Override
-    public void serialize(Boolean boolValue, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+    public void serialize(FollowType followType, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException, JsonProcessingException {
-        jsonGenerator.writeString(boolValue.toString());
+        jsonGenerator.writeString(followType.toString().toLowerCase());
     }
 }

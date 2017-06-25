@@ -62,4 +62,21 @@ public class AccountName implements ByteTransformable {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
+
+    @Override
+    public boolean equals(Object otherAccount) {
+        if (this == otherAccount)
+            return true;
+        if (otherAccount == null || !(otherAccount instanceof AccountName))
+            return false;
+        AccountName other = (AccountName) otherAccount;
+        return this.getAccountName().equals(other.getAccountName());
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = 31 * hashCode + (this.getAccountName() == null ? 0 : this.getAccountName().hashCode());
+        return hashCode;
+    }
 }

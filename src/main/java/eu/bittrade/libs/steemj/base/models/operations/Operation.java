@@ -23,6 +23,8 @@ import eu.bittrade.libs.steemj.base.models.operations.virtual.ReturnVestingDeleg
 import eu.bittrade.libs.steemj.base.models.operations.virtual.ShutdownWitnessOpeartion;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.plugins.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.plugins.follow.models.operations.ReblogOperation;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user
@@ -86,7 +88,10 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
         @Type(value = InterestOperation.class, name = "interest"),
         @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
         @Type(value = ReturnVestingDelegationOperation.class, name = "return_Vesting_delegation"),
-        @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness") })
+        @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
+        // Follow Plugin Operations
+        @Type(value = ReblogOperation.class, name = "reblog_operation"),
+        @Type(value = FollowOperation.class, name = "follow_operation") })
 public abstract class Operation implements ByteTransformable {
     /**
      * This field contains the private key type that is required for this

@@ -60,7 +60,7 @@ public class Authority implements ByteTransformable {
 
     /**
      * 
-     * @return
+     * @return the weightThreshold
      */
     public long getWeightThreshold() {
         return weightThreshold;
