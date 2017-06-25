@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.VarInt;
@@ -123,15 +122,17 @@ public class SteemJUtils {
      */
     public static byte[] transformStringToVarIntByteArray(String string) {
         Charset encodingCharset = SteemJConfig.getInstance().getEncodingCharset();
-        byte[] resultingByteRepresentation = {};
+        try (ByteArrayOutputStream resultingByteRepresentation = new ByteArrayOutputStream()) {
+            byte[] stringAsByteArray = string.getBytes(encodingCharset);
 
-        resultingByteRepresentation = ArrayUtils.addAll(resultingByteRepresentation,
-                transformLongToVarIntByteArray(Integer.toUnsignedLong(string.length())));
+            resultingByteRepresentation
+                    .write(transformLongToVarIntByteArray(Integer.toUnsignedLong(stringAsByteArray.length)));
+            resultingByteRepresentation.write(stringAsByteArray);
 
-        resultingByteRepresentation = ArrayUtils.addAll(resultingByteRepresentation,
-                ByteBuffer.allocate(string.length()).put(string.getBytes(encodingCharset)).array());
-
-        return resultingByteRepresentation;
+            return resultingByteRepresentation.toByteArray();
+        } catch (IOException e) {
+            throw new IllegalArgumentException("A problem occured while transforming the string into a byte array.", e);
+        }
     }
 
     /**
@@ -229,8 +230,7 @@ public class SteemJUtils {
      * This method transform a date and returns this date in its String
      * representation. The method is using the timezone and the date time
      * pattern defined in the
-     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig
-     * SteemJConfig}.
+     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig SteemJConfig}.
      * 
      * @param date
      *            The date in its String representation.
@@ -246,8 +246,7 @@ public class SteemJUtils {
     /**
      * This method transforms a String into a timestamp. The method is using the
      * timezone and the date time pattern defined in the
-     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig
-     * SteemJConfig}.
+     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig SteemJConfig}.
      * 
      * @param dateTime
      *            The date to transform.

@@ -531,7 +531,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testBlogAuthors() throws Exception {
+    public void testGetBlogAuthors() throws Exception {
         final List<PostsPerAuthorPair> blogAuthors = steemApiWrapper.getBlogAuthors(new AccountName("dez1337"));
 
         assertThat(blogAuthors.size(), greaterThan(2));
