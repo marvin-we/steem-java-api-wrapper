@@ -1,47 +1,60 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import java.util.List;
+import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * This class represents a Steem "order" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class MarketOrder {
-    private String created;
+    private Date created;
     @JsonProperty("order_price")
-    private List<Price> orderPrice;
+    private Price orderPrice;
     @JsonProperty("real_price")
-    private String realPrice;
+    private double realPrice;
     private int steem;
-    private int sdb;
-    /* TODO
-    price                order_price;
-    double               real_price; // dollars per steem
-    share_type           steem;
-    share_type           sbd;
-    fc::time_point_sec   created;
-*/
-    public String getCreated() {
+    private int sbd;
+
+    /**
+     * @return the created
+     */
+    public Date getCreated() {
         return created;
     }
 
-    public String getRealPrice() {
-        return realPrice;
-    }
-
-    public List<Price> getOrderPrice() {
+    /**
+     * @return the orderPrice
+     */
+    public Price getOrderPrice() {
         return orderPrice;
     }
 
+    /**
+     * Get the SBD per Steem.
+     * 
+     * @return the realPrice
+     */
+    public double getRealPrice() {
+        return realPrice;
+    }
+
+    /**
+     * @return the steem
+     */
     public int getSteem() {
         return steem;
     }
 
-    public int getSdb() {
-        return sdb;
+    /**
+     * @return the sbd
+     */
+    public int getSbd() {
+        return sbd;
     }
 
     @Override

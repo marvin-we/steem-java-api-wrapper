@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exparity.hamcrest.date.DateMatchers;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -36,9 +37,11 @@ import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
 import eu.bittrade.libs.steemj.base.models.LiquidityQueueEntry;
+import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
@@ -99,7 +102,8 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
         assertThat(signedBlockWithInfoWithExtension.getTimestamp(), equalTo(0L));
         assertThat(signedBlockWithInfoWithExtension.getWitness(), equalTo("dragosroua"));
-        assertThat(signedBlockWithInfoWithExtension.getExtensions().get(0).getHardforkVersionVote().getHfVersion(), equalTo("0.19.0"));
+        assertThat(signedBlockWithInfoWithExtension.getExtensions().get(0).getHardforkVersionVote().getHfVersion(),
+                equalTo("0.19.0"));
     }
 
     @Category({ IntegrationTest.class })
@@ -488,7 +492,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         final List<CommentFeedEntry> feed = steemApiWrapper.getFeed(new AccountName("dez1337"), 0, (short) 100);
 
         assertThat(feed.size(), equalTo(100));
-        assertTrue(feed.get(0).getComment().getAuthor().getAccountName().matches("[a-z]+"));
+        assertTrue(feed.get(0).getComment().getAuthor().getAccountName().matches("[a-z\\-_0-9]+"));
     }
 
     @Category({ IntegrationTest.class })
@@ -537,4 +541,40 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         assertThat(blogAuthors.size(), greaterThan(2));
         assertThat(blogAuthors.get(1).getAccount(), equalTo(new AccountName("good-karma")));
     }
+
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testOrderBook() throws Exception {
+        final OrderBook orderBook = steemApiWrapper.getOrderBook(1);
+
+        assertThat(orderBook.getAsks().size(), equalTo(1));
+        assertThat(orderBook.getBids().get(0).getSbd(), greaterThan(1));
+    }
+
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testGetFeedHistory() throws Exception {
+        final FeedHistory feedHistory = steemApiWrapper.getFeedHistory();
+
+        assertThat(feedHistory.getCurrentPrice().getBase().getAmount(), greaterThan(1.0));
+        assertThat(feedHistory.getPriceHistory().size(), greaterThan(1));
+    }
+
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testGetOpenOrders() throws Exception {
+        // As orders are pretty dynamically we just expect that no exception is
+        // thrown.
+        steemApiWrapper.getOpenOrders(new AccountName("dez1337"));
+    }
+
+    @Category({ IntegrationTest.class })
+    @Ignore
+    @Test
+    public void testGetConversionRequests() throws Exception {
+        // TODO: Implement
+        steemApiWrapper.getConversionRequests(new AccountName("dez1337"));
+    }
+    
+    
 }
