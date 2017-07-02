@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +16,7 @@ public class HardforkVersionVote {
     @JsonProperty("hf_version")
     protected String hfVersion;
     @JsonProperty("hf_time")
-    protected TimePointSec hfTime;
+    protected Date hfTime;
 
     /**
      * @return the hfVersion
@@ -34,7 +36,7 @@ public class HardforkVersionVote {
     /**
      * @return the hfTime
      */
-    public TimePointSec getHfTime() {
+    public Date getHfTime() {
         return hfTime;
     }
 
@@ -42,7 +44,7 @@ public class HardforkVersionVote {
      * @param hfTime
      *            the hfTime to set
      */
-    public void setHfTime(TimePointSec hfTime) {
+    public void setHfTime(Date hfTime) {
         this.hfTime = hfTime;
     }
 

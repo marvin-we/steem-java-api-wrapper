@@ -37,7 +37,7 @@ public class TransactionTest {
         operations.add(voteOperation);
 
         Transaction transaction = new Transaction();
-        transaction.setExpirationDate(new TimePointSec("2016-08-08T12:24:17"));
+        transaction.setExpirationDate("2016-08-08T12:24:17");
         transaction.setRefBlockNum((short) 36029);
         transaction.setRefBlockPrefix(1164960351);
         // TODO: Add extensions when supported.

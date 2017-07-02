@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -24,7 +25,7 @@ public class RewardFund {
     @JsonProperty("recent_claims")
     private BigInteger recentClaims;
     @JsonProperty("last_update")
-    private TimePointSec lastUpdate;
+    private Date lastUpdate;
     // Original type is uint128_t so we use BigInteger here.
     @JsonProperty("content_constant")
     private BigInteger contentConstant;
@@ -71,7 +72,7 @@ public class RewardFund {
     /**
      * @return the lastUpdate
      */
-    public TimePointSec getLastUpdate() {
+    public Date getLastUpdate() {
         return lastUpdate;
     }
 

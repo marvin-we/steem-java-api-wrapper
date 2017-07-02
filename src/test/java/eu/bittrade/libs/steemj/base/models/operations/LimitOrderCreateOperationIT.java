@@ -15,7 +15,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.base.models.operations.LimitOrderCreateOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -56,7 +57,7 @@ public class LimitOrderCreateOperationIT extends BaseIntegrationTest {
         amountToSell.setSymbol(AssetSymbolType.SBD);
 
         limitOrderCreateOperation.setAmountToSell(amountToSell);
-        limitOrderCreateOperation.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
+        limitOrderCreateOperation.setExpirationDate(EXPIRATION_DATE);
         limitOrderCreateOperation.setFillOrKill(false);
 
         Asset minToReceive = new Asset();
@@ -81,8 +82,7 @@ public class LimitOrderCreateOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingLimitOrderCreateOperation = steemApiWrapper
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingLimitOrderCreateOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation limitOrderCreateOperation = blockContainingLimitOrderCreateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

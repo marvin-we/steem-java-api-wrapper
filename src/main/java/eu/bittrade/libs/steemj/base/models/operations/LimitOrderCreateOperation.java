@@ -2,17 +2,20 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.Expirable;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -22,7 +25,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCreateOperation extends Operation {
+public class LimitOrderCreateOperation extends Operation implements Expirable {
     @JsonProperty("owner")
     private AccountName owner;
     @JsonProperty("orderid")
@@ -36,7 +39,7 @@ public class LimitOrderCreateOperation extends Operation {
     @JsonProperty("fill_or_kill")
     private Boolean fillOrKill;
     @JsonProperty("expiration")
-    private TimePointSec expirationDate;
+    private long expirationDate;
 
     /**
      * Create a new limit order operation.
@@ -47,7 +50,7 @@ public class LimitOrderCreateOperation extends Operation {
         // Set default values:
         this.setOrderId(0);
         this.setFillOrKill(false);
-        this.setExpirationDate(new TimePointSec(System.currentTimeMillis()));
+        this.setExpirationDate(System.currentTimeMillis());
     }
 
     /**
@@ -147,22 +150,30 @@ public class LimitOrderCreateOperation extends Operation {
         this.fillOrKill = fillOrKill;
     }
 
-    /**
-     * TODO:
-     * 
-     * @return the expirationDate
-     */
-    public TimePointSec getExpirationDate() {
-        return expirationDate;
+    @Override
+    public void setExpirationDate(String expirationDate) throws ParseException {
+        this.setExpirationDate(SteemJUtils.transformStringToTimestamp(expirationDate));
     }
 
-    /**
-     * TODO:
-     * 
-     * @param expirationDate
-     *            the expirationDate to set
-     */
-    public void setExpirationDate(TimePointSec expirationDate) {
+    @Override
+    public String getExpirationDate() {
+        return SteemJUtils.transformDateToString(this.getExpirationDateAsDate());
+    }
+
+    @Override
+    @JsonIgnore
+    public Date getExpirationDateAsDate() {
+        return new Date(expirationDate);
+    }
+
+    @Override
+    @JsonIgnore
+    public int getExpirationDateAsInt() {
+        return (int) (this.expirationDate / 1000);
+    }
+
+    @Override
+    public void setExpirationDate(long expirationDate) {
         this.expirationDate = expirationDate;
     }
 
@@ -176,7 +187,8 @@ public class LimitOrderCreateOperation extends Operation {
             serializedLimitOrderCreateOperation.write(this.getAmountToSell().toByteArray());
             serializedLimitOrderCreateOperation.write(this.getMinToReceive().toByteArray());
             serializedLimitOrderCreateOperation.write(SteemJUtils.transformBooleanToByteArray(this.getFillOrKill()));
-            serializedLimitOrderCreateOperation.write(this.getExpirationDate().toByteArray());
+            serializedLimitOrderCreateOperation
+                    .write(SteemJUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
 
             return serializedLimitOrderCreateOperation.toByteArray();
         } catch (IOException e) {

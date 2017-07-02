@@ -44,7 +44,6 @@ import eu.bittrade.libs.steemj.base.models.LiquidityQueueEntry;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Version;
 import eu.bittrade.libs.steemj.base.models.Vote;
@@ -94,15 +93,14 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetBlock() throws Exception {
-        final SignedBlockWithInfo signedBlockWithInfo = steemApiWrapper.getBlock(13310401L);
+        final SignedBlockWithInfo signedBlockWithInfo = steemApiWrapper.getBlock(12347123L);
 
-        assertThat(signedBlockWithInfo.getTimestamp().getDateTime(), equalTo("2017-05-29T07:40:57"));
+        assertThat(signedBlockWithInfo.getTimestamp(), equalTo(0L));
         assertThat(signedBlockWithInfo.getWitness(), equalTo("abit"));
 
         final SignedBlockWithInfo signedBlockWithInfoWithExtension = steemApiWrapper.getBlock(12615532L);
 
-        assertThat(signedBlockWithInfoWithExtension.getTimestamp().getDateTime(),
-                equalTo(new TimePointSec("2017-06-07T15:33:27").getDateTime()));
+        assertThat(signedBlockWithInfoWithExtension.getTimestamp(), equalTo(0L));
         assertThat(signedBlockWithInfoWithExtension.getWitness(), equalTo("dragosroua"));
         assertThat(signedBlockWithInfoWithExtension.getExtensions().get(0).getHardforkVersionVote().getHfVersion(),
                 equalTo("0.19.0"));
@@ -144,7 +142,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
         assertNotNull("expect votes", votes);
         assertThat("expect account has votes", votes.size(), greaterThan(0));
-        assertThat("expect last vote after 2016-03-01", votes.get(votes.size() - 1).getTime().getDateTimeAsDate(),
+        assertThat("expect last vote after 2016-03-01", votes.get(votes.size() - 1).getTime(),
                 DateMatchers.after(2016, Month.MARCH, 1));
 
         boolean foundSelfVote = false;
@@ -577,5 +575,6 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         // TODO: Implement
         steemApiWrapper.getConversionRequests(new AccountName("dez1337"));
     }
-
+    
+    
 }

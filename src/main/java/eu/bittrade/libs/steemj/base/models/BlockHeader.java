@@ -1,23 +1,24 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class BlockHeader implements ByteTransformable {
+public class BlockHeader {
     // Original type is "block_id_type" which wraps a ripemd160 hash. We use an
     // byte array to cover this type.
     protected byte[] previous;
-    protected TimePointSec timestamp;
+    protected long timestamp;
     protected String witness;
     // Original type is "checksum_type" which wraps a ripemd160 hash. We use an
     // byte array to cover this type.
@@ -40,6 +41,40 @@ public class BlockHeader implements ByteTransformable {
      */
     public void setPrevious(byte[] previous) {
         this.previous = previous;
+    }
+
+    /**
+     * @return the timestamp
+     */
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    /**
+     * @param timestamp
+     *            the timestamp to set
+     */
+    @JsonIgnore
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    /**
+     * Additional setter to also handle dates provided as String. The date has
+     * to be specified as String and needs a special format:
+     * yyyy-MM-dd'T'HH:mm:ss
+     * 
+     * <p>
+     * Example: "2016-08-08T12:24:17"
+     * </p>
+     * 
+     * @param timestamp
+     *            The creation date of this block in its String representation.
+     * @throws ParseException
+     *             If the given String does not patch the pattern.
+     */
+    public void setTimestamp(String timestamp) throws ParseException {
+        this.timestamp = SteemJUtils.transformStringToTimestamp(timestamp);
     }
 
     /**
@@ -97,29 +132,8 @@ public class BlockHeader implements ByteTransformable {
         this.extensions = extensions;
     }
 
-    /**
-     * @return the timestamp
-     */
-    public TimePointSec getTimestamp() {
-        return timestamp;
-    }
-
-    /**
-     * @param timestamp
-     *            the timestamp to set
-     */
-    public void setTimestamp(TimePointSec timestamp) {
-        this.timestamp = timestamp;
-    }
-
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
-    public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

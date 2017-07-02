@@ -16,7 +16,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.base.models.operations.EscrowTransferOperation;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -32,7 +33,7 @@ public class EscrowTransferOperationIT extends BaseIntegrationTest {
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_FROM = "xtar";
     private static final int EXPECTED_ESCROW_ID = 20618239;
-    private static final long EXPECTED_ESCROW_EXPIRATION = 1490215341000L;
+    private static final int EXPECTED_ESCROW_EXPIRATION = 1490215341;
     private static final String EXPECTED_TRANSACTION_HEX = "0";
 
     @BeforeClass()
@@ -44,9 +45,9 @@ public class EscrowTransferOperationIT extends BaseIntegrationTest {
         escrowTransferOperation.setAgent(new AccountName("steemj"));
         escrowTransferOperation.setFrom(new AccountName("dez1337"));
         escrowTransferOperation.setTo(new AccountName("dez1337"));
-        escrowTransferOperation.setEscrowExpirationDate(new TimePointSec(1490215341));
+        escrowTransferOperation.setEscrowExpirationDate(1490215341);
         escrowTransferOperation.setEscrowId(34);
-        escrowTransferOperation.setRatificationDeadlineDate(new TimePointSec(1490215340));
+        escrowTransferOperation.setRatificationDeadlineDate(1490215340);
         escrowTransferOperation.setJsonMeta("");
 
         Asset sbdAmount = new Asset();
@@ -77,8 +78,7 @@ public class EscrowTransferOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingEscrowTransferOperation = steemApiWrapper
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingEscrowTransferOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation escrowTransferOperation = blockContainingEscrowTransferOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
@@ -87,8 +87,7 @@ public class EscrowTransferOperationIT extends BaseIntegrationTest {
         assertThat(((EscrowTransferOperation) escrowTransferOperation).getFrom().getAccountName(),
                 equalTo(EXPECTED_FROM));
         assertThat(((EscrowTransferOperation) escrowTransferOperation).getEscrowId(), equalTo(EXPECTED_ESCROW_ID));
-        assertThat(
-                ((EscrowTransferOperation) escrowTransferOperation).getEscrowExpirationDate().getDateTimeAsTimestamp(),
+        assertThat(((EscrowTransferOperation) escrowTransferOperation).getEscrowExpirationDateAsInt(),
                 equalTo(EXPECTED_ESCROW_EXPIRATION));
     }
 

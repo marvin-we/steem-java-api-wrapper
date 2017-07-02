@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -26,11 +27,11 @@ public class Comment {
     @JsonProperty("json_metadata")
     private String jsonMetadata;
     @JsonProperty("last_update")
-    private TimePointSec lastUpdate;
-    private TimePointSec created;
-    private TimePointSec active;
+    private Date lastUpdate;
+    private Date created;
+    private Date active;
     @JsonProperty("last_payout")
-    private TimePointSec lastPayout;
+    private Date lastPayout;
     // Original type is uint8_t.
     private short depth;
     // Orignal type is uint32_t.
@@ -51,9 +52,9 @@ public class Comment {
     @JsonProperty("children_abs_rshares")
     private long childrenAbsRshares;
     @JsonProperty("cashout_time")
-    private TimePointSec cashoutTime;
+    private Date cashoutTime;
     @JsonProperty("max_cashout_time")
-    private TimePointSec maxCashoutTime;
+    private Date maxCashoutTime;
     // TODO: Original type is uint64_t, but long seems to be not enough here -->
     // "Can not deserialize value of type long from String
     // "16089511318360462253": not a valid Long value"
@@ -159,28 +160,28 @@ public class Comment {
     /**
      * @return the lastUpdate
      */
-    public TimePointSec getLastUpdate() {
+    public Date getLastUpdate() {
         return lastUpdate;
     }
 
     /**
      * @return the created
      */
-    public TimePointSec getCreated() {
+    public Date getCreated() {
         return created;
     }
 
     /**
      * @return the active
      */
-    public TimePointSec getActive() {
+    public Date getActive() {
         return active;
     }
 
     /**
      * @return the lastPayout
      */
-    public TimePointSec getLastPayout() {
+    public Date getLastPayout() {
         return lastPayout;
     }
 
@@ -236,14 +237,14 @@ public class Comment {
     /**
      * @return the cashoutTime
      */
-    public TimePointSec getCashoutTime() {
+    public Date getCashoutTime() {
         return cashoutTime;
     }
 
     /**
      * @return the maxCashoutTime
      */
-    public TimePointSec getMaxCashoutTime() {
+    public Date getMaxCashoutTime() {
         return maxCashoutTime;
     }
 

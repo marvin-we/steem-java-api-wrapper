@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,25 +26,25 @@ public class Account {
     private String jsonMetadata;
     private AccountName proxy;
     @JsonProperty("last_owner_update")
-    private TimePointSec lastOwnerUpdate;
+    private Date lastOwnerUpdate;
     @JsonProperty("last_account_update")
-    private TimePointSec lastAccountUpdate;
-    private TimePointSec created;
+    private Date lastAccountUpdate;
+    private Date created;
     private boolean mined;
     @JsonProperty("owner_challenged")
     private boolean ownerChallenged;
     @JsonProperty("active_challenged")
     private boolean activeChallenged;
     @JsonProperty("last_owner_proved")
-    private TimePointSec lastOwnerProved;
+    private Date lastOwnerProved;
     @JsonProperty("last_active_proved")
-    private TimePointSec lastActiveProved;
+    private Date lastActiveProved;
     @JsonProperty("recovery_account")
     private AccountName recoveryAccount;
     @JsonProperty("reset_account")
     private AccountName resetAccount;
     @JsonProperty("last_account_recovery")
-    private TimePointSec lastAccountRecovery;
+    private Date lastAccountRecovery;
     @JsonProperty("comment_count")
     private long commentCount;
     @JsonProperty("lifetime_vote_count")
@@ -56,7 +57,7 @@ public class Account {
     @JsonProperty("voting_power")
     private int votingPower;
     @JsonProperty("last_vote_time")
-    private TimePointSec lastVoteTime;
+    private Date lastVoteTime;
     private Asset balance;
     @JsonProperty("savings_balance")
     private Asset savingsBalance;
@@ -65,17 +66,17 @@ public class Account {
     @JsonProperty("sbd_seconds")
     private BigInteger sbdSeconds;
     @JsonProperty("sbd_seconds_last_update")
-    private TimePointSec sbdSecondsLastUpdate;
+    private Date sbdSecondsLastUpdate;
     @JsonProperty("sbd_last_interest_payment")
-    private TimePointSec sbdLastInterestPayment;
+    private Date sbdLastInterestPayment;
     @JsonProperty("savings_sbd_balance")
     private Asset savingsSbdBalance;
     @JsonProperty("savings_sbd_seconds")
     private BigInteger savingsSbdSeconds;
     @JsonProperty("savings_sbd_seconds_last_update")
-    private TimePointSec savingsSbdSecondsLastUpdate;
+    private Date savingsSbdSecondsLastUpdate;
     @JsonProperty("savings_sbd_last_interest_payment")
-    private TimePointSec savingsSbdLastInterestPayment;
+    private Date savingsSbdLastInterestPayment;
     // Original type is uint8_t.
     @JsonProperty("savings_withdraw_requests")
     private short SavingWithdrawRequests;
@@ -102,7 +103,7 @@ public class Account {
     @JsonProperty("vesting_withdraw_rate")
     private Asset vestingWithdrawRate;
     @JsonProperty("next_vesting_withdrawal")
-    private TimePointSec nextVestingWithdrawal;
+    private Date nextVestingWithdrawal;
     // Original type is safe<int64_t>;
     @JsonProperty("withdrawn")
     private long withdrwan;
@@ -125,7 +126,7 @@ public class Account {
     @JsonProperty("lifetime_bandwidth")
     private long lifetimeBandwidth;
     @JsonProperty("last_bandwidth_update")
-    private TimePointSec lastBandwidthUpdate;
+    private Date lastBandwidthUpdate;
     // Original type is safe<int64_t>;
     @JsonProperty("average_market_bandwidth")
     private long averageMarketBandwidth;
@@ -133,11 +134,11 @@ public class Account {
     @JsonProperty("lifetime_market_bandwidth")
     private long lifetimeMarketBandwidth;
     @JsonProperty("last_market_bandwidth_update")
-    private TimePointSec lastMarketBandwidthUpdate;
+    private Date lastMarketBandwidthUpdate;
     @JsonProperty("last_post")
-    private TimePointSec lastPost;
+    private Date lastPost;
     @JsonProperty("last_root_post")
-    private TimePointSec lastRootPost;
+    private Date lastRootPost;
     /**
      * Original type is safe<int64_t>;
      * 
@@ -198,15 +199,15 @@ public class Account {
         return proxy;
     }
 
-    public TimePointSec getLastOwnerUpdate() {
+    public Date getLastOwnerUpdate() {
         return lastOwnerUpdate;
     }
 
-    public TimePointSec getLastAccountUpdate() {
+    public Date getLastAccountUpdate() {
         return lastAccountUpdate;
     }
 
-    public TimePointSec getCreated() {
+    public Date getCreated() {
         return created;
     }
 
@@ -222,11 +223,11 @@ public class Account {
         return activeChallenged;
     }
 
-    public TimePointSec getLastOwnerProved() {
+    public Date getLastOwnerProved() {
         return lastOwnerProved;
     }
 
-    public TimePointSec getLastActiveProved() {
+    public Date getLastActiveProved() {
         return lastActiveProved;
     }
 
@@ -238,7 +239,7 @@ public class Account {
         return resetAccount;
     }
 
-    public TimePointSec getLastAccountRecovery() {
+    public Date getLastAccountRecovery() {
         return lastAccountRecovery;
     }
 
@@ -262,7 +263,7 @@ public class Account {
         return votingPower;
     }
 
-    public TimePointSec getLastVoteTime() {
+    public Date getLastVoteTime() {
         return lastVoteTime;
     }
 
@@ -282,11 +283,11 @@ public class Account {
         return sbdSeconds;
     }
 
-    public TimePointSec getSbdSecondsLastUpdate() {
+    public Date getSbdSecondsLastUpdate() {
         return sbdSecondsLastUpdate;
     }
 
-    public TimePointSec getSbdLastInterestPayment() {
+    public Date getSbdLastInterestPayment() {
         return sbdLastInterestPayment;
     }
 
@@ -298,11 +299,11 @@ public class Account {
         return savingsSbdSeconds;
     }
 
-    public TimePointSec getSavingsSbdSecondsLastUpdate() {
+    public Date getSavingsSbdSecondsLastUpdate() {
         return savingsSbdSecondsLastUpdate;
     }
 
-    public TimePointSec getSavingsSbdLastInterestPayment() {
+    public Date getSavingsSbdLastInterestPayment() {
         return savingsSbdLastInterestPayment;
     }
 
@@ -350,7 +351,7 @@ public class Account {
         return vestingWithdrawRate;
     }
 
-    public TimePointSec getNextVestingWithdrawal() {
+    public Date getNextVestingWithdrawal() {
         return nextVestingWithdrawal;
     }
 
@@ -382,7 +383,7 @@ public class Account {
         return lifetimeBandwidth;
     }
 
-    public TimePointSec getLastBandwidthUpdate() {
+    public Date getLastBandwidthUpdate() {
         return lastBandwidthUpdate;
     }
 
@@ -394,15 +395,15 @@ public class Account {
         return lifetimeMarketBandwidth;
     }
 
-    public TimePointSec getLastMarketBandwidthUpdate() {
+    public Date getLastMarketBandwidthUpdate() {
         return lastMarketBandwidthUpdate;
     }
 
-    public TimePointSec getLastPost() {
+    public Date getLastPost() {
         return lastPost;
     }
 
-    public TimePointSec getLastRootPost() {
+    public Date getLastRootPost() {
         return lastRootPost;
     }
 

@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class MarketOrder {
-    private TimePointSec created;
+    private Date created;
     @JsonProperty("order_price")
     private Price orderPrice;
     @JsonProperty("real_price")
@@ -21,7 +23,7 @@ public class MarketOrder {
     /**
      * @return the created
      */
-    public TimePointSec getCreated() {
+    public Date getCreated() {
         return created;
     }
 

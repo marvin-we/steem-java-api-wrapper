@@ -4,7 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -15,6 +17,7 @@ import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
@@ -23,6 +26,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.interfaces.Expirable;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -31,7 +35,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
-public class Transaction implements ByteTransformable, Serializable {
+public class Transaction implements ByteTransformable, Serializable, Expirable {
     private static final long serialVersionUID = 4821422578657270330L;
     private static final Logger LOGGER = LogManager.getLogger(Transaction.class);
 
@@ -65,7 +69,7 @@ public class Transaction implements ByteTransformable, Serializable {
     @JsonProperty("ref_block_prefix")
     private long refBlockPrefix;
     @JsonProperty("expiration")
-    private TimePointSec expirationDate;
+    private long expirationDate;
     private transient List<Operation> operations;
     protected transient List<String> signatures;
     // Original type is "extension_type" which is an array of "future_extions".
@@ -77,6 +81,23 @@ public class Transaction implements ByteTransformable, Serializable {
     public Transaction() {
         // Set default values to avoid null pointer exceptions.
         this.signatures = new ArrayList<>();
+    }
+
+    @Override
+    public String getExpirationDate() {
+        return SteemJUtils.transformDateToString(getExpirationDateAsDate());
+    }
+
+    @Override
+    @JsonIgnore
+    public Date getExpirationDateAsDate() {
+        return new Date(expirationDate);
+    }
+
+    @Override
+    @JsonIgnore
+    public int getExpirationDateAsInt() {
+        return (int) (expirationDate / 1000);
     }
 
     /**
@@ -148,6 +169,16 @@ public class Transaction implements ByteTransformable, Serializable {
                 || ((signature[32] & 0x80) != 0) || (signature[32] == 0) || ((signature[33] & 0x80) != 0);
     }
 
+    @Override
+    public void setExpirationDate(long expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    @Override
+    public void setExpirationDate(String expirationDate) throws ParseException {
+        this.setExpirationDate(SteemJUtils.transformStringToTimestamp(expirationDate));
+    }
+
     /**
      * Extensions are currently not supported and will be ignored.
      * 
@@ -204,25 +235,6 @@ public class Transaction implements ByteTransformable, Serializable {
     }
 
     /**
-     * TODO:
-     * 
-     * @return the expirationDate
-     */
-    public TimePointSec getExpirationDate() {
-        return expirationDate;
-    }
-
-    /**
-     * TODO:
-     * 
-     * @param expirationDate
-     *            the expirationDate to set
-     */
-    public void setExpirationDate(TimePointSec expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    /**
      *
      * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
      * id.
@@ -247,15 +259,14 @@ public class Transaction implements ByteTransformable, Serializable {
         // Before we start signing the transaction we check if all required
         // fields are present, which private keys are required and if those keys
         // are provided.
-        if (this.getExpirationDate() == null || this.getExpirationDate().getDateTimeAsTimestamp() == 0) {
+        if (this.expirationDate == 0) {
             // The expiration date is not set by the user so we do it on our own
             // by adding the maximal allowed offset to the current time.
-            this.setExpirationDate(new TimePointSec(
-                    System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
+            this.setExpirationDate((new Timestamp(System.currentTimeMillis())).getTime()
+                    + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L);
             LOGGER.debug("No expiration date has been provided so the latest possible time is used.");
-        } else if (this.getExpirationDate()
-                .getDateTimeAsTimestamp() > (new Timestamp(System.currentTimeMillis())).getTime()
-                        + SteemJConfig.getInstance().getMaximumExpirationDateOffset()) {
+        } else if (this.expirationDate > (new Timestamp(System.currentTimeMillis())).getTime()
+                + SteemJConfig.getInstance().getMaximumExpirationDateOffset()) {
             LOGGER.warn("The configured expiration date for this transaction is to far "
                     + "in the future and may not be accepted by the Steem node.");
         } else if (this.operations == null || this.operations.isEmpty()) {
@@ -329,7 +340,7 @@ public class Transaction implements ByteTransformable, Serializable {
                 System.arraycopy(Utils.bigIntegerToBytes(signature.s, 32), 0, signedTransaction, 33, 32);
 
                 if (isCanonical(signedTransaction)) {
-                    this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1);
+                    this.expirationDate += 1;
                 } else {
                     isCanonical = true;
                 }
@@ -372,7 +383,7 @@ public class Transaction implements ByteTransformable, Serializable {
             }
             serializedTransaction.write(SteemJUtils.transformShortToByteArray(this.getRefBlockNum()));
             serializedTransaction.write(SteemJUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
-            serializedTransaction.write(this.getExpirationDate().toByteArray());
+            serializedTransaction.write(SteemJUtils.transformIntToByteArray(this.getExpirationDateAsInt()));
             serializedTransaction.write(SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size()));
 
             for (Operation operation : this.getOperations()) {
