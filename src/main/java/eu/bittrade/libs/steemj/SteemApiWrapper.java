@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import eu.bittrade.libs.steemj.base.models.AccountActivity;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ActiveVote;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
@@ -420,7 +421,7 @@ public class SteemApiWrapper {
     public BlockHeader getBlockHeader(long blockNumber) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_BLOCK_HEADER);
-        requestObject.setSteemApi(SteemApis.LOGIN_API);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { String.valueOf(blockNumber) };
         requestObject.setAdditionalParameters(parameters);
 
@@ -927,6 +928,11 @@ public class SteemApiWrapper {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
+    }
+    
+    //TODO:
+    public List<AppliedOperation> getOpsInBlock() {
+        return null;
     }
 
     // TODO implement this!

@@ -33,6 +33,7 @@ import eu.bittrade.libs.steemj.base.models.AccountActivity;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ActiveVote;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
@@ -106,6 +107,15 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         assertThat(signedBlockWithInfoWithExtension.getWitness(), equalTo("dragosroua"));
         assertThat(signedBlockWithInfoWithExtension.getExtensions().get(0).getHardforkVersionVote().getHfVersion(),
                 equalTo("0.19.0"));
+    }
+    
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testGetBlockHeader() throws Exception {
+        final BlockHeader blockHeader = steemApiWrapper.getBlockHeader(13339001L);
+
+        assertThat(blockHeader.getTimestamp().getDateTime(), equalTo("2017-07-02T19:15:06"));
+        assertThat(blockHeader.getWitness(), equalTo("clayop"));
     }
 
     @Category({ IntegrationTest.class })
