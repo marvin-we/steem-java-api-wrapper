@@ -87,7 +87,7 @@ import eu.bittrade.libs.steemj.plugins.follow.models.operations.ReblogOperation;
         @Type(value = HardforkOperation.class, name = "hardfork"),
         @Type(value = InterestOperation.class, name = "interest"),
         @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
-        @Type(value = ReturnVestingDelegationOperation.class, name = "return_Vesting_delegation"),
+        @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
         @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
         // Follow Plugin Operations
         @Type(value = ReblogOperation.class, name = "reblog_operation"),

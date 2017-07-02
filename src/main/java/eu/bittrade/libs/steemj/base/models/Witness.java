@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
-import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -10,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Witness {
     private int id;
     private String owner;
-    private Date created;
+    private TimePointSec created;
     private String url;
     private BigInteger votes;
     @JsonProperty("virtual_last_update")
@@ -33,7 +32,7 @@ public class Witness {
     @JsonProperty("sbd_exchange_rate")
     private Price sbdExchangeRate;
     @JsonProperty("last_sbd_exchange_update")
-    private Date lastSbdExchangeUpdate;
+    private TimePointSec lastSbdExchangeUpdate;
     @JsonProperty("last_work")
     private String lastWork;
     @JsonProperty("running_version")
@@ -41,7 +40,7 @@ public class Witness {
     @JsonProperty("hardfork_version_vote")
     private String hardforkVersionVote;
     @JsonProperty("hardfork_time_vote")
-    private Date hardforkTimeVote;
+    private TimePointSec hardforkTimeVote;
 
     public int getId() {
         return id;
@@ -55,7 +54,7 @@ public class Witness {
         return owner;
     }
 
-    public Date getCreated() {
+    public TimePointSec getCreated() {
         return created;
     }
 
@@ -103,7 +102,7 @@ public class Witness {
         return sbdExchangeRate;
     }
 
-    public Date getLastSbdExchangeUpdate() {
+    public TimePointSec getLastSbdExchangeUpdate() {
         return lastSbdExchangeUpdate;
     }
 
@@ -119,7 +118,7 @@ public class Witness {
         return hardforkVersionVote;
     }
 
-    public Date getHardforkTimeVote() {
+    public TimePointSec getHardforkTimeVote() {
         return hardforkTimeVote;
     }
 

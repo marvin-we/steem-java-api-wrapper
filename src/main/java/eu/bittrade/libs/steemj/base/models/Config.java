@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
-import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -11,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Config {
-
     @JsonProperty("IS_TEST_NET")
     private Boolean isTestNet;
     /**
@@ -132,7 +130,7 @@ public class Config {
     @JsonProperty("STEEMIT_INIT_SUPPLY")
     private int steemitInitSupply;
     @JsonProperty("STEEMIT_INIT_TIME")
-    private Date steemitInitTime;
+    private TimePointSec steemitInitTime;
     @JsonProperty("STEEMIT_IRREVERSIBLE_THRESHOLD")
     private int steemitIrreversibleThreshold;
     @JsonProperty("STEEMIT_LIQUIDITY_APR_PERCENT")
@@ -612,7 +610,7 @@ public class Config {
         return steemitInitSupply;
     }
 
-    public Date getSteemitInitTime() {
+    public TimePointSec getSteemitInitTime() {
         return steemitInitTime;
     }
 
