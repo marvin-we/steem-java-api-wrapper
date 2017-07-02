@@ -14,8 +14,7 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.base.models.operations.LimitOrderCreate2Operation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -68,7 +67,7 @@ public class LimitOrderCreate2OperationIT extends BaseIntegrationTest {
         amountToSell.setSymbol(AssetSymbolType.SBD);
 
         limitOrderCreate2Operation.setAmountToSell(amountToSell);
-        limitOrderCreate2Operation.setExpirationDate(EXPIRATION_DATE);
+        limitOrderCreate2Operation.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
         limitOrderCreate2Operation.setFillOrKill(false);
         limitOrderCreate2Operation.setOrderId(492991L);
         limitOrderCreate2Operation.setOwner(new AccountName("dez1337"));

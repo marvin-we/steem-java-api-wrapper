@@ -1,8 +1,6 @@
 package eu.bittrade.libs.steemj.base.models.deserializer;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
 import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -44,15 +42,7 @@ public class BlockHeaderExtensionsDeserializer extends JsonDeserializer<BlockHea
                 jasonParser.nextToken();
             }
 
-            SimpleDateFormat simpleDateFormatter = new SimpleDateFormat(
-                    SteemJConfig.getInstance().getDateTimePattern());
-
-            String date = jasonParser.getText();
-            try {
-                hardforkVersionVote.setHfTime(simpleDateFormatter.parse(date)); 
-            } catch (ParseException e) {
-                throw new IllegalArgumentException("Could not parse '" + date + "' into a date.");
-            }
+            hardforkVersionVote.setHfTime(new TimePointSec(jasonParser.getText()));
 
             for (int i = 0; i < 2; i++) {
                 jasonParser.nextToken();

@@ -2,16 +2,14 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.Date;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -36,9 +34,9 @@ public class EscrowTransferOperation extends Operation {
     private Asset steemAmount;
     private Asset fee;
     @JsonProperty("ratification_deadline")
-    private long ratificationDeadlineDate;
+    private TimePointSec ratificationDeadlineDate;
     @JsonProperty("escrow_expiration")
-    private long escrowExpirationDate;
+    private TimePointSec escrowExpirationDate;
     @JsonProperty("json_meta")
     private String jsonMeta;
 
@@ -219,120 +217,40 @@ public class EscrowTransferOperation extends Operation {
     }
 
     /**
-     * This method returns the ratification deadline as its String
-     * representation. For this a specific date format ("yyyy-MM-dd'T'HH:mm:ss")
-     * is used as it is required by the Steem api.
+     * TODO:
      * 
-     * @return The the ratification deadline as String.
+     * @return the ratificationDeadlineDate
      */
-    public String getRatificationDeadlineDate() {
-        return SteemJUtils.transformDateToString(getRatificationDeadlineDateAsDate());
+    public TimePointSec getRatificationDeadlineDate() {
+        return ratificationDeadlineDate;
     }
 
     /**
-     * Get the configured the ratification deadline as a Java.util.Date object.
-     * 
-     * @return The ratification deadline date.
-     */
-    @JsonIgnore
-    public Date getRatificationDeadlineDateAsDate() {
-        return new Date(ratificationDeadlineDate);
-    }
-
-    /**
-     * This method returns the ratification deadline as its int representation.
-     * 
-     * @return The ratification deadline date.
-     */
-    @JsonIgnore
-    public int getRatificationDeadlineDateAsInt() {
-        return (int) (ratificationDeadlineDate / 1000);
-    }
-
-    /**
-     * Define the ratification deadline. The date has to be specified as String
-     * and needs a special format: yyyy-MM-dd'T'HH:mm:ss
-     * 
-     * <p>
-     * Example: "2016-08-08T12:24:17"
-     * </p>
+     * TODO:
      * 
      * @param ratificationDeadlineDate
-     *            The ratification deadline as its String representation.
-     * @throws ParseException
-     *             If the given String does not match the pattern.
+     *            the ratificationDeadlineDate to set
      */
-    public void setRatificationDeadlineDate(String ratificationDeadlineDate) throws ParseException {
-        this.setEscrowExpirationDate(SteemJUtils.transformStringToTimestamp(ratificationDeadlineDate));
-    }
-
-    /**
-     * Set the ratification deadline by providing a timestamp.
-     * 
-     * @param ratificationDeadlineDate
-     *            The ratification deadline as a timestamp.
-     */
-    @JsonIgnore
-    public void setRatificationDeadlineDate(long ratificationDeadlineDate) {
+    public void setRatificationDeadlineDate(TimePointSec ratificationDeadlineDate) {
         this.ratificationDeadlineDate = ratificationDeadlineDate;
     }
 
     /**
-     * This method returns the escrow expiration date as its String
-     * representation. For this a specific date format ("yyyy-MM-dd'T'HH:mm:ss")
-     * is used as it is required by the Steem api.
+     * TODO:
      * 
-     * @return The escrow expiration date as String.
+     * @return the escrowExpirationDate
      */
-    public String getEscrowExpirationDate() {
-        return SteemJUtils.transformDateToString(getEscrowExpirationDateAsDate());
+    public TimePointSec getEscrowExpirationDate() {
+        return escrowExpirationDate;
     }
 
     /**
-     * Get the configured escrow expiration date as a Java.util.Date object.
-     * 
-     * @return The escrow expiration date.
-     */
-    @JsonIgnore
-    public Date getEscrowExpirationDateAsDate() {
-        return new Date(escrowExpirationDate);
-    }
-
-    /**
-     * This method returns the escrow expiration data as its int representation.
-     * 
-     * @return The escrow expiration date.
-     */
-    @JsonIgnore
-    public int getEscrowExpirationDateAsInt() {
-        return (int) (escrowExpirationDate / 1000);
-    }
-
-    /**
-     * Define how long this escrow transfer is valid. The date has to be
-     * specified as String and needs a special format: yyyy-MM-dd'T'HH:mm:ss
-     * 
-     * <p>
-     * Example: "2016-08-08T12:24:17"
-     * </p>
+     * TODO:
      * 
      * @param escrowExpirationDate
-     *            The escrow expiration date as its String representation.
-     * @throws ParseException
-     *             If the given String does not match the pattern.
+     *            the escrowExpirationDate to set
      */
-    public void setEscrowExpirationDate(String escrowExpirationDate) throws ParseException {
-        this.setEscrowExpirationDate(SteemJUtils.transformStringToTimestamp(escrowExpirationDate));
-    }
-
-    /**
-     * Set the escrow expiration date by providing a timestamp.
-     * 
-     * @param escrowExpirationDate
-     *            The escrow expiration date as a timestamp.
-     */
-    @JsonIgnore
-    public void setEscrowExpirationDate(long escrowExpirationDate) {
+    public void setEscrowExpirationDate(TimePointSec escrowExpirationDate) {
         this.escrowExpirationDate = escrowExpirationDate;
     }
 
@@ -367,10 +285,8 @@ public class EscrowTransferOperation extends Operation {
             serializedEscrowTransferOperation.write(this.getSbdAmount().toByteArray());
             serializedEscrowTransferOperation.write(this.getSteemAmount().toByteArray());
             serializedEscrowTransferOperation.write(this.getFee().toByteArray());
-            serializedEscrowTransferOperation
-                    .write(SteemJUtils.transformIntToByteArray(this.getRatificationDeadlineDateAsInt()));
-            serializedEscrowTransferOperation
-                    .write(SteemJUtils.transformIntToByteArray(this.getEscrowExpirationDateAsInt()));
+            serializedEscrowTransferOperation.write(this.getRatificationDeadlineDate().toByteArray());
+            serializedEscrowTransferOperation.write(this.getEscrowExpirationDate().toByteArray());
             serializedEscrowTransferOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMeta()));
 
             return serializedEscrowTransferOperation.toByteArray();

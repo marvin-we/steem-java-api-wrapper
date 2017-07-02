@@ -14,8 +14,7 @@ import org.junit.Test;
 import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.operations.LimitOrderCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -44,7 +43,7 @@ public class LimitOrderCreateOperationTest extends BaseUnitTest {
         amountToSell.setSymbol(AssetSymbolType.SBD);
 
         limitOrderCreateOperation.setAmountToSell(amountToSell);
-        limitOrderCreateOperation.setExpirationDate(EXPIRATION_DATE);
+        limitOrderCreateOperation.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
         limitOrderCreateOperation.setFillOrKill(false);
 
         Asset minToReceive = new Asset();
