@@ -9,8 +9,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLSession;
+import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
+import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,14 +47,14 @@ import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommunicationHandler {
+public class CommunicationHandler extends Endpoint implements MessageHandler.Whole<String> {
     private static final Logger LOGGER = LogManager.getLogger(CommunicationHandler.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+    private CountDownLatch responseCountDownLatch = new CountDownLatch(1);
     private ClientManager client;
     private Session session;
-    private SteemMessageHandler steemMessageHandler;
-    private CountDownLatch messageLatch;
+    private String rawJsonResponse;
 
     /**
      * Initialize the Connection Handler.
@@ -60,17 +64,14 @@ public class CommunicationHandler {
      */
     public CommunicationHandler() throws SteemCommunicationException {
         this.client = ClientManager.createClient();
-        this.steemMessageHandler = new SteemMessageHandler(this);
 
         if (SteemJConfig.getInstance().isSslVerificationDisabled()) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
             sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
-
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(
-                SteemJConfig.getInstance().getDateTimePattern());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
 
         MAPPER.setDateFormat(simpleDateFormat);
@@ -84,6 +85,21 @@ public class CommunicationHandler {
         MAPPER.registerModule(simpleModule);
 
         reconnect();
+    }
+
+    @Override
+    public void onOpen(Session session, EndpointConfig config) {
+        LOGGER.info("Connection has been established.");
+    }
+
+    @Override
+    public void onClose(Session session, CloseReason closeReason) {
+        LOGGER.info("Connection has been closed.", closeReason);
+    }
+
+    @Override
+    public void onError(Session session, Throwable thr) {
+        LOGGER.error("Connection error.", thr);
     }
 
     /**
@@ -116,29 +132,15 @@ public class CommunicationHandler {
             reconnect();
         }
 
-        messageLatch = new CountDownLatch(1);
-
-        String rawJsonResponse = "";
         try {
-            session.getBasicRemote().sendObject(requestObject);
-            if (!messageLatch.await(SteemJConfig.getInstance().getTimeout(), TimeUnit.MILLISECONDS)) {
-                String errorMessage = "Timeout occured. The websocket server was not able to answer in "
-                        + SteemJConfig.getInstance().getTimeout() + " millisecond(s).";
-
-                LOGGER.error(errorMessage);
-                throw new SteemTimeoutException(errorMessage);
-            }
-
-            rawJsonResponse = steemMessageHandler.getMessage();
-
-            LOGGER.debug("Raw JSON response: {}", rawJsonResponse);
+            sendMessageSynchronously(requestObject);
 
             @SuppressWarnings("unchecked")
             ResponseWrapperDTO<T> response = MAPPER.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 
             if (response == null || "".equals(response.toString()) || response.getResult() == null
                     || "".equals(response.getResult().toString())) {
-                LOGGER.debug("The response was empty. The requested node may not provided the method {}.",
+                LOGGER.debug("The response was empty. The requested node may not provid the method {}.",
                         requestObject.getApiMethod().toString());
                 List<T> emptyResult = new ArrayList<>();
                 emptyResult.add(null);
@@ -176,24 +178,53 @@ public class CommunicationHandler {
      */
     private void reconnect() throws SteemCommunicationException {
         try {
-            session = client.connectToServer(new SteemEndpoint(),
-                    SteemJConfig.getInstance().getClientEndpointConfig(),
+            session = client.connectToServer(this, SteemJConfig.getInstance().getClientEndpointConfig(),
                     SteemJConfig.getInstance().getWebsocketEndpointURI());
-            session.addMessageHandler(steemMessageHandler);
+            session.addMessageHandler(this);
         } catch (DeploymentException | IOException e) {
             throw new SteemCommunicationException("Could not connect to the server.", e);
         }
-        // TODO: Login again?
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return MAPPER;
     }
 
     /**
-     * Used to signal that the result is ready and can get accessed.
+     * 
+     * @param requestObject
+     * @throws IOException
+     * @throws EncodeException
+     * @throws SteemTimeoutException
+     * @throws InterruptedException
      */
-    public void countDownLetch() {
-        messageLatch.countDown();
+    private void sendMessageSynchronously(RequestWrapperDTO requestObject)
+            throws IOException, EncodeException, SteemTimeoutException, InterruptedException {
+        responseCountDownLatch = new CountDownLatch(1);
+
+        session.getBasicRemote().sendObject(requestObject);
+
+        // Wait until we received a response from the Server.
+        if (SteemJConfig.getInstance().getTimeout() == 0) {
+            responseCountDownLatch.await();
+        } else {
+            if (!responseCountDownLatch.await(SteemJConfig.getInstance().getTimeout(), TimeUnit.MILLISECONDS)) {
+                String errorMessage = "Timeout occured. The websocket server was not able to answer in "
+                        + SteemJConfig.getInstance().getTimeout() + " millisecond(s).";
+
+                LOGGER.error(errorMessage);
+                throw new SteemTimeoutException(errorMessage);
+            }
+        }
+    }
+
+    @Override
+    public void onMessage(String message) {
+        this.rawJsonResponse = message;
+
+        LOGGER.debug("Raw JSON response: {}", rawJsonResponse);
+        
+        responseCountDownLatch.countDown();
+    }
+
+    // TODO: Find a way to remove this.
+    public ObjectMapper getObjectMapper() {
+        return MAPPER;
     }
 }

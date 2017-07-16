@@ -125,8 +125,14 @@ public class SteemJConfig {
      * 
      * @param timeout
      *            Time in milliseconds.
+     * @throws IllegalArgumentException
+     *             If the value of timeout is negative.
      */
     public void setTimeout(long timeout) {
+        if (timeout < 0) {
+            throw new IllegalArgumentException("The timeout has to be greater than 0. (0 will disable the timeout).");
+        }
+
         this.timeout = timeout;
     }
 
@@ -350,8 +356,7 @@ public class SteemJConfig {
     }
 
     /**
-     * Receive a
-     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig
+     * Receive a {@link eu.bittrade.libs.steemj.configuration.SteemJConfig
      * SteemJConfig} instance.
      * 
      * @return A SteemJConfig instance.
@@ -366,8 +371,8 @@ public class SteemJConfig {
 
     /**
      * Overrides the current
-     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig
-     * SteemJConfig} instance and returns a new one.
+     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig SteemJConfig}
+     * instance and returns a new one.
      * 
      * @return A SteemJConfig instance.
      */
