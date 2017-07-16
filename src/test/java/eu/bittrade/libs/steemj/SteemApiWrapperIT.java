@@ -32,6 +32,7 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.base.models.AccountActivity;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ActiveVote;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
@@ -53,7 +54,9 @@ import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegationOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
@@ -108,7 +111,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         assertThat(signedBlockWithInfoWithExtension.getExtensions().get(0).getHardforkVersionVote().getHfVersion(),
                 equalTo("0.19.0"));
     }
-    
+
     @Category({ IntegrationTest.class })
     @Test
     public void testGetBlockHeader() throws Exception {
@@ -116,6 +119,26 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
         assertThat(blockHeader.getTimestamp().getDateTime(), equalTo("2017-07-02T19:15:06"));
         assertThat(blockHeader.getWitness(), equalTo("clayop"));
+    }
+
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testGetOpsInBlock() throws Exception {
+        final List<AppliedOperation> appliedOperationsOnlyVirtual = steemApiWrapper.getOpsInBlock(13138393, true);
+
+        assertThat(appliedOperationsOnlyVirtual.size(), equalTo(5));
+        assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx(), equalTo(1));
+        assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), equalTo(41));
+        assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), equalTo(0L));
+        assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(AuthorRewardOperation.class));
+        
+        final List<AppliedOperation> appliedOperations = steemApiWrapper.getOpsInBlock(13138393, false);
+
+        assertThat(appliedOperations.size(), equalTo(50));
+        assertThat(appliedOperations.get(1).getOpInTrx(), equalTo(0));
+        assertThat(appliedOperations.get(1).getTrxInBlock(), equalTo(1));
+        assertThat(appliedOperations.get(1).getVirtualOp(), equalTo(0L));
+        assertThat(appliedOperations.get(1).getOp(), instanceOf(CommentOperation.class));
     }
 
     @Category({ IntegrationTest.class })

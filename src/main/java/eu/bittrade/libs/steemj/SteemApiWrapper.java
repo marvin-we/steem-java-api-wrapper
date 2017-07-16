@@ -929,10 +929,36 @@ public class SteemApiWrapper {
 
         return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
     }
-    
-    //TODO:
-    public List<AppliedOperation> getOpsInBlock() {
-        return null;
+
+    /**
+     * Get a list of all performed operations for a given block number.
+     * 
+     * @param blockNumber
+     *            The block number.
+     * @param onlyVirtual
+     *            Define if only virtual operations should be returned or not.
+     * @return A list of all performed operations for a given block number.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<AppliedOperation> getOpsInBlock(int blockNumber, boolean onlyVirtual)
+            throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_OPS_IN_BLOCK);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+        String[] parameters = { String.valueOf(blockNumber), String.valueOf(onlyVirtual) };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, AppliedOperation.class);
     }
 
     // TODO implement this!
