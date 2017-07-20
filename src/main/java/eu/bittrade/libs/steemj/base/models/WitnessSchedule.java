@@ -1,99 +1,162 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import java.math.BigInteger;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * This class represents a Steem "witness_schedule_object" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class WitnessSchedule {
+    // TODO: Original type is id_type.
     private long id;
     @JsonProperty("current_virtual_time")
-    private String currentVirtualTime;
+    // Original type is uint128.
+    private BigInteger currentVirtualTime;
+    // Original type is uint32_t.
     @JsonProperty("next_shuffle_block_num")
-    private String nextShuffleBlockNum;
+    private int nextShuffleBlockNum;
     @JsonProperty("current_shuffled_witnesses")
     private String currentShuffledWitnesses;
+    // Original type is uint8_t.
     @JsonProperty("num_scheduled_witnesses")
-    private int numScheduledWitnesses;
+    private short numScheduledWitnesses;
+    // Original type is uint8_t.
     @JsonProperty("top19_weight")
-    private int top19Weight;
+    private short top19Weight;
+    // Original type is uint8_t.
     @JsonProperty("hardfork_required_witnesses")
-    private int hardforkRequiredWitnesses;
+    private short hardforkRequiredWitnesses;
+    // Original type is uint8_t.
     @JsonProperty("max_voted_witnesses")
-    private int maxVotedWitnesses;
+    private short maxVotedWitnesses;
+    // Original type is uint8_t.
     @JsonProperty("max_runner_witnesses")
-    private int maxRunnerWitnesses;
+    private short maxRunnerWitnesses;
+    // Original type is uint8_t.
     @JsonProperty("max_miner_witnesses")
-    private int maxMinerWitnesses;
+    private short maxMinerWitnesses;
+    // Original type is uint8_t.
     @JsonProperty("timeshare_weight")
-    private int timeshareWeight;
+    private short timeshareWeight;
+    // Original type is uint8_t.
     @JsonProperty("miner_weight")
-    private int minerWeight;
+    private short minerWeight;
+    // Original type is uint32_t.
     @JsonProperty("witness_pay_normalization_factor")
     private int witnessPayNormalizationFactor;
     @JsonProperty("median_props")
-    private MedianProps medianProps;
+    private ChainProperties medianProps;
+    // Original type is version which is a uint32_t. The actual returned value
+    // is the real version (e.g. 0.19.0) so we use String here.
     @JsonProperty("majority_version")
     private String majorityVersion;
 
+    /**
+     * @return the id
+     */
     public long getId() {
         return id;
     }
 
-    public String getCurrentVirtualTime() {
+    /**
+     * @return the currentVirtualTime
+     */
+    public BigInteger getCurrentVirtualTime() {
         return currentVirtualTime;
     }
 
-    public String getNextShuffleBlockNum() {
+    /**
+     * @return the nextShuffleBlockNum
+     */
+    public int getNextShuffleBlockNum() {
         return nextShuffleBlockNum;
     }
 
+    /**
+     * @return the currentShuffledWitnesses
+     */
     public String getCurrentShuffledWitnesses() {
         return currentShuffledWitnesses;
     }
 
-    public int getNumScheduledWitnesses() {
+    /**
+     * @return the numScheduledWitnesses
+     */
+    public short getNumScheduledWitnesses() {
         return numScheduledWitnesses;
     }
 
-    public int getTop19Weight() {
+    /**
+     * @return the top19Weight
+     */
+    public short getTop19Weight() {
         return top19Weight;
     }
 
-    public int getHardforkRequiredWitnesses() {
+    /**
+     * @return the hardforkRequiredWitnesses
+     */
+    public short getHardforkRequiredWitnesses() {
         return hardforkRequiredWitnesses;
     }
 
-    public int getMaxVotedWitnesses() {
+    /**
+     * @return the maxVotedWitnesses
+     */
+    public short getMaxVotedWitnesses() {
         return maxVotedWitnesses;
     }
 
-    public int getMaxRunnerWitnesses() {
+    /**
+     * @return the maxRunnerWitnesses
+     */
+    public short getMaxRunnerWitnesses() {
         return maxRunnerWitnesses;
     }
 
-    public int getMaxMinerWitnesses() {
+    /**
+     * @return the maxMinerWitnesses
+     */
+    public short getMaxMinerWitnesses() {
         return maxMinerWitnesses;
     }
 
-    public int getTimeshareWeight() {
+    /**
+     * @return the timeshareWeight
+     */
+    public short getTimeshareWeight() {
         return timeshareWeight;
     }
 
-    public int getMinerWeight() {
+    /**
+     * @return the minerWeight
+     */
+    public short getMinerWeight() {
         return minerWeight;
     }
 
+    /**
+     * @return the witnessPayNormalizationFactor
+     */
     public int getWitnessPayNormalizationFactor() {
         return witnessPayNormalizationFactor;
     }
 
-    public MedianProps getMedianProps() {
+    /**
+     * @return the medianProps
+     */
+    public ChainProperties getMedianProps() {
         return medianProps;
     }
 
+    /**
+     * @return the majorityVersion
+     */
     public String getMajorityVersion() {
         return majorityVersion;
     }

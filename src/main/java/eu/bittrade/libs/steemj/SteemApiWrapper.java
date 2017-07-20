@@ -14,26 +14,26 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.ActiveVote;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
-import eu.bittrade.libs.steemj.base.models.LiquidityQueueEntry;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.Transaction;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.UserOrder;
-import eu.bittrade.libs.steemj.base.models.Version;
+import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -299,14 +299,14 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<ActiveVote> getActiveVotes(String author, String permlink) throws SteemCommunicationException {
+    public List<VoteState> getActiveVotes(String author, String permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { author, permlink };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, ActiveVote.class);
+        return communicationHandler.performRequest(requestObject, VoteState.class);
     }
 
     /**
@@ -808,7 +808,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<LiquidityQueueEntry> getLiquidityQueue(String accoutName, int limit)
+    public List<LiquidityBalance> getLiquidityQueue(String accoutName, int limit)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_LIQUIDITY_QUEUE);
@@ -816,7 +816,7 @@ public class SteemApiWrapper {
         Object[] parameters = { accoutName, String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, LiquidityQueueEntry.class);
+        return communicationHandler.performRequest(requestObject, LiquidityBalance.class);
     }
 
     /**
@@ -891,14 +891,14 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<UserOrder> getOpenOrders(AccountName accountName) throws SteemCommunicationException {
+    public List<ExtendedLimitOrder> getOpenOrders(AccountName accountName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = { accountName.getAccountName() };
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, UserOrder.class);
+        return communicationHandler.performRequest(requestObject, ExtendedLimitOrder.class);
     }
 
     /**
@@ -1113,14 +1113,14 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Version getVersion() throws SteemCommunicationException {
+    public SteemVersionInfo getVersion() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_VERSION);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Version.class).get(0);
+        return communicationHandler.performRequest(requestObject, SteemVersionInfo.class).get(0);
     }
 
     /**

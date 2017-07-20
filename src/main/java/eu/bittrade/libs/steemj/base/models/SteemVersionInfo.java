@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Version {
+public class SteemVersionInfo {
     @JsonProperty("blockchain_version")
     private String blockchainVersion;
     @JsonProperty("steem_revision")

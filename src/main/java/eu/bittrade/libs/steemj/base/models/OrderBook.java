@@ -5,17 +5,19 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
+ * This class represents a Steem "order_book" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class OrderBook {
-    private List<MarketOrder> asks;
-    private List<MarketOrder> bids;
+    private List<Order> asks;
+    private List<Order> bids;
 
-    public List<MarketOrder> getAsks() {
+    public List<Order> getAsks() {
         return asks;
     }
 
-    public List<MarketOrder> getBids() {
+    public List<Order> getBids() {
         return bids;
     }
 

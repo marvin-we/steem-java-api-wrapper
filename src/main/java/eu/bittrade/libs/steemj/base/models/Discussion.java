@@ -23,7 +23,7 @@ public class Discussion extends Comment {
     private Asset totalPendingPayoutValue;
     // Original type is vector<vote_state>.
     @JsonProperty("active_votes")
-    private List<ActiveVote> activeVotes;
+    private List<VoteState> activeVotes;
     private List<String> replies;
     // Original type is safe<int64_t>.
     @JsonProperty("author_reputation")
@@ -70,7 +70,7 @@ public class Discussion extends Comment {
     /**
      * @return the activeVotes
      */
-    public List<ActiveVote> getActiveVotes() {
+    public List<VoteState> getActiveVotes() {
         return activeVotes;
     }
 

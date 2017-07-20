@@ -1,19 +1,24 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import java.math.BigInteger;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
+ * This class represents a Graphene Chain "liquidity_balance" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LiquidityQueueEntry {
-    private String account;
-    private int weight;
+public class LiquidityBalance {
+    private AccountName account;
+    // Original type is uint128_t.
+    private BigInteger weight;
 
-    public String getAccount() {
+    public AccountName getAccount() {
         return account;
     }
 
-    public int getWeight() {
+    public BigInteger getWeight() {
         return weight;
     }
 

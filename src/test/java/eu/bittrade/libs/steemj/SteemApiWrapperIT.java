@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.ActiveVote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
@@ -38,16 +38,17 @@ import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
-import eu.bittrade.libs.steemj.base.models.LiquidityQueueEntry;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.Version;
+import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
@@ -130,7 +131,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), equalTo(41));
         assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), equalTo(0L));
         assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(AuthorRewardOperation.class));
-        
+
         final List<AppliedOperation> appliedOperations = steemApiWrapper.getOpsInBlock(13138393, false);
 
         assertThat(appliedOperations.size(), equalTo(50));
@@ -172,7 +173,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     public void testActiveVotes() throws Exception {
         // Get the votes done by the specified account:
         final List<Vote> votes = steemApiWrapper.getAccountVotes(ACCOUNT);
-        final List<ActiveVote> activeVotesForArticle = steemApiWrapper.getActiveVotes(ACCOUNT, PERMLINK);
+        final List<VoteState> activeVotesForArticle = steemApiWrapper.getActiveVotes(ACCOUNT, PERMLINK);
 
         assertNotNull("expect votes", votes);
         assertThat("expect account has votes", votes.size(), greaterThan(0));
@@ -181,7 +182,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
         boolean foundSelfVote = false;
 
-        for (final ActiveVote vote : activeVotesForArticle) {
+        for (final VoteState vote : activeVotesForArticle) {
             if (ACCOUNT.equals(vote.getVoter())) {
                 foundSelfVote = true;
                 break;
@@ -338,7 +339,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetLiquidityQueue() throws Exception {
-        final List<LiquidityQueueEntry> repliesByLastUpdate = steemApiWrapper.getLiquidityQueue(WITNESS_ACCOUNT, 5);
+        final List<LiquidityBalance> repliesByLastUpdate = steemApiWrapper.getLiquidityQueue(WITNESS_ACCOUNT, 5);
 
         assertEquals("expect that 5 results are returned", repliesByLastUpdate.size(), 5);
         assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned account", WITNESS_ACCOUNT,
@@ -459,7 +460,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testVersion() throws Exception {
-        final Version version = steemApiWrapper.getVersion();
+        final SteemVersionInfo version = steemApiWrapper.getVersion();
 
         assertNotEquals("expect non-empty blockchain version", "", version.getBlockchainVersion());
         assertNotEquals("expect non-empty fc revision", "", version.getFcRevision());
@@ -480,6 +481,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         final WitnessSchedule witnessSchedule = steemApiWrapper.getWitnessSchedule();
 
         assertNotNull("expect hardfork version", witnessSchedule);
+        assertThat(witnessSchedule.getTop19Weight(), equalTo((short) 1));
     }
 
     @Category({ IntegrationTest.class })
@@ -597,9 +599,19 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetOpenOrders() throws Exception {
-        // TODO: As orders are pretty dynamically we just expect that no exception is
-        // thrown.
-        steemApiWrapper.getOpenOrders(new AccountName("dez1337"));
+        // TODO: If dez1337 removes this operation, the test will fail. Use the
+        // SteemJ account for this.
+        final List<ExtendedLimitOrder> openOrders = steemApiWrapper.getOpenOrders(new AccountName(ACCOUNT));
+
+        assertThat(openOrders.size(), greaterThanOrEqualTo(1));
+        assertThat(openOrders.get(0).getCreated().getDateTime(), equalTo("2017-07-20T19:30:27"));
+        assertThat(openOrders.get(0).getExpiration().getDateTime(), equalTo("1969-12-31T23:59:59"));
+        assertThat(openOrders.get(0).getDeferredFee(), equalTo(0));
+        assertThat(openOrders.get(0).getForSale(), equalTo(1));
+        assertThat(openOrders.get(0).getId(), equalTo(675734));
+        assertThat(openOrders.get(0).getOrderId(), equalTo(1500579025L));
+        assertThat(openOrders.get(0).getSeller(), equalTo(new AccountName(ACCOUNT)));
+        assertThat(openOrders.get(0).getSellPrice().getBase(), equalTo(new Asset(1, AssetSymbolType.SBD)));
     }
 
     @Category({ IntegrationTest.class })

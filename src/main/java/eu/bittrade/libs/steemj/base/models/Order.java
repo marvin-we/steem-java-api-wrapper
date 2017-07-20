@@ -9,13 +9,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class MarketOrder {
+public class Order {
     private TimePointSec created;
     @JsonProperty("order_price")
     private Price orderPrice;
     @JsonProperty("real_price")
     private double realPrice;
+    // TODO: Original type is share_type.
     private int steem;
+    // TODO: Original type is share_type.
     private int sbd;
 
     /**

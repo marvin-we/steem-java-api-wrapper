@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This class represents a Steem "Account" object.
+ * This class represents a Steem "account" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
