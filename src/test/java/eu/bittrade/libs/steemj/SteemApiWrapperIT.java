@@ -29,7 +29,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.base.models.AccountActivity;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ActiveVote;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
@@ -100,8 +99,8 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     public void testGetBlock() throws Exception {
         final SignedBlockWithInfo signedBlockWithInfo = steemApiWrapper.getBlock(13310401L);
 
-        assertThat(signedBlockWithInfo.getTimestamp().getDateTime(), equalTo("2017-05-29T07:40:57"));
-        assertThat(signedBlockWithInfo.getWitness(), equalTo("abit"));
+        assertThat(signedBlockWithInfo.getTimestamp().getDateTime(), equalTo("2017-07-01T19:24:42"));
+        assertThat(signedBlockWithInfo.getWitness(), equalTo("riverhead"));
 
         final SignedBlockWithInfo signedBlockWithInfoWithExtension = steemApiWrapper.getBlock(12615532L);
 
@@ -152,19 +151,19 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testAccountHistory() throws Exception {
-        final Map<Integer, AccountActivity> accountHistorySetOne = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
+        final Map<Integer, AppliedOperation> accountHistorySetOne = steemApiWrapper.getAccountHistory(ACCOUNT, 10, 10);
         assertEquals("expect response to contain 10 results", 11, accountHistorySetOne.size());
 
-        Operation firstOperation = accountHistorySetOne.get(0).getOperations();
+        Operation firstOperation = accountHistorySetOne.get(0).getOp();
         assertTrue("the first operation for each account is the 'account_create_operation'",
                 firstOperation instanceof AccountCreateOperation);
 
-        final Map<Integer, AccountActivity> accountHistorySetTwo = steemApiWrapper.getAccountHistory(ACCOUNT_TWO, 1000,
+        final Map<Integer, AppliedOperation> accountHistorySetTwo = steemApiWrapper.getAccountHistory(ACCOUNT_TWO, 1000,
                 1000);
         assertEquals("expect response to contain 1001 results", 1001, accountHistorySetTwo.size());
 
-        assertThat(accountHistorySetTwo.get(0).getOperations(), instanceOf(AccountCreateWithDelegationOperation.class));
-        assertThat(((AccountCreateWithDelegationOperation) accountHistorySetTwo.get(0).getOperations()).getCreator()
+        assertThat(accountHistorySetTwo.get(0).getOp(), instanceOf(AccountCreateWithDelegationOperation.class));
+        assertThat(((AccountCreateWithDelegationOperation) accountHistorySetTwo.get(0).getOp()).getCreator()
                 .getAccountName(), equalTo(new AccountName("anonsteem").getAccountName()));
     }
 
@@ -243,11 +242,11 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetApiByName() throws Exception {
-        final String bogus = steemApiWrapper.getApiByName("bogus_api");
-        final String database = steemApiWrapper.getApiByName("database_api");
-        final String login = steemApiWrapper.getApiByName("login_api");
-        final String market_history = steemApiWrapper.getApiByName("market_history_api");
-        final String follow = steemApiWrapper.getApiByName("follow_api");
+        final Integer bogus = steemApiWrapper.getApiByName("bogus_api");
+        final Integer database = steemApiWrapper.getApiByName("database_api");
+        final Integer login = steemApiWrapper.getApiByName("login_api");
+        final Integer market_history = steemApiWrapper.getApiByName("market_history_api");
+        final Integer follow = steemApiWrapper.getApiByName("follow_api");
 
         assertNull("expect that bogus api does not exist", bogus);
         assertNotNull("expect that database api does exist", database);
@@ -259,9 +258,9 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category(IntegrationTest.class)
     @Test
     public void testGetApiByNameForSecuredApi() throws Exception {
-        final String database = steemApiWrapper.getApiByName("database_api");
-        final String networkBroadcast = steemApiWrapper.getApiByName("network_broadcast_api");
-        final String login = steemApiWrapper.getApiByName("login_api");
+        final Integer database = steemApiWrapper.getApiByName("database_api");
+        final Integer networkBroadcast = steemApiWrapper.getApiByName("network_broadcast_api");
+        final Integer login = steemApiWrapper.getApiByName("login_api");
 
         assertNotNull("expect that network_node api does exist", database);
         assertNotNull("expect that network_broadcast api does exist", networkBroadcast);
@@ -598,7 +597,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetOpenOrders() throws Exception {
-        // As orders are pretty dynamically we just expect that no exception is
+        // TODO: As orders are pretty dynamically we just expect that no exception is
         // thrown.
         steemApiWrapper.getOpenOrders(new AccountName("dez1337"));
     }

@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import eu.bittrade.libs.steemj.base.models.AccountActivity;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ActiveVote;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
@@ -177,7 +176,7 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Get the latest activities of a specific account.
+     * Get all operations performed by the specified account.
      * 
      * @param accountName
      *            The user name of the account.
@@ -199,7 +198,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Map<Integer, AccountActivity> getAccountHistory(String accountName, int from, int limit)
+    public Map<Integer, AppliedOperation> getAccountHistory(String accountName, int from, int limit)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -207,11 +206,11 @@ public class SteemApiWrapper {
         String[] parameters = { accountName, String.valueOf(from), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
-        Map<Integer, AccountActivity> accountActivities = new HashMap<>();
+        Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
 
         for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
             accountActivities.put((Integer) accountActivity[0], communicationHandler.getObjectMapper()
-                    .convertValue(accountActivity[1], new TypeReference<AccountActivity>() {
+                    .convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
                     }));
         }
 
@@ -356,14 +355,14 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public String getApiByName(String apiName) throws SteemCommunicationException {
+    public Integer getApiByName(String apiName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_API_BY_NAME);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
         String[] parameters = { apiName };
         requestObject.setAdditionalParameters(parameters);
 
-        List<String> response = communicationHandler.performRequest(requestObject, String.class);
+        List<Integer> response = communicationHandler.performRequest(requestObject, Integer.class);
         if (!response.isEmpty()) {
             return response.get(0);
         }
