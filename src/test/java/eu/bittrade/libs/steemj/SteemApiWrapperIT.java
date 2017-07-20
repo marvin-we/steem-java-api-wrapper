@@ -183,7 +183,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         boolean foundSelfVote = false;
 
         for (final VoteState vote : activeVotesForArticle) {
-            if (ACCOUNT.equals(vote.getVoter())) {
+            if (ACCOUNT.equals(vote.getVoter().getAccountName())) {
                 foundSelfVote = true;
                 break;
             }
@@ -343,7 +343,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
 
         assertEquals("expect that 5 results are returned", repliesByLastUpdate.size(), 5);
         assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned account", WITNESS_ACCOUNT,
-                repliesByLastUpdate.get(0).getAccount());
+                repliesByLastUpdate.get(0).getAccount().getAccountName());
     }
 
     @Category({ IntegrationTest.class })
@@ -606,8 +606,8 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         assertThat(openOrders.size(), greaterThanOrEqualTo(1));
         assertThat(openOrders.get(0).getCreated().getDateTime(), equalTo("2017-07-20T19:30:27"));
         assertThat(openOrders.get(0).getExpiration().getDateTime(), equalTo("1969-12-31T23:59:59"));
-        assertThat(openOrders.get(0).getDeferredFee(), equalTo(0));
-        assertThat(openOrders.get(0).getForSale(), equalTo(1));
+        assertThat(openOrders.get(0).getDeferredFee(), equalTo(0L));
+        assertThat(openOrders.get(0).getForSale(), equalTo(1L));
         assertThat(openOrders.get(0).getId(), equalTo(675734));
         assertThat(openOrders.get(0).getOrderId(), equalTo(1500579025L));
         assertThat(openOrders.get(0).getSeller(), equalTo(new AccountName(ACCOUNT)));
