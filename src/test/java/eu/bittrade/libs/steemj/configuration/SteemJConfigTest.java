@@ -29,10 +29,14 @@ public class SteemJConfigTest {
         System.setProperty("steemj.key.active", STEEMJ_KEY_ACTIVE);
         System.setProperty("steemj.key.owner", STEEMJ_KEY_OWNER);
         System.setProperty("steemj.key.memo", STEEMJ_KEY_MEMO);
+
+        // As there may have been other tests earlier we need to create a new
+        // SteemJConfig instance so the parameter above will take effect.
+        SteemJConfig.getNewInstance();
     }
 
     @Test
-    public void testSettingsThrougSystemProperties() {
+    public void testSettingsThroughSystemProperties() {
         assertThat(SteemJConfig.getInstance().getUsername(), equalTo(STEEMJ_API_USERNAME));
         assertThat(String.valueOf(SteemJConfig.getInstance().getPassword()), equalTo(STEEMJ_API_PASSWORD));
         assertThat(
