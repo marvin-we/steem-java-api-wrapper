@@ -584,7 +584,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         final OrderBook orderBook = steemApiWrapper.getOrderBook(1);
 
         assertThat(orderBook.getAsks().size(), equalTo(1));
-        assertThat(orderBook.getBids().get(0).getSbd(), greaterThan(1));
+        assertThat(orderBook.getBids().get(0).getSbd(), greaterThan(1L));
     }
 
     @Category({ IntegrationTest.class })
