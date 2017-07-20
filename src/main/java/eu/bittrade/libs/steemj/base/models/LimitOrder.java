@@ -14,16 +14,18 @@ public class LimitOrder {
     private TimePointSec created;
     private TimePointSec expiration;
     private AccountName seller;
-    // TODO: Original type is share_type.
+    // Original type is share_type while a share_type is a int64_t so we use
+    // long here.
     @JsonProperty("for_sale")
-    private int forSale;
+    private long forSale;
     @JsonProperty("orderid")
     private long orderId;
     @JsonProperty("sell_price")
     private Price sellPrice;
-    // TODO: Original type is share_type.
+    // Original type is share_type while a share_type is a int64_t so we use
+    // long here.
     @JsonProperty("deferred_fee")
-    private int deferredFee;
+    private long deferredFee;
 
     /**
      * @return the id
@@ -56,7 +58,7 @@ public class LimitOrder {
     /**
      * @return the forSale
      */
-    public int getForSale() {
+    public long getForSale() {
         return forSale;
     }
 
@@ -77,7 +79,7 @@ public class LimitOrder {
     /**
      * @return the deferred_fee
      */
-    public int getDeferredFee() {
+    public long getDeferredFee() {
         return deferredFee;
     }
 

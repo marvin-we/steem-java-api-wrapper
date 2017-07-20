@@ -112,7 +112,8 @@ public class Account {
     // Original type is uint16, but we have to use int here.
     @JsonProperty("withdraw_routes")
     private int withdrawRoutes;
-    // Original type is vector<share_type>
+    // Original type is vector<share_type> while a share_type is a int64_t so we
+    // use long here.
     @JsonProperty("proxied_vsf_votes")
     private List<Long> proxiedVsfVotes;
     // Original type is uint16, but we have to use int here.

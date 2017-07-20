@@ -15,8 +15,9 @@ public class VoteState {
     private long rshares;
     // Original type is int16_t.
     private short percent;
-    // TODO Original type is share_type.
-    private String reputation;
+    // Original type is share_type while a share_type is a int64_t so we use
+    // long here.
+    private long reputation;
     private TimePointSec time;
 
     public AccountName getVoter() {
@@ -35,14 +36,14 @@ public class VoteState {
         return percent;
     }
 
-    public String getReputation() {
+    public long getReputation() {
         return reputation;
     }
 
     public TimePointSec getTime() {
         return time;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

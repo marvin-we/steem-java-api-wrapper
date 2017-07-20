@@ -15,10 +15,12 @@ public class Order {
     private Price orderPrice;
     @JsonProperty("real_price")
     private double realPrice;
-    // TODO: Original type is share_type.
-    private int steem;
-    // TODO: Original type is share_type.
-    private int sbd;
+    // Original type is share_type while a share_type is a int64_t so we use
+    // long here.
+    private long steem;
+    // Original type is share_type while a share_type is a int64_t so we use
+    // long here.
+    private long sbd;
 
     /**
      * @return the created
@@ -46,14 +48,14 @@ public class Order {
     /**
      * @return the steem
      */
-    public int getSteem() {
+    public long getSteem() {
         return steem;
     }
 
     /**
      * @return the sbd
      */
-    public int getSbd() {
+    public long getSbd() {
         return sbd;
     }
 
