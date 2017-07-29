@@ -1736,48 +1736,4 @@ public class SteemApiWrapper {
 
         return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
     }
-
-    public void setSubscriptionCallback() throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.SET_SUBSCRIBE_CALLBACK);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-
-        Object[] parameters = { 4, true };
-        requestObject.setAdditionalParameters(parameters);
-
-        System.out.println(communicationHandler.performRequest(requestObject, String.class).get(0));
-    }
-
-    public void setBlockAppliedCallback() throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.SET_BLOCK_APPLIED_CALLBACK);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-
-        Object[] parameters = { 4 };
-        requestObject.setAdditionalParameters(parameters);
-
-        System.out.println(communicationHandler.performRequest(requestObject, String.class).get(0));
-    }
-
-    public void setPendingTransactionCallback() throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.SET_PENDING_TRANSACTION_CALLBACK);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-
-        Object[] parameters = { 4 };
-        requestObject.setAdditionalParameters(parameters);
-
-        System.out.println(communicationHandler.performRequest(requestObject, String.class).get(0));
-    }
-
-    public void cancelAllSubscriptions() throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.CANCEL_ALL_SUBSCRIPTIONS);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
-
-        Object[] parameters = { 4, true };
-        requestObject.setAdditionalParameters(parameters);
-
-        System.out.println(communicationHandler.performRequest(requestObject, String.class).get(0));
-    }
 }
