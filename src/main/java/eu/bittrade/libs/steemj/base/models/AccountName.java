@@ -22,6 +22,7 @@ public class AccountName implements ByteTransformable {
      * Create an account name object with an empty account name.
      */
     public AccountName() {
+        this.setAccountName("");
     }
 
     /**
@@ -31,7 +32,7 @@ public class AccountName implements ByteTransformable {
      *            The account name.
      */
     public AccountName(String accountName) {
-        this.accountName = accountName;
+        this.setAccountName(accountName);
     }
 
     /**
@@ -50,8 +51,7 @@ public class AccountName implements ByteTransformable {
      *            The account name.
      */
     public void setAccountName(String accountName) {
-        // TODO: ToLowerCase
-        this.accountName = accountName;
+        this.accountName = accountName.toLowerCase();
     }
 
     @Override
