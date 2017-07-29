@@ -4,10 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -16,7 +14,6 @@ import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -26,8 +23,6 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommentOperationIT extends BaseIntegrationTest {
-    private static final Charset ORIGINAL_CHARSET_BEFORE_TEST = SteemJConfig.getInstance().getEncodingCharset();
-
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5688416;
     private static final int TRANSACTION_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
@@ -74,8 +69,6 @@ public class CommentOperationIT extends BaseIntegrationTest {
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
-
-        SteemJConfig.getInstance().setEncodingCharset(Charset.forName("UTF-8"));
 
         CommentOperation commentOperation = new CommentOperation();
         commentOperation.setAuthor(new AccountName("dez1337"));
@@ -132,10 +125,5 @@ public class CommentOperationIT extends BaseIntegrationTest {
     @Test
     public void getTransactionHex() throws Exception {
         assertThat(steemApiWrapper.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
-    }
-
-    @After
-    public void cleanUp() {
-        SteemJConfig.getInstance().setEncodingCharset(ORIGINAL_CHARSET_BEFORE_TEST);
     }
 }

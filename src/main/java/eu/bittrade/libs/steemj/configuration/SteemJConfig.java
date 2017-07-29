@@ -62,7 +62,7 @@ public class SteemJConfig {
         this.sslVerificationDisabled = false;
         this.maximumExpirationDateOffset = 3600000L;
         this.timeZoneId = "GMT";
-        this.encodingCharset = StandardCharsets.US_ASCII;
+        this.encodingCharset = StandardCharsets.UTF_8;
 
         this.privateKeys = new EnumMap<>(PrivateKeyType.class);
         for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {

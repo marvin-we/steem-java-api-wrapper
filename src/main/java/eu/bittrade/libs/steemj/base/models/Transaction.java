@@ -65,7 +65,7 @@ public class Transaction implements ByteTransformable, Serializable {
     @JsonProperty("ref_block_prefix")
     private long refBlockPrefix;
     @JsonProperty("expiration")
-    private TimePointSec expirationDate;
+    private transient TimePointSec expirationDate;
     private transient List<Operation> operations;
     protected transient List<String> signatures;
     // Original type is "extension_type" which is an array of "future_extions".
