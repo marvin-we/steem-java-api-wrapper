@@ -50,6 +50,7 @@ public class AccountName implements ByteTransformable {
      *            The account name.
      */
     public void setAccountName(String accountName) {
+        // TODO: ToLowerCase
         this.accountName = accountName;
     }
 

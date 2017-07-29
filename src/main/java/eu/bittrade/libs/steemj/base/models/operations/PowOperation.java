@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.math.BigInteger;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -37,7 +39,7 @@ public class PowOperation extends Operation {
         // Define the required key type for this operation.
         super(PrivateKeyType.ACTIVE);
         // Set default values:
-        this.setNonce(0);
+        this.setNonce(BigInteger.valueOf(0));
     }
 
     /**
@@ -73,16 +75,16 @@ public class PowOperation extends Operation {
     /**
      * @return the nonce
      */
-    public long getNonce() {
-        return nonce;
+    public BigInteger getNonce() {
+        return new BigInteger(Long.toUnsignedString(this.nonce));
     }
-
+    
     /**
      * @param nonce
      *            the nonce to set
      */
-    public void setNonce(long nonce) {
-        this.nonce = nonce;
+    public void setNonce(BigInteger nonce) {
+        this.nonce = Long.parseUnsignedLong(nonce.toString());
     }
 
     /**
