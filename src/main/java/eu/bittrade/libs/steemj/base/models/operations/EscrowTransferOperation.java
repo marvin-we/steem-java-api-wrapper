@@ -65,20 +65,19 @@ public class EscrowTransferOperation extends Operation {
      * the 'escrow_id' is defined by the sender.
      */
     public EscrowTransferOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Apply default values:
         this.setEscrowId(30);
 
-        Asset sbdAmount = new Asset();
-        sbdAmount.setAmount(0);
-        sbdAmount.setSymbol(AssetSymbolType.SBD);
-        this.setSbdAmount(sbdAmount);
+        Asset initialSbdAmount = new Asset();
+        initialSbdAmount.setAmount(0);
+        initialSbdAmount.setSymbol(AssetSymbolType.SBD);
+        this.setSbdAmount(initialSbdAmount);
 
-        Asset steemAmount = new Asset();
-        steemAmount.setAmount(0);
-        steemAmount.setSymbol(AssetSymbolType.STEEM);
-        this.setSbdAmount(steemAmount);
+        Asset initialSteemAmount = new Asset();
+        initialSteemAmount.setAmount(0);
+        initialSteemAmount.setSymbol(AssetSymbolType.STEEM);
+        this.setSbdAmount(initialSteemAmount);
     }
 
     /**
@@ -93,13 +92,17 @@ public class EscrowTransferOperation extends Operation {
 
     /**
      * Set the account who wants to transfer the fund to the {@link #to to}
-     * account.
+     * account. <b>Notice:</b> The private active key of this account needs to
+     * be stored in the key storage.
      * 
      * @param from
      *            The account who wants to transfer the fund.
      */
     public void setFrom(AccountName from) {
         this.from = from;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(from, PrivateKeyType.ACTIVE);
     }
 
     /**

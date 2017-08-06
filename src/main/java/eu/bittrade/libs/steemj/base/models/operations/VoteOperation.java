@@ -35,8 +35,7 @@ public class VoteOperation extends Operation {
      * Create a new vote operation to vote for a comment or a post.
      */
     public VoteOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
         // Set default values:
         try {
             this.setWeight((short) 0);
@@ -82,13 +81,18 @@ public class VoteOperation extends Operation {
     }
 
     /**
-     * Set the account name that should perform the vote.
+     * Set the account name that should perform the vote. <b>Notice:</b> The
+     * private posting key of this account needs to be stored in the key
+     * storage.
      * 
      * @param voter
      *            The account name that should perform the vote.
      */
     public void setVoter(AccountName voter) {
         this.voter = voter;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(voter, PrivateKeyType.POSTING);
     }
 
     /**

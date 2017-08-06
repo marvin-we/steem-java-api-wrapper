@@ -16,6 +16,13 @@ public class CommentPayoutUpdateOperation extends Operation {
     private String permlink;
 
     /**
+     * Create a new comment payout update operation.
+     */
+    public CommentPayoutUpdateOperation() {
+        super(true);
+    }
+
+    /**
      * @return the author
      */
     public AccountName getAuthor() {

@@ -20,6 +20,13 @@ public class ReturnVestingDelegationOperation extends Operation {
     private Asset vestingShares;
 
     /**
+     * Create a new return vesting delegation operation.
+     */
+    public ReturnVestingDelegationOperation() {
+        super(true);
+    }
+
+    /**
      * @return the account
      */
     public AccountName getAccount() {

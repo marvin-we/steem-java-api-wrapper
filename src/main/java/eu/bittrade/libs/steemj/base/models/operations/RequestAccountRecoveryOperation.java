@@ -64,8 +64,7 @@ public class RequestAccountRecoveryOperation extends Operation {
      * RecoverAccountOperation}.
      */
     public RequestAccountRecoveryOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -84,13 +83,17 @@ public class RequestAccountRecoveryOperation extends Operation {
      * account by using the
      * {@link eu.bittrade.libs.steemj.SteemApiWrapper#getAccounts(List)
      * getAccounts(List)} method when passing the {@link #accountToRecover
-     * accountToRecover}.
+     * accountToRecover}. <b>Notice:</b> The private active key of this account
+     * needs to be stored in the key storage.
      * 
      * @param recoveryAccount
      *            The recovery account.
      */
     public void setRecoveryAccount(AccountName recoveryAccount) {
         this.recoveryAccount = recoveryAccount;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(recoveryAccount, PrivateKeyType.ACTIVE);
     }
 
     /**

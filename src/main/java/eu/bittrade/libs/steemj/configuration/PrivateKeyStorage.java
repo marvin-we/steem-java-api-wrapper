@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.util;
+package eu.bittrade.libs.steemj.configuration;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class PrivateKeyStorage {
-    private HashMap<AccountName, List<ImmutablePair<PrivateKeyType, ECKey>>> privateKeysPerAccounts;
+    private HashMap<AccountName, List<ImmutablePair<PrivateKeyType, ECKey>>> privateKeysPerAccounts = new HashMap<>();
 
     /**
      * Get a private key of the given private key type for the given account
@@ -63,8 +63,10 @@ public class PrivateKeyStorage {
     }
 
     /**
-     * Add a new account and a list of its private keys to the key storage.
-     * Please provide the private key in its WIF representation.
+     * Add a new account and a list of its private keys to the key storage. This
+     * methods expects a List of Pairs while each Pair consists of the private
+     * key type and the convenient private key in its WIF representation (e.g.
+     * "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3").
      * 
      * @param accountName
      *            The account to be added to the key storage.
@@ -79,8 +81,12 @@ public class PrivateKeyStorage {
     }
 
     /**
-     * Add a private key to an already existing account. Please provide the
-     * private key in its WIF representation.
+     * 
+     * Add a private key to an already existing account. This methods expects a
+     * List of Pairs while each Pair consists of the private key type and the
+     * convenient private key in its WIF representation (e.g.
+     * "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3").
+     * 
      * 
      * <p>
      * Example:
@@ -88,7 +94,7 @@ public class PrivateKeyStorage {
      * 
      * <p>
      * addPrivateKeyToAccount(new AccountName("dez1337"), new
-     * ImmutablePair<PrivateKeyType, String>(PrivateKeyType.OWNER,
+     * ImmutablePair&lt;PrivateKeyType, String&gt;(PrivateKeyType.OWNER,
      * "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3");
      * </p>
      * 

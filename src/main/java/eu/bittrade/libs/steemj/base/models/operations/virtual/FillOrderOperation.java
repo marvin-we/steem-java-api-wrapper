@@ -34,6 +34,13 @@ public class FillOrderOperation extends Operation {
     private Asset openPays;
 
     /**
+     * Create a new fill order operation.
+     */
+    public FillOrderOperation() {
+        super(true);
+    }
+    
+    /**
      * 
      * @return
      */

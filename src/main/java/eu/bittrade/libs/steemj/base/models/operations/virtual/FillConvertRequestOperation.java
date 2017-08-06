@@ -29,6 +29,13 @@ public class FillConvertRequestOperation extends Operation {
     private Asset amountOut;
 
     /**
+     * Create a new fill convert request operation.
+     */
+    public FillConvertRequestOperation() {
+        super(true);
+    }
+    
+    /**
      * Get the owner of this conversion request.
      * 
      * @return The owner as an AccountName instance.

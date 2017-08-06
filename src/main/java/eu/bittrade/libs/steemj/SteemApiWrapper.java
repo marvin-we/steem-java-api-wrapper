@@ -86,10 +86,10 @@ public class SteemApiWrapper {
         this.communicationHandler = new CommunicationHandler();
 
         if (!("").equals(String.valueOf(SteemJConfig.getInstance().getPassword()))
-                && !("").equals(SteemJConfig.getInstance().getUsername())) {
+                && !SteemJConfig.getInstance().getAccountName().isEmpty()) {
 
             LOGGER.info("Calling the login method with the prodvided credentials before checking the available apis.");
-            if (login(SteemJConfig.getInstance().getUsername(),
+            if (login(SteemJConfig.getInstance().getAccountName(),
                     String.valueOf(SteemJConfig.getInstance().getPassword()))) {
                 LOGGER.info("You have been logged in.");
             } else {
@@ -98,7 +98,7 @@ public class SteemApiWrapper {
         } else {
             LOGGER.info(
                     "No credentials have been provided. The following check of available apis will be done as a anonymous user.");
-            login("", "");
+            login(new AccountName(""), "");
         }
 
         // Check all known apis
@@ -808,8 +808,7 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<LiquidityBalance> getLiquidityQueue(String accoutName, int limit)
-            throws SteemCommunicationException {
+    public List<LiquidityBalance> getLiquidityQueue(String accoutName, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_LIQUIDITY_QUEUE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1284,7 +1283,7 @@ public class SteemApiWrapper {
      *             </ul>
      */
     public Boolean login() throws SteemCommunicationException {
-        return login(SteemJConfig.getInstance().getUsername(),
+        return login(SteemJConfig.getInstance().getAccountName(),
                 String.valueOf(SteemJConfig.getInstance().getPassword()));
     }
 
@@ -1296,8 +1295,8 @@ public class SteemApiWrapper {
      * For some apis like the broadcast_api a call of this method with empty
      * strings can be enough to access them.
      * 
-     * @param username
-     *            The user name.
+     * @param accountName
+     *            The username used to login.
      * @param password
      *            The password.
      * @return true if the login was successful. False otherwise.
@@ -1313,11 +1312,11 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Boolean login(String username, String password) throws SteemCommunicationException {
+    public Boolean login(AccountName accountName, String password) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOGIN);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = { username, password };
+        String[] parameters = { accountName.getAccountName(), password };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Boolean.class).get(0);

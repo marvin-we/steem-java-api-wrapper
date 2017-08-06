@@ -36,8 +36,7 @@ public class PowOperation extends Operation {
      * Create a mew pow operation.
      */
     public PowOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values:
         this.setNonce(BigInteger.valueOf(0));
     }
@@ -50,11 +49,17 @@ public class PowOperation extends Operation {
     }
 
     /**
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
+     * 
      * @param workerAccount
      *            the workerAccount to set
      */
     public void setWorkerAccount(AccountName workerAccount) {
         this.workerAccount = workerAccount;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(workerAccount, PrivateKeyType.ACTIVE);
     }
 
     /**
@@ -78,7 +83,7 @@ public class PowOperation extends Operation {
     public BigInteger getNonce() {
         return new BigInteger(Long.toUnsignedString(this.nonce));
     }
-    
+
     /**
      * @param nonce
      *            the nonce to set

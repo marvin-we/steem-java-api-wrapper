@@ -25,6 +25,13 @@ public class FillTransferFromSavingsOperation extends Operation {
     private String memo;
 
     /**
+     * Create a new fill transfer from savings operation.
+     */
+    public FillTransferFromSavingsOperation() {
+        super(true);
+    }
+
+    /**
      * @return the from
      */
     public AccountName getFrom() {

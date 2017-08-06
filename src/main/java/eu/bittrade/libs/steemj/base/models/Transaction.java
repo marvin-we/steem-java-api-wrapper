@@ -3,11 +3,13 @@ package eu.bittrade.libs.steemj.base.models;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.InvalidParameterException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.ECKey;
@@ -266,29 +268,37 @@ public class Transaction implements ByteTransformable, Serializable {
             throw new SteemInvalidTransactionException("The refBlockPrefix field needs to be set.");
         }
 
+        // Create a local list containing all required key types per account.
+        List<ECKey> requiredPrivateKeys = new ArrayList<>();
+
         // Check which keys are required for the attached operations to
-        // avoid an "irrelevant signature included\nUnnecessary signature(s)
+        // avoid an "irrelevant signature included / Unnecessary signature(s)
         // detected" error.
-        List<PrivateKeyType> requiredPrivateKeyTypes = new ArrayList<>();
         for (Operation operation : this.operations) {
             // Skip validation for Operations that do not need a specific
             // private key type.
-            if (operation.getRequiredPrivateKeyType() == null) {
+            if (operation.getRequiredPrivateKeyTypes() == null || operation.getRequiredPrivateKeyTypes().isEmpty()) {
                 continue;
             }
 
-            if (!requiredPrivateKeyTypes.contains(operation.getRequiredPrivateKeyType())) {
-                if (SteemJConfig.getInstance().getPrivateKey(operation.getRequiredPrivateKeyType()) == null) {
-                    throw new SteemInvalidTransactionException("The operation of type "
-                            + operation.getClass().getSimpleName() + " requires a private key of type "
-                            + operation.getRequiredPrivateKeyType().toString() + ".");
+            // Check if the requested keys are present.
+            for (ImmutablePair<AccountName, PrivateKeyType> privateKeyType : operation.getRequiredPrivateKeyTypes()) {
+                try {
+                    ECKey privateKey = SteemJConfig.getInstance().getPrivateKeyStorage()
+                            .getKeyForAccount(privateKeyType.getRight(), privateKeyType.getLeft());
+                    if (!requiredPrivateKeys.contains(privateKey)) {
+                        requiredPrivateKeys.add(privateKey);
+                    }
+                } catch (InvalidParameterException ipe) {
+                    throw new SteemInvalidTransactionException(
+                            "The operation of type " + operation.getClass().getSimpleName()
+                                    + " requires a private key of type " + privateKeyType.getRight() + " for the user "
+                                    + privateKeyType.getLeft().getAccountName() + ".");
                 }
-                requiredPrivateKeyTypes.add(operation.getRequiredPrivateKeyType());
             }
         }
 
-        for (PrivateKeyType requiredKeyType : requiredPrivateKeyTypes) {
-            ECKey privateKey = SteemJConfig.getInstance().getPrivateKey(requiredKeyType);
+        for (ECKey requiredPrivateKey : requiredPrivateKeys) {
             boolean isCanonical = false;
             byte[] signedTransaction = null;
 
@@ -300,7 +310,7 @@ public class Transaction implements ByteTransformable, Serializable {
                     throw new SteemInvalidTransactionException(
                             "The required encoding is not supported by your platform.", e);
                 }
-                ECDSASignature signature = privateKey.sign(messageAsHash);
+                ECDSASignature signature = requiredPrivateKey.sign(messageAsHash);
 
                 /*
                  * Identify the correct key type (posting, active, owner, memo)
@@ -310,8 +320,8 @@ public class Transaction implements ByteTransformable, Serializable {
                 Integer recId = null;
                 for (int i = 0; i < 4; i++) {
                     ECKey publicKey = ECKey.recoverFromSignature(i, signature, messageAsHash,
-                            privateKey.isCompressed());
-                    if (publicKey != null && publicKey.getPubKeyPoint().equals(privateKey.getPubKeyPoint())) {
+                            requiredPrivateKey.isCompressed());
+                    if (publicKey != null && publicKey.getPubKeyPoint().equals(requiredPrivateKey.getPubKeyPoint())) {
                         recId = i;
                         break;
                     }
@@ -322,7 +332,7 @@ public class Transaction implements ByteTransformable, Serializable {
                             "Could not construct a recoverable key. This should never happen.");
                 }
 
-                int headerByte = recId + 27 + (privateKey.isCompressed() ? 4 : 0);
+                int headerByte = recId + 27 + (requiredPrivateKey.isCompressed() ? 4 : 0);
                 signedTransaction = new byte[65];
                 signedTransaction[0] = (byte) headerByte;
                 System.arraycopy(Utils.bigIntegerToBytes(signature.r, 32), 0, signedTransaction, 1, 32);

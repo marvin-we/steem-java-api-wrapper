@@ -39,7 +39,7 @@ public class CommentOperation extends Operation {
      */
     public CommentOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
     }
 
     /**
@@ -53,12 +53,17 @@ public class CommentOperation extends Operation {
 
     /**
      * Set the author of the parent article you want to comment on.
+     * <b>Notice:</b> The private posting key of this account needs to be stored
+     * in the key storage.
      * 
      * @param parentAuthor
      *            The author of the parent article you want to comment on.
      */
     public void setParentAuthor(AccountName parentAuthor) {
         this.parentAuthor = parentAuthor;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(parentAuthor, PrivateKeyType.POSTING);
     }
 
     /**

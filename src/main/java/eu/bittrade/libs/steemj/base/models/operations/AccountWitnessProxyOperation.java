@@ -29,8 +29,7 @@ public class AccountWitnessProxyOperation extends Operation {
      * to allow {@link #account account} to vote for a witness on your behalf.
      */
     public AccountWitnessProxyOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -43,13 +42,18 @@ public class AccountWitnessProxyOperation extends Operation {
     }
 
     /**
-     * Set the account for which a witness proxy should be set.
+     * Set the account for which a witness proxy should be set. <b>Notice:</b>
+     * The private active key of this account needs to be stored in the key
+     * storage.
      * 
      * @param account
      *            The account for which a witness proxy should be set.
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.ACTIVE);
     }
 
     /**

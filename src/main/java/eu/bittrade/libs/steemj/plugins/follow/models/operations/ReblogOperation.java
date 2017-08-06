@@ -29,8 +29,7 @@ public class ReblogOperation extends Operation {
      * CustomJsonOperation] instead.}
      */
     public ReblogOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
     }
 
     /**
@@ -41,11 +40,18 @@ public class ReblogOperation extends Operation {
     }
 
     /**
+     * Define the account whose want to reblog the post. <b>Notice:</b> The
+     * private posting key of this account needs to be stored in the key
+     * storage.
+     * 
      * @param account
-     *            the account to set
+     *            The account who wants to reblog the post.
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.POSTING);
     }
 
     /**
@@ -64,15 +70,21 @@ public class ReblogOperation extends Operation {
     }
 
     /**
-     * @return the permlink
+     * Get the permanent link of the post or comment that has been resteemed.
+     *
+     * @return The permanent link of the post or comment that has been
+     *         resteemed.
      */
     public String getPermlink() {
         return permlink;
     }
 
     /**
+     * Set the permanent link of the post or comment that should be resteemed.
+     * 
      * @param permlink
-     *            the permlink to set
+     *            The permanent link of the post or comment that should be
+     *            resteened.
      */
     public void setPermlink(String permlink) {
         this.permlink = permlink;

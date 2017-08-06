@@ -39,8 +39,7 @@ public class AccountUpdateOperation extends Operation {
      * update the keys of an existing account.
      */
     public AccountUpdateOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.OWNER);
+        super(false);
     }
 
     /**
@@ -53,13 +52,18 @@ public class AccountUpdateOperation extends Operation {
     }
 
     /**
-     * Set the account name of the account that has been changed.
+     * Set the account name of the account that has been changed. <b>Notice:</b>
+     * The private owner key of this account needs to be stored in the key
+     * storage.
      * 
      * @param account
      *            The account name of the account to change.
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.OWNER);
     }
 
     /**
@@ -105,9 +109,8 @@ public class AccountUpdateOperation extends Operation {
     }
 
     /**
-     * Get the posting
-     * {@link eu.bittrade.libs.steemj.base.models.Authority Authority} of
-     * the {@link #account account}.
+     * Get the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #account account}.
      * 
      * @return The posting authority.
      */
@@ -116,9 +119,8 @@ public class AccountUpdateOperation extends Operation {
     }
 
     /**
-     * Set the posting
-     * {@link eu.bittrade.libs.steemj.base.models.Authority Authority} of
-     * the {@link #account account}.
+     * Set the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #account account}.
      * 
      * @param posting
      *            The posting authority.

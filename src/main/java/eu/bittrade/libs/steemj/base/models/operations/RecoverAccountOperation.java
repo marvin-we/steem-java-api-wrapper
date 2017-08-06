@@ -77,7 +77,7 @@ public class RecoverAccountOperation extends Operation {
      */
     public RecoverAccountOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.OWNER);
+        super(false);
     }
 
     /**
@@ -90,13 +90,18 @@ public class RecoverAccountOperation extends Operation {
     }
 
     /**
-     * Set the account to recover.
+     * Set the account to recover. <b>Notice:</b> The private owner key of this
+     * account needs to be stored in the key storage.
+     * 
      * 
      * @param accountToRecover
      *            The account to recover.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
         this.accountToRecover = accountToRecover;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(accountToRecover, PrivateKeyType.OWNER);
     }
 
     /**

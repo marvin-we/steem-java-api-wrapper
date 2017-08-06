@@ -34,8 +34,7 @@ public class TransferOperation extends Operation {
      * from one account to another.
      */
     public TransferOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -48,13 +47,17 @@ public class TransferOperation extends Operation {
     }
 
     /**
-     * Set the user who sends the asset.
+     * Set the user who sends the asset. <b>Notice:</b> The private active key
+     * of this account needs to be stored in the key storage.
      * 
      * @param from
-     *            the user who sends the asset.
+     *            The user who sends the asset.
      */
     public void setFrom(AccountName from) {
         this.from = from;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(from, PrivateKeyType.ACTIVE);
     }
 
     /**

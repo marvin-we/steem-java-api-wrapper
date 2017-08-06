@@ -32,7 +32,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * Create a new and empty claim reward balance operation.
      */
     public ClaimRewardBalanceOperation() {
-        super(PrivateKeyType.POSTING);
+        super(false);
     }
 
     /**
@@ -45,13 +45,18 @@ public class ClaimRewardBalanceOperation extends Operation {
     }
 
     /**
-     * Set the account the reward should be collected for.
+     * Set the account the reward should be collected for. <b>Notice:</b> The
+     * private posting key of this account needs to be stored in the key
+     * storage.
      * 
      * @param account
      *            The account name.
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.POSTING);
     }
 
     /**

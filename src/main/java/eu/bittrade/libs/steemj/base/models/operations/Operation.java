@@ -1,12 +1,17 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
@@ -94,38 +99,79 @@ import eu.bittrade.libs.steemj.plugins.follow.models.operations.ReblogOperation;
         @Type(value = FollowOperation.class, name = "follow_operation") })
 public abstract class Operation implements ByteTransformable {
     /**
-     * This field contains the private key type that is required for this
-     * specific operation.
+     * This field contains the private key types required for this specific
+     * operation.
      */
     @JsonIgnore
-    protected PrivateKeyType requiredPrivateKeyType;
+    protected List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeyTypes = new ArrayList<>();
+    /**
+     * This field is used to store the operation type.
+     */
+    @JsonIgnore
+    private boolean virtual;
 
     /**
-     * Constructor used to hide the public one and also to force the sub classes
-     * to define the required private key type.
+     * Create a new Operation object by providing the operation type.
+     */
+    protected Operation(boolean virtual) {
+        this.virtual = virtual;
+    }
+
+    /**
+     * Define the required private key types required to sign this operation.
+     * 
+     * @param requiredPrivateKeyTypes
+     *            A list of private key types.
+     */
+    protected void setRequiredPrivateKeyTypes(
+            List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeyTypes) {
+        this.requiredPrivateKeyTypes = requiredPrivateKeyTypes;
+    }
+
+    /**
+     * Get the list of required private key types to sign the transaction with.
+     * 
+     * @return The required private key types for this operation.
+     */
+    public List<ImmutablePair<AccountName, PrivateKeyType>> getRequiredPrivateKeyTypes() {
+        return requiredPrivateKeyTypes;
+    }
+
+    /**
+     * Returns {@code true} if, and only if, the operation is a virtual
+     * operation.
+     *
+     * @return {@code true} if the operation is a virtual operation, otherwise
+     *         {@code false}
+     */
+    public boolean isVirtual() {
+        return virtual;
+    }
+
+    /**
+     * Override the current list of required private key types with a new single
+     * value.
+     * 
+     * @param accountName
+     *            The account name whose private key is required.
+     * @param privateKeyType
+     *            The type of the required private key.
+     */
+    protected void addRequiredPrivateKeyType(AccountName accountName, PrivateKeyType privateKeyType) {
+        // Reset the existing list.
+        requiredPrivateKeyTypes = new ArrayList<>();
+        // And add a new value.
+        requiredPrivateKeyTypes.add(new ImmutablePair<>(accountName, privateKeyType));
+        this.setRequiredPrivateKeyTypes(requiredPrivateKeyTypes);
+    }
+
+    /**
+     * TODO
      * 
      * @param requiredPrivateKeyType
-     *            The required private key type for this operation.
      */
-    protected Operation(PrivateKeyType requiredPrivateKeyType) {
-        this.requiredPrivateKeyType = requiredPrivateKeyType;
-    }
-
-    /**
-     * Default constructor which will not set the required private key type.
-     * This constructor should only be used for virtual operations.
-     */
-    protected Operation() {
-
-    }
-
-    /**
-     * Get the private key type that is required for this operation.
-     * 
-     * @return The required private key type for this operation.
-     */
-    public PrivateKeyType getRequiredPrivateKeyType() {
-        return requiredPrivateKeyType;
+    protected void addRequiredPrivateKeyType(List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeyType) {
+        // TODO
     }
 
     @Override

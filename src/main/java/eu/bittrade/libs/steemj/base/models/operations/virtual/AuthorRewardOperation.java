@@ -30,6 +30,13 @@ public class AuthorRewardOperation extends Operation {
     private Asset vestingPayout;
 
     /**
+     * Create a new author reward operation.
+     */
+    public AuthorRewardOperation() {
+        super(true);
+    }
+
+    /**
      * Get the author who received this reward.
      * 
      * @return The author who received the reward.

@@ -34,8 +34,7 @@ public class AccountWitnessVoteOperation extends Operation {
      * If a proxy is specified then all existing votes are removed.
      */
     public AccountWitnessVoteOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values:
         this.setApprove(true);
     }
@@ -50,13 +49,17 @@ public class AccountWitnessVoteOperation extends Operation {
     }
 
     /**
-     * Set the account name that should perform the vote.
+     * Set the account name that should perform the vote. <b>Notice:</b> The
+     * private active key of this account needs to be stored in the key storage.
      * 
      * @param account
      *            The account name that should perform the vote.
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.ACTIVE);
     }
 
     /**

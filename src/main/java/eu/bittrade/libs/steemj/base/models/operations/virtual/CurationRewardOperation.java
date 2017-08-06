@@ -28,6 +28,13 @@ public class CurationRewardOperation extends Operation {
     private String commentPermlink;
 
     /**
+     * Create a new curation reward operation.
+     */
+    public CurationRewardOperation() {
+        super(true);
+    }
+
+    /**
      * Get the person that receives the reward.
      * 
      * @return The person that receives the reward.

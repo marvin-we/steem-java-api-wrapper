@@ -19,6 +19,13 @@ public class CommentBenefactorRewardOperation extends Operation {
     private Asset reward;
 
     /**
+     * Create a new comment benefactor reward operation.
+     */
+    public CommentBenefactorRewardOperation() {
+        super(true);
+    }
+
+    /**
      * @return the benefactor
      */
     public AccountName getBenefactor() {

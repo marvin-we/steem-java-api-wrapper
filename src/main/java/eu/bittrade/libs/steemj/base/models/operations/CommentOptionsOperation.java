@@ -55,7 +55,7 @@ public class CommentOptionsOperation extends Operation {
      */
     public CommentOptionsOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
         // Set default values:
         Asset maxAcceptedPayout = new Asset();
         maxAcceptedPayout.setAmount(1000000000);
@@ -76,13 +76,17 @@ public class CommentOptionsOperation extends Operation {
     }
 
     /**
-     * Set the author of the comment.
+     * Set the author of the comment. <b>Notice:</b> The private posting key of
+     * this account needs to be stored in the key storage.
      * 
      * @param author
      *            The account name of the author.
      */
     public void setAuthor(AccountName author) {
         this.author = author;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(author, PrivateKeyType.POSTING);
     }
 
     /**

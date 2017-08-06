@@ -30,7 +30,7 @@ public class DeleteCommentOperation extends Operation {
      */
     public DeleteCommentOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
     }
 
     /**
@@ -44,6 +44,8 @@ public class DeleteCommentOperation extends Operation {
 
     /**
      * Set the account name of the author whose comment should be deleted.
+     * <b>Notice:</b> The private posting key of this account needs to be stored
+     * in the key storage.
      * 
      * @param author
      *            The account name of the author whose comment should be
@@ -51,6 +53,9 @@ public class DeleteCommentOperation extends Operation {
      */
     public void setAuthor(AccountName author) {
         this.author = author;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(author, PrivateKeyType.POSTING);
     }
 
     /**

@@ -20,6 +20,13 @@ public class HardforkOperation extends Operation {
     private long hardforkId;
 
     /**
+     * Create a new hardfork operation.
+     */
+    public HardforkOperation() {
+        super(true);
+    }
+    
+    /**
      * Get the hardfork id.
      * 
      * @return The hardfork Id.

@@ -7,6 +7,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 
@@ -14,7 +15,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemJConfigTest {
-    private static final String STEEMJ_API_USERNAME = "dez1337";
+    private static final String STEEMJ_API_ACCOUNTNAME = "dez1337";
     private static final String STEEMJ_API_PASSWORD = "test1234";
     private static final String STEEMJ_KEY_POSTING = "5JpbHHrEkoLsxNcddo5YaTgtmgDegTcjk8i7BDPiTbMefrPnjWK";
     private static final String STEEMJ_KEY_ACTIVE = "5J6a9B9H1rBC9XsxHUrv9Eu98cG4MaZPuaMk6LBfMSDGyk5SoiP";
@@ -23,7 +24,7 @@ public class SteemJConfigTest {
 
     @BeforeClass
     public static void setUp() {
-        System.setProperty("steemj.api.username", STEEMJ_API_USERNAME);
+        System.setProperty("steemj.api.accountName", STEEMJ_API_ACCOUNTNAME);
         System.setProperty("steemj.api.password", STEEMJ_API_PASSWORD);
         System.setProperty("steemj.key.posting", STEEMJ_KEY_POSTING);
         System.setProperty("steemj.key.active", STEEMJ_KEY_ACTIVE);
@@ -37,23 +38,23 @@ public class SteemJConfigTest {
 
     @Test
     public void testSettingsThroughSystemProperties() {
-        assertThat(SteemJConfig.getInstance().getUsername(), equalTo(STEEMJ_API_USERNAME));
-        assertThat(String.valueOf(SteemJConfig.getInstance().getPassword()), equalTo(STEEMJ_API_PASSWORD));
-        assertThat(
-                SteemJConfig.getInstance().getPrivateKey(PrivateKeyType.POSTING).decompress()
-                        .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
+        final AccountName accountName = SteemJConfig.getInstance().getAccountName();
+        assertThat(accountName, equalTo(new AccountName(STEEMJ_API_ACCOUNTNAME)));
+        assertThat(String.valueOf(SteemJConfig.getInstance().getPassword()),
+                equalTo(STEEMJ_API_PASSWORD));
+        assertThat(SteemJConfig.getInstance().getPrivateKeyStorage()
+                .getKeyForAccount(PrivateKeyType.POSTING, accountName).decompress()
+                .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
                 equalTo(STEEMJ_KEY_POSTING));
-        assertThat(
-                SteemJConfig.getInstance().getPrivateKey(PrivateKeyType.ACTIVE).decompress()
-                        .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
+        assertThat(SteemJConfig.getInstance().getPrivateKeyStorage()
+                .getKeyForAccount(PrivateKeyType.ACTIVE, accountName).decompress()
+                .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
                 equalTo(STEEMJ_KEY_ACTIVE));
-        assertThat(
-                SteemJConfig.getInstance().getPrivateKey(PrivateKeyType.OWNER).decompress()
-                        .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
+        assertThat(SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.OWNER, accountName)
+                .decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
                 equalTo(STEEMJ_KEY_OWNER));
-        assertThat(
-                SteemJConfig.getInstance().getPrivateKey(PrivateKeyType.MEMO).decompress()
-                        .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
+        assertThat(SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.MEMO, accountName)
+                .decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
                 equalTo(STEEMJ_KEY_MEMO));
     }
 }

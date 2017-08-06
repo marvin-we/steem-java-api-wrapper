@@ -40,8 +40,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      * vests to steem and back, guaranteeing they maintain their value.
      */
     public SetWithdrawVestingRouteOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values:
         this.setPercent(0);
         this.setAutoVest(false);
@@ -59,13 +58,17 @@ public class SetWithdrawVestingRouteOperation extends Operation {
 
     /**
      * Set the account whose funds will be transfered to the {@link #toAccount
-     * toAccount}.
+     * toAccount}. <b>Notice:</b> The private active key of this account needs
+     * to be stored in the key storage.
      * 
      * @param fromAccount
      *            The account whose funds will be transfered.
      */
     public void setFromAccount(AccountName fromAccount) {
         this.fromAccount = fromAccount;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(fromAccount, PrivateKeyType.ACTIVE);
     }
 
     /**

@@ -41,7 +41,7 @@ public class ReportOverProductionOperation extends Operation {
      * of the block producer to the reporter.
      */
     public ReportOverProductionOperation() {
-        super(null);
+        super(false);
     }
 
     /**

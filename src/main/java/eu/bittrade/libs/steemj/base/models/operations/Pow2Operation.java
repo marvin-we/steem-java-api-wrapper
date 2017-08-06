@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -25,8 +24,7 @@ public class Pow2Operation extends Operation {
     private ChainProperties properties;
 
     public Pow2Operation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
     }
 
     /**

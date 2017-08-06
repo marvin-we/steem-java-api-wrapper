@@ -51,7 +51,7 @@ public class PublicKey implements ByteTransformable {
      *             If the input is not base 58 or the checksum does not
      *             validate.
      */
-    public PublicKey(String address) throws AddressFormatException {
+    public PublicKey(String address) {
         // As this method is also used for parsing different operations where
         // the field could be empty we sadly have to handle "null" cases here.
         if (address != null && !"".equals(address)) {
@@ -63,11 +63,11 @@ public class PublicKey implements ByteTransformable {
             // As sha256 is used for Bitcoin and ripemd160 for Steem, we can't
             // use Bitcoinjs Base58.decodeChecked here and have to do all stuff
             // on our own.
-            byte[] publicKey = Arrays.copyOfRange(decodedAddress, 0, decodedAddress.length - CHECKSUM_BYTES);
+            byte[] potentialPublicKey = Arrays.copyOfRange(decodedAddress, 0, decodedAddress.length - CHECKSUM_BYTES);
             byte[] expectedChecksum = Arrays.copyOfRange(decodedAddress, decodedAddress.length - CHECKSUM_BYTES,
                     decodedAddress.length);
 
-            byte[] actualChecksum = calculateChecksum(publicKey);
+            byte[] actualChecksum = calculateChecksum(potentialPublicKey);
 
             // And compare them.
             for (int i = 0; i < expectedChecksum.length; i++) {
@@ -76,7 +76,7 @@ public class PublicKey implements ByteTransformable {
                 }
             }
 
-            this.setPublicKey(ECKey.fromPublicOnly(publicKey));
+            this.setPublicKey(ECKey.fromPublicOnly(potentialPublicKey));
         } else {
             LOGGER.debug(
                     "An empty address has been provided. This can cause some problems if you plan to broadcast this key.");

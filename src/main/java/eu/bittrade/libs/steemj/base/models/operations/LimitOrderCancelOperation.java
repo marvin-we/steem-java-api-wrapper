@@ -30,8 +30,7 @@ public class LimitOrderCancelOperation extends Operation {
      * an order. The balance will be returned to the owner.
      */
     public LimitOrderCancelOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values:
         this.setOrderId(0);
     }
@@ -46,13 +45,17 @@ public class LimitOrderCancelOperation extends Operation {
     }
 
     /**
-     * Set the owner of the order that should be canceled.
+     * Set the owner of the order that should be canceled. <b>Notice:</b> The
+     * private active key of this account needs to be stored in the key storage.
      * 
      * @param owner
      *            The owner of the order that should be canceled.
      */
     public void setOwner(AccountName owner) {
         this.owner = owner;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(owner, PrivateKeyType.ACTIVE);
     }
 
     /**

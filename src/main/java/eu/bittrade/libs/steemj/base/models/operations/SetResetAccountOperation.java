@@ -33,8 +33,7 @@ public class SetResetAccountOperation extends Operation {
      * days.
      */
     public SetResetAccountOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.OWNER);
+        super(false);
     }
 
     /**
@@ -50,6 +49,8 @@ public class SetResetAccountOperation extends Operation {
 
     /**
      * Define for which account this "set reset account operation" is for.
+     * <b>Notice:</b> The private owner key of this account needs to be stored
+     * in the key storage.
      * 
      * @param account
      *            The account which the "set reset account operation" has been
@@ -57,6 +58,9 @@ public class SetResetAccountOperation extends Operation {
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.OWNER);
     }
 
     /**

@@ -31,23 +31,32 @@ public class FollowOperation extends Operation {
      * CustomJsonOperation] instead.}
      */
     public FollowOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
     }
 
     /**
-     * @return the follower
+     * Get the account who follows the {@link #following} account.
+     * 
+     * @return The account name of the follower.
      */
     public AccountName getFollower() {
         return follower;
+
     }
 
     /**
+     * Set the account who follows the {@link #following} account.
+     * <b>Notice:</b> The private posting key of this account needs to be stored
+     * in the key storage.
+     * 
      * @param follower
-     *            the follower to set
+     *            The account name of the follower
      */
     public void setFollower(AccountName follower) {
         this.follower = follower;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(follower, PrivateKeyType.POSTING);
     }
 
     /**

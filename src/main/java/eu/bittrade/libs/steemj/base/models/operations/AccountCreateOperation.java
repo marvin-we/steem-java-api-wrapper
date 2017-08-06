@@ -47,7 +47,7 @@ public class AccountCreateOperation extends Operation {
      */
     public AccountCreateOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -81,12 +81,17 @@ public class AccountCreateOperation extends Operation {
 
     /**
      * Set the account name of the user who created a new account.
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
      * 
      * @param creator
      *            The account name of the user who created a new account.
      */
     public void setCreator(AccountName creator) {
         this.creator = creator;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(creator, PrivateKeyType.ACTIVE);
     }
 
     /**

@@ -38,8 +38,7 @@ public class DelegateVestingSharesOperation extends Operation {
      * prevent a satoshi of VESTS from voting on the same content twice.
      */
     public DelegateVestingSharesOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -53,12 +52,17 @@ public class DelegateVestingSharesOperation extends Operation {
 
     /**
      * Set the account name of the account who delegated the vesting shares.
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
      * 
      * @param delegator
      *            The account name of the delegator.
      */
     public void setDelegator(AccountName delegator) {
         this.delegator = delegator;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(delegator, PrivateKeyType.ACTIVE);
     }
 
     /**

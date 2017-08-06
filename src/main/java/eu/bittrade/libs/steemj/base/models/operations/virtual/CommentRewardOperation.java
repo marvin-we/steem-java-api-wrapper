@@ -21,6 +21,13 @@ public class CommentRewardOperation extends Operation {
     private Asset payout;
 
     /**
+     * Create a new comment reward operation.
+     */
+    public CommentRewardOperation() {
+        super(true);
+    }
+
+    /**
      * Get the author of the comment.
      * 
      * @return The author of the comment.

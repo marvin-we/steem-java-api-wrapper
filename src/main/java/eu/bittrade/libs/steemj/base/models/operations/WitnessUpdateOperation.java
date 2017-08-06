@@ -54,8 +54,7 @@ public class WitnessUpdateOperation extends Operation {
      * network will pick the top 21 witnesses for producing blocks.
      */
     public WitnessUpdateOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -71,7 +70,8 @@ public class WitnessUpdateOperation extends Operation {
 
     /**
      * Set the account name of the account for that the witness update operation
-     * should be executed.
+     * should be executed. <b>Notice:</b> The private active key of this account
+     * needs to be stored in the key storage.
      * 
      * @param owner
      *            The name of the account that this operation should be executed
@@ -79,6 +79,9 @@ public class WitnessUpdateOperation extends Operation {
      */
     public void setOwner(AccountName owner) {
         this.owner = owner;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(owner, PrivateKeyType.ACTIVE);
     }
 
     /**

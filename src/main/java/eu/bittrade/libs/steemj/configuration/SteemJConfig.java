@@ -5,17 +5,15 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.websocket.ClientEndpointConfig;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.bitcoinj.core.DumpedPrivateKey;
-import org.bitcoinj.core.ECKey;
 
+import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 
 /**
@@ -37,10 +35,10 @@ public class SteemJConfig {
     private String dateTimePattern;
     private long maximumExpirationDateOffset;
     private String timeZoneId;
-    private String username;
+    private AccountName accountName;
     private char[] password;
     private boolean sslVerificationDisabled;
-    private Map<PrivateKeyType, ECKey> privateKeys;
+    private PrivateKeyStorage privateKeyStorage;
     private Charset encodingCharset;
 
     /**
@@ -57,20 +55,24 @@ public class SteemJConfig {
         }
         this.timeout = 1000;
         this.dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
-        this.username = System.getProperty("steemj.api.username", "");
+        this.accountName = new AccountName(System.getProperty("steemj.api.accountName", ""));
         this.password = System.getProperty("steemj.api.password", "").toCharArray();
         this.sslVerificationDisabled = false;
         this.maximumExpirationDateOffset = 3600000L;
         this.timeZoneId = "GMT";
         this.encodingCharset = StandardCharsets.UTF_8;
+        this.privateKeyStorage = new PrivateKeyStorage();
 
-        this.privateKeys = new EnumMap<>(PrivateKeyType.class);
-        for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
-            String wifPrivateKey = System.getProperty("steemj.key." + privateKeyType.name().toLowerCase());
-            if (wifPrivateKey == null || wifPrivateKey.isEmpty()) {
-                this.privateKeys.put(privateKeyType, null);
-            } else {
-                this.privateKeys.put(privateKeyType, DumpedPrivateKey.fromBase58(null, wifPrivateKey).getKey());
+        // Fill the key store with the provided accountName and private keys.
+        if (!this.getAccountName().isEmpty()) {
+            privateKeyStorage.addAccount(this.getAccountName());
+            for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
+                String wifPrivateKey = System.getProperty("steemj.key." + privateKeyType.name().toLowerCase());
+                // Only add keys if they are present.
+                if (wifPrivateKey != null && !wifPrivateKey.isEmpty()) {
+                    privateKeyStorage.addPrivateKeyToAccount(this.getAccountName(),
+                            new ImmutablePair<PrivateKeyType, String>(privateKeyType, wifPrivateKey));
+                }
             }
         }
     }
@@ -171,14 +173,14 @@ public class SteemJConfig {
     }
 
     /**
-     * Set the user name which should be used for methods, that require
+     * Set the account name which should be used for methods, that require
      * authentication.
      * 
-     * @param username
-     *            The user name to use.
+     * @param accountName
+     *            The account name to use.
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAccountName(AccountName accountName) {
+        this.accountName = accountName;
     }
 
     /**
@@ -193,12 +195,12 @@ public class SteemJConfig {
     }
 
     /**
-     * Get the currently configured user name.
+     * Get the currently configured account name.
      * 
-     * @return The currently configured user name.
+     * @return The currently configured account name.
      */
-    public String getUsername() {
-        return username;
+    public AccountName getAccountName() {
+        return accountName;
     }
 
     /**
@@ -230,29 +232,11 @@ public class SteemJConfig {
     }
 
     /**
-     * Add one private key as a ECKey instance to the configuration. The private
-     * keys are required to sign transactions.
+     * Get the private key storage to manage the private keys for one or
+     * multiple accounts.
      * 
-     * <ul>
-     * <li>A posting key is required to vote, post or comment on content.</li>
-     * <li>An active key is required to interact with the market, to change keys
-     * and to vote for witnesses.</li>
-     * <li>An owner key is required to change the keys.</li>
-     * <li>A memo key is required to use private messages.</li>
-     * </ul>
-     * 
-     * @param privateKeyType
-     *            The type of the key.
-     * @param privateKey
-     *            The private key itself as a ECKey instance.
-     */
-    public void setPrivateKey(PrivateKeyType privateKeyType, ECKey privateKey) {
-        this.privateKeys.put(privateKeyType, privateKey);
-    }
-
-    /**
-     * Add one private key in its String representation to the configuration.
-     * The private keys are required to sign transactions.
+     * The private keys have been defined by the account creator (e.g.
+     * steemit.com) and are required to write data on the blockchain.
      *
      * <ul>
      * <li>A posting key is required to vote, post or comment on content.</li>
@@ -262,40 +246,10 @@ public class SteemJConfig {
      * <li>A memo key is required to use private messages.</li>
      * </ul>
      * 
-     * <p>
-     * Example:<br>
-     * setPrivateKey(PrivateKeyType.OWNER,
-     * "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3")
-     * </p>
-     * 
-     * @param privateKeyType
-     *            The type of the key.
-     * @param privateKey
-     *            The private key itself as a ECKey instance.
+     * @return The privateKeyStorage.
      */
-    public void setPrivateKey(PrivateKeyType privateKeyType, String privateKey) {
-        this.privateKeys.put(privateKeyType, DumpedPrivateKey.fromBase58(null, privateKey).getKey());
-    }
-
-    /**
-     * Get a specific private key.
-     * 
-     * @param privateKeyType
-     *            The private key type.
-     * @return The configured private key of the specified type.
-     */
-    public ECKey getPrivateKey(PrivateKeyType privateKeyType) {
-        return this.privateKeys.get(privateKeyType);
-    }
-
-    /**
-     * Get all configured keys.
-     * 
-     * @return A map containing all configured keys. If no key has been
-     *         specified, the key will be 'null'.
-     */
-    public Map<PrivateKeyType, ECKey> getPrivateKeys() {
-        return this.privateKeys;
+    public PrivateKeyStorage getPrivateKeyStorage() {
+        return privateKeyStorage;
     }
 
     /**
@@ -349,7 +303,7 @@ public class SteemJConfig {
      * Define the Charset that should be used to encode Strings.
      * 
      * @param encodingCharset
-     *            A Charset instance like StandardCharsets.US_ASCII.
+     *            A Charset instance like StandardCharsets.UTF_8.
      */
     public void setEncodingCharset(Charset encodingCharset) {
         this.encodingCharset = encodingCharset;

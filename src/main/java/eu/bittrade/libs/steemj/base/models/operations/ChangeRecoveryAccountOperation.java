@@ -50,7 +50,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
      * explicitly the most trusted witness according to stake.
      */
     public ChangeRecoveryAccountOperation() {
-        super(PrivateKeyType.OWNER);
+        super(false);
     }
 
     /**
@@ -85,12 +85,17 @@ public class ChangeRecoveryAccountOperation extends Operation {
     /**
      * Set the recovery account which is the account that is allowed to create a
      * recovery request for the {@link #accountToRecover accountToRecover}.
+     * <b>Notice:</b> The private owner key of this account needs to be stored
+     * in the key storage.
      * 
      * @param newRecoveryAccount
      *            The account that creates the recover request.
      */
     public void setNewRecoveryAccount(AccountName newRecoveryAccount) {
         this.newRecoveryAccount = newRecoveryAccount;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(newRecoveryAccount, PrivateKeyType.OWNER);
     }
 
     /**

@@ -21,6 +21,13 @@ public class InterestOperation extends Operation {
     private Asset interest;
 
     /**
+     * Create a new interest operation.
+     */
+    public InterestOperation() {
+        super(true);
+    }
+    
+    /**
      * 
      * @return
      */

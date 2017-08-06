@@ -35,8 +35,7 @@ public class EscrowDisputeOperation extends Operation {
      * authority over who gets what.
      */
     public EscrowDisputeOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Apply default values:
         this.setEscrowId(30);
     }
@@ -53,13 +52,17 @@ public class EscrowDisputeOperation extends Operation {
 
     /**
      * Set the account who wants to transfer the fund to the {@link #to to}
-     * account.
+     * account. <b>Notice:</b> The private active key of this account needs to
+     * be stored in the key storage.
      * 
      * @param from
      *            The account who wants to transfer the fund.
      */
     public void setFrom(AccountName from) {
         this.from = from;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(from, PrivateKeyType.ACTIVE);
     }
 
     /**

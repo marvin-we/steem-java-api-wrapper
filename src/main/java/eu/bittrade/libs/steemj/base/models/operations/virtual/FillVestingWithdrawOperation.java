@@ -23,6 +23,13 @@ public class FillVestingWithdrawOperation extends Operation {
     private Asset deposited;
 
     /**
+     * Create a new fill vesting withdraw operation.
+     */
+    public FillVestingWithdrawOperation() {
+        super(true);
+    }
+    
+    /**
      * @return the fromAccount
      */
     public AccountName getFromAccount() {

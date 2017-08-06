@@ -37,7 +37,7 @@ public class CustomBinaryOperation extends Operation {
 
     public CustomBinaryOperation() {
         // Define the required key type for this operation.
-        super(null);
+        super(false);
     }
 
     /**
@@ -138,31 +138,35 @@ public class CustomBinaryOperation extends Operation {
         try (ByteArrayOutputStream serializedCustomBinaryOperation = new ByteArrayOutputStream()) {
             serializedCustomBinaryOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_BINARY_OPERATION.ordinal()));
-            
-            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredOwnerAuths().size()));
+
+            serializedCustomBinaryOperation
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredOwnerAuths().size()));
 
             for (AccountName accountName : this.getRequiredOwnerAuths()) {
                 serializedCustomBinaryOperation.write(accountName.toByteArray());
             }
-            
-            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredActiveAuths().size()));
+
+            serializedCustomBinaryOperation
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredActiveAuths().size()));
 
             for (AccountName accountName : this.getRequiredActiveAuths()) {
                 serializedCustomBinaryOperation.write(accountName.toByteArray());
             }
-            
-            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredPostingAuths().size()));
+
+            serializedCustomBinaryOperation
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredPostingAuths().size()));
 
             for (AccountName accountName : this.getRequiredPostingAuths()) {
                 serializedCustomBinaryOperation.write(accountName.toByteArray());
             }
-            
-            serializedCustomBinaryOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
+
+            serializedCustomBinaryOperation
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
 
             for (Authority authority : this.getRequiredAuths()) {
                 serializedCustomBinaryOperation.write(authority.toByteArray());
             }
-            
+
             serializedCustomBinaryOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getId()));
             serializedCustomBinaryOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getData()));
 

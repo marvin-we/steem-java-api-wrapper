@@ -33,23 +33,25 @@ public class CustomOperation extends Operation {
      * Create a new custom operation.
      */
     public CustomOperation() {
-        // Define the required key type for this operation.
-        super(null);
+        super(false);
         // Set default values:
         this.setId(0);
     }
 
     /**
-     * Get the list of accounts name whose private active keys were required to
+     * Get the list of account names whose private active keys were required to
      * sign this transaction.
      * 
-     * @return The list of accounts name whose private active keys were required
+     * @return The list of account names whose private active keys were required
      */
     public List<AccountName> getRequiredAuths() {
         return requiredAuths;
     }
 
     /**
+     * Set the list of account name whose private active keys are required to
+     * sign this transaction.
+     * 
      * @param requiredAuths
      *            the requiredAuths to set
      */

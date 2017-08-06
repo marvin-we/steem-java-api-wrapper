@@ -401,7 +401,7 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testLogin() throws Exception {
-        final boolean success = steemApiWrapper.login("gilligan", "s.s.minnow");
+        final boolean success = steemApiWrapper.login(new AccountName("gilligan"), "s.s.minnow");
 
         assertTrue("expect login to always return success: true", success);
     }

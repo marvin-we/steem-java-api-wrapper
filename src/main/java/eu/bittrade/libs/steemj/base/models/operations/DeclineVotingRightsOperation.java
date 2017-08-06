@@ -26,7 +26,7 @@ public class DeclineVotingRightsOperation extends Operation {
      * 7 day waiting period.
      */
     public DeclineVotingRightsOperation() {
-        super(PrivateKeyType.OWNER);
+        super(false);
     }
 
     /**
@@ -39,13 +39,17 @@ public class DeclineVotingRightsOperation extends Operation {
     }
 
     /**
-     * Set the account which voting rights should be updated.
+     * Set the account which voting rights should be updated. <b>Notice:</b> The
+     * private owner key of this account needs to be stored in the key storage.
      * 
      * @param account
      *            The account which updated its voting rights.
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.OWNER);
     }
 
     /**

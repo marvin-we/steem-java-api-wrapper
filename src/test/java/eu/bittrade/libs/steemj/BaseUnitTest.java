@@ -1,5 +1,11 @@
 package eu.bittrade.libs.steemj;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 
@@ -15,7 +21,15 @@ public abstract class BaseUnitTest extends BaseTest {
     protected static void setupUnitTestEnvironment() {
         setupBasicTestEnvironment();
 
-        CONFIG.setPrivateKey(PrivateKeyType.POSTING, PRIVATE_POSTING_KEY);
-        CONFIG.setPrivateKey(PrivateKeyType.ACTIVE, PRIVATE_ACTIVE_KEY);
+        List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
+
+        privateKeys.add(new ImmutablePair<>(PrivateKeyType.POSTING, PRIVATE_POSTING_KEY));
+        privateKeys.add(new ImmutablePair<>(PrivateKeyType.ACTIVE, PRIVATE_ACTIVE_KEY));
+
+        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
+        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("foobara"), privateKeys);
+        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("foobarc"), privateKeys);
+        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("foo"), privateKeys);
+        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("steemj"), privateKeys);
     }
 }

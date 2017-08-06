@@ -35,7 +35,7 @@ public class ResetAccountOperation extends Operation {
      */
     public ResetAccountOperation() {
         // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -48,13 +48,17 @@ public class ResetAccountOperation extends Operation {
     }
 
     /**
-     * Set the account that will perform the account reset.
+     * Set the account that will perform the account reset. <b>Notice:</b> The
+     * private active key of this account needs to be stored in the key storage.
      * 
      * @param resetAccount
      *            The account that will perform the account reset.
      */
     public void setResetAccount(AccountName resetAccount) {
         this.resetAccount = resetAccount;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(resetAccount, PrivateKeyType.ACTIVE);
     }
 
     /**

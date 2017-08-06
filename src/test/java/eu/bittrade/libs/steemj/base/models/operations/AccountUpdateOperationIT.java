@@ -37,21 +37,18 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
     private static final PublicKey EXPECTED_PUBLIC_KEY = new PublicKey(
             "STM5PcXipEAThkBhkXawSqL1mqTVU9iRNLasAw9sbYnkRApAxbTWR");
     private static final int EXPECTED_WEIGHT_THRESHOLD = 0;
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcecc80457010a06737465656d"
-            + "6a010100000000010245afe8ba78a2023ef69af6d3ecbbf26e37f5f5b9c1a8b37f80f4a1b761a75e5"
-            + "90100010100000000010309b5f14e6ca97187ae2a2cdf4c6e7b15b5a434bf53ffcea6642f28e1aa53"
-            + "36c101000101000000000102a2a9e8a0ec260cfef0e7708d88a99f90809db2a61ea2a87dddb062d5f"
-            + "59a011c01000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34bb74f3c62699e0000"
-            + "011b6320cce3e0fdf9ef40b83842cd4e729306706841f0430c687a782f55c5e089041c4551451ca57"
-            + "8dcea99bd92ed382f8a014f22e9fa4047b47023a1d0ea04d274";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c80457010a0764657a31333337010100000000010245afe8ba"
+            + "78a2023ef69af6d3ecbbf26e37f5f5b9c1a8b37f80f4a1b761a75e590100010100000000010309b5f14e6ca97187ae2a2cdf4c6e7b15b"
+            + "5a434bf53ffcea6642f28e1aa5336c101000101000000000102a2a9e8a0ec260cfef0e7708d88a99f90809db2a61ea2a87dddb062d5f5"
+            + "9a011c01000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34bb74f3c62699e0000011c792fac8bfdee0dac9086a4908"
+            + "f3d3798a7e551292f13c2dbfaa8c2b4b71cb6767136f8d7c11a6a24993980480ea45eef40485995e04062d5329ab1e98e80c6a5";
 
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
 
         AccountUpdateOperation accountUpdateOperation = new AccountUpdateOperation();
-
-        accountUpdateOperation.setAccount(new AccountName("steemj"));
+        accountUpdateOperation.setAccount(new AccountName("dez1337"));
         accountUpdateOperation.setMemoKey(new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp"));
 
         Authority posting = new Authority();
@@ -92,7 +89,8 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingAccountUpdateOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingAccountUpdateOperation = steemApiWrapper
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation accountUpdateOperation = blockContainingAccountUpdateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
@@ -110,6 +108,7 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
     @Test
     @Ignore
     public void verifyTransaction() throws Exception {
+        // TODO: Check if working
         assertThat(steemApiWrapper.verifyAuthority(transaction), equalTo(true));
     }
 

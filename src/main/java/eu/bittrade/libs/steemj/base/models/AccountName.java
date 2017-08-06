@@ -80,4 +80,15 @@ public class AccountName implements ByteTransformable {
         hashCode = 31 * hashCode + (this.getAccountName() == null ? 0 : this.getAccountName().hashCode());
         return hashCode;
     }
+
+    /**
+     * Returns {@code true} if, and only if, the account name has more than
+     * {@code 0} characters.
+     *
+     * @return {@code true} if the account name has more than {@code 0},
+     *         otherwise {@code false}
+     */
+    public boolean isEmpty() {
+        return this.getAccountName().isEmpty();
+    }
 }

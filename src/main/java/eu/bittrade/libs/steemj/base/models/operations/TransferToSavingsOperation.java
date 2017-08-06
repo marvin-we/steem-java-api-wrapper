@@ -29,8 +29,7 @@ public class TransferToSavingsOperation extends Operation {
      * the {@link #to to} account.
      */
     public TransferToSavingsOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -44,12 +43,17 @@ public class TransferToSavingsOperation extends Operation {
 
     /**
      * Set the account name of the user who wants to transfer the amount.
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
      * 
      * @param from
      *            The user that transfered the amount.
      */
     public void setFrom(AccountName from) {
         this.from = from;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(from, PrivateKeyType.ACTIVE);
     }
 
     /**

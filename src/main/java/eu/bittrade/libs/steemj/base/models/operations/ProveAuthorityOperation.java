@@ -27,8 +27,7 @@ public class ProveAuthorityOperation extends Operation {
      * Create a new prove authority operation.
      */
     public ProveAuthorityOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.OWNER);
+        super(false);
         // Set default values:
         this.setRequireOwner(false);
     }
@@ -41,11 +40,17 @@ public class ProveAuthorityOperation extends Operation {
     }
 
     /**
+     * <b>Notice:</b> The private owner key of this account needs to be stored
+     * in the key storage.
+     * 
      * @param challenged
      *            the challenged to set
      */
     public void setChallenged(AccountName challenged) {
         this.challenged = challenged;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(challenged, PrivateKeyType.OWNER);
     }
 
     /**

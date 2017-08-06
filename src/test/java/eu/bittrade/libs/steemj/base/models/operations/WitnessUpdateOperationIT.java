@@ -13,10 +13,11 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.operations.AccountWitnessVoteOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.WitnessUpdateOperation;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -32,9 +33,10 @@ public class WitnessUpdateOperationIT extends BaseIntegrationTest {
     private static final String WITNESS_NAME = "glitterpig";
     private static final double FEE_AMOUNT = 0.0;
     private static final double ACCOUNT_CREATION_FEE = 3.0;
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dceec80457010c0764657a313333370a"
-            + "676f6f642d6b61726d610000011b74932d668952cbdf53423956b32800cfde661abbb87893a5642055848b7"
-            + "74805583ceb968a5d267f79b3bd59325a8f7c7e7e4322dfd383383515187957bda8ec";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c80457010b0764657a313333371c68747470733a2f2f737465"
+            + "656d69742e636f6d2f4064657a3133333702e5127bd7d41f01d9981a5a2c2524a60706040bbec8838a39719550ea25071000881300000"
+            + "000000003535445454d0000000001000000000000000000000003535445454d000000011c247941168ef8c2a1407bbf3eba8163d95ef5"
+            + "babcf02993bb7b01c5c21af0db5934d993c7f4e8f464e0d88c850310bb2a52a50c1f72f54a58e9240cad53940108";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -48,14 +50,30 @@ public class WitnessUpdateOperationIT extends BaseIntegrationTest {
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
-        
-        AccountWitnessVoteOperation accountWitnessVoteOperation = new AccountWitnessVoteOperation();
-        accountWitnessVoteOperation.setAccount(new AccountName("dez1337"));
-        accountWitnessVoteOperation.setWitness(new AccountName("good-karma"));
-        accountWitnessVoteOperation.setApprove(false);
+
+        WitnessUpdateOperation witnessUpdateOperation = new WitnessUpdateOperation();
+        witnessUpdateOperation
+                .setBlockSigningKey(new PublicKey("STM6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb"));
+
+        Asset fee = new Asset();
+        fee.setAmount(0L);
+        fee.setSymbol(AssetSymbolType.STEEM);
+        witnessUpdateOperation.setFee(fee);
+        witnessUpdateOperation.setOwner(new AccountName("dez1337"));
+
+        ChainProperties chainProperties = new ChainProperties();
+        Asset accountCreationFee = new Asset();
+        accountCreationFee.setAmount(5000L);
+        accountCreationFee.setSymbol(AssetSymbolType.STEEM);
+        chainProperties.setAccountCreationFee(accountCreationFee);
+        chainProperties.setMaximumBlockSize(65536);
+        chainProperties.setSdbInterestRate(0);
+
+        witnessUpdateOperation.setProperties(chainProperties);
+        witnessUpdateOperation.setUrl("https://steemit.com/@dez1337");
 
         ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(accountWitnessVoteOperation);
+        operations.add(witnessUpdateOperation);
 
         transaction.setOperations(operations);
         transaction.sign();
@@ -64,7 +82,8 @@ public class WitnessUpdateOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingWitnessUpdateOperation = steemApiWrapper.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingWitnessUpdateOperation = steemApiWrapper
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation witnessUpdateOperation = blockContainingWitnessUpdateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

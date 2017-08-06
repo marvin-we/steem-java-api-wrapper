@@ -21,7 +21,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
- * Verify the functionality of the "vote operation" under the use of real api
+ * Verify the functionality of the "convert operation" under the use of real api
  * calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

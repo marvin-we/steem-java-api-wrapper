@@ -32,7 +32,7 @@ public class CancelTransferFromSavingsOperation extends Operation {
      * TransferFromSavingsOperation}.
      */
     public CancelTransferFromSavingsOperation() {
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values.
         this.setRequestId(0);
     }
@@ -52,7 +52,8 @@ public class CancelTransferFromSavingsOperation extends Operation {
     /**
      * Set the account whose
      * {@link eu.bittrade.libs.steemj.base.models.operations.TransferFromSavingsOperation
-     * TransferFromSavingsOperation} should be canceled.
+     * TransferFromSavingsOperation} should be canceled. <b>Notice:</b> The
+     * private active key of this account needs to be stored in the key storage.
      * 
      * @param from
      *            The account whose transfer to savings operation should be
@@ -60,6 +61,9 @@ public class CancelTransferFromSavingsOperation extends Operation {
      */
     public void setFrom(AccountName from) {
         this.from = from;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(from, PrivateKeyType.ACTIVE);
     }
 
     /**

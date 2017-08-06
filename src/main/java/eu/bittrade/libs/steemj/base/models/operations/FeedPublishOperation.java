@@ -31,8 +31,7 @@ public class FeedPublishOperation extends Operation {
      * the exchange rate between steem and the dollar.
      */
     public FeedPublishOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -46,6 +45,8 @@ public class FeedPublishOperation extends Operation {
 
     /**
      * Set the account name of the witness that will publish a new price feed.
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
      * 
      * @param publisher
      *            The account name of the witness that will publish a new price
@@ -53,6 +54,9 @@ public class FeedPublishOperation extends Operation {
      */
     public void setPublisher(AccountName publisher) {
         this.publisher = publisher;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(publisher, PrivateKeyType.ACTIVE);
     }
 
     /**

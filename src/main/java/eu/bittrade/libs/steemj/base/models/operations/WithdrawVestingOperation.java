@@ -40,8 +40,7 @@ public class WithdrawVestingOperation extends Operation {
      * This operation is not valid if the user has no vesting shares.
      */
     public WithdrawVestingOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -57,7 +56,8 @@ public class WithdrawVestingOperation extends Operation {
 
     /**
      * Set the account name of the account that the withdraw vesting operation
-     * should be executed for.
+     * should be executed for. <b>Notice:</b> The private active key of this
+     * account needs to be stored in the key storage.
      * 
      * @param account
      *            The account name for which the withdraw vesting operation
@@ -65,6 +65,9 @@ public class WithdrawVestingOperation extends Operation {
      */
     public void setAccount(AccountName account) {
         this.account = account;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(account, PrivateKeyType.ACTIVE);
     }
 
     /**

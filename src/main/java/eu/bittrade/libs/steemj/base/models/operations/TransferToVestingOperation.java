@@ -39,8 +39,7 @@ public class TransferToVestingOperation extends Operation {
      * vesting shares.
      */
     public TransferToVestingOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -53,13 +52,18 @@ public class TransferToVestingOperation extends Operation {
     }
 
     /**
-     * Set the account name of the user who will send the VFS.
+     * Set the account name of the user who will send the VFS. <b>Notice:</b>
+     * The private active key of this account needs to be stored in the key
+     * storage.
      * 
      * @param from
      *            The account name of the user who will send the VFS.
      */
     public void setFrom(AccountName from) {
         this.from = from;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(from, PrivateKeyType.ACTIVE);
     }
 
     /**

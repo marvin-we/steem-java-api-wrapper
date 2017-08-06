@@ -17,6 +17,13 @@ public class LiquidityRewardOperation extends Operation {
     private Asset payout;
 
     /**
+     * Create a new liquidity reward operation.
+     */
+    public LiquidityRewardOperation() {
+        super(true);
+    }
+    
+    /**
      * @return the owner
      */
     public AccountName getOwner() {

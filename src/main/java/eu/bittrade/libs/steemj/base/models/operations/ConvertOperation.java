@@ -34,8 +34,7 @@ public class ConvertOperation extends Operation {
      * after STEEMIT_CONVERSION_DELAY.
      */
     public ConvertOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values.
         this.setRequestId(0);
     }
@@ -51,12 +50,17 @@ public class ConvertOperation extends Operation {
 
     /**
      * Set the account for which the operation should be performed.
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
      * 
      * @param owner
      *            The account for which the operation should be performed.
      */
     public void setOwner(AccountName owner) {
         this.owner = owner;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(owner, PrivateKeyType.ACTIVE);
     }
 
     /**

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -35,8 +34,7 @@ public class CustomJsonOperation extends Operation {
      * to be human readable/developer friendly.
      */
     public CustomJsonOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.POSTING);
+        super(false);
     }
 
     public List<AccountName> getRequiredAuths() {
@@ -68,7 +66,7 @@ public class CustomJsonOperation extends Operation {
     }
 
     /**
-     * 
+     * Plugin ID (e.g. follow)
      * @return
      */
     public String getId() {

@@ -46,8 +46,7 @@ public class AccountCreateWithDelegationOperation extends Operation {
      * to create a new account.
      */
     public AccountCreateWithDelegationOperation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
     }
 
     /**
@@ -102,12 +101,17 @@ public class AccountCreateWithDelegationOperation extends Operation {
 
     /**
      * Set the account name of the user who created a new account.
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
      * 
      * @param creator
      *            The account name of the user who created a new account.
      */
     public void setCreator(AccountName creator) {
         this.creator = creator;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(creator, PrivateKeyType.ACTIVE);
     }
 
     /**
@@ -172,9 +176,8 @@ public class AccountCreateWithDelegationOperation extends Operation {
     }
 
     /**
-     * Get the posting
-     * {@link eu.bittrade.libs.steemj.base.models.Authority Authority} of
-     * the {@link #newAccountName newAccountName}.
+     * Get the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
      * @return The posting authority.
      */
@@ -183,9 +186,8 @@ public class AccountCreateWithDelegationOperation extends Operation {
     }
 
     /**
-     * Set the posting
-     * {@link eu.bittrade.libs.steemj.base.models.Authority Authority} of
-     * the {@link #newAccountName newAccountName}.
+     * Set the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
      * 
      * @param posting
      *            The posting authority.

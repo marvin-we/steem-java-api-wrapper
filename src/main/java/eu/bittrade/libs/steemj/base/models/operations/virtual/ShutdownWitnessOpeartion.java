@@ -15,6 +15,13 @@ public class ShutdownWitnessOpeartion extends Operation {
     private AccountName owner;
 
     /**
+     * Create a new shutdown witness operation.
+     */
+    public ShutdownWitnessOpeartion() {
+        super(true);
+    }
+
+    /**
      * @return the owner
      */
     public AccountName getOwner() {

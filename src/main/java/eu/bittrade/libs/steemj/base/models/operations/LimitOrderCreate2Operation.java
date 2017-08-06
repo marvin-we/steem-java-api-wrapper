@@ -45,8 +45,7 @@ public class LimitOrderCreate2Operation extends Operation {
      * than calculating it from other fields.
      */
     public LimitOrderCreate2Operation() {
-        // Define the required key type for this operation.
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values.
         this.setOrderId(0);
         this.setFillOrKill(false);
@@ -63,13 +62,17 @@ public class LimitOrderCreate2Operation extends Operation {
     }
 
     /**
-     * Get the account to create the order for.
+     * Get the account to create the order for. <b>Notice:</b> The private
+     * active key of this account needs to be stored in the key storage.
      * 
      * @param owner
      *            The account to create the order for.
      */
     public void setOwner(AccountName owner) {
         this.owner = owner;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(owner, PrivateKeyType.ACTIVE);
     }
 
     /**

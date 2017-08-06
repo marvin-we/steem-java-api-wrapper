@@ -28,7 +28,7 @@ public class ChallengeAuthorityOperation extends Operation {
      * Create a new challenge authority operation.
      */
     public ChallengeAuthorityOperation() {
-        super(PrivateKeyType.ACTIVE);
+        super(false);
         // Set default values:
         this.setRequireOwner(false);
     }
@@ -41,11 +41,17 @@ public class ChallengeAuthorityOperation extends Operation {
     }
 
     /**
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
+     * 
      * @param challenger
      *            the challenger to set
      */
     public void setChallenger(AccountName challenger) {
         this.challenger = challenger;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(challenger, PrivateKeyType.ACTIVE);
     }
 
     /**
