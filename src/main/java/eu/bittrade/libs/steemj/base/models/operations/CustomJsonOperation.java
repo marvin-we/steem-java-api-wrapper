@@ -2,14 +2,17 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -29,14 +32,22 @@ public class CustomJsonOperation extends Operation {
     private String json;
 
     /**
-     * serves the same purpose as custom_operation but also supports required
-     * posting authorities. Unlike custom_operation, this operation is designed
-     * to be human readable/developer friendly.
+     * Create a new custom json operation. This operation serves the same
+     * purpose as custom_operation but also supports required posting
+     * authorities. Unlike custom_operation, this operation is designed to be
+     * human readable/developer friendly.
      */
     public CustomJsonOperation() {
         super(false);
+        // Apply default values:
+        this.requiredAuths = new ArrayList<>();
+        this.requiredPostingAuths = new ArrayList<>();
     }
 
+    /**
+     * 
+     * @return
+     */
     public List<AccountName> getRequiredAuths() {
         return requiredAuths;
     }
@@ -47,6 +58,9 @@ public class CustomJsonOperation extends Operation {
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
         this.requiredAuths = requiredAuths;
+
+        // Update the List of required private key types.
+        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -63,10 +77,14 @@ public class CustomJsonOperation extends Operation {
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
         this.requiredPostingAuths = requiredPostingAuths;
+
+        // Update the List of required private key types.
+        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
      * Plugin ID (e.g. follow)
+     * 
      * @return
      */
     public String getId() {
@@ -97,6 +115,25 @@ public class CustomJsonOperation extends Operation {
      */
     public void setJson(String json) {
         this.json = json;
+    }
+
+    /**
+     * Merge both required authorities list to determine all required keys.
+     * 
+     * @return A merged list of the required active and posting authorities.
+     */
+    private List<ImmutablePair<AccountName, PrivateKeyType>> mergeRequiredAuth() {
+        List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeys = new ArrayList<>();
+
+        for (AccountName accountName : this.getRequiredAuths()) {
+            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.ACTIVE));
+        }
+
+        for (AccountName accountName : this.getRequiredPostingAuths()) {
+            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
+        }
+
+        return requiredPrivateKeys;
     }
 
     @Override

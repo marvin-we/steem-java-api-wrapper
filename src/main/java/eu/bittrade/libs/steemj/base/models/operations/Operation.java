@@ -167,11 +167,10 @@ public abstract class Operation implements ByteTransformable {
 
     /**
      * TODO
-     * 
-     * @param requiredPrivateKeyType
+     * @param requiredPrivateKeyTypes
      */
-    protected void addRequiredPrivateKeyType(List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeyType) {
-        // TODO
+    protected void addRequiredPrivateKeyType(List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeyTypes) {
+        this.setRequiredPrivateKeyTypes(requiredPrivateKeyTypes);
     }
 
     @Override
