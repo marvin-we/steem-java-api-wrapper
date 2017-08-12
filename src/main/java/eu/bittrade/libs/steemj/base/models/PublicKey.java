@@ -17,6 +17,7 @@ import com.google.common.primitives.Bytes;
 
 import eu.bittrade.libs.steemj.base.models.deserializer.PublicKeyDeserializer;
 import eu.bittrade.libs.steemj.base.models.serializer.PublicKeySerializer;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 
@@ -33,7 +34,6 @@ public class PublicKey implements ByteTransformable {
     private static final Logger LOGGER = LogManager.getLogger(PublicKey.class);
 
     private static final int CHECKSUM_BYTES = 4;
-    private static final String STEEM_DEFAULT_PREFIX = "STM";
 
     private ECKey publicKey;
     private String prefix;
@@ -107,7 +107,7 @@ public class PublicKey implements ByteTransformable {
      */
     public PublicKey(ECKey publicKey) {
         this.setPublicKey(publicKey);
-        this.prefix = STEEM_DEFAULT_PREFIX;
+        this.prefix = SteemJConfig.getInstance().getSteemitAddressPrefix().toString().toUpperCase();
     }
 
     /**

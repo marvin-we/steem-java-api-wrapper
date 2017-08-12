@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 
 /**
  * This class stores the configuration that is used for the communication to the
@@ -40,6 +41,8 @@ public class SteemJConfig {
     private boolean sslVerificationDisabled;
     private PrivateKeyStorage privateKeyStorage;
     private Charset encodingCharset;
+    private SteemitAddressPrefix steemitAddressPrefix;
+    private String chainId;
 
     /**
      * Default constructor that will set all default values.
@@ -62,6 +65,8 @@ public class SteemJConfig {
         this.timeZoneId = "GMT";
         this.encodingCharset = StandardCharsets.UTF_8;
         this.privateKeyStorage = new PrivateKeyStorage();
+        this.steemitAddressPrefix = SteemitAddressPrefix.STM;
+        this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
 
         // Fill the key store with the provided accountName and private keys.
         if (!this.getAccountName().isEmpty()) {
@@ -307,6 +312,49 @@ public class SteemJConfig {
      */
     public void setEncodingCharset(Charset encodingCharset) {
         this.encodingCharset = encodingCharset;
+    }
+
+    /**
+     * Get the currently configured Steemit address prefix. This prefix is used
+     * to parse keys in their WIF format.
+     * 
+     * @return The Steemit address prefix.
+     */
+    public SteemitAddressPrefix getSteemitAddressPrefix() {
+        return steemitAddressPrefix;
+    }
+
+    /**
+     * Get the currently configured chain id used to sign transactions. For the
+     * production chain the id is a 56bit long 0 sequence which is configured by
+     * default.
+     * 
+     * @return The currently configured Chain ID.
+     */
+    public String getChainId() {
+        return chainId;
+    }
+
+    /**
+     * Set the chain id used to sign transactions. For the production chain the
+     * id is a 56bit long 0 sequence which is configured by default.
+     * 
+     * @param chainId
+     *            The chain id to set.
+     */
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
+    /**
+     * Set the Steemit address prefix. This prefix is used to parse keys in
+     * their WIF format.
+     * 
+     * @param steemitAddressPrefix
+     *            The Steemit address prefix to set.
+     */
+    public void setSteemitAddressPrefix(SteemitAddressPrefix steemitAddressPrefix) {
+        this.steemitAddressPrefix = steemitAddressPrefix;
     }
 
     /**

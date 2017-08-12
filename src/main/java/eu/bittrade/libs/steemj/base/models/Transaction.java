@@ -38,13 +38,6 @@ public class Transaction implements ByteTransformable, Serializable {
     private static final Logger LOGGER = LogManager.getLogger(Transaction.class);
 
     /**
-     * For STEEM the the chain id is a 256bit long 0 sequence. It could also be
-     * pulled using the "get_config" api call, but we are going to safe some
-     * resources by using a static reference.
-     */
-    private static final String CHAIN_ID = "0000000000000000000000000000000000000000000000000000000000000000";
-
-    /**
      * The ref_block_num indicates a particular block in the past by referring
      * to the block number which has this number as the last two bytes.
      * 
@@ -233,7 +226,7 @@ public class Transaction implements ByteTransformable, Serializable {
      *             If the transaction can not be signed.
      */
     public void sign() throws SteemInvalidTransactionException {
-        sign(CHAIN_ID);
+        sign(SteemJConfig.getInstance().getChainId());
     }
 
     /**
@@ -358,7 +351,7 @@ public class Transaction implements ByteTransformable, Serializable {
      */
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        return toByteArray(CHAIN_ID);
+        return toByteArray(SteemJConfig.getInstance().getChainId());
     }
 
     /**

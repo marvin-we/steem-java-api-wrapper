@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.equalTo;
 import org.bitcoinj.core.Utils;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
 /**
@@ -16,9 +15,26 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
  *
  */
 public class AssetTest {
+    private final String EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION = "ce040000000000000656455354530000";
+
     private final String EXPECTED_STEEM_ASSET_BYTE_REPRESENTATION = "78e001000000000003535445454d0000";
     private final String EXPECTED_SBD_ASSET_BYTE_REPRESENTATION = "7b000000000000000353424400000000";
-    private final String EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION = "ce040000000000000656455354530000";
+    private final String EXPECTED_STMD_ASSET_BYTE_REPRESENTATION = "0cde0000000000000353544d44000000";
+
+    private final String EXPECTED_TESTS_ASSET_BYTE_REPRESENTATION = "858f0000000000000354455354530000";
+    private final String EXPECTED_TBD_ASSET_BYTE_REPRESENTATION = "c3110000000000000354424400000000";
+    private final String EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION = "be9bb404000000000354535444000000";
+
+    @Test
+    public void testVestsAssetToByteArray() throws Exception {
+        Asset vestsAsset = new Asset();
+        vestsAsset.setSymbol(AssetSymbolType.VESTS);
+        vestsAsset.setAmount(1230);
+
+        assertThat(vestsAsset.getPrecision(), equalTo(6));
+        assertThat("Expect that the asset object has the given byte representation.",
+                Utils.HEX.encode(vestsAsset.toByteArray()), equalTo(EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION));
+    }
 
     @Test
     public void testSteemAssetToByteArray() throws Exception {
@@ -43,27 +59,60 @@ public class AssetTest {
     }
 
     @Test
-    public void testVestsAssetToByteArray() throws Exception {
-        Asset vestsAsset = new Asset();
-        vestsAsset.setSymbol(AssetSymbolType.VESTS);
-        vestsAsset.setAmount(1230);
+    public void testStmdAssetToByteArray() throws Exception {
+        Asset sbdAsset = new Asset();
+        sbdAsset.setSymbol(AssetSymbolType.STMD);
+        sbdAsset.setAmount(56844);
 
-        assertThat(vestsAsset.getPrecision(), equalTo(6));
+        assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(vestsAsset.toByteArray()), equalTo(EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION));
+                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_STMD_ASSET_BYTE_REPRESENTATION));
     }
-    
+
+    @Test
+    public void testTestsAssetToByteArray() throws Exception {
+        Asset sbdAsset = new Asset();
+        sbdAsset.setSymbol(AssetSymbolType.TESTS);
+        sbdAsset.setAmount(36741);
+
+        assertThat(sbdAsset.getPrecision(), equalTo(3));
+        assertThat("Expect that the asset object has the given byte representation.",
+                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TESTS_ASSET_BYTE_REPRESENTATION));
+    }
+
+    @Test
+    public void testTbdAssetToByteArray() throws Exception {
+        Asset sbdAsset = new Asset();
+        sbdAsset.setSymbol(AssetSymbolType.TBD);
+        sbdAsset.setAmount(4547);
+
+        assertThat(sbdAsset.getPrecision(), equalTo(3));
+        assertThat("Expect that the asset object has the given byte representation.",
+                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TBD_ASSET_BYTE_REPRESENTATION));
+    }
+
+    @Test
+    public void testTstdAssetToByteArray() throws Exception {
+        Asset sbdAsset = new Asset();
+        sbdAsset.setSymbol(AssetSymbolType.TSTD);   
+        sbdAsset.setAmount(78945214);
+
+        assertThat(sbdAsset.getPrecision(), equalTo(3));
+        assertThat("Expect that the asset object has the given byte representation.",
+                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION));
+    }
+
     @Test
     public void testAssetEqualsMethod() {
-        
+
         Asset asset = new Asset();
         asset.setAmount(115);
         asset.setSymbol(AssetSymbolType.SBD);
-        
+
         Asset sameAsset = new Asset();
         sameAsset.setAmount(115);
         sameAsset.setSymbol(AssetSymbolType.SBD);
-        
+
         Asset differentAsset = new Asset();
         differentAsset.setAmount(100);
         differentAsset.setSymbol(AssetSymbolType.STEEM);
