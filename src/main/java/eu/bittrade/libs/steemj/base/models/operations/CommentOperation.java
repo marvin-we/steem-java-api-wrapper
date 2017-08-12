@@ -53,17 +53,13 @@ public class CommentOperation extends Operation {
 
     /**
      * Set the author of the parent article you want to comment on.
-     * <b>Notice:</b> The private posting key of this account needs to be stored
-     * in the key storage.
+     *
      * 
      * @param parentAuthor
      *            The author of the parent article you want to comment on.
      */
     public void setParentAuthor(AccountName parentAuthor) {
         this.parentAuthor = parentAuthor;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(parentAuthor, PrivateKeyType.POSTING);
     }
 
     /**
@@ -76,13 +72,18 @@ public class CommentOperation extends Operation {
     }
 
     /**
-     * Set the account name that will publish the comment.
+     * Set the account name that will publish the comment. <b>Notice:</b> The
+     * private posting key of this account needs to be stored in the key
+     * storage.
      * 
      * @param author
      *            The account name that will publish the comment.
      */
     public void setAuthor(AccountName author) {
         this.author = author;
+
+        // Update the List of required private key types.
+        addRequiredPrivateKeyType(author, PrivateKeyType.POSTING);
     }
 
     /**

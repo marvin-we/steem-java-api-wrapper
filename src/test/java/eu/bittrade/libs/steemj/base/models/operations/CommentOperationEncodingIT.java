@@ -23,7 +23,7 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommentOperationUSASCIIIT extends BaseIntegrationTest {
+public class CommentOperationEncodingIT extends BaseIntegrationTest {
     private static final Charset ORIGINAL_CHARSET_BEFORE_TEST = SteemJConfig.getInstance().getEncodingCharset();
 
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c8045701010764657a3133333728737465656d6a2d76302d322d342d6861732d62656"
