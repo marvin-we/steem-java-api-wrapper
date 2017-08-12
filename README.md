@@ -24,7 +24,7 @@ File: <i>pom.xml</i>
 	<dependency>
             <groupId>eu.bittrade.libs</groupId>
             <artifactId>steem-api-wrapper</artifactId>
-            <version>0.3.0</version>
+            <version>0.3.2</version>
 	</dependency>
 ```
 
@@ -41,7 +41,7 @@ The resulting JAR can be found in the target directory as usual. Please notice t
 For bugs or feature requests please create a [GitHub Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues). For general discussions or questions you can also reply to one of the SteemJ update posts on [Steemit.com](https://steemit.com/@dez1337).
 
 # Example
-The following code is a small example showing how to use Version 0.3.0 of the API Wrapper.
+The following code is a small example showing how to use Version 0.3.2 of the API Wrapper.
 
 <b>Attention!</b> The private keys provided in this sample a actually not correct and will result in an error if not changed.
 
@@ -56,15 +56,16 @@ import java.util.Map;
 
 import javax.activity.InvalidActivityException;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import eu.bittrade.libs.steemj.base.models.AccountActivity;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.ActiveVote;
+import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.Transaction;
 import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
@@ -77,7 +78,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 public class SteemJExample {
     private static final Logger LOGGER = LogManager.getLogger(SteemJExample.class);
 
-    public static void main(String args[]) {
+   public static void main(String args[]) {
         // Change the default settings if needed.
         SteemJConfig myConfig = SteemJConfig.getInstance();
 
@@ -88,18 +89,25 @@ public class SteemJExample {
         } catch (URISyntaxException e) {
             throw new RuntimeException("The given URI is not valid.", e);
         }
-        myConfig.setPrivateKey(PrivateKeyType.POSTING, "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3");
-        myConfig.setPrivateKey(PrivateKeyType.ACTIVE, "5KQasdf7ASD8weASdW37FSSsadfAImkwASd732QzDeyXtP79zk");
+
+        List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
+
+        privateKeys.add(
+                new ImmutablePair<>(PrivateKeyType.POSTING, "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"));
+        privateKeys
+                .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KQasdf7ASD8weASdW37FSSsadfAImkwASd732QzDeyXtP79zk"));
+
+        myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
         try {
             // Create a new apiWrapper with your config object.
             SteemApiWrapper steemApiWrapper = new SteemApiWrapper();
 
             // Let's have a look at the account history of dez1337
-            Map<Integer, AccountActivity> accountHistory = steemApiWrapper.getAccountHistory("dez1337", 100, 100);
-            if (accountHistory.get(0).getOperations() instanceof AccountCreateOperation) {
+            Map<Integer, AppliedOperation> accountHistory = steemApiWrapper.getAccountHistory("dez1337", 100, 100);
+            if (accountHistory.get(0).getOp() instanceof AccountCreateOperation) {
                 AccountCreateOperation accountCreateOperation = (AccountCreateOperation) (accountHistory.get(0)
-                        .getOperations());
+                        .getOp());
                 LOGGER.info("The account {} has been created by {}.", "dez1337", accountCreateOperation.getCreator());
             }
 
@@ -151,7 +159,7 @@ public class SteemJExample {
                     "dez1337 is one of {} accounts on steemit and may increase the number witnesses to {} in the near future.",
                     numberOfAccounts, numberOfWitnesses + 1);
 
-            List<ActiveVote> activeVotesForArticle = steemApiWrapper.getActiveVotes("dez1337",
+            List<VoteState> activeVotesForArticle = steemApiWrapper.getActiveVotes("dez1337",
                     "steem-api-wrapper-for-java-update1");
             LOGGER.info("The last vote for a article of dez1337 has been done from {}.",
                     activeVotesForArticle.get(activeVotesForArticle.size() - 1).getVoter());
