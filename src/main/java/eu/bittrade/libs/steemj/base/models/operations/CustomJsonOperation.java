@@ -75,7 +75,8 @@ public class CustomJsonOperation extends Operation {
      * Get the list of account names whose private posting keys were required to
      * sign this transaction.
      * 
-     * @return The list of account names whose private active keys were required
+     * @return The list of account names whose private posting keys were
+     *         required.
      */
     public List<AccountName> getRequiredPostingAuths() {
         return requiredPostingAuths;
@@ -85,7 +86,7 @@ public class CustomJsonOperation extends Operation {
      * Set the list of account names whose private posting keys are required to
      * sign this transaction.
      * 
-     * @param requiredAuths
+     * @param requiredPostingAuths
      *            The account names whose private posting keys are required.
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
@@ -107,7 +108,7 @@ public class CustomJsonOperation extends Operation {
     /**
      * 
      * @param id
-     *            Must be less than 32 characters long.
+     *            TODO: Must be less than 32 characters long.
      */
     public void setId(String id) {
         this.id = id;

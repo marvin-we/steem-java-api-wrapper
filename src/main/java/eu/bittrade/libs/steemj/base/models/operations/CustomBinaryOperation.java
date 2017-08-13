@@ -2,15 +2,19 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.bitcoinj.core.Utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -35,69 +39,115 @@ public class CustomBinaryOperation extends Operation {
     private String id;
     private String data;
 
+    /**
+     * Create a new custom binary operation.
+     */
     public CustomBinaryOperation() {
         // Define the required key type for this operation.
         super(false);
+        // Set default values.
+        this.requiredActiveAuths = new ArrayList<>();
+        this.requiredAuths = new ArrayList<>();
+        this.requiredOwnerAuths = new ArrayList<>();
+        this.requiredPostingAuths = new ArrayList<>();
     }
 
     /**
-     * @return the requiredOwnerAuths
+     * Get the list of account names whose private owner keys were required to
+     * sign this transaction.
+     * 
+     * @return The list of account names whose private owner keys were required.
      */
     public List<AccountName> getRequiredOwnerAuths() {
         return requiredOwnerAuths;
     }
 
     /**
+     * Set the list of account names whose private owner keys are required to
+     * sign this transaction.
+     * 
      * @param requiredOwnerAuths
-     *            the requiredOwnerAuths to set
+     *            The account names whose private owner keys are required.
      */
     public void setRequiredOwnerAuths(List<AccountName> requiredOwnerAuths) {
         this.requiredOwnerAuths = requiredOwnerAuths;
+
+        // Update the List of required private key types.
+        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
-     * @return the requiredActiveAuths
+     * Get the list of account names whose private active keys were required to
+     * sign this transaction.
+     * 
+     * @return The list of account names whose private active keys were
+     *         required.
      */
     public List<AccountName> getRequiredActiveAuths() {
         return requiredActiveAuths;
     }
 
     /**
+     * Set the list of account names whose private active keys are required to
+     * sign this transaction.
+     * 
      * @param requiredActiveAuths
-     *            the requiredActiveAuths to set
+     *            The account names whose private active keys are required.
      */
     public void setRequiredActiveAuths(List<AccountName> requiredActiveAuths) {
         this.requiredActiveAuths = requiredActiveAuths;
+
+        // Update the List of required private key types.
+        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
-     * @return the requiredPostingAuths
+     * Get the list of account names whose private posting keys were required to
+     * sign this transaction.
+     * 
+     * @return The list of account names whose private posting keys were
+     *         required.
      */
     public List<AccountName> getRequiredPostingAuths() {
         return requiredPostingAuths;
     }
 
     /**
+     * Set the list of account names whose private posting keys are required to
+     * sign this transaction.
+     * 
      * @param requiredPostingAuths
-     *            the requiredPostingAuths to set
+     *            The account names whose private posting keys are required.
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
         this.requiredPostingAuths = requiredPostingAuths;
+
+        // Update the List of required private key types.
+        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
-     * @return the requiredAuths
+     * Get the list of account names whose private keys were required to sign
+     * this transaction.
+     * 
+     * @return The list of account names whose private keys were required.
      */
     public List<Authority> getRequiredAuths() {
         return requiredAuths;
     }
 
     /**
+     * Set the list of account names whose private keys are required to sign
+     * this transaction.
+     * 
      * @param requiredAuths
-     *            the requiredAuths to set
+     *            The account names whose private keys are required.
      */
     public void setRequiredAuths(List<Authority> requiredAuths) {
         this.requiredAuths = requiredAuths;
+
+        // Update the List of required private key types.
+        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -109,7 +159,7 @@ public class CustomBinaryOperation extends Operation {
 
     /**
      * 
-     * The id must be less than 32 characters long.
+     * TODO The id must be less than 32 characters long.
      * 
      * @param id
      *            the id to set
@@ -119,18 +169,50 @@ public class CustomBinaryOperation extends Operation {
     }
 
     /**
-     * @return the data
+     * Get the data that this operation contains. <b>Notice</b> that the
+     * original type of this field is "vector&lt; char &gt;" and that its
+     * returned as a String.
+     * 
+     * @return the data The data transfered with this operation.
      */
     public String getData() {
         return data;
     }
 
     /**
+     * Set the data to send with this operation in its HEX representation.
+     * 
      * @param data
-     *            the data to set
+     *            The data to set.
      */
     public void setData(String data) {
         this.data = data;
+    }
+
+    /**
+     * Merge both required authorities list to determine all required keys.
+     * 
+     * @return A merged list of the required active and posting authorities.
+     */
+    private List<ImmutablePair<AccountName, PrivateKeyType>> mergeRequiredAuth() {
+        List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeys = new ArrayList<>();
+
+        // TODO: Support this auth.
+        // for (Authority authority : this.getRequiredAuths()) { }
+
+        for (AccountName accountName : this.getRequiredPostingAuths()) {
+            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
+        }
+
+        for (AccountName accountName : this.getRequiredActiveAuths()) {
+            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
+        }
+
+        for (AccountName accountName : this.getRequiredOwnerAuths()) {
+            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
+        }
+
+        return requiredPrivateKeys;
     }
 
     @Override
@@ -168,7 +250,10 @@ public class CustomBinaryOperation extends Operation {
             }
 
             serializedCustomBinaryOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getId()));
-            serializedCustomBinaryOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getData()));
+
+            byte[] decodedData = Utils.HEX.decode(this.getData());
+            serializedCustomBinaryOperation.write(SteemJUtils.transformIntToVarIntByteArray(decodedData.length));
+            serializedCustomBinaryOperation.write(decodedData);
 
             return serializedCustomBinaryOperation.toByteArray();
         } catch (IOException e) {

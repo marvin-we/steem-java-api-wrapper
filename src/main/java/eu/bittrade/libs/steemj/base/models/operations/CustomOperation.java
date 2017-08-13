@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.bitcoinj.core.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
