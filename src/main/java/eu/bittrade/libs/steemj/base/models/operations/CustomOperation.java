@@ -127,16 +127,9 @@ public class CustomOperation extends Operation {
 
             serializedCustomOperation.write(SteemJUtils.transformShortToByteArray(this.getId()));
 
-            //SteemJConfig.getInstance().setEncodingCharset(StandardCharsets.US_ASCII);
-            //serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getData()));
-            
-            serializedCustomOperation.write(SteemJUtils.transformLongToVarIntByteArray(Integer.toUnsignedLong(this.getData().length())));
-            serializedCustomOperation.write(this.getData().getBytes(StandardCharsets.US_ASCII));
-            //for (char singleCharacter : this.getData().toCharArray()) {
-            //    serializedCustomOperation.write(SteemJUtils.transformByteToLittleEndian((byte)singleCharacter));
-            //}
-
-            // serializedCustomOperation.write(Utils.HEX.decode(this.getData()));
+            byte[] decodedData = Utils.HEX.decode(this.getData());
+            serializedCustomOperation.write(SteemJUtils.transformIntToVarIntByteArray(decodedData.length));
+            serializedCustomOperation.write(decodedData);
 
             return serializedCustomOperation.toByteArray();
         } catch (IOException e) {
