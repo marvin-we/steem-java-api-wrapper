@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.Checksum;
 import eu.bittrade.libs.steemj.base.models.Pow;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -21,9 +22,7 @@ public class PowOperation extends Operation {
     @JsonProperty("worker_account")
     private AccountName workerAccount;
     @JsonProperty("block_id")
-    // Original type is "checksum_type" which wraps a ripemd160 hash. We use an
-    // byte array to cover this type.
-    private String blockId;
+    private Checksum blockId;
     // Original type is uint64_t.
     @JsonProperty("nonce")
     private long nonce;
@@ -65,7 +64,7 @@ public class PowOperation extends Operation {
     /**
      * @return the blockId
      */
-    public String getBlockId() {
+    public Checksum getBlockId() {
         return blockId;
     }
 
@@ -73,7 +72,7 @@ public class PowOperation extends Operation {
      * @param blockId
      *            the blockId to set
      */
-    public void setBlockId(String blockId) {
+    public void setBlockId(Checksum blockId) {
         this.blockId = blockId;
     }
 

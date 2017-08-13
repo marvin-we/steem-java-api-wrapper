@@ -13,19 +13,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SignedBlockWithInfo extends SignedBlock {
-    // TODO: Original type is "block_id_type".
     @JsonProperty("block_id")
-    private byte[] blockId;
+    private BlockId blockId;
     @JsonProperty("signing_key")
     private PublicKey signingKey;
-    // TODO: Original type is "vector< transaction_id_type > ".
     @JsonProperty("transaction_ids")
-    private List<byte[]> transactionIds;
+    private List<TransactionId> transactionIds;
 
     /**
      * @return the blockId
      */
-    public byte[] getBlockId() {
+    public BlockId getBlockId() {
         return blockId;
     }
 
@@ -33,7 +31,7 @@ public class SignedBlockWithInfo extends SignedBlock {
      * @param blockId
      *            the blockId to set
      */
-    public void setBlockId(byte[] blockId) {
+    public void setBlockId(BlockId blockId) {
         this.blockId = blockId;
     }
 
@@ -55,7 +53,7 @@ public class SignedBlockWithInfo extends SignedBlock {
     /**
      * @return the transactionIds
      */
-    public List<byte[]> getTransactionIds() {
+    public List<TransactionId> getTransactionIds() {
         return transactionIds;
     }
 
@@ -63,7 +61,7 @@ public class SignedBlockWithInfo extends SignedBlock {
      * @param transactionIds
      *            the transactionIds to set
      */
-    public void setTransactionIds(List<byte[]> transactionIds) {
+    public void setTransactionIds(List<TransactionId> transactionIds) {
         this.transactionIds = transactionIds;
     }
 

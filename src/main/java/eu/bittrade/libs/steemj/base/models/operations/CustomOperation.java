@@ -2,14 +2,20 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.bitcoinj.core.Utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -22,9 +28,9 @@ public class CustomOperation extends Operation {
     // Original type is flat_set< account_name_type >.
     @JsonProperty("required_auths")
     private List<AccountName> requiredAuths;
-    // Original type is uint16_t so we use int here.
+    // Original type is uint16_t.
     @JsonProperty("id")
-    private int id;
+    private short id;
     // Original type is vector< char >.
     @JsonProperty("data")
     private String data;
@@ -49,29 +55,41 @@ public class CustomOperation extends Operation {
     }
 
     /**
-     * Set the list of account name whose private active keys are required to
+     * Set the list of account names whose private active keys are required to
      * sign this transaction.
      * 
      * @param requiredAuths
-     *            the requiredAuths to set
+     *            The account names whose private active keys are required.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
         this.requiredAuths = requiredAuths;
+
+        List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeys = new ArrayList<>();
+
+        for (AccountName accountName : this.getRequiredAuths()) {
+            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.ACTIVE));
+        }
+
+        this.addRequiredPrivateKeyType(requiredPrivateKeys);
     }
 
     /**
-     * @return the id
+     * Get the id of this operation.
+     * 
+     * @return The id of this operation.
      */
     public int getId() {
-        return id;
+        return Short.toUnsignedInt(this.id);
     }
 
     /**
+     * Set the id of this operation.
+     * 
      * @param id
-     *            the id to set
+     *            The id to set.
      */
     public void setId(int id) {
-        this.id = id;
+        this.id = (short) id;
     }
 
     /**
@@ -86,8 +104,10 @@ public class CustomOperation extends Operation {
     }
 
     /**
+     * Set the data to send with this operation in its HEX representation.
+     * 
      * @param data
-     *            the data to set
+     *            The data to set.
      */
     public void setData(String data) {
         this.data = data;
@@ -99,14 +119,24 @@ public class CustomOperation extends Operation {
             serializedCustomOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_OPERATION.ordinal()));
 
-            serializedCustomOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
+            serializedCustomOperation.write(SteemJUtils.transformIntToVarIntByteArray(this.getRequiredAuths().size()));
 
             for (AccountName accountName : this.getRequiredAuths()) {
                 serializedCustomOperation.write(accountName.toByteArray());
             }
 
             serializedCustomOperation.write(SteemJUtils.transformShortToByteArray(this.getId()));
-            serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getData()));
+
+            //SteemJConfig.getInstance().setEncodingCharset(StandardCharsets.US_ASCII);
+            //serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getData()));
+            
+            serializedCustomOperation.write(SteemJUtils.transformLongToVarIntByteArray(Integer.toUnsignedLong(this.getData().length())));
+            serializedCustomOperation.write(this.getData().getBytes(StandardCharsets.US_ASCII));
+            //for (char singleCharacter : this.getData().toCharArray()) {
+            //    serializedCustomOperation.write(SteemJUtils.transformByteToLittleEndian((byte)singleCharacter));
+            //}
+
+            // serializedCustomOperation.write(Utils.HEX.decode(this.getData()));
 
             return serializedCustomOperation.toByteArray();
         } catch (IOException e) {

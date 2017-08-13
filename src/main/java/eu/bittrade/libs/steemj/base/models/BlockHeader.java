@@ -14,15 +14,11 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class BlockHeader implements ByteTransformable {
-    // Original type is "block_id_type" which wraps a ripemd160 hash. We use an
-    // byte array to cover this type.
-    protected byte[] previous;
+    protected BlockId previous;
     protected TimePointSec timestamp;
     protected String witness;
-    // Original type is "checksum_type" which wraps a ripemd160 hash. We use an
-    // byte array to cover this type.
     @JsonProperty("transaction_merkle_root")
-    protected byte[] transactionMerkleRoot;
+    protected Checksum transactionMerkleRoot;
     // Original type is "block_header_extensions_type" which is an array of
     // "block_header_extensions".
     protected List<BlockHeaderExtensions> extensions;
@@ -30,7 +26,7 @@ public class BlockHeader implements ByteTransformable {
     /**
      * @return the previous
      */
-    public byte[] getPrevious() {
+    public BlockId getPrevious() {
         return previous;
     }
 
@@ -38,7 +34,7 @@ public class BlockHeader implements ByteTransformable {
      * @param previous
      *            the previous to set
      */
-    public void setPrevious(byte[] previous) {
+    public void setPrevious(BlockId previous) {
         this.previous = previous;
     }
 
@@ -60,7 +56,7 @@ public class BlockHeader implements ByteTransformable {
     /**
      * @return the transactionMerkleRoot
      */
-    public byte[] getTransactionMerkleRoot() {
+    public Checksum getTransactionMerkleRoot() {
         return transactionMerkleRoot;
     }
 
@@ -68,7 +64,7 @@ public class BlockHeader implements ByteTransformable {
      * @param transactionMerkleRoot
      *            the transactionMerkleRoot to set
      */
-    public void setTransactionMerkleRoot(byte[] transactionMerkleRoot) {
+    public void setTransactionMerkleRoot(Checksum transactionMerkleRoot) {
         this.transactionMerkleRoot = transactionMerkleRoot;
     }
 

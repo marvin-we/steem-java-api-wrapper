@@ -33,9 +33,12 @@ public class CustomJsonOperation extends Operation {
 
     /**
      * Create a new custom json operation. This operation serves the same
-     * purpose as custom_operation but also supports required posting
-     * authorities. Unlike custom_operation, this operation is designed to be
-     * human readable/developer friendly.
+     * purpose as
+     * {@link eu.bittrade.libs.steemj.base.models.operations.CustomOperation
+     * CustomOperation} but also supports required posting authorities. Unlike
+     * {@link eu.bittrade.libs.steemj.base.models.operations.CustomOperation
+     * CustomOperation}, this operation is designed to be human
+     * readable/developer friendly.
      */
     public CustomJsonOperation() {
         super(false);
@@ -45,16 +48,21 @@ public class CustomJsonOperation extends Operation {
     }
 
     /**
+     * Get the list of account names whose private active keys were required to
+     * sign this transaction.
      * 
-     * @return
+     * @return The list of account names whose private active keys were required
      */
     public List<AccountName> getRequiredAuths() {
         return requiredAuths;
     }
 
     /**
+     * Set the list of account names whose private active keys are required to
+     * sign this transaction.
      * 
      * @param requiredAuths
+     *            The account names whose private active keys are required.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
         this.requiredAuths = requiredAuths;
@@ -64,16 +72,21 @@ public class CustomJsonOperation extends Operation {
     }
 
     /**
+     * Get the list of account names whose private posting keys were required to
+     * sign this transaction.
      * 
-     * @return
+     * @return The list of account names whose private active keys were required
      */
     public List<AccountName> getRequiredPostingAuths() {
         return requiredPostingAuths;
     }
 
     /**
+     * Set the list of account names whose private posting keys are required to
+     * sign this transaction.
      * 
-     * @param requiredPostingAuths
+     * @param requiredAuths
+     *            The account names whose private posting keys are required.
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
         this.requiredPostingAuths = requiredPostingAuths;

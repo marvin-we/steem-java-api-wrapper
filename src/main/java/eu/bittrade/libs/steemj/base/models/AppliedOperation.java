@@ -13,9 +13,8 @@ import eu.bittrade.libs.steemj.base.models.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AppliedOperation {
-    // TODO: transaction_id_type
     @JsonProperty("trx_id")
-    private String trxId;
+    private TransactionId trxId;
     // Original type is uint32_t.
     private int block;
     // Original type is uint32_t.
@@ -35,7 +34,7 @@ public class AppliedOperation {
      * 
      * @return The transaction id.
      */
-    public String getTrxId() {
+    public TransactionId getTrxId() {
         return trxId;
     }
 
