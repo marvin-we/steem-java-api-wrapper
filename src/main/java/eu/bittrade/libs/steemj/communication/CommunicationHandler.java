@@ -32,8 +32,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
 import eu.bittrade.libs.steemj.base.models.error.SteemError;
 import eu.bittrade.libs.steemj.base.models.serializer.BooleanSerializer;
+import eu.bittrade.libs.steemj.communication.dto.NotificationDTO;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.communication.dto.ResponseWrapperDTO;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -216,11 +218,29 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     @Override
     public void onMessage(String message) {
-        this.rawJsonResponse = message;
+        // Check if we are waiting for an answer.
+        if (responseCountDownLatch.getCount() > 0) {
+            LOGGER.debug("Raw JSON response: {}", message);
 
-        LOGGER.debug("Raw JSON response: {}", rawJsonResponse);
-        
-        responseCountDownLatch.countDown();
+            this.rawJsonResponse = message;
+
+            responseCountDownLatch.countDown();
+        } else {
+            // A message has been send while we are not waiting for it - It can
+            // be a callback.
+            LOGGER.debug("Received callback: {}", message);
+
+            try {
+                NotificationDTO response = MAPPER.readValue(message, NotificationDTO.class);
+
+                // Make sure that the inner result object is a BlockHeader.
+                CallbackHub.getInstance().getCallbackByUuid(Integer.valueOf(response.getParams()[0].toString()))
+                        .onNewBlock(MAPPER.convertValue(((ArrayList<Object>)(response.getParams()[1])).get(0), SignedBlockHeader.class));
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                LOGGER.error("Could not parse callback {}.", e);
+            }
+        }
     }
 
     // TODO: Find a way to remove this.

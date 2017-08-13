@@ -34,8 +34,8 @@ public class SteemJUtils {
     }
 
     /**
-     * TODO: Is there a nicer way to solve this?
      * 
+     * TODO: Is there a nicer way to solve this?
      * @param discussionSortType
      * @return
      */

@@ -36,6 +36,8 @@ import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
+import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.dto.GetDiscussionParametersDTO;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
@@ -1735,4 +1737,52 @@ public class SteemApiWrapper {
 
         return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
     }
+
+    /**
+     * Use this method to register a callback method that is called whenever a
+     * new block has been applied.
+     * 
+     * <p>
+     * <b>Notice:</b>
+     * 
+     * That there can only be one active Callback. If you call this method
+     * multiple times with different callback methods, only the last one will be
+     * called.
+     * 
+     * Beside that there is currently no way to cancel a subscription. Once
+     * you've registered a callback it will be called until the connection has
+     * been closed.
+     * </p>
+     * 
+     * @param blockAppliedCallback
+     *            A class implementing the
+     *            {@link eu.bittrade.libs.steemj.communication.BlockAppliedCallback
+     *            BlockAppliedCallback}.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the API Wrapper is unable to transform the JSON
+     *             response into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public void setBlockAppliedCallback(BlockAppliedCallback blockAppliedCallback) throws SteemCommunicationException {
+        // Register the given callback at the callback hub.
+        CallbackHub.getInstance().addCallback(blockAppliedCallback);
+
+        // Register the callback at the steem node.
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.SET_BLOCK_APPLIED_CALLBACK);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+
+        Object[] parameters = { blockAppliedCallback.getUuid() };
+        requestObject.setAdditionalParameters(parameters);
+
+        communicationHandler.performRequest(requestObject, Object.class);
+    }
+
 }
