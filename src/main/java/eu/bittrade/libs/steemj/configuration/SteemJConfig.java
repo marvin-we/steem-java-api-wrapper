@@ -36,8 +36,8 @@ public class SteemJConfig {
     private String dateTimePattern;
     private long maximumExpirationDateOffset;
     private String timeZoneId;
-    private AccountName accountName;
-    private char[] password;
+    private AccountName apiUsername;
+    private char[] apiPassword;
     private boolean sslVerificationDisabled;
     private PrivateKeyStorage privateKeyStorage;
     private Charset encodingCharset;
@@ -58,8 +58,8 @@ public class SteemJConfig {
         }
         this.timeout = 1000;
         this.dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
-        this.accountName = new AccountName(System.getProperty("steemj.api.accountName", ""));
-        this.password = System.getProperty("steemj.api.password", "").toCharArray();
+        this.apiUsername = new AccountName(System.getProperty("steemj.api.username", ""));
+        this.apiPassword = System.getProperty("steemj.api.password", "").toCharArray();
         this.sslVerificationDisabled = false;
         this.maximumExpirationDateOffset = 3600000L;
         this.timeZoneId = "GMT";
@@ -69,13 +69,14 @@ public class SteemJConfig {
         this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
 
         // Fill the key store with the provided accountName and private keys.
-        if (!this.getAccountName().isEmpty()) {
-            privateKeyStorage.addAccount(this.getAccountName());
+        AccountName primaryAccountName = new AccountName(System.getProperty("steemj.key.accountName", ""));
+        if (!primaryAccountName.isEmpty()) {
+            privateKeyStorage.addAccount(primaryAccountName);
             for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
                 String wifPrivateKey = System.getProperty("steemj.key." + privateKeyType.name().toLowerCase());
                 // Only add keys if they are present.
                 if (wifPrivateKey != null && !wifPrivateKey.isEmpty()) {
-                    privateKeyStorage.addPrivateKeyToAccount(this.getAccountName(),
+                    privateKeyStorage.addPrivateKeyToAccount(primaryAccountName,
                             new ImmutablePair<PrivateKeyType, String>(privateKeyType, wifPrivateKey));
                 }
             }
@@ -178,25 +179,25 @@ public class SteemJConfig {
     }
 
     /**
-     * Set the account name which should be used for methods, that require
-     * authentication.
+     * Set the account name which should be used to login to a node. This is not
+     * required if the node is not protected.
      * 
-     * @param accountName
+     * @param apiUsername
      *            The account name to use.
      */
-    public void setAccountName(AccountName accountName) {
-        this.accountName = accountName;
+    public void setApiUsername(AccountName apiUsername) {
+        this.apiUsername = apiUsername;
     }
 
     /**
-     * Set the password which should be used for methods, that require
-     * authentication.
+     * Set the password which should be used to login to a node. This is not
+     * required if the node is not protected.
      * 
-     * @param password
+     * @param apiPassword
      *            The password to use.
      */
-    public void setPassword(char[] password) {
-        this.password = password;
+    public void setApiPassword(char[] apiPassword) {
+        this.apiPassword = apiPassword;
     }
 
     /**
@@ -204,8 +205,8 @@ public class SteemJConfig {
      * 
      * @return The currently configured account name.
      */
-    public AccountName getAccountName() {
-        return accountName;
+    public AccountName getApiUsername() {
+        return apiUsername;
     }
 
     /**
@@ -213,8 +214,8 @@ public class SteemJConfig {
      * 
      * @return The currently configured password.
      */
-    public char[] getPassword() {
-        return password;
+    public char[] getApiPassword() {
+        return apiPassword;
     }
 
     /**
@@ -257,6 +258,7 @@ public class SteemJConfig {
         return privateKeyStorage;
     }
 
+    
     /**
      * Get the currently configured maximum offset of the expiration date.
      * 

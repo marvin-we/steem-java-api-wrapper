@@ -133,6 +133,17 @@ public class PrivateKeyStorage {
     }
 
     /**
+     * Get a list of account names for which private keys have been stored.
+     * 
+     * @return A list of account names for which private keys have been stored.
+     */
+    public List<AccountName> getAccounts() {
+        ArrayList<AccountName> storedAccounts = new ArrayList<>();
+        storedAccounts.addAll(this.getPrivateKeysPerAccounts().keySet());
+        return storedAccounts;
+    }
+
+    /**
      * Internal method to convert a WIF private key into an ECKey object.
      * 
      * @param wifPrivateKey

@@ -26,7 +26,7 @@ public class PowOperationIT extends BaseIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 3585;
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
-    private static final String EXPECTED_BLOCK_ID = "00000e00e73bdec3af550b7c2cc67ce3d6f87f39";
+    private static final int EXPECTED_BLOCK_ID = 3584;
     private static final BigInteger EXPECTED_NONCE = new BigInteger("12704523629717466956");
     private static final AccountName EXPECTED_WORKER_ACCOUNT = new AccountName("steemit63");
     private static final long EXPECTED_MAXIMUM_BLOCK_SIZE = 131072L;
@@ -45,7 +45,7 @@ public class PowOperationIT extends BaseIntegrationTest {
                 .get(OPERATION_INDEX);
 
         assertThat(powOperation, instanceOf(PowOperation.class));
-        assertThat(((PowOperation) powOperation).getBlockId(), equalTo(EXPECTED_BLOCK_ID));
+        assertThat(((PowOperation) powOperation).getBlockId().getNumberFromHash(), equalTo(EXPECTED_BLOCK_ID));
         assertThat(((PowOperation) powOperation).getNonce(), equalTo(EXPECTED_NONCE));
         assertThat(((PowOperation) powOperation).getWorkerAccount(), equalTo(EXPECTED_WORKER_ACCOUNT));
         assertThat(((PowOperation) powOperation).getProperties().getMaximumBlockSize(), equalTo(EXPECTED_MAXIMUM_BLOCK_SIZE));

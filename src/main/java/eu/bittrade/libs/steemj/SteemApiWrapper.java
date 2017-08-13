@@ -87,12 +87,12 @@ public class SteemApiWrapper {
     public SteemApiWrapper() throws SteemCommunicationException {
         this.communicationHandler = new CommunicationHandler();
 
-        if (!("").equals(String.valueOf(SteemJConfig.getInstance().getPassword()))
-                && !SteemJConfig.getInstance().getAccountName().isEmpty()) {
+        if (!("").equals(String.valueOf(SteemJConfig.getInstance().getApiPassword()))
+                && !SteemJConfig.getInstance().getApiUsername().isEmpty()) {
 
             LOGGER.info("Calling the login method with the prodvided credentials before checking the available apis.");
-            if (login(SteemJConfig.getInstance().getAccountName(),
-                    String.valueOf(SteemJConfig.getInstance().getPassword()))) {
+            if (login(SteemJConfig.getInstance().getApiUsername(),
+                    String.valueOf(SteemJConfig.getInstance().getApiPassword()))) {
                 LOGGER.info("You have been logged in.");
             } else {
                 LOGGER.error("Login failed. The following check of available apis will be done as a anonymous user.");
@@ -1285,8 +1285,8 @@ public class SteemApiWrapper {
      *             </ul>
      */
     public Boolean login() throws SteemCommunicationException {
-        return login(SteemJConfig.getInstance().getAccountName(),
-                String.valueOf(SteemJConfig.getInstance().getPassword()));
+        return login(SteemJConfig.getInstance().getApiUsername(),
+                String.valueOf(SteemJConfig.getInstance().getApiPassword()));
     }
 
     /**
