@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.bittrade.libs</groupId>
-	<artifactId>steem-api-wrapper</artifactId>
+	<artifactId>steemj</artifactId>
 	<version>0.4.0-SNAPSHOT</version>
-	<name>Steem Java API Wrapper</name>
-	<description>A simple wrapper to enable the access of the steem web socket API through Java.</description>
+	<name>SteemJ</name>
+	<description>SteemJ is a simple wrapper to enable the access of the steem web socket API through Java.</description>
 	<url>http://www.steemit.com/@dez1337</url>
 
 	<distributionManagement>
