@@ -29,9 +29,9 @@ import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.Transaction;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
@@ -211,8 +211,8 @@ public class SteemApiWrapper {
         Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
 
         for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
-            accountActivities.put((Integer) accountActivity[0], communicationHandler.getObjectMapper()
-                    .convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
+            accountActivities.put((Integer) accountActivity[0], (AppliedOperation) communicationHandler
+                    .getObjectMapper().convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
                     }));
         }
 

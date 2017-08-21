@@ -41,7 +41,7 @@ public class CustomJsonOperationTest extends BaseUnitTest {
         customJsonOperation.setId("follow");
         customJsonOperation
                 .setJson("[\"follow\",{\"follower\":\"dez1337\",\"following\":\"steemj\",\"what\":[\"blog\"]}]");
-        customJsonOperation.setRequiredAuths(new ArrayList<>());
+        customJsonOperation.setRequiredAuths(new ArrayList<AccountName>());
 
         ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
         requiredPostingAuths.add(new AccountName("dez1337"));

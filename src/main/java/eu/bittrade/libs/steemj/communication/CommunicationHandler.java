@@ -8,7 +8,6 @@ import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.SSLSession;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
 import javax.websocket.EncodeException;
@@ -69,7 +68,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
         if (SteemJConfig.getInstance().isSslVerificationDisabled()) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
+            sslEngineConfigurator.setHostVerificationEnabled(false);
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
@@ -235,7 +234,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
                 // Make sure that the inner result object is a BlockHeader.
                 CallbackHub.getInstance().getCallbackByUuid(Integer.valueOf(response.getParams()[0].toString()))
-                        .onNewBlock(MAPPER.convertValue(((ArrayList<Object>)(response.getParams()[1])).get(0), SignedBlockHeader.class));
+                        .onNewBlock(MAPPER.convertValue(((ArrayList<Object>) (response.getParams()[1])).get(0),
+                                SignedBlockHeader.class));
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 LOGGER.error("Could not parse callback {}.", e);

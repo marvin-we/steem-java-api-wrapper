@@ -22,7 +22,7 @@ public class AuthorityTest {
     @Test
     public void testSteemChainPropertiesToByteArray() throws Exception {
         Authority exampleAuthority = new Authority();
-        exampleAuthority.setAccountAuths(new HashMap<>());
+        exampleAuthority.setAccountAuths(new HashMap<AccountName,Integer>());
         Map<PublicKey, Integer> postingKeyAuth = new HashMap<>();
         postingKeyAuth.put(new PublicKey("STM7Amy3akYfmSY92YrxYxfEGfc1pe3ctJtWjRi1wfo66K2e9veCN"), 1);
         exampleAuthority.setKeyAuths(postingKeyAuth);

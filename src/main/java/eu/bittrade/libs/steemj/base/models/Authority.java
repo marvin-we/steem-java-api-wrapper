@@ -52,8 +52,8 @@ public class Authority implements ByteTransformable {
      * Constructor thats set required values to avoid null pointer exceptions.
      */
     public Authority() {
-        this.setAccountAuths(new HashMap<>());
-        this.setKeyAuths(new HashMap<>());
+        this.setAccountAuths(new HashMap<AccountName,Integer>());
+        this.setKeyAuths(new HashMap<PublicKey,Integer>());
         // Set default values.
         this.setWeightThreshold(0);
     }

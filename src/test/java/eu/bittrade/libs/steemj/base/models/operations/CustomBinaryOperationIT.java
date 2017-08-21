@@ -12,6 +12,7 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -54,9 +55,9 @@ public class CustomBinaryOperationIT extends BaseIntegrationTest {
         requiredPostingAuths.add(new AccountName("dez1337"));
 
         customBinaryOperation.setRequiredPostingAuths(requiredPostingAuths);
-        customBinaryOperation.setRequiredActiveAuths(new ArrayList<>());
-        customBinaryOperation.setRequiredAuths(new ArrayList<>());
-        customBinaryOperation.setRequiredOwnerAuths(new ArrayList<>());
+        customBinaryOperation.setRequiredActiveAuths(new ArrayList<AccountName>());
+        customBinaryOperation.setRequiredAuths(new ArrayList<Authority>());
+        customBinaryOperation.setRequiredOwnerAuths(new ArrayList<AccountName>());
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customBinaryOperation);

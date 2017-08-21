@@ -50,7 +50,7 @@ public class RecoverAccountOperationIT extends BaseIntegrationTest {
         recoverAccountOperation.setAccountToRecover(new AccountName("dez1337"));
 
         Authority newOwnerAuthority = new Authority();
-        newOwnerAuthority.setAccountAuths(new HashMap<>());
+        newOwnerAuthority.setAccountAuths(new HashMap<AccountName,Integer>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
         newOwnerAuthority.setKeyAuths(ownerKeyAuth);
@@ -59,7 +59,7 @@ public class RecoverAccountOperationIT extends BaseIntegrationTest {
         recoverAccountOperation.setNewOwnerAuthority(newOwnerAuthority);
 
         Authority recentOwnerAuthority = new Authority();
-        recentOwnerAuthority.setAccountAuths(new HashMap<>());
+        recentOwnerAuthority.setAccountAuths(new HashMap<AccountName,Integer>());
         Map<PublicKey, Integer> ownerKeyAuth2 = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM688NyXXSjXmXCy4FSaPH5L2FitugsKU9PbLn5ZiUQr3GaztmCL"), 1);
         recentOwnerAuthority.setKeyAuths(ownerKeyAuth2);

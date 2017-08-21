@@ -50,8 +50,8 @@ public class RequestAccountRecoveryOperationIT extends BaseIntegrationTest {
         requestAccountRecoveryOperation.setRecoveryAccount(new AccountName("dez1337"));
 
         Authority newOwnerAuthority = new Authority();
-        newOwnerAuthority.setAccountAuths(new HashMap<>());
-        Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
+        newOwnerAuthority.setAccountAuths(new HashMap<AccountName,Integer>());
+        Map<PublicKey, Integer> ownerKeyAuth = new HashMap<PublicKey, Integer>();
         ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
         newOwnerAuthority.setKeyAuths(ownerKeyAuth);
         newOwnerAuthority.setWeightThreshold(1);

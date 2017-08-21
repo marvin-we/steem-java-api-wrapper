@@ -59,7 +59,7 @@ public class AccountCreateWithDelegationOperationTest extends BaseUnitTest {
         accountCreateWithDelegationOperation.setNewAccountName(new AccountName("steemj"));
 
         Authority posting = new Authority();
-        posting.setAccountAuths(new HashMap<>());
+        posting.setAccountAuths(new HashMap<AccountName,Integer>());
         Map<PublicKey, Integer> postingKeyAuth = new HashMap<>();
         postingKeyAuth.put(new PublicKey("STM8CemMDjdUWSV5wKotEimhK6c4dY7p2PdzC2qM1HpAP8aLtZfE7"), 1);
         posting.setKeyAuths(postingKeyAuth);
@@ -68,7 +68,7 @@ public class AccountCreateWithDelegationOperationTest extends BaseUnitTest {
         accountCreateWithDelegationOperation.setPosting(posting);
 
         Authority active = new Authority();
-        active.setAccountAuths(new HashMap<>());
+        active.setAccountAuths(new HashMap<AccountName,Integer>());
         Map<PublicKey, Integer> activeKeyAuth = new HashMap<>();
         activeKeyAuth.put(new PublicKey("STM6pbVDAjRFiw6fkiKYCrkz7PFeL7XNAfefrsREwg8MKpJ9VYV9x"), 1);
         active.setKeyAuths(activeKeyAuth);
@@ -77,7 +77,7 @@ public class AccountCreateWithDelegationOperationTest extends BaseUnitTest {
         accountCreateWithDelegationOperation.setActive(active);
 
         Authority owner = new Authority();
-        owner.setAccountAuths(new HashMap<>());
+        owner.setAccountAuths(new HashMap<AccountName,Integer>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
         owner.setKeyAuths(ownerKeyAuth);
