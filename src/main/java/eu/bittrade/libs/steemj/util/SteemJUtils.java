@@ -126,7 +126,7 @@ public class SteemJUtils {
             byte[] stringAsByteArray = string.getBytes(encodingCharset);
 
             resultingByteRepresentation
-                    .write(transformLongToVarIntByteArray(Integer.toUnsignedLong(stringAsByteArray.length)));
+                    .write(transformLongToVarIntByteArray(stringAsByteArray.length));
             resultingByteRepresentation.write(stringAsByteArray);
 
             return resultingByteRepresentation.toByteArray();

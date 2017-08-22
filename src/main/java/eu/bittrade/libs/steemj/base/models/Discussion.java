@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -35,9 +34,9 @@ public class Discussion extends Comment {
     @JsonProperty("reblogged_by")
     private List<AccountName> rebloggedBy;
     @JsonProperty("first_reblogged_by")
-    private Optional<AccountName> firstRebloggedBy;
+    private AccountName firstRebloggedBy;
     @JsonProperty("first_reblogged_on")
-    private Optional<Date> firstRebloggedOn;
+    private Date firstRebloggedOn;
 
     /**
      * @return the url
@@ -112,14 +111,14 @@ public class Discussion extends Comment {
     /**
      * @return the firstRebloggedBy
      */
-    public Optional<AccountName> getFirstRebloggedBy() {
+    public AccountName getFirstRebloggedBy() {
         return firstRebloggedBy;
     }
 
     /**
      * @return the firstRebloggedOn
      */
-    public Optional<Date> getFirstRebloggedOn() {
+    public Date getFirstRebloggedOn() {
         return firstRebloggedOn;
     }
 

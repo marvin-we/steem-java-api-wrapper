@@ -80,7 +80,7 @@ public class PowOperation extends Operation {
      * @return the nonce
      */
     public BigInteger getNonce() {
-        return new BigInteger(Long.toUnsignedString(this.nonce));
+        return new BigInteger(String.valueOf(this.nonce));
     }
 
     /**

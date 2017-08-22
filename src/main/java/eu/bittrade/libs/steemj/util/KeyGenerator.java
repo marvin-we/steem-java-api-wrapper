@@ -152,7 +152,7 @@ public class KeyGenerator {
         try {
             for (int i = 0; i < BRAIN_KEY_WORD_COUNT; i++) {
                 brainKeyParts.add(
-                        BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary()[SecureRandom.getInstanceStrong()
+                        BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary()[SecureRandom.getInstance("SHA1PRNG")
                                 .nextInt(BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary().length - 1)]
                                         .toUpperCase());
             }

@@ -77,7 +77,7 @@ public class CustomOperation extends Operation {
      * @return The id of this operation.
      */
     public int getId() {
-        return Short.toUnsignedInt(this.id);
+        return (int)this.id;
     }
 
     /**
