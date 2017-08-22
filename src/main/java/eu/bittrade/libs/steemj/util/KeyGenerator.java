@@ -161,7 +161,7 @@ public class KeyGenerator {
                     "The algorithm used to provide a strong random number is not available on your system.", e);
         }
 
-        return String.join(" ", brainKeyParts);
+        return ""; //TODO: String.join(" ", brainKeyParts);
     }
 
     /**

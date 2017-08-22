@@ -88,7 +88,7 @@ public class PowOperation extends Operation {
      *            the nonce to set
      */
     public void setNonce(BigInteger nonce) {
-        this.nonce = Long.parseUnsignedLong(nonce.toString());
+        this.nonce = Long.valueOf(nonce.toString());
     }
 
     /**
