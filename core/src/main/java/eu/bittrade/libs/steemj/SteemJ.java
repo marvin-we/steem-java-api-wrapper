@@ -1418,11 +1418,11 @@ public class SteemJ {
     }
 
     /**
-     * Get a list of account names which follow the <b>startFollower</b>.
+     * Get a list of account names which follow the <code>startFollower</code>.
      * 
      * @param following
      *            The account name that started to follow the
-     *            <b>startFollower</b>. If you want to receive all followers you
+     *            <code>startFollower</code>. If you want to receive all followers you
      *            need to use the same account name for both fields.
      * @param startFollower
      *            The account name for which the followers are returned.
@@ -1651,10 +1651,25 @@ public class SteemJ {
     }
 
     /**
+     * Get the reputation for one or more accounts. This method will return the
+     * reputation for the given {@code accountName} and the next {@code limit}
+     * accounts after the given one.
      * 
-     * @param lowerBoundName
+     * <p>
+     * <b>Example:</b>
+     * <p>
+     * <code>getAccountReputations(new AccountName("dez1337"), 0);</code>
+     * </p>
+     * This example will return the reputation of the account "dez1337".
+     * <p>
+     * 
+     * @param accountName
+     *            The first account name to get the reputation for.
      * @param limit
-     * @return
+     *            The number of results.
+     * @return A list of
+     *         {@link eu.bittrade.libs.steemj.plugins.follow.model.AccountReputation
+     *         AccountReputation}.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1667,13 +1682,13 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<AccountReputation> getAccountReputations(AccountName lowerBoundName, int limit)
+    public List<AccountReputation> getAccountReputations(AccountName accountName, int limit)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { lowerBoundName.getAccountName(), limit };
+        Object[] parameters = { accountName.getAccountName(), limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, AccountReputation.class);
@@ -1683,7 +1698,9 @@ public class SteemJ {
      * Gets list of accounts that have reblogged a particular post.
      * 
      * @param author
+     *            The author of the post to get the rebloggers for.
      * @param permlink
+     *            The permlink of the post to get the rebloggers for.
      * @return
      * @throws SteemCommunicationException
      *             <ul>

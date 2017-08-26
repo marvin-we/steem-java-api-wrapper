@@ -41,7 +41,7 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
     private static final String EXPECTED_AUTHOR_WITH_EXTENSION = "malay11";
     private static final String EXPECTED_PERMANENT_LINK_WITH_EXTENSION = "re-bart2305-201767t204737942z";
     private static final boolean EXPECTED_VOTES_ALLOWED_WITH_EXTENSION = true;
-    private static final int BENEFICIARIES_ID = 1;
+    private static final int BENEFICIARIES_ID = 0;
     private static final String EXPECTED_BENEFICIARY_ACCOUNT = "esteemapp";
     private static final short EXPECTED_BENEFICIARY_WEIGHT = 500;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcedc8045701130764657a"
@@ -114,8 +114,9 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
                 equalTo(EXPECTED_VOTES_ALLOWED_WITH_EXTENSION));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink(), equalTo(EXPECTED_PERMANENT_LINK_WITH_EXTENSION));
         
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getInnerCommentOptionsExtension().get(BENEFICIARIES_ID).getBeneficiaries().get(0).getAccount().getAccountName(), equalTo(EXPECTED_BENEFICIARY_ACCOUNT));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getInnerCommentOptionsExtension().get(BENEFICIARIES_ID).getBeneficiaries().get(0).getWeight(), equalTo(EXPECTED_BENEFICIARY_WEIGHT));
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getCommentPayoutBeneficiaries().getBeneficiaries().size(), equalTo(1));
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getAccount().getAccountName(), equalTo(EXPECTED_BENEFICIARY_ACCOUNT));
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getWeight(), equalTo(EXPECTED_BENEFICIARY_WEIGHT));
     }
 
     @Category({ IntegrationTest.class })
