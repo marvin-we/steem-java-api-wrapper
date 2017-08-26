@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigInteger;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -333,7 +334,10 @@ public class SteemJIT extends BaseIntegrationTest {
         final GlobalProperties properties = steemJ.getDynamicGlobalProperties();
 
         assertNotNull("expect properties", properties);
-        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000));
+        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000L));
+        assertTrue(properties.getHeadBlockId().getHashValue().matches("[0-9a-f]{40}"));
+        assertThat(properties.getHeadBlockId().getNumberFromHash(), greaterThan(123));
+        assertThat(properties.getTotalPow(), greaterThan(new BigInteger("123")));
     }
 
     @Category({ IntegrationTest.class })
