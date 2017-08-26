@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class repesents a Steem "comment_options_extenson" object.
@@ -103,12 +104,10 @@ public class CommentOptionsExtension implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentOptionsExtension = new ByteArrayOutputStream()) {
-            if (this.getCommentPayoutBeneficiaries() == null) {
-                byte[] extension = { 0x00 };
-                serializedCommentOptionsExtension.write(extension);
-            } else {
-                serializedCommentOptionsExtension.write(this.getCommentPayoutBeneficiaries().toByteArray());
-            }
+            serializedCommentOptionsExtension.write(
+                    SteemJUtils.transformIntToVarIntByteArray(this.getClassTypeIdentifier()));
+            
+            serializedCommentOptionsExtension.write(this.getCommentPayoutBeneficiaries().toByteArray());
 
             return serializedCommentOptionsExtension.toByteArray();
         } catch (IOException e) {

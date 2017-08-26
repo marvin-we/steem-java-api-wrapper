@@ -34,16 +34,6 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
     private static final String EXPECTED_PERMANENT_LINK = "giving-a-farewell-speech";
     private static final boolean EXPECTED_VOTES_ALLOWED = true;
     private static final Asset EXPECTED_ASSET = new Asset();
-    // Try to parse a comment options operation with extension.
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION_WITH_EXTENSION = 12615224;
-    private static final int TRANSACTION_INDEX_WITH_EXTENSION = 9;
-    private static final int OPERATION_INDEX_WITH_EXTENSION = 1;
-    private static final String EXPECTED_AUTHOR_WITH_EXTENSION = "malay11";
-    private static final String EXPECTED_PERMANENT_LINK_WITH_EXTENSION = "re-bart2305-201767t204737942z";
-    private static final boolean EXPECTED_VOTES_ALLOWED_WITH_EXTENSION = true;
-    private static final int BENEFICIARIES_ID = 0;
-    private static final String EXPECTED_BENEFICIARY_ACCOUNT = "esteemapp";
-    private static final short EXPECTED_BENEFICIARY_WEIGHT = 500;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcedc8045701130764657a"
             + "3133333728737465656d6a2d76302d322d342d6861732d6265656e2d72656c65617365642d757"
             + "0646174652d3900ca9a3b000000000353424400000000102701010000011c06dfac5938938a83"
@@ -101,6 +91,7 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
+<<<<<<< HEAD:core/src/test/java/eu/bittrade/libs/steemj/base/models/operations/CommentOptionsOperationIT.java
     public void testOperationParsingWithExtension() throws SteemCommunicationException {
         SignedBlockWithInfo blockContainingCommentOptionsOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION_WITH_EXTENSION);
 
@@ -121,6 +112,8 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
+=======
+>>>>>>> 87ba745... Fix #62:src/test/java/eu/bittrade/libs/steemj/base/models/operations/CommentOptionsOperationIT.java
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
     }
