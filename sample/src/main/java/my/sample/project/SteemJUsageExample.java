@@ -34,26 +34,26 @@ public class SteemJUsageExample {
     public static void main(String args[]) {
         // Change the default settings if needed.
         SteemJConfig myConfig = SteemJConfig.getInstance();
-
         myConfig.setTimeout(100000L);
         try {
-            myConfig.setWebSocketEndpointURI(new URI("wss://this.piston.rocks"));
-            myConfig.setSslVerificationDisabled(true);
+            myConfig.setWebSocketEndpointURI(new URI("wss://this.piston.rocks"), true);
         } catch (URISyntaxException e) {
             throw new RuntimeException("The given URI is not valid.", e);
         }
 
-        List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
-        privateKeys.add(
-                new ImmutablePair<>(PrivateKeyType.POSTING, "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"));
-        privateKeys
-                .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KQasdf7ASD8weASdW37FSSsadfAImkwASd732QzDeyXtP79zk"));
-
-        myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
         try {
             // Create a new apiWrapper with your config object.
             SteemJ steemJ = new SteemJ();
+            
+
+            List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
+            privateKeys.add(
+                    new ImmutablePair<>(PrivateKeyType.POSTING, "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"));
+            privateKeys
+                    .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KQasdf7ASD8weASdW37FSSsadfAImkwASd732QzDeyXtP79zk"));
+
+            myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
             // Let's have a look at the account history of dez1337
             Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory("dez1337", 100, 100);
@@ -83,8 +83,8 @@ public class SteemJUsageExample {
 
             Transaction transaction = new Transaction();
 
-            //transaction.setRefBlockPrefix(globalProperties.getHeadBlockId().getHashValue());
-            //transaction.setRefBlockNum(globalProperties.getHeadBlockId().getNumberFromHash());
+            transaction.setRefBlockPrefix(globalProperties.getHeadBlockId().getHashValue());
+            transaction.setRefBlockNum(globalProperties.getHeadBlockId().getNumberFromHash());
             transaction.setOperations(operations);
 
             try {
