@@ -3,11 +3,11 @@ package eu.bittrade.libs.steemj.base.models;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 @JsonDeserialize(using = PublicKeyDeserializer.class)
 @JsonSerialize(using = PublicKeySerializer.class)
 public class PublicKey implements ByteTransformable {
-    private static final Logger LOGGER = LogManager.getLogger(PublicKey.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PublicKey.class);
 
     private static final int CHECKSUM_BYTES = 4;
 

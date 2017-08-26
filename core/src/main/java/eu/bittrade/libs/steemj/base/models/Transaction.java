@@ -10,12 +10,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,7 +35,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class Transaction implements ByteTransformable, Serializable {
     private static final long serialVersionUID = 4821422578657270330L;
-    private static final Logger LOGGER = LogManager.getLogger(Transaction.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Transaction.class);
 
     /**
      * The ref_block_num indicates a particular block in the past by referring

@@ -10,8 +10,8 @@ import java.util.TimeZone;
 import javax.websocket.ClientEndpointConfig;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -26,7 +26,7 @@ import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemJConfig {
-    private static final Logger LOGGER = LogManager.getLogger(SteemJConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
     private static final String DEFAULT_STEEM_NODE_URI = "wss://node.steem.ws";
 
     private static SteemJConfig steemJConfigInstance;

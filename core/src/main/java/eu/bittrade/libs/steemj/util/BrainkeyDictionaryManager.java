@@ -3,20 +3,20 @@ package eu.bittrade.libs.steemj.util;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.util.IOUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * As the {@link eu.bittrade.libs.steemj.util.KeyGenerator
- * KeyGenerator} class can be initiated several times with each of those
- * instances needing the dictionary, this class has been created to have the
- * dictionary in memory for only one time.
+ * As the {@link eu.bittrade.libs.steemj.util.KeyGenerator KeyGenerator} class
+ * can be initiated several times with each of those instances needing the
+ * dictionary, this class has been created to have the dictionary in memory for
+ * only one time.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 class BrainkeyDictionaryManager {
-    private static final Logger LOGGER = LogManager.getLogger(BrainkeyDictionaryManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrainkeyDictionaryManager.class);
 
     private static final String DICTIONARY_FILE_NAME = "dictionary.txt";
     private static final String DICTIONARY_DELIMITER = ",";

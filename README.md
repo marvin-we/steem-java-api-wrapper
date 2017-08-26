@@ -76,7 +76,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 public class SteemJExample {
-    private static final Logger LOGGER = LogManager.getLogger(SteemJExample.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SteemJExample.class);
 
    public static void main(String args[]) {
         // Change the default settings if needed.

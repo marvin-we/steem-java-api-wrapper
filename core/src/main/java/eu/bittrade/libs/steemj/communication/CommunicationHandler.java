@@ -17,12 +17,12 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.glassfish.tyrus.client.SslContextConfigurator;
 import org.glassfish.tyrus.client.SslEngineConfigurator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.Version;
@@ -50,7 +50,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommunicationHandler extends Endpoint implements MessageHandler.Whole<String> {
-    private static final Logger LOGGER = LogManager.getLogger(CommunicationHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private CountDownLatch responseCountDownLatch = new CountDownLatch(1);

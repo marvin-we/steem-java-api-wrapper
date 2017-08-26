@@ -22,13 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.exparity.hamcrest.date.DateMatchers;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
@@ -76,7 +76,7 @@ import eu.bittrade.libs.steemj.plugins.follow.model.PostsPerAuthorPair;
  * @author Anthony Martin
  */
 public class SteemJIT extends BaseIntegrationTest {
-    private static final Logger LOGGER = LogManager.getLogger(SteemJIT.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SteemJIT.class);
     private static final String ACCOUNT = "dez1337";
     private static final String ACCOUNT_TWO = "randowhale";
     private static final String WITNESS_ACCOUNT = "riverhead";
@@ -160,8 +160,7 @@ public class SteemJIT extends BaseIntegrationTest {
         assertTrue("the first operation for each account is the 'account_create_operation'",
                 firstOperation instanceof AccountCreateOperation);
 
-        final Map<Integer, AppliedOperation> accountHistorySetTwo = steemJ.getAccountHistory(ACCOUNT_TWO, 1000,
-                1000);
+        final Map<Integer, AppliedOperation> accountHistorySetTwo = steemJ.getAccountHistory(ACCOUNT_TWO, 1000, 1000);
         assertEquals("expect response to contain 1001 results", 1001, accountHistorySetTwo.size());
 
         assertThat(accountHistorySetTwo.get(0).getOp(), instanceOf(AccountCreateWithDelegationOperation.class));
@@ -397,7 +396,7 @@ public class SteemJIT extends BaseIntegrationTest {
         } catch (final SteemResponseError steemResponseError) {
             // success
         } catch (final Exception e) {
-            LOGGER.error(e);
+            LOGGER.error("An unexpected Exception occured.", e);
             fail(e.toString());
         }
     }
@@ -556,8 +555,7 @@ public class SteemJIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetAccountReputation() throws Exception {
-        final List<AccountReputation> accountReputations = steemJ
-                .getAccountReputations(new AccountName("dez1337"), 10);
+        final List<AccountReputation> accountReputations = steemJ.getAccountReputations(new AccountName("dez1337"), 10);
 
         assertThat(accountReputations.size(), equalTo(10));
         assertThat(accountReputations.get(0).getReputation(), greaterThan(14251747809260L));

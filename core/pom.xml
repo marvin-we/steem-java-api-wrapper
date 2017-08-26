@@ -42,14 +42,9 @@
 			<version>${tyrus.client.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-			<version>${log4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-			<version>${log4j.version}</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -59,7 +54,12 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>${apache.common.version}</version>
+			<version>${apache.commons.lang.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${apache.commons.io.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bitcoinj</groupId>
@@ -111,9 +111,9 @@
 		<hamcrest.date.version>2.0.4</hamcrest.date.version>
 		<java.version>1.8</java.version>
 		<tyrus.client.version>1.13.1</tyrus.client.version>
-		<log4j.version>2.8.2</log4j.version>
 		<jackson.version>2.9.0.pr4</jackson.version>
-		<apache.common.version>3.6</apache.common.version>
+		<apache.commons.lang.version>3.6</apache.commons.lang.version>
+		<apache.commons.io.version>2.5</apache.commons.io.version>
 		<slf4j.version>1.7.25</slf4j.version>
 	</properties>
 </project>

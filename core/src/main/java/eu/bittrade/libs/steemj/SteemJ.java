@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -65,7 +65,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemJ {
-    private static final Logger LOGGER = LogManager.getLogger(SteemJ.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SteemJ.class);
 
     private CommunicationHandler communicationHandler;
 
@@ -1422,8 +1422,9 @@ public class SteemJ {
      * 
      * @param following
      *            The account name that started to follow the
-     *            <code>startFollower</code>. If you want to receive all followers you
-     *            need to use the same account name for both fields.
+     *            <code>startFollower</code>. If you want to receive all
+     *            followers you need to use the same account name for both
+     *            fields.
      * @param startFollower
      *            The account name for which the followers are returned.
      * @param type

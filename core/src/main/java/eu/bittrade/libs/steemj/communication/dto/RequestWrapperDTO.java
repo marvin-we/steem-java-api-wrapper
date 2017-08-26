@@ -1,7 +1,7 @@
 package eu.bittrade.libs.steemj.communication.dto;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -20,7 +20,7 @@ import eu.bittrade.libs.steemj.enums.SteemApis;
 @JsonPropertyOrder({ "jsonrpc", "params", "id", "method" })
 public class RequestWrapperDTO {
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final Logger LOGGER = LogManager.getLogger(RequestWrapperDTO.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestWrapperDTO.class);
 
     /**
      * The id of the request (used to identify which answer belongs to which

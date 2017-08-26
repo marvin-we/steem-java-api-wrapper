@@ -13,9 +13,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.bitcoinj.core.VarInt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.RequestMethods;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SteemJUtils {
-    private static final Logger LOGGER = LogManager.getLogger(SteemJUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SteemJUtils.class);
 
     /** Add a private constructor to hide the implicit public one. */
     private SteemJUtils() {
