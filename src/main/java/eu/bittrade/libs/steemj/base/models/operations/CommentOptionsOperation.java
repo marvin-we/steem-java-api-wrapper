@@ -223,13 +223,11 @@ public class CommentOptionsOperation extends Operation {
             serializedCommentOptionsOperation
                     .write(SteemJUtils.transformBooleanToByteArray(this.getAllowCurationRewards()));
 
-            if (this.getExtensions() == null || this.getExtensions().isEmpty()) {
-                byte[] extension = { 0x00 };
-                serializedCommentOptionsOperation.write(extension);
-            } else {
-                for (CommentOptionsExtension commentOptionsExtension : this.getExtensions()) {
-                    serializedCommentOptionsOperation.write(commentOptionsExtension.toByteArray());
-                }
+            serializedCommentOptionsOperation
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getExtensions().size()));
+
+            for (CommentOptionsExtension commentOptionsExtension : this.getExtensions()) {
+                serializedCommentOptionsOperation.write(commentOptionsExtension.toByteArray());
             }
 
             return serializedCommentOptionsOperation.toByteArray();
