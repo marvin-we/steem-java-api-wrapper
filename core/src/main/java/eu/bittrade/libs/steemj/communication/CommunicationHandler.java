@@ -67,7 +67,13 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     public CommunicationHandler() throws SteemCommunicationException {
         this.client = ClientManager.createClient();
 
-        if (SteemJConfig.getInstance().isSslVerificationDisabled()) {
+        // Tyrus expects a SSL connection if the SSL_ENGINE_CONFIGURATOR
+        // property is present. This leads to a "connection failed" error when
+        // a non SSL secured protocol is used. Due to this we only add the
+        // property when connecting to a SSL secured node.
+        if (SteemJConfig.getInstance().isSslVerificationDisabled()
+                && SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("wss")
+                || SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("https")) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
             sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);

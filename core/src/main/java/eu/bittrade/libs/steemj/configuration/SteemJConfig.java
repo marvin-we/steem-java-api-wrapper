@@ -27,11 +27,38 @@ import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
  */
 public class SteemJConfig {
     private static final Logger LOGGER = LogManager.getLogger(SteemJConfig.class);
+    private static final String DEFAULT_STEEM_NODE_URI = "wss://node.steem.ws";
 
     private static SteemJConfig steemJConfigInstance;
 
+    /**
+     * Receive a {@link eu.bittrade.libs.steemj.configuration.SteemJConfig
+     * SteemJConfig} instance.
+     * 
+     * @return A SteemJConfig instance.
+     */
+    public static SteemJConfig getInstance() {
+        if (steemJConfigInstance == null) {
+            steemJConfigInstance = new SteemJConfig();
+        }
+
+        return steemJConfigInstance;
+    }
+
+    /**
+     * Overrides the current
+     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig SteemJConfig}
+     * instance and returns a new one.
+     * 
+     * @return A SteemJConfig instance.
+     */
+    public static SteemJConfig getNewInstance() {
+        steemJConfigInstance = new SteemJConfig();
+        return steemJConfigInstance;
+    }
+
     private ClientEndpointConfig clientEndpointConfig;
-    private URI WebSocketEndpointURI;
+    private URI webSocketEndpointURI;
     private long timeout;
     private String dateTimePattern;
     private long maximumExpirationDateOffset;
@@ -50,11 +77,11 @@ public class SteemJConfig {
     private SteemJConfig() {
         this.clientEndpointConfig = ClientEndpointConfig.Builder.create().build();
         try {
-            this.WebSocketEndpointURI = new URI("wss://node.steem.ws");
+            this.setWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI));
         } catch (URISyntaxException e) {
             // This can never happen!
             LOGGER.error("The configured default URI has a Syntax error.", e);
-            this.WebSocketEndpointURI = null;
+            this.webSocketEndpointURI = null;
         }
         this.timeout = 1000;
         this.dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
@@ -84,64 +111,39 @@ public class SteemJConfig {
     }
 
     /**
+     * Get the currently configured password.
+     * 
+     * @return The currently configured password.
+     */
+    public char[] getApiPassword() {
+        return apiPassword;
+    }
+
+    /**
+     * Get the currently configured account name.
+     * 
+     * @return The currently configured account name.
+     */
+    public AccountName getApiUsername() {
+        return apiUsername;
+    }
+
+    /**
+     * Get the currently configured chain id used to sign transactions. For the
+     * production chain the id is a 56bit long 0 sequence which is configured by
+     * default.
+     * 
+     * @return The currently configured Chain ID.
+     */
+    public String getChainId() {
+        return chainId;
+    }
+
+    /**
      * @return Get the configured ClientEndpointConfig instance.
      */
     public ClientEndpointConfig getClientEndpointConfig() {
         return clientEndpointConfig;
-    }
-
-    /**
-     * Override the default ClientEndpointConfig instance.
-     * 
-     * @param clientEndpointConfig
-     *            The configuration of the client end point.
-     */
-    public void setClientEndpointConfig(ClientEndpointConfig clientEndpointConfig) {
-        this.clientEndpointConfig = clientEndpointConfig;
-    }
-
-    /**
-     * @return Get the configured WebSocket endpoint URI.
-     */
-    public URI getWebSocketEndpointURI() {
-        return WebSocketEndpointURI;
-    }
-
-    /**
-     * Override the default WebSocket endpoint URI.
-     * 
-     * @param WebSocketEndpointURI
-     *            The URI of the node you want to connect to.
-     */
-    public void setWebSocketEndpointURI(URI WebSocketEndpointURI) {
-        this.WebSocketEndpointURI = WebSocketEndpointURI;
-    }
-
-    /**
-     * Get the configured, maximum time that SteemJ will wait for an answer of
-     * the WebSocket server.
-     * 
-     * @return Time in milliseconds
-     */
-    public long getTimeout() {
-        return timeout;
-    }
-
-    /**
-     * Override the default, maximum time that SteemJ will wait for an answer of
-     * the WebSocket server.
-     * 
-     * @param timeout
-     *            Time in milliseconds.
-     * @throws IllegalArgumentException
-     *             If the value of timeout is negative.
-     */
-    public void setTimeout(long timeout) {
-        if (timeout < 0) {
-            throw new IllegalArgumentException("The timeout has to be greater than 0. (0 will disable the timeout).");
-        }
-
-        this.timeout = timeout;
     }
 
     /**
@@ -153,6 +155,133 @@ public class SteemJConfig {
      */
     public String getDateTimePattern() {
         return dateTimePattern;
+    }
+
+    /**
+     * Get the currently configured Charset that will be used to encode Strings.
+     * 
+     * @return The configured Charset.
+     */
+    public Charset getEncodingCharset() {
+        return encodingCharset;
+    }
+
+    /**
+     * Get the currently configured maximum offset of the expiration date.
+     * 
+     * @return The maximum offset of the expiration date.
+     */
+    public long getMaximumExpirationDateOffset() {
+        return maximumExpirationDateOffset;
+    }
+
+    /**
+     * Get the private key storage to manage the private keys for one or
+     * multiple accounts.
+     * 
+     * The private keys have been defined by the account creator (e.g.
+     * steemit.com) and are required to write data on the blockchain.
+     *
+     * <ul>
+     * <li>A posting key is required to vote, post or comment on content.</li>
+     * <li>An active key is required to interact with the market, to change keys
+     * and to vote for witnesses.</li>
+     * <li>An owner key is required to change the keys.</li>
+     * <li>A memo key is required to use private messages.</li>
+     * </ul>
+     * 
+     * @return The privateKeyStorage.
+     */
+    public PrivateKeyStorage getPrivateKeyStorage() {
+        return privateKeyStorage;
+    }
+
+    /**
+     * Get the currently configured Steemit address prefix. This prefix is used
+     * to parse keys in their WIF format.
+     * 
+     * @return The Steemit address prefix.
+     */
+    public SteemitAddressPrefix getSteemitAddressPrefix() {
+        return steemitAddressPrefix;
+    }
+
+    /**
+     * Get the configured, maximum time that the wrapper will wait for an answer
+     * of the websocket server.
+     * 
+     * @return Time in milliseconds
+     */
+    public long getTimeout() {
+        return timeout;
+    }
+
+    /**
+     * Get the currently configured time zone id.
+     * 
+     * @return The time zone id.
+     */
+    public String getTimeZoneId() {
+        return timeZoneId;
+    }
+
+    /**
+     * @return Get the configured websocket endpoint URI.
+     */
+    public URI getWebSocketEndpointURI() {
+        return webSocketEndpointURI;
+    }
+
+    /**
+     * Check if the SSL-Verification should be disabled.
+     * 
+     * @return True if the SSL-Verification should be disabled or false if not.
+     */
+    public boolean isSslVerificationDisabled() {
+        return sslVerificationDisabled;
+    }
+
+    /**
+     * Set the password which should be used to login to a node. This is not
+     * required if the node is not protected.
+     * 
+     * @param apiPassword
+     *            The password to use.
+     */
+    public void setApiPassword(char[] apiPassword) {
+        this.apiPassword = apiPassword;
+    }
+
+    /**
+     * Set the account name which should be used to login to a node. This is not
+     * required if the node is not protected.
+     * 
+     * @param apiUsername
+     *            The account name to use.
+     */
+    public void setApiUsername(AccountName apiUsername) {
+        this.apiUsername = apiUsername;
+    }
+
+    /**
+     * Set the chain id used to sign transactions. For the production chain the
+     * id is a 56bit long 0 sequence which is configured by default.
+     * 
+     * @param chainId
+     *            The chain id to set.
+     */
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
+    }
+
+    /**
+     * Override the default ClientEndpointConfig instance.
+     * 
+     * @param clientEndpointConfig
+     *            The configuration of the client end point.
+     */
+    public void setClientEndpointConfig(ClientEndpointConfig clientEndpointConfig) {
+        this.clientEndpointConfig = clientEndpointConfig;
     }
 
     /**
@@ -179,92 +308,13 @@ public class SteemJConfig {
     }
 
     /**
-     * Set the account name which should be used to login to a node. This is not
-     * required if the node is not protected.
+     * Define the Charset that should be used to encode Strings.
      * 
-     * @param apiUsername
-     *            The account name to use.
+     * @param encodingCharset
+     *            A Charset instance like StandardCharsets.UTF_8.
      */
-    public void setApiUsername(AccountName apiUsername) {
-        this.apiUsername = apiUsername;
-    }
-
-    /**
-     * Set the password which should be used to login to a node. This is not
-     * required if the node is not protected.
-     * 
-     * @param apiPassword
-     *            The password to use.
-     */
-    public void setApiPassword(char[] apiPassword) {
-        this.apiPassword = apiPassword;
-    }
-
-    /**
-     * Get the currently configured account name.
-     * 
-     * @return The currently configured account name.
-     */
-    public AccountName getApiUsername() {
-        return apiUsername;
-    }
-
-    /**
-     * Get the currently configured password.
-     * 
-     * @return The currently configured password.
-     */
-    public char[] getApiPassword() {
-        return apiPassword;
-    }
-
-    /**
-     * Check if the SSL-Verification should be disabled.
-     * 
-     * @return True if the SSL-Verification should be disabled or false if not.
-     */
-    public boolean isSslVerificationDisabled() {
-        return sslVerificationDisabled;
-    }
-
-    /**
-     * Set if the SSL-Verification should be disabled.
-     * 
-     * @param sslVerificationDisabled
-     *            Defines if the SSL-Verification should be disabled or not.
-     */
-    public void setSslVerificationDisabled(boolean sslVerificationDisabled) {
-        this.sslVerificationDisabled = sslVerificationDisabled;
-    }
-
-    /**
-     * Get the private key storage to manage the private keys for one or
-     * multiple accounts.
-     * 
-     * The private keys have been defined by the account creator (e.g.
-     * steemit.com) and are required to write data on the blockchain.
-     *
-     * <ul>
-     * <li>A posting key is required to vote, post or comment on content.</li>
-     * <li>An active key is required to interact with the market, to change keys
-     * and to vote for witnesses.</li>
-     * <li>An owner key is required to change the keys.</li>
-     * <li>A memo key is required to use private messages.</li>
-     * </ul>
-     * 
-     * @return The privateKeyStorage.
-     */
-    public PrivateKeyStorage getPrivateKeyStorage() {
-        return privateKeyStorage;
-    }
-
-    /**
-     * Get the currently configured maximum offset of the expiration date.
-     * 
-     * @return The maximum offset of the expiration date.
-     */
-    public long getMaximumExpirationDateOffset() {
-        return maximumExpirationDateOffset;
+    public void setEncodingCharset(Charset encodingCharset) {
+        this.encodingCharset = encodingCharset;
     }
 
     /**
@@ -288,63 +338,13 @@ public class SteemJConfig {
     }
 
     /**
-     * Get the currently configured time zone id.
+     * Define if the SSL-Verification should be disabled.
      * 
-     * @return The time zone id.
+     * @param sslVerificationDisabled
+     *            Defines if the SSL-Verification should be disabled or not.
      */
-    public String getTimeZoneId() {
-        return timeZoneId;
-    }
-
-    /**
-     * Get the currently configured Charset that will be used to encode Strings.
-     * 
-     * @return The configured Charset.
-     */
-    public Charset getEncodingCharset() {
-        return encodingCharset;
-    }
-
-    /**
-     * Define the Charset that should be used to encode Strings.
-     * 
-     * @param encodingCharset
-     *            A Charset instance like StandardCharsets.UTF_8.
-     */
-    public void setEncodingCharset(Charset encodingCharset) {
-        this.encodingCharset = encodingCharset;
-    }
-
-    /**
-     * Get the currently configured Steemit address prefix. This prefix is used
-     * to parse keys in their WIF format.
-     * 
-     * @return The Steemit address prefix.
-     */
-    public SteemitAddressPrefix getSteemitAddressPrefix() {
-        return steemitAddressPrefix;
-    }
-
-    /**
-     * Get the currently configured chain id used to sign transactions. For the
-     * production chain the id is a 56bit long 0 sequence which is configured by
-     * default.
-     * 
-     * @return The currently configured Chain ID.
-     */
-    public String getChainId() {
-        return chainId;
-    }
-
-    /**
-     * Set the chain id used to sign transactions. For the production chain the
-     * id is a 56bit long 0 sequence which is configured by default.
-     * 
-     * @param chainId
-     *            The chain id to set.
-     */
-    public void setChainId(String chainId) {
-        this.chainId = chainId;
+    public void setSslVerificationDisabled(boolean sslVerificationDisabled) {
+        this.sslVerificationDisabled = sslVerificationDisabled;
     }
 
     /**
@@ -359,28 +359,59 @@ public class SteemJConfig {
     }
 
     /**
-     * Receive a {@link eu.bittrade.libs.steemj.configuration.SteemJConfig
-     * SteemJConfig} instance.
+     * Override the default, maximum time that SteemJ will wait for an answer of
+     * the Steem Node. If set to <code>0</code> the timeout mechanism will be
+     * disabled.
      * 
-     * @return A SteemJConfig instance.
+     * @param timeout
+     *            Time in milliseconds.
+     * @throws IllegalArgumentException
+     *             If the value of timeout is negative.
      */
-    public static SteemJConfig getInstance() {
-        if (steemJConfigInstance == null) {
-            steemJConfigInstance = new SteemJConfig();
+    public void setTimeout(long timeout) {
+        if (timeout < 0) {
+            throw new IllegalArgumentException("The timeout has to be greater than 0. (0 will disable the timeout).");
         }
 
-        return steemJConfigInstance;
+        this.timeout = timeout;
     }
 
     /**
-     * Overrides the current
-     * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig SteemJConfig}
-     * instance and returns a new one.
+     * This method has the same functionality than
+     * {@link #setWebSocketEndpointURI(URI, boolean)
+     * setWebsocketEndpointURI(URI, boolean)}, but this method will enable the
+     * SSL verification by default.
      * 
-     * @return A SteemJConfig instance.
+     * @param webSocketEndpointURI
+     *            The URI of the node you want to connect to.
+     * @throws URISyntaxException
+     *             If the <code>websocketEndpointURI</code> is null.
      */
-    public static SteemJConfig getNewInstance() {
-        steemJConfigInstance = new SteemJConfig();
-        return steemJConfigInstance;
+    public void setWebSocketEndpointURI(URI webSocketEndpointURI) throws URISyntaxException {
+        setWebSocketEndpointURI(webSocketEndpointURI, false);
+    }
+
+    /**
+     * Configure the connection to the Steem Node by providing the endpoint URI
+     * and the SSL verification settings.
+     * 
+     * @param webSocketEndpointURI
+     *            The URI of the node you want to connect to.
+     * @param sslVerificationDisabled
+     *            Define if SteemJ should verify the SSL certificate of the
+     *            endpoint. This option will be ignored if the given
+     *            <code>webSocketEndpointURI</code> is using a non SSL protocol.
+     * @throws URISyntaxException
+     *             If the <code>websocketEndpointURI</code> is null.
+     */
+    public void setWebSocketEndpointURI(URI webSocketEndpointURI, boolean sslVerificationDisabled)
+            throws URISyntaxException {
+        if (webSocketEndpointURI == null) {
+            throw new URISyntaxException("websocketEndpointURI",
+                    "The websocketEndpointURI can't be null, because a valid URI to the RPC endpoint of a Steem Node is required.");
+        }
+
+        this.webSocketEndpointURI = webSocketEndpointURI;
+        this.sslVerificationDisabled = sslVerificationDisabled;
     }
 }
