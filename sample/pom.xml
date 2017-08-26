@@ -1,0 +1,52 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>steemj-sample</artifactId>
+
+	<name>SteemJ-Sample</name>
+	<description>An example application for SteemJ.</description>
+	<url>http://www.steemit.com/@dez1337</url>
+
+	<parent>
+		<groupId>eu.bittrade.libs</groupId>
+		<artifactId>steemj-parent</artifactId>
+		<version>0.4.0-SNAPSHOT</version>
+	</parent>
+
+	<licenses>
+		<license>
+			<name>GNU General Public License, Version 3</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>dez1337</name>
+			<email>dez1337@bittrade.eu</email>
+			<organization>bittrade.eu</organization>
+			<organizationUrl>http://www.bittrade.eu</organizationUrl>
+		</developer>
+	</developers>
+
+	<dependencies>
+		<dependency>
+			<groupId>eu.bittrade.libs</groupId>
+			<artifactId>steemj-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+</project>
