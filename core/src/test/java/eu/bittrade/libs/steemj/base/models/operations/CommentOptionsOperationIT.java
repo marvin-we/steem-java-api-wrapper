@@ -91,29 +91,6 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-<<<<<<< HEAD:core/src/test/java/eu/bittrade/libs/steemj/base/models/operations/CommentOptionsOperationIT.java
-    public void testOperationParsingWithExtension() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingCommentOptionsOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION_WITH_EXTENSION);
-
-        Operation commentOptionsOperation = blockContainingCommentOptionsOperation.getTransactions()
-                .get(TRANSACTION_INDEX_WITH_EXTENSION).getOperations().get(OPERATION_INDEX_WITH_EXTENSION);
-
-        assertThat(commentOptionsOperation, instanceOf(CommentOptionsOperation.class));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAuthor().getAccountName(),
-                equalTo(EXPECTED_AUTHOR_WITH_EXTENSION));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAllowVotes(),
-                equalTo(EXPECTED_VOTES_ALLOWED_WITH_EXTENSION));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink(), equalTo(EXPECTED_PERMANENT_LINK_WITH_EXTENSION));
-        
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getCommentPayoutBeneficiaries().getBeneficiaries().size(), equalTo(1));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getAccount().getAccountName(), equalTo(EXPECTED_BENEFICIARY_ACCOUNT));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0).getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getWeight(), equalTo(EXPECTED_BENEFICIARY_WEIGHT));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-=======
->>>>>>> 87ba745... Fix #62:src/test/java/eu/bittrade/libs/steemj/base/models/operations/CommentOptionsOperationIT.java
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
     }
