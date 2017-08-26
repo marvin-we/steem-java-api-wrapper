@@ -57,10 +57,11 @@ public class CommentOptionsOperation extends Operation {
         // Define the required key type for this operation.
         super(false);
         // Set default values:
-        Asset maxAcceptedPayout = new Asset();
-        maxAcceptedPayout.setAmount(1000000000);
-        maxAcceptedPayout.setSymbol(AssetSymbolType.SBD);
-        this.setMaxAcceptedPayout(maxAcceptedPayout);
+        Asset localMaxAcceptedPayout = new Asset();
+        localMaxAcceptedPayout.setAmount(1000000000);
+        localMaxAcceptedPayout.setSymbol(AssetSymbolType.SBD);
+
+        this.setMaxAcceptedPayout(localMaxAcceptedPayout);
         this.setPercentSteemDollars((short) 10000);
         this.setAllowVotes(true);
         this.setAllowCurationRewards(true);
@@ -192,10 +193,8 @@ public class CommentOptionsOperation extends Operation {
      */
     public List<CommentOptionsExtension> getExtensions() {
         if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList that contains an empty FutureExtension so
-            // one byte gets added to the signature for sure.
+            // Create a new ArrayList to avoid a NullPointerException.
             extensions = new ArrayList<>();
-            extensions.add(new CommentOptionsExtension());
         }
         return extensions;
     }
@@ -223,8 +222,14 @@ public class CommentOptionsOperation extends Operation {
             serializedCommentOptionsOperation.write(SteemJUtils.transformBooleanToByteArray(this.getAllowVotes()));
             serializedCommentOptionsOperation
                     .write(SteemJUtils.transformBooleanToByteArray(this.getAllowCurationRewards()));
-            for (CommentOptionsExtension futureExtensions : this.getExtensions()) {
-                serializedCommentOptionsOperation.write(futureExtensions.toByteArray());
+
+            if (this.getExtensions() == null || this.getExtensions().isEmpty()) {
+                byte[] extension = { 0x00 };
+                serializedCommentOptionsOperation.write(extension);
+            } else {
+                for (CommentOptionsExtension commentOptionsExtension : this.getExtensions()) {
+                    serializedCommentOptionsOperation.write(commentOptionsExtension.toByteArray());
+                }
             }
 
             return serializedCommentOptionsOperation.toByteArray();

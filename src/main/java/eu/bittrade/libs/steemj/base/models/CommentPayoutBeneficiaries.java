@@ -6,12 +6,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class represents a Steem "comment_payout_beneficiaries" object
@@ -19,39 +16,7 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommentPayoutBeneficiaries implements ByteTransformable {
-    @JsonIgnore
-    private int index;
     private List<BeneficiaryRouteType> beneficiaries;
-
-    /**
-     * Default constructor if no inner elements are present.
-     */
-    public CommentPayoutBeneficiaries() {
-    }
-
-    /**
-     * 
-     * @param index
-     */
-    @JsonCreator
-    public CommentPayoutBeneficiaries(@JsonProperty int index) {
-        this.index = index;
-    }
-
-    /**
-     * @return the index
-     */
-    public int getIndex() {
-        return index;
-    }
-
-    /**
-     * @param index
-     *            the index to set
-     */
-    public void setIndex(int index) {
-        this.index = index;
-    }
 
     /**
      * @return the beneficiaries
@@ -72,10 +37,12 @@ public class CommentPayoutBeneficiaries implements ByteTransformable {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentPayoutBeneficiaries = new ByteArrayOutputStream()) {
 
-            // TODO for (BeneficiaryRouteType veneficiaryRouteType :
-            // this.getBeneficiaries()) {
-            // serializedCommentPayoutBeneficiaries.write(veneficiaryRouteType.toByteArray());
-            // }
+            serializedCommentPayoutBeneficiaries
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getBeneficiaries().size()));
+
+            for (BeneficiaryRouteType beneficiaryRouteType : this.getBeneficiaries()) {
+                serializedCommentPayoutBeneficiaries.write(beneficiaryRouteType.toByteArray());
+            }
 
             return serializedCommentPayoutBeneficiaries.toByteArray();
         } catch (IOException e) {
