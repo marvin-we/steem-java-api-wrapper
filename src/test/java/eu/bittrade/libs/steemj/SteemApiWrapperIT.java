@@ -16,6 +16,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.math.BigInteger;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
@@ -46,10 +46,11 @@ import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.Vote;
+import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
@@ -333,7 +334,10 @@ public class SteemApiWrapperIT extends BaseIntegrationTest {
         final GlobalProperties properties = steemApiWrapper.getDynamicGlobalProperties();
 
         assertNotNull("expect properties", properties);
-        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000));
+        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000L));
+        assertTrue(properties.getHeadBlockId().getHashValue().matches("[0-9a-f]{40}"));
+        assertThat(properties.getHeadBlockId().getNumberFromHash(), greaterThan(123));
+        assertThat(properties.getTotalPow(), greaterThan(new BigInteger("123")));
     }
 
     @Category({ IntegrationTest.class })
