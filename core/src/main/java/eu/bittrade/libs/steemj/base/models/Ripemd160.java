@@ -7,7 +7,6 @@ import org.bitcoinj.core.Utils;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class is a wrapper for ripemd160 hashes.
