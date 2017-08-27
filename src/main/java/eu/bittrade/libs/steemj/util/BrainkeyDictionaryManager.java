@@ -8,10 +8,10 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.util.IOUtils;
 
 /**
- * As the {@link eu.bittrade.libs.steemj.util.KeyGenerator
- * KeyGenerator} class can be initiated several times with each of those
- * instances needing the dictionary, this class has been created to have the
- * dictionary in memory for only one time.
+ * As the {@link eu.bittrade.libs.steemj.util.KeyGenerator KeyGenerator} class
+ * can be initiated several times with each of those instances needing the
+ * dictionary, this class has been created to have the dictionary in memory for
+ * only one time.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -52,7 +52,7 @@ class BrainkeyDictionaryManager {
     /**
      * Get the current BrainkeyDictionaryManager instance.
      * 
-     * @return
+     * @return The current BrainkeyDictionaryManager instance.
      */
     public static BrainkeyDictionaryManager getInstance() {
         try {

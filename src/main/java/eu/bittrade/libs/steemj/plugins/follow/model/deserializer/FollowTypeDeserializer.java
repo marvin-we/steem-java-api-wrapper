@@ -3,7 +3,6 @@ package eu.bittrade.libs.steemj.plugins.follow.model.deserializer;
 import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
@@ -16,7 +15,7 @@ import eu.bittrade.libs.steemj.plugins.follow.enums.FollowType;
 public class FollowTypeDeserializer extends JsonDeserializer<FollowType> {
     @Override
     public FollowType deserialize(JsonParser jasonParser, DeserializationContext deserializationContext)
-            throws IOException, JsonProcessingException {
+            throws IOException {
 
         JsonToken currentToken = jasonParser.currentToken();
         if (currentToken != null && JsonToken.VALUE_STRING.equals(currentToken)) {

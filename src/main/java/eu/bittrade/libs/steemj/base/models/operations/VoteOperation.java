@@ -65,7 +65,8 @@ public class VoteOperation extends Operation {
     /**
      * Get the permanent link of the post or comment that has been voted for.
      * 
-     * @return
+     * @return The permanent link of the post or comment that has been voted
+     *         for.
      */
     public String getPermlink() {
         return permlink;
@@ -74,7 +75,7 @@ public class VoteOperation extends Operation {
     /**
      * Get the weight with that the user has voted for a comment or post.
      * 
-     * @return
+     * @return The weight with that the user has voted for a comment or post.
      */
     public short getWeight() {
         return weight;

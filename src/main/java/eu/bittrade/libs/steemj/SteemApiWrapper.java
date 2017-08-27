@@ -1418,19 +1418,22 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Get a list of account names which follow the <code>startFollower</code>.
+     * Get a list of account names which the <code>following</code> account is
+     * followed by.
      * 
      * @param following
-     *            The account name that started to follow the
-     *            <code>startFollower</code>. If you want to receive all followers you
-     *            need to use the same account name for both fields.
+     *            The account name for whose followers should be returned.
      * @param startFollower
-     *            The account name for which the followers are returned.
+     *            A filter to limit the number of results. If not empty, the
+     *            method will only return account names after the
+     *            <code>following</code> account has been followed by the
+     *            <code>startFollower</code> account.
      * @param type
      *            The follow type.
      * @param limit
      *            The maximum number of results returned.
-     * @return A list of account names which follow the <b>startFollower</b>.
+     * @return A list of account names that follow the <code>follower</code>
+     *         account..
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1457,19 +1460,23 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Get a list of account names which follow the <b>startFollower</b>.
+     * Get a list of account names which the <code>follower</code> account
+     * follows.
      * 
-     * @param following
-     *            The account name that started to follow the
-     *            <b>startFollower</b>. If you want to receive all followers you
-     *            need to use the same account name for both fields.
-     * @param startFollower
-     *            The account name for which the followers are returned.
+     * @param follower
+     *            The account name for which the account names should be
+     *            returned, that the <code>follower</code> is following.
+     * @param startFollowing
+     *            A filter to limit the number of results. If not empty, the
+     *            method will only return account names after the
+     *            <code>follower</code> account has followed the
+     *            <code>startFollowing</code> account.
      * @param type
      *            The follow type.
      * @param limit
      *            The maximum number of results returned.
-     * @return A list of account names which follow the <b>startFollower</b>.
+     * @return A list of account names the <code>follower</code> account is
+     *         following.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1482,13 +1489,13 @@ public class SteemApiWrapper {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<FollowApiObject> getFollowing(AccountName following, AccountName startFollower, FollowType type,
+    public List<FollowApiObject> getFollowing(AccountName follower, AccountName startFollowing, FollowType type,
             short limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWING);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { following.getAccountName(), startFollower.getAccountName(),
+        Object[] parameters = { follower.getAccountName(), startFollowing.getAccountName(),
                 type.toString().toLowerCase(), limit };
         requestObject.setAdditionalParameters(parameters);
 
@@ -1496,9 +1503,9 @@ public class SteemApiWrapper {
     }
 
     /**
-     * Get the amount of accounts following the given account and the number of
-     * accounts this account follows. Both values are wrapped in a
-     * FollowCountApiObject.
+     * Get the amount of accounts following the given <code>account</code> and
+     * the number of accounts this <code>account</code> follows. Both values are
+     * wrapped in a FollowCountApiObject.
      * 
      * @param account
      *            The account to get the number of followers / following
@@ -1528,12 +1535,20 @@ public class SteemApiWrapper {
     }
 
     /**
-     * TODO
+     * This method is like the {@link #getBlogEntries(AccountName, int, short)
+     * getBlogEntries(AccountName, int, short)} method, but instead of returning
+     * blog entries, the getFeedEntries method returns the feed of the given
+     * account.
      * 
      * @param account
+     *            The account to get the feed entries for.
      * @param entryId
+     *            The first feed entry id to return.
      * @param limit
-     * @return
+     *            The number of results.
+     * @return A list of feed entries from the given <code>author</code> based
+     *         on the given conditions (<code>entryId</code> and
+     *         <code>limit</code>).
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1559,12 +1574,19 @@ public class SteemApiWrapper {
     }
 
     /**
-     * TODO
+     * This method is like the {@link #getBlog(AccountName, int, short)
+     * getBlog(AccountName, int, short)} method, but instead of returning blog
+     * entries, the getFeed method returns the feed of the given account.
      * 
      * @param account
+     *            The account to get the feed entries for.
      * @param entryId
+     *            The first feed entry id to return.
      * @param limit
-     * @return
+     *            The number of results.
+     * @return A list of feed entries from the given <code>author</code> based
+     *         on the given conditions (<code>entryId</code> and
+     *         <code>limit</code>).
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1590,11 +1612,41 @@ public class SteemApiWrapper {
     }
 
     /**
+     * Get the blog entries of the given <code>author</code> based on the given
+     * coniditions.
+     * 
+     * Each blog entry of an <code>author</code> (resteemed or posted on his/her
+     * own) has an <code>entryId</code>, while the <code>entryId</code> starts
+     * with 0 for the first blog entry and is increment by 1 for each resteem or
+     * post of the <code>author</code>.
+     * 
+     * Steem allows to use the <code>entryId</code> as a search criteria: The
+     * first entry of the returned list is the blog entry with the given
+     * <code>entryId</code>. Beside that, the <code>limit</code> can be used to
+     * limit the number of results.
+     * 
+     * So if the method is called with <code>entryId</code> set to 5 and the
+     * <code>limit</code> is set to 2, the returned list will contain 2 entries:
+     * The first one is the blog entry with <code>entryId</code> of 5, the
+     * second one has the <code>entryId</code> 4.
+     * 
+     * If the <code>entryId</code> is set to 0, the first returned item will be
+     * the latest blog entry of the given <code>author</code>.
+     * 
+     * So if a user has 50 blog entries and this method is called with an
+     * <code>entryId</code> set to 0 and a <code>limit</code> of 2, the returned
+     * list will contain the blog entries with the <code>entryId</code>s 50 and
+     * 49.
      * 
      * @param account
+     *            The account to get the blog entries for.
      * @param entryId
+     *            The first blog entry id to return.
      * @param limit
-     * @return
+     *            The number of results.
+     * @return A list of blog entries from the given <code>author</code> based
+     *         on the given conditions (<code>entryId</code> and
+     *         <code>limit</code>).
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1621,11 +1673,19 @@ public class SteemApiWrapper {
     }
 
     /**
+     * Like {@link #getBlogEntries(AccountName, int, short)
+     * getBlogEntries(AccountName, int, short)}, but contains the whole content
+     * of the blog entry.
      * 
      * @param account
+     *            The account to get the blog entries for.
      * @param entryId
+     *            The first blog entry id to return.
      * @param limit
-     * @return
+     *            The number of results.
+     * @return A list of blog entries from the given <code>author</code> based
+     *         on the given conditions (<code>entryId</code> and
+     *         <code>limit</code>).
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1652,16 +1712,25 @@ public class SteemApiWrapper {
 
     /**
      * Get the reputation for one or more accounts. This method will return the
-     * reputation for the given {@code accountName} and the next {@code limit}
-     * accounts after the given one.
+     * reputation of the {@code limit} number of accounts that mostly match the
+     * given {@code accountName}.
      * 
      * <p>
      * <b>Example:</b>
+     * </p>
      * <p>
      * <code>getAccountReputations(new AccountName("dez1337"), 0);</code>
      * </p>
-     * This example will return the reputation of the account "dez1337".
      * <p>
+     * This example will return the reputation of the account "dez1337".
+     * </p>
+     * <p>
+     * <code>getAccountReputations(new AccountName("dez1337"), 1);</code>
+     * </p>
+     * <p>
+     * This example will return the reputation of the account "dez1337" and
+     * "dez243", because "dez243" is the most similar account name to "dez1337".
+     * </p>
      * 
      * @param accountName
      *            The first account name to get the reputation for.
@@ -1701,7 +1770,7 @@ public class SteemApiWrapper {
      *            The author of the post to get the rebloggers for.
      * @param permlink
      *            The permlink of the post to get the rebloggers for.
-     * @return
+     * @return A list of accounts that have reblogged a particular post.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1726,12 +1795,14 @@ public class SteemApiWrapper {
     }
 
     /**
-     * 
-     * Gets a list of authors that have had their content reblogged on a given
-     * blog account.
+     * Use this method to find out how many posts of different authors have been
+     * resteemed by the given <code>blogAccount</code>.
      * 
      * @param blogAccount
-     * @return
+     *            The account whose blog should be analyzed.
+     * @return A list of pairs, while each pair contains the author name and the
+     *         number of blog entries from this author published by the
+     *         <code>blogAuthor</code>.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the

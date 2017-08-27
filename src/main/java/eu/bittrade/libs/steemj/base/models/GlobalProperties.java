@@ -232,10 +232,9 @@ public class GlobalProperties {
      *         which change every round. Each witness posts what they think the
      *         maximum size should be as part of their witness properties, the
      *         median size is chosen to be the maximum block size for the round.
-     *
-     * @note The minimum value for maximum_block_size is defined by the protocol
-     *       to prevent the network from getting stuck by witnesses attempting
-     *       to set this too low.
+     *         <b>Notice:</b> The minimum value for maximum_block_size is
+     *         defined by the protocol to prevent the network from getting stuck
+     *         by witnesses attempting to set this too low.
      */
     public long getMaximumBlockSize() {
         return maximumBlockSize;

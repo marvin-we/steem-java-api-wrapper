@@ -21,21 +21,25 @@ public class FollowCountApiObject {
     private int followingCount;
 
     /**
-     * @return the account
+     * @return The account which the {@link #getFollowerCount()
+     *         getFollowerCount()} and {@link #getFollowingCount()
+     *         getFollowingCount()} results belong to.
      */
     public AccountName getAccount() {
         return account;
     }
 
     /**
-     * @return the followerCount
+     * @return The number of accounts following the {@link #getAccount()
+     *         getAccount()}.
      */
     public int getFollowerCount() {
         return followerCount;
     }
 
     /**
-     * @return the followingCount
+     * @return The number of accounts the {@link #getAccount()
+     *         getAccount()} account is following.
      */
     public int getFollowingCount() {
         return followingCount;

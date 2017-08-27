@@ -36,6 +36,7 @@ public class SteemJUtils {
     /**
      * 
      * TODO: Is there a nicer way to solve this?
+     * 
      * @param discussionSortType
      * @return
      */
@@ -233,8 +234,8 @@ public class SteemJUtils {
      * {@link eu.bittrade.libs.steemj.configuration.SteemJConfig SteemJConfig}.
      * 
      * @param date
-     *            The date in its String representation.
-     * @return
+     *            The date to transform.
+     * @return The date in its String representation.
      */
     public static String transformDateToString(Date date) {
         SimpleDateFormat simpleDateFormatForJSON = new SimpleDateFormat(

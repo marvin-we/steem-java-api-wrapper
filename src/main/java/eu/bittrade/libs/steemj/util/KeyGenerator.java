@@ -118,7 +118,9 @@ public class KeyGenerator {
     }
 
     /**
+     * Get the generated public key.
      * 
+     * @return The generated public key.
      */
     public PublicKey getPublicKey() {
         return new PublicKey(ECKey.fromPrivate(this.getPrivateKey().getPrivKeyBytes()));

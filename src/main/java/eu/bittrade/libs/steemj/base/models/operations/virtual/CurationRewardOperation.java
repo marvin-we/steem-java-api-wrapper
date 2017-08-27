@@ -65,7 +65,8 @@ public class CurationRewardOperation extends Operation {
      * Get the permanent link of the post or comment that this curation reward
      * is for.
      * 
-     * @return
+     * @return The permanent link of the post or comment that this curation
+     *         reward is for.
      */
     public String getCommentPermlink() {
         return commentPermlink;

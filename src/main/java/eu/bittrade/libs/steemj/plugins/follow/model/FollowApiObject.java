@@ -18,21 +18,23 @@ public class FollowApiObject {
     private List<FollowType> what;
 
     /**
-     * @return the follower
+     * @return The account which is following {@link #getFollowing()}.
      */
     public AccountName getFollower() {
         return follower;
     }
 
     /**
-     * @return the following
+     * @return The account which is followed by {@link #getFollower()}.
      */
     public AccountName getFollowing() {
         return following;
     }
 
     /**
-     * @return the what
+     * @return The variant of the follow (see
+     *         {@link eu.bittrade.libs.steemj.plugins.follow.enums.FollowType
+     *         FollowType}.
      */
     public List<FollowType> getWhat() {
         return what;
