@@ -36,7 +36,6 @@ public class CommentPayoutBeneficiaries implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentPayoutBeneficiaries = new ByteArrayOutputStream()) {
-            System.out.println("3");
             serializedCommentPayoutBeneficiaries
                     .write(SteemJUtils.transformLongToVarIntByteArray(this.getBeneficiaries().size()));
 
