@@ -13,8 +13,6 @@ import org.junit.Test;
 
 import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.operations.AccountWitnessVoteOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**

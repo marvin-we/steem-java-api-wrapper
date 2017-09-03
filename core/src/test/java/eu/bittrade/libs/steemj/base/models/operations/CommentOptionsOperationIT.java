@@ -15,8 +15,6 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -74,8 +72,7 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingCommentOptionsOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingCommentOptionsOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation commentOptionsOperation = blockContainingCommentOptionsOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

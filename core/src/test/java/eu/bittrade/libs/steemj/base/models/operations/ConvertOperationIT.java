@@ -15,8 +15,6 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.operations.ConvertOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -75,8 +73,8 @@ public class ConvertOperationIT extends BaseIntegrationTest {
     public void testOperationParsing() throws SteemCommunicationException {
         SignedBlockWithInfo blockContainingConvertOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
-        Operation convertOperation = blockContainingConvertOperation.getTransactions().get(TRANSACTION_INDEX).getOperations()
-                .get(OPERATION_INDEX);
+        Operation convertOperation = blockContainingConvertOperation.getTransactions().get(TRANSACTION_INDEX)
+                .getOperations().get(OPERATION_INDEX);
 
         assertThat(convertOperation, instanceOf(ConvertOperation.class));
         assertThat(((ConvertOperation) convertOperation).getOwner().getAccountName(), equalTo(EXPECTED_OWNER));

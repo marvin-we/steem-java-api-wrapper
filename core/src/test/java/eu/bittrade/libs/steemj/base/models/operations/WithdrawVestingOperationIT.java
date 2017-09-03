@@ -15,8 +15,6 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.WithdrawVestingOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -68,7 +66,8 @@ public class WithdrawVestingOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingWithdrawVestingOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingWithdrawVestingOperation = steemJ
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation withdrawVestingOperation = blockContainingWithdrawVestingOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

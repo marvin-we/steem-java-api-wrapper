@@ -82,8 +82,7 @@ public class WitnessUpdateOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testOperationParsing() throws SteemCommunicationException {
-        SignedBlockWithInfo blockContainingWitnessUpdateOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        SignedBlockWithInfo blockContainingWitnessUpdateOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation witnessUpdateOperation = blockContainingWitnessUpdateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

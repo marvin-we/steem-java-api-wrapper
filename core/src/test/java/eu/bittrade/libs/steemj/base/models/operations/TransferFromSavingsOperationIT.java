@@ -13,14 +13,12 @@ import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.TransferFromSavingsOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
- * Verify the functionality of the "transfer from savings operation"
- * under the use of real api calls.
+ * Verify the functionality of the "transfer from savings operation" under the
+ * use of real api calls.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

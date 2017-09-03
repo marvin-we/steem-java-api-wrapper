@@ -72,7 +72,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * Set the amount of Steem that should be collected. Please note that it is
      * not possible to collect more than that what is available. You can check
      * the available amount by requesting the Account information using
-     * {@link eu.bittrade.libs.steemj.Steemj#getAccounts(java.util.List)
+     * {@link eu.bittrade.libs.steemj.steemJ#getAccounts(java.util.List)
      * getAccounts(List)} method.
      * 
      * @param rewardSteem
@@ -96,7 +96,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * that it is not possible to collect more than that what is available. You
      * can check the available amount by requesting the Account information
      * using
-     * {@link eu.bittrade.libs.steemj.Steemj#getAccounts(java.util.List)
+     * {@link eu.bittrade.libs.steemj.steemJ#getAccounts(java.util.List)
      * getAccounts(List)} method.
      * 
      * @param rewardSbd
@@ -119,7 +119,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * Set the amount of Vests that should be collected. Please note that it is
      * not possible to collect more than that what is available. You can check
      * the available amount by requesting the Account information using
-     * {@link eu.bittrade.libs.steemj.Steemj#getAccounts(java.util.List)
+     * {@link eu.bittrade.libs.steemj.steemJ#getAccounts(java.util.List)
      * getAccounts(List)} method.
      * 
      * @param rewardVests

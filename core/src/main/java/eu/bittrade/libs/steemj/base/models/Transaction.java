@@ -188,7 +188,7 @@ public class Transaction implements ByteTransformable, Serializable {
     /**
      * Set the ref block prefix by providing its String representation. The
      * String representation can be received from the @link
-     * {@link eu.bittrade.libs.steemj.Steemj#getDynamicGlobalProperties
+     * {@link eu.bittrade.libs.steemj.steemJ#getDynamicGlobalProperties
      * getDynamicGlobalProperties} method.
      * 
      * @param refBlockPrefix

@@ -15,8 +15,6 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
