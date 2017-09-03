@@ -1,52 +1,4 @@
-![SteemJ Logo](https://camo.githubusercontent.com/a325dd7ebceee15b8ca3fd57383c4e8330cc0425/687474703a2f2f696d6775722e636f6d2f784a4c514e31752e706e67)
-
-This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
-
-# Full Documentation
-- Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki) for full documentation, examples, operational details and other information.
-- Or have a look at the JavaDoc.
-
-# Communication
-- Please contact me on [Steemit.com](https://steemit.com/@dez1337)
-- Or create an [Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues) here on GitHub
-
-# Contributors
-- [inertia](https://steemit.com/@inertia) provided a bunch of unit tests to this project.
-- An article from [Kyle](https://steemit.com/@klye) has been used to improve the documentation of the methods.
-- The [guide](https://steemit.com/steem/@xeroc/steem-transaction-signing-in-a-nutshell) from [xeroc](https://steemit.com/@xeroc) shows how to create and sign transactions.
-
-# Binaries
-SteemJ binaries are pushed into the maven central repository and can be integrated with a bunch of build management tools like Maven.
-
-## Maven
-File: <i>pom.xml</i>
-```Xml
-	<dependency>
-            <groupId>eu.bittrade.libs</groupId>
-            <artifactId>steem-api-wrapper</artifactId>
-            <version>0.3.2</version>
-	</dependency>
-```
-
-Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki/How-to-add-SteemJ-to-your-project) to find examples for Maven, Ivy, Gradle and others.
-
-# How to build the project
-The project requires Maven and Java to be installed on your machine. It can be build with the default maven command:
-
->mvn clean package
-
-The resulting JAR can be found in the target directory as usual. Please notice that some integration tests require different private keys. Please provide them as -D parameter or use the properties file ( *src/test/resources/accountDetailsUsedDuringTests.properties* ) to define them. If you do not want to execute tests at all add *"-Dmaven.test.skip"* to the mvn call which skips the test execution during the build.
-
-# Bugs and Feedback
-For bugs or feature requests please create a [GitHub Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues). For general discussions or questions you can also reply to one of the SteemJ update posts on [Steemit.com](https://steemit.com/@dez1337).
-
-# Example
-The following code is a small example showing how to use Version 0.3.2 of the API Wrapper.
-
-<b>Attention!</b> The private keys provided in this sample a actually not correct and will result in an error if not changed.
-
-```Java
-package eu.bittrade.libs.steemj;
+package my.sample.project;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,9 +9,10 @@ import java.util.Map;
 import javax.activity.InvalidActivityException;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
@@ -75,33 +28,32 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
-public class SteemJExample {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SteemJExample.class);
+public class SteemJUsageExample {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SteemJUsageExample.class);
 
-   public static void main(String args[]) {
+    public static void main(String args[]) {
         // Change the default settings if needed.
         SteemJConfig myConfig = SteemJConfig.getInstance();
-
         myConfig.setTimeout(100000L);
         try {
-            myConfig.setWebSocketEndpointURI(new URI("wss://this.piston.rocks"));
-            myConfig.setSslVerificationDisabled(true);
+            myConfig.setWebSocketEndpointURI(new URI("wss://this.piston.rocks"), true);
         } catch (URISyntaxException e) {
             throw new RuntimeException("The given URI is not valid.", e);
         }
 
-        List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
-
-        privateKeys.add(
-                new ImmutablePair<>(PrivateKeyType.POSTING, "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"));
-        privateKeys
-                .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KQasdf7ASD8weASdW37FSSsadfAImkwASd732QzDeyXtP79zk"));
-
-        myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
         try {
             // Create a new apiWrapper with your config object.
-            Steemj steemJ = new Steemj();
+            SteemJ steemJ = new SteemJ();
+            
+
+            List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
+            privateKeys.add(
+                    new ImmutablePair<>(PrivateKeyType.POSTING, "YOURPRIVATEPOSTINGKEY"));
+            privateKeys
+                    .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "YOURPRIVATEACTIVEKEY"));
+
+            myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
             // Let's have a look at the account history of dez1337
             Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory("dez1337", 100, 100);
@@ -128,11 +80,11 @@ public class SteemJExample {
             // Get the current RefBlockNum and RefBlockPrefix from the global
             // properties.
             GlobalProperties globalProperties = steemJ.getDynamicGlobalProperties();
-            int refBlockNum = (globalProperties.getHeadBlockNumber() & 0xFFFF);
 
             Transaction transaction = new Transaction();
-            transaction.setRefBlockNum(refBlockNum);
-            transaction.setRefBlockPrefix(globalProperties.getHeadBlockId());
+
+            transaction.setRefBlockPrefix(globalProperties.getHeadBlockId().getHashValue());
+            transaction.setRefBlockNum(globalProperties.getHeadBlockId().getNumberFromHash());
             transaction.setOperations(operations);
 
             try {
@@ -142,8 +94,7 @@ public class SteemJExample {
             }
             steemJ.broadcastTransaction(transaction);
 
-            LOGGER.info("The HEX representation of this transaction it {}.",
-                    steemJ.getTransactionHex(transaction));
+            LOGGER.info("The HEX representation of this transaction it {}.", steemJ.getTransactionHex(transaction));
 
             // Get the current Price
             LOGGER.info("The current price in the internal market is {}.",
@@ -179,5 +130,5 @@ public class SteemJExample {
             LOGGER.error("Error!", e);
         }
     }
+
 }
-```

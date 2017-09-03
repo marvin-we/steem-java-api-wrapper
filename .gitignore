@@ -12,3 +12,11 @@ log4j2.xml
 steem-api-wrapper.iml
 accountDetailsUsedDuringTests.properties
 
+/*.project
+/.settings
+/sample/*.project
+*.classpath
+.settings
+.settings
+*.project
+*.classpath
