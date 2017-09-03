@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -13,7 +14,9 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public abstract class Ripemd160 implements ByteTransformable {
+public abstract class Ripemd160 implements ByteTransformable, Serializable {
+    /** Generated serial uid. */
+    private static final long serialVersionUID = 7984783145088522082L;
     /**
      * Contains the ripemd160.
      */

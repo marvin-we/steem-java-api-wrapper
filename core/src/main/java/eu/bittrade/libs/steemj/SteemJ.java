@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
-import eu.bittrade.libs.steemj.base.models.Transaction;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -128,7 +128,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public void broadcastTransaction(Transaction transaction) throws SteemCommunicationException {
+    public void broadcastTransaction(SignedTransaction transaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
@@ -141,11 +141,11 @@ public class SteemJ {
     }
 
     // TODO implement this!
-    public Boolean broadcastTransactionSynchronous(String trx) throws SteemCommunicationException {
+    public Boolean broadcastTransactionSynchronous(SignedTransaction transaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
-        String[] parameters = { trx };
+        Object[] parameters = { transaction };
         requestObject.setAdditionalParameters(parameters);
 
         return null;
@@ -1056,7 +1056,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public String getTransactionHex(Transaction signedTransaction) throws SteemCommunicationException {
+    public String getTransactionHex(SignedTransaction signedTransaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_TRANSACTION_HEX);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1404,7 +1404,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Boolean verifyAuthority(Transaction signedTransaction) throws SteemCommunicationException {
+    public Boolean verifyAuthority(SignedTransaction signedTransaction) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.VERIFY_AUTHORITY);
         requestObject.setSteemApi(SteemApis.DATABASE_API);

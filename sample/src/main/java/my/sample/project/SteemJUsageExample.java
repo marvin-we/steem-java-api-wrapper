@@ -16,7 +16,7 @@ import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.Transaction;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
@@ -81,7 +81,7 @@ public class SteemJUsageExample {
             // properties.
             GlobalProperties globalProperties = steemJ.getDynamicGlobalProperties();
 
-            Transaction transaction = new Transaction();
+            SignedTransaction transaction = new SignedTransaction();
 
             transaction.setRefBlockPrefix(globalProperties.getHeadBlockId().getHashValue());
             transaction.setRefBlockNum(globalProperties.getHeadBlockId().getNumberFromHash());

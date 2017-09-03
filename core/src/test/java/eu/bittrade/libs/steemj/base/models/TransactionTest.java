@@ -10,7 +10,7 @@ import org.bitcoinj.core.Utils;
 import org.junit.Test;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Transaction;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 
@@ -36,7 +36,7 @@ public class TransactionTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        Transaction transaction = new Transaction();
+        SignedTransaction transaction = new SignedTransaction();
         transaction.setExpirationDate(new TimePointSec("2016-08-08T12:24:17"));
         transaction.setRefBlockNum((short) 36029);
         transaction.setRefBlockPrefix(1164960351);

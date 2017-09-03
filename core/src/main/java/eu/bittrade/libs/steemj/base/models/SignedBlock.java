@@ -12,12 +12,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class SignedBlock extends SignedBlockHeader {
     // TODO: Original type is vector<signed_transaction> - Do we implement the
     // signed_transaction object?.
-    protected List<Transaction> transactions;
+    protected List<SignedTransaction> transactions;
 
     /**
      * @return the transactions
      */
-    public List<Transaction> getTransactions() {
+    public List<SignedTransaction> getTransactions() {
         return transactions;
     }
 
