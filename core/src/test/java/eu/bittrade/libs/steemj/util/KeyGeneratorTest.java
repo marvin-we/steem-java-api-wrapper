@@ -15,7 +15,6 @@ import eu.bittrade.libs.steemj.util.KeyGenerator;
  * "https://github.com/steemit/steem-python/blob/master/tests/steembase/test_base_account.py">GitHub</a>).
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
- *
  */
 public class KeyGeneratorTest {
     @Test

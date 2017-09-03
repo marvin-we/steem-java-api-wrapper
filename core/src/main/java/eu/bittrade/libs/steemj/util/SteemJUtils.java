@@ -13,6 +13,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.VarInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +40,7 @@ public class SteemJUtils {
      * TODO: Is there a nicer way to solve this?
      * 
      * @param discussionSortType
-     * @return
+     * @return The request type.
      */
     public static RequestMethods getEquivalentRequestMethod(DiscussionSortType discussionSortType) {
         switch (discussionSortType) {
@@ -261,5 +263,23 @@ public class SteemJUtils {
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
         calendar.setTime(simpleDateFormat.parse(dateTime + SteemJConfig.getInstance().getTimeZoneId()));
         return calendar.getTimeInMillis();
+    }
+
+    /**
+     * Get the WIF representation of a private key.
+     * 
+     * @param privateKey
+     *            The private key to get WIF representation for.
+     * @return The WIF representation of the given private key.
+     * @throws IllegalStateException
+     *             If no private key is present in the given ECKey instance.
+     */
+    public static String privateKeyToWIF(ECKey privateKey) throws IllegalStateException {
+        ECKey currentPrivateKey = privateKey;
+        if (currentPrivateKey.isCompressed()) {
+            currentPrivateKey = currentPrivateKey.decompress();
+        }
+        return currentPrivateKey.getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET))
+                .toBase58();
     }
 }

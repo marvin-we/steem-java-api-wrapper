@@ -84,8 +84,7 @@ public class KeyGenerator {
      * @return The uncompressed private key in a WI-Format.
      */
     public String getPrivateKeyAsWIF() {
-        return this.getPrivateKey().decompress()
-                .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58();
+        return SteemJUtils.privateKeyToWIF(this.getPrivateKey());
     }
 
     /**
