@@ -128,11 +128,11 @@ public class SteemJExample {
             // Get the current RefBlockNum and RefBlockPrefix from the global
             // properties.
             GlobalProperties globalProperties = steemJ.getDynamicGlobalProperties();
-            int refBlockNum = (globalProperties.getHeadBlockNumber() & 0xFFFF);
 
             Transaction transaction = new Transaction();
-            transaction.setRefBlockNum(refBlockNum);
-            transaction.setRefBlockPrefix(globalProperties.getHeadBlockId());
+
+            transaction.setRefBlockPrefix(globalProperties.getHeadBlockId().getHashValue());
+            transaction.setRefBlockNum(globalProperties.getHeadBlockId().getNumberFromHash());
             transaction.setOperations(operations);
 
             try {
@@ -166,7 +166,6 @@ public class SteemJExample {
             LOGGER.info(
                     "You may also want to vote for some posts to generate some Steem which is currently worth about {}.",
                     steemJ.getCurrentMedianHistoryPrice().getBase());
-            steemJ.getPotentialSignatures();
 
             // Force an error response:
             steemJ.getAccountVotes("thisAcountDoesNotExistYet");
