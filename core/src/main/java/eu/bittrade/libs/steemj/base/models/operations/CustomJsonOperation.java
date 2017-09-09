@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,37 +98,48 @@ public class CustomJsonOperation extends Operation {
     }
 
     /**
-     * Plugin ID (e.g. follow)
-     * 
-     * @return
+     * @return The plugin id (e.g. <code>follow</code>").
      */
     public String getId() {
         return id;
     }
 
     /**
+     * Set the plugin id for this operation.
      * 
      * @param id
-     *            TODO: Must be less than 32 characters long.
+     *            The plugin id of this Operation (e.g. <code>follow</code>").
+     * @throws InvalidParameterException
+     *             If the id has more than 31 characters.
      */
     public void setId(String id) {
+        if (id.length() > 32) {
+            throw new InvalidParameterException("The ID must be less than 32 characters long.");
+        }
+
         this.id = id;
     }
 
     /**
-     * 
-     * @return
+     * @return The JSON covered by this Operation in its String representation.
      */
     public String getJson() {
         return json;
     }
 
     /**
+     * Set the JSON String that should be send with this Operation.
      * 
      * @param json
-     *            Must be proper utf8 / JSON string.
+     *            The JSON to send.
+     * @throws InvalidParameterException
+     *             If the given <code>json</code> is not valid.
      */
     public void setJson(String json) {
+        if (!SteemJUtils.verifyJsonString(json)) {
+            throw new InvalidParameterException("The given String is no valid JSON");
+        }
+
         this.json = json;
     }
 

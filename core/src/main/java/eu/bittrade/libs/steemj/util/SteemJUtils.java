@@ -19,6 +19,8 @@ import org.bitcoinj.core.VarInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
@@ -33,6 +35,26 @@ public class SteemJUtils {
 
     /** Add a private constructor to hide the implicit public one. */
     private SteemJUtils() {
+    }
+
+    /**
+     * This method can be used to verify, if the given String is a valid JSON
+     * string.
+     * 
+     * @param customJsonString
+     *            The string to be checked.
+     * @return <code>true</code> If the given String is valid JSON,
+     *         <code>false</code> if not.
+     */
+    public static boolean verifyJsonString(String customJsonString) {
+        boolean valid = true;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.readTree(customJsonString);
+        } catch (IOException e) {
+            valid = false;
+        }
+        return valid;
     }
 
     /**
