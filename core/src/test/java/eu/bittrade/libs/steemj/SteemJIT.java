@@ -21,7 +21,6 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -308,7 +307,8 @@ public class SteemJIT extends BaseIntegrationTest {
         for (final DiscussionSortType type : DiscussionSortType.values()) {
             // Some methods require other parameters, so skip them here and
             // check them afterwards.
-            if (type.equals(DiscussionSortType.GET_DISCUSSIONS_BY_FEED) || type.equals(DiscussionSortType.GET_DISCUSSIONS_BY_BLOG)) {
+            if (type.equals(DiscussionSortType.GET_DISCUSSIONS_BY_FEED)
+                    || type.equals(DiscussionSortType.GET_DISCUSSIONS_BY_BLOG)) {
                 continue;
             }
             final List<Discussion> discussions = steemJ.getDiscussionsBy(discussionQuery, type);
@@ -325,7 +325,7 @@ public class SteemJIT extends BaseIntegrationTest {
         assertNotNull("expect discussions", discussions);
         assertThat("expect discussions in " + DiscussionSortType.GET_DISCUSSIONS_BY_FEED + " greater than zero",
                 discussions.size(), greaterThanOrEqualTo(0));
-        
+
         final List<Discussion> discussions2 = steemJ.getDiscussionsBy(discussionQuery,
                 DiscussionSortType.GET_DISCUSSIONS_BY_BLOG);
         assertNotNull("expect discussions", discussions2);

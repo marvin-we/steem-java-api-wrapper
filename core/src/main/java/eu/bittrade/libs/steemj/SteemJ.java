@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
-import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -40,7 +40,6 @@ import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.communication.dto.GetDiscussionParametersDTO;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
@@ -58,7 +57,6 @@ import eu.bittrade.libs.steemj.plugins.follow.model.FeedEntry;
 import eu.bittrade.libs.steemj.plugins.follow.model.FollowApiObject;
 import eu.bittrade.libs.steemj.plugins.follow.model.FollowCountApiObject;
 import eu.bittrade.libs.steemj.plugins.follow.model.PostsPerAuthorPair;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class is a wrapper for the Steem web socket API.
