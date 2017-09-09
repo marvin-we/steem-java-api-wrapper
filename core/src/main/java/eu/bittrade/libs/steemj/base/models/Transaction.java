@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.bitcoinj.core.Utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -138,16 +139,28 @@ public class Transaction implements Serializable {
     }
 
     /**
-     * Set the ref block prefix by providing its long representation.
-     * 
-     * The ref_block_prefix on the other hand is obtain from the block id of
-     * that particular reference block.
+     * Set the ref block prefix by providing its long representation. If you
+     * only have the String representation use {@link #setRefBlockPrefix(String)
+     * setRefBlockPrefix(String)}.
      * 
      * @param refBlockPrefix
      *            The ref block prefix.
      */
     public void setRefBlockPrefix(long refBlockPrefix) {
         this.refBlockPrefix = (int) refBlockPrefix;
+    }
+
+    /**
+     * Set the ref block prefix by providing its String representation. The
+     * String representation can be received from the @link
+     * {@link eu.bittrade.libs.steemj.SteemJ#getDynamicGlobalProperties
+     * getDynamicGlobalProperties} method.
+     * 
+     * @param refBlockPrefix
+     *            The String representation of the ref block prefix.
+     */
+    public void setRefBlockPrefix(String refBlockPrefix) {
+        this.refBlockPrefix = (int) Utils.readUint32(Utils.HEX.decode(refBlockPrefix), 4);
     }
 
     /**

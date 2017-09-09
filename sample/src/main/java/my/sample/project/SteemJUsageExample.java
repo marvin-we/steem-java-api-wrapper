@@ -41,17 +41,13 @@ public class SteemJUsageExample {
             throw new RuntimeException("The given URI is not valid.", e);
         }
 
-
         try {
             // Create a new apiWrapper with your config object.
             SteemJ steemJ = new SteemJ();
-            
 
             List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
-            privateKeys.add(
-                    new ImmutablePair<>(PrivateKeyType.POSTING, "YOURPRIVATEPOSTINGKEY"));
-            privateKeys
-                    .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "YOURPRIVATEACTIVEKEY"));
+            privateKeys.add(new ImmutablePair<>(PrivateKeyType.POSTING, "YOURPRIVATEPOSTINGKEY"));
+            privateKeys.add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "YOURPRIVATEACTIVEKEY"));
 
             myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
@@ -117,7 +113,6 @@ public class SteemJUsageExample {
             LOGGER.info(
                     "You may also want to vote for some posts to generate some Steem which is currently worth about {}.",
                     steemJ.getCurrentMedianHistoryPrice().getBase());
-            steemJ.getPotentialSignatures();
 
             // Force an error response:
             steemJ.getAccountVotes("thisAcountDoesNotExistYet");

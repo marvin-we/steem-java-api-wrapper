@@ -44,12 +44,12 @@ public abstract class Ripemd160 implements ByteTransformable, Serializable {
     }
 
     /**
-     * Get the wrapped hash value in its decoded form.
+     * Get the wrapped hash value in its long representation.
      * 
-     * @return The wrapped hash value in its decoded form.
+     * @return The wrapped hash value in its long representation.
      */
-    public String getHashValue() {
-        return Utils.HEX.encode(hashValue);
+    public long getHashValue() {
+        return Utils.readUint32(hashValue, 4);
     }
 
     /**
@@ -74,12 +74,11 @@ public abstract class Ripemd160 implements ByteTransformable, Serializable {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
-        return null;
+        return this.hashValue;
     }
 
     @Override
     public String toString() {
-        return this.getHashValue();
+        return Utils.HEX.encode(this.hashValue);
     }
 }
