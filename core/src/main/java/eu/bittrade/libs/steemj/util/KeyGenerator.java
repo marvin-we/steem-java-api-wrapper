@@ -7,7 +7,6 @@ import java.security.Security;
 import java.util.ArrayList;
 
 import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.NetworkParameters;
 
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;

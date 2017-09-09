@@ -16,7 +16,6 @@ import eu.bittrade.libs.steemj.enums.SteemApis;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-// TODO: Verify data in set-methods.
 @JsonPropertyOrder({ "jsonrpc", "params", "id", "method" })
 public class RequestWrapperDTO {
     private static final ObjectMapper MAPPER = new ObjectMapper();

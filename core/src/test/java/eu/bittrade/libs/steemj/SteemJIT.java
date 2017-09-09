@@ -21,6 +21,7 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +38,7 @@ import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
@@ -298,20 +300,37 @@ public class SteemJIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetDiscussionBy() throws Exception {
+        final DiscussionQuery discussionQuery = new DiscussionQuery();
+        discussionQuery.setLimit(1);
+        discussionQuery.setTag("steemit");
+        discussionQuery.setStartAuthor(new AccountName("steemitblog"));
 
-        final DiscussionSortType[] sortTypes = new DiscussionSortType[] { DiscussionSortType.SORT_BY_TRENDING,
-                DiscussionSortType.SORT_BY_CREATED, DiscussionSortType.SORT_BY_ACTIVE,
-                DiscussionSortType.SORT_BY_CASHOUT, DiscussionSortType.SORT_BY_VOTES,
-                DiscussionSortType.SORT_BY_CHILDREN, DiscussionSortType.SORT_BY_HOT, DiscussionSortType.SORT_BY_BLOG,
-                DiscussionSortType.SORT_BY_PROMOTED, DiscussionSortType.SORT_BY_PAYOUT,
-                DiscussionSortType.SORT_BY_FEED };
-
-        for (final DiscussionSortType type : sortTypes) {
-            final List<Discussion> discussions = steemJ.getDiscussionsBy("steemit", 1, type);
+        for (final DiscussionSortType type : DiscussionSortType.values()) {
+            // Some methods require other parameters, so skip them here and
+            // check them afterwards.
+            if (type.equals(DiscussionSortType.GET_DISCUSSIONS_BY_FEED) || type.equals(DiscussionSortType.GET_DISCUSSIONS_BY_BLOG)) {
+                continue;
+            }
+            final List<Discussion> discussions = steemJ.getDiscussionsBy(discussionQuery, type);
             assertNotNull("expect discussions", discussions);
             assertThat("expect discussions in " + type + " greater than zero", discussions.size(),
                     greaterThanOrEqualTo(0));
         }
+
+        // TODO: Clean this up..
+        discussionQuery.setStartAuthor(null);
+
+        final List<Discussion> discussions = steemJ.getDiscussionsBy(discussionQuery,
+                DiscussionSortType.GET_DISCUSSIONS_BY_FEED);
+        assertNotNull("expect discussions", discussions);
+        assertThat("expect discussions in " + DiscussionSortType.GET_DISCUSSIONS_BY_FEED + " greater than zero",
+                discussions.size(), greaterThanOrEqualTo(0));
+        
+        final List<Discussion> discussions2 = steemJ.getDiscussionsBy(discussionQuery,
+                DiscussionSortType.GET_DISCUSSIONS_BY_BLOG);
+        assertNotNull("expect discussions", discussions2);
+        assertThat("expect discussions in " + DiscussionSortType.GET_DISCUSSIONS_BY_FEED + " greater than zero",
+                discussions2.size(), greaterThanOrEqualTo(0));
     }
 
     @Category({ IntegrationTest.class })

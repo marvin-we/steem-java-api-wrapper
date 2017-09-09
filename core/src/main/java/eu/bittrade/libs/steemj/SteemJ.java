@@ -19,6 +19,7 @@ import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
+import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
@@ -598,13 +599,11 @@ public class SteemJ {
     /**
      * Get active discussions for a specified tag.
      * 
-     * @param tag
-     *            Get discussions that are tagged with this tag.
-     * @param limit
-     *            The number of results.
+     * @param discussionQuery
+     *            A query defining specific search parameters.
      * @param sortBy
-     *            The way how the results should be sorted by.
-     * @return A list of discussions.
+     *            Choose the method used for sorting the results.
+     * @return A list of discussions matching the given conditions.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -617,18 +616,13 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getDiscussionsBy(String tag, int limit, DiscussionSortType sortBy)
+    public List<Discussion> getDiscussionsBy(DiscussionQuery discussionQuery, DiscussionSortType sortBy)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
-        requestObject.setApiMethod(SteemJUtils.getEquivalentRequestMethod(sortBy));
+        requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        // This steem api is the most non standardized shit I've ever seen in my
-        // life. Here goes the workaround:
-        GetDiscussionParametersDTO getDiscussionParameterDTO = new GetDiscussionParametersDTO();
-        getDiscussionParameterDTO.setTag(tag);
-        getDiscussionParameterDTO.setLimit(String.valueOf(limit));
-        Object[] parameters = { getDiscussionParameterDTO };
+        Object[] parameters = { discussionQuery };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
