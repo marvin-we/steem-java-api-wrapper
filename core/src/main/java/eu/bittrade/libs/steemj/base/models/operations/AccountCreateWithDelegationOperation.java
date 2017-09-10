@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateWithDelegationOperation extends AbstractAccountCreateOperation {
+public class AccountCreateWithDelegationOperation extends AbstractAccountOperation {
     private Asset fee;
     private Asset delegation;
     @SignatureRequired(type = PrivateKeyType.ACTIVE)

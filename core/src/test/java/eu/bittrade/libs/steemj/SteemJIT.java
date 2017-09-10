@@ -145,7 +145,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testAccountCount() throws Exception {
+    public void testGetAccountCount() throws Exception {
         final int accountCount = steemJ.getAccountCount();
 
         assertThat("expect the number of accounts greater than 122908", accountCount, greaterThan(122908));
@@ -153,7 +153,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testAccountHistory() throws Exception {
+    public void testGetAccountHistory() throws Exception {
         final Map<Integer, AppliedOperation> accountHistorySetOne = steemJ.getAccountHistory(ACCOUNT, 10, 10);
         assertEquals("expect response to contain 10 results", 11, accountHistorySetOne.size());
 
@@ -171,7 +171,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testActiveVotes() throws Exception {
+    public void testGetActiveVotes() throws Exception {
         // Get the votes done by the specified account:
         final List<Vote> votes = steemJ.getAccountVotes(ACCOUNT);
         final List<VoteState> activeVotesForArticle = steemJ.getActiveVotes(ACCOUNT, PERMLINK);
@@ -208,7 +208,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testCurrentMedianHistoryPrice() throws Exception {
+    public void testGetCurrentMedianHistoryPrice() throws Exception {
         final Asset base = steemJ.getCurrentMedianHistoryPrice().getBase();
         final Asset quote = steemJ.getCurrentMedianHistoryPrice().getQuote();
 
@@ -400,7 +400,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testHardforkVersion() throws Exception {
+    public void testGetHardforkVersion() throws Exception {
         final String hardforkVersion = steemJ.getHardforkVersion();
 
         assertNotNull("Expect hardfork version to be present.", hardforkVersion);
@@ -409,7 +409,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testInvalidAccountVotes() throws Exception {
+    public void testGetInvalidAccountVotes() throws Exception {
         // Force an error response:
         try {
             steemJ.getAccountVotes("thisAcountDoesNotExistYet");
@@ -431,7 +431,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testLookupAccount() throws Exception {
+    public void testGetLookupAccount() throws Exception {
         final List<String> accounts = steemJ.lookupAccounts(ACCOUNT, 10);
 
         assertNotNull("expect accounts", accounts);
@@ -440,7 +440,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testLookupWitnessAccount() throws Exception {
+    public void testGetLookupWitnessAccount() throws Exception {
         final List<String> accounts = steemJ.lookupWitnessAccounts("gtg", 10);
 
         assertNotNull("expect accounts", accounts);
@@ -449,7 +449,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testMinerQueue() throws Exception {
+    public void testGetMinerQueue() throws Exception {
         final String[] minerQueue = steemJ.getMinerQueue();
 
         assertThat("expect the number of miners greater than 0", minerQueue.length, greaterThan(0));
@@ -457,7 +457,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testTrendingTags() throws Exception {
+    public void testGetTrendingTags() throws Exception {
         final List<TrendingTag> trendingTags = steemJ.getTrendingTags(null, 10);
 
         assertNotNull("expect trending tags", trendingTags);
@@ -482,7 +482,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testVersion() throws Exception {
+    public void testGetVersion() throws Exception {
         final SteemVersionInfo version = steemJ.getVersion();
 
         assertNotEquals("expect non-empty blockchain version", "", version.getBlockchainVersion());
@@ -492,7 +492,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testWitnessCount() throws Exception {
+    public void testGetWitnessCount() throws Exception {
         final int witnessCount = steemJ.getWitnessCount();
 
         assertThat("expect the number of witnesses greater than 13071", witnessCount, greaterThan(13071));
@@ -500,7 +500,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testWitnessSchedule() throws Exception {
+    public void testGetWitnessSchedule() throws Exception {
         final WitnessSchedule witnessSchedule = steemJ.getWitnessSchedule();
 
         assertNotNull("expect hardfork version", witnessSchedule);
@@ -602,7 +602,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOrderBook() throws Exception {
+    public void testGetOrderBook() throws Exception {
         final OrderBook orderBook = steemJ.getOrderBook(1);
 
         assertThat(orderBook.getAsks().size(), equalTo(1));

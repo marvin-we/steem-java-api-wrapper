@@ -20,7 +20,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateOperation extends AbstractAccountCreateOperation {
+public class AccountCreateOperation extends AbstractAccountOperation {
     @JsonProperty("fee")
     private Asset fee;
     // Accurate type is fixed_string

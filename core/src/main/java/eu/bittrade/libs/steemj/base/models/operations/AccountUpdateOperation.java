@@ -21,20 +21,10 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountUpdateOperation extends Operation {
+public class AccountUpdateOperation extends AbstractAccountOperation {
     @SignatureRequired(type = PrivateKeyType.OWNER)
     @JsonProperty("account")
     private AccountName account;
-    @JsonProperty("owner")
-    private Authority owner;
-    @JsonProperty("active")
-    private Authority active;
-    @JsonProperty("posting")
-    private Authority posting;
-    @JsonProperty("memo_key")
-    private PublicKey memoKey;
-    @JsonProperty("json_metadata")
-    private String jsonMetadata;
 
     /**
      * Create a new create account update operation. Use this operation to
@@ -71,6 +61,7 @@ public class AccountUpdateOperation extends Operation {
      * 
      * @return The owner authority.
      */
+    @Override
     public Authority getOwner() {
         return owner;
     }
@@ -82,6 +73,7 @@ public class AccountUpdateOperation extends Operation {
      * @param owner
      *            The owner authority.
      */
+    @Override
     public void setOwner(Authority owner) {
         this.owner = owner;
     }
@@ -92,6 +84,7 @@ public class AccountUpdateOperation extends Operation {
      * 
      * @return The active authority.
      */
+    @Override
     public Authority getActive() {
         return active;
     }
@@ -103,6 +96,7 @@ public class AccountUpdateOperation extends Operation {
      * @param active
      *            The active authority.
      */
+    @Override
     public void setActive(Authority active) {
         this.active = active;
     }
@@ -113,6 +107,7 @@ public class AccountUpdateOperation extends Operation {
      * 
      * @return The posting authority.
      */
+    @Override
     public Authority getPosting() {
         return posting;
     }
@@ -124,6 +119,7 @@ public class AccountUpdateOperation extends Operation {
      * @param posting
      *            The posting authority.
      */
+    @Override
     public void setPosting(Authority posting) {
         this.posting = posting;
     }
@@ -134,6 +130,7 @@ public class AccountUpdateOperation extends Operation {
      * 
      * @return The memo key.
      */
+    @Override
     public PublicKey getMemoKey() {
         return memoKey;
     }
@@ -145,6 +142,7 @@ public class AccountUpdateOperation extends Operation {
      * @param memoKey
      *            The memo key.
      */
+    @Override
     public void setMemoKey(PublicKey memoKey) {
         this.memoKey = memoKey;
     }
@@ -154,6 +152,7 @@ public class AccountUpdateOperation extends Operation {
      * 
      * @return The json metadata which have been added to this operation.
      */
+    @Override
     public String getJsonMetadata() {
         return jsonMetadata;
     }
@@ -164,6 +163,7 @@ public class AccountUpdateOperation extends Operation {
      * @param jsonMetadata
      *            The json metadata.
      */
+    @Override
     public void setJsonMetadata(String jsonMetadata) {
         this.jsonMetadata = jsonMetadata;
     }

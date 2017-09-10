@@ -105,6 +105,35 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<argLine>${failsafeArgLine}</argLine>
+					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+					<groups>eu.bittrade.libs.steemj.IntegrationTest</groups>
+					<systemPropertiesFile>${project.build.testOutputDirectory}/accountDetailsUsedDuringTests.properties</systemPropertiesFile>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>${surefireArgLine}</argLine>
+					<includes>
+						<include>**/*.*</include>
+					</includes>
+					<excludedGroups>eu.bittrade.libs.steemj.IntegrationTest</excludedGroups>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -115,7 +144,6 @@
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<hamcrest.date.version>2.0.4</hamcrest.date.version>
-		<java.version>1.8</java.version>
 		<tyrus.client.version>1.13.1</tyrus.client.version>
 		<jackson.version>2.9.1</jackson.version>
 		<apache.commons.lang.version>3.6</apache.commons.lang.version>

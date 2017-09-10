@@ -7,11 +7,11 @@ import eu.bittrade.libs.steemj.base.models.PublicKey;
 
 /**
  * This abstract class contains fields that exist in all Steem
- * "account_create_operation" types.
+ * "account_*_operation" types.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-abstract class AbstractAccountCreateOperation extends Operation {
+abstract class AbstractAccountOperation extends Operation {
     @JsonProperty("owner")
     protected Authority owner;
     @JsonProperty("active")
@@ -26,7 +26,7 @@ abstract class AbstractAccountCreateOperation extends Operation {
     /**
      * Create a new Operation object by providing the operation type.
      */
-    protected AbstractAccountCreateOperation(boolean virtual) {
+    protected AbstractAccountOperation(boolean virtual) {
         super(virtual);
     }
 
