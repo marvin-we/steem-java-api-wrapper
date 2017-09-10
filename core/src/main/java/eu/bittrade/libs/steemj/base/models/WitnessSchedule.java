@@ -12,46 +12,46 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class WitnessSchedule {
-    // TODO: Original type is id_type.
+    // Original type is "id_type".
     private long id;
     @JsonProperty("current_virtual_time")
-    // Original type is uint128.
+    // Original type is "uint128".
     private BigInteger currentVirtualTime;
-    // Original type is uint32_t.
+    // Original type is "uint32_t".
     @JsonProperty("next_shuffle_block_num")
     private int nextShuffleBlockNum;
     @JsonProperty("current_shuffled_witnesses")
     private String currentShuffledWitnesses;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("num_scheduled_witnesses")
     private short numScheduledWitnesses;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("top19_weight")
     private short top19Weight;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("hardfork_required_witnesses")
     private short hardforkRequiredWitnesses;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("max_voted_witnesses")
     private short maxVotedWitnesses;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("max_runner_witnesses")
     private short maxRunnerWitnesses;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("max_miner_witnesses")
     private short maxMinerWitnesses;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("timeshare_weight")
     private short timeshareWeight;
-    // Original type is uint8_t.
+    // Original type is "uint8_t".
     @JsonProperty("miner_weight")
     private short minerWeight;
-    // Original type is uint32_t.
+    // Original type is "uint32_t".
     @JsonProperty("witness_pay_normalization_factor")
     private int witnessPayNormalizationFactor;
     @JsonProperty("median_props")
     private ChainProperties medianProps;
-    // Original type is version which is a uint32_t. The actual returned value
+    // Original type is version which is a "uint32_t". The actual returned value
     // is the real version (e.g. 0.19.0) so we use String here.
     @JsonProperty("majority_version")
     private String majorityVersion;

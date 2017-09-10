@@ -2,6 +2,11 @@ package eu.bittrade.libs.steemj.plugins.market.history.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
+
 /**
  * This class represents a Steem "bucket_object" object of the
  * "market_history_plugin".
@@ -9,24 +14,144 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Bucket {
-    /*
-     * struct bucket_object:public object<bucket_object_type,bucket_object> {
-     * template< typename Constructor, typename Allocator > bucket_object(
-     * Constructor&& c, allocator< Allocator > a ) { c( *this ); }
-     * 
-     * id_type id;
-     * 
-     * fc::time_point_sec open; uint32_t seconds = 0; share_type high_steem;
-     * share_type high_sbd; share_type low_steem; share_type low_sbd; share_type
-     * open_steem; share_type open_sbd; share_type close_steem; share_type
-     * close_sbd; share_type steem_volume; share_type sbd_volume;
-     * 
-     * price high()const { return asset( high_sbd, SBD_SYMBOL ) / asset(
-     * high_steem, STEEM_SYMBOL ); }
-     * 
-     * price low()const { return asset( low_sbd, SBD_SYMBOL ) / asset(
-     * low_steem, STEEM_SYMBOL ); } };
+    // Original type is "id_type".
+    private long id;
+    private TimePointSec open;
+    // Original type is "uint32_t" so we use long here.
+    private long seconds;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("high_steem")
+    private long highSteem;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("high_sbd")
+    private long highSbd;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("low_steem")
+    private long lowSteem;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("low_sbd")
+    private long lowSbd;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("open_steem")
+    private long openSteem;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("open_sbd")
+    private long openSbd;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("close_steem")
+    private long closeSteem;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("close_sbd")
+    private long closeSbd;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("steem_volume")
+    private long steemVolume;
+    // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonProperty("sbd_volume")
+    private long sbdVolume;
+
+    /**
+     * @return the id
      */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * @return the open
+     */
+    public TimePointSec getOpen() {
+        return open;
+    }
+
+    /**
+     * @return the seconds
+     */
+    public long getSeconds() {
+        return seconds;
+    }
+
+    /**
+     * @return the highSteem
+     */
+    public long getHighSteem() {
+        return highSteem;
+    }
+
+    /**
+     * @return the highSbd
+     */
+    public long getHighSbd() {
+        return highSbd;
+    }
+
+    /**
+     * @return the lowSteem
+     */
+    public long getLowSteem() {
+        return lowSteem;
+    }
+
+    /**
+     * @return the lowSbd
+     */
+    public long getLowSbd() {
+        return lowSbd;
+    }
+
+    /**
+     * @return the openSteem
+     */
+    public long getOpenSteem() {
+        return openSteem;
+    }
+
+    /**
+     * @return the openSbd
+     */
+    public long getOpenSbd() {
+        return openSbd;
+    }
+
+    /**
+     * @return the closeSteem
+     */
+    public long getCloseSteem() {
+        return closeSteem;
+    }
+
+    /**
+     * @return the closeSbd
+     */
+    public long getCloseSbd() {
+        return closeSbd;
+    }
+
+    /**
+     * @return the steemVolume
+     */
+    public long getSteemVolume() {
+        return steemVolume;
+    }
+
+    /**
+     * @return the sbdVolume
+     */
+    public long getSbdVolume() {
+        return sbdVolume;
+    }
+
+    public Price calculateHigh() {
+        // price high()const { return asset( high_sbd, SBD_SYMBOL ) / asset(
+        // high_steem, STEEM_SYMBOL ); }
+        return null;
+    }
+
+    public Price calculateLow() {
+        // price low()const { return asset( low_sbd, SBD_SYMBOL ) / asset(
+        // low_steem, STEEM_SYMBOL ); }
+        return null;
+    }
 
     @Override
     public String toString() {

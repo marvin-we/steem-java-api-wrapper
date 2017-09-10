@@ -14,9 +14,9 @@ import eu.bittrade.libs.steemj.enums.CurveId;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class RewardFund {
-    // TODO: Original type is "reward_fund_id_type".
-    private int id;
-    // TODO: Original type is "reward_fund_name_type".
+    // Original type is "reward_fund_id_type".
+    private long id;
+    // Original type is "reward_fund_name_type".
     private String name;
     @JsonProperty("reward_balance")
     private Asset rewardBalance;

@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Block extends SignedBlockWithInfo {
-    // TODO: Original type is "id_type".
-    private int id;
+    // Original type is comment_id_type.
+    private long id;
     // Original type is uint32_t so we use long here.
     @JsonProperty("ref_prefix")
     private long refPrefix;

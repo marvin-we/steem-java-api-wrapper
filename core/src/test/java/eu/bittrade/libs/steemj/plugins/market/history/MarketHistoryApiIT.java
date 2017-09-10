@@ -12,6 +12,7 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.plugins.market.history.model.Bucket;
 import eu.bittrade.libs.steemj.plugins.market.history.model.MarketTicker;
 import eu.bittrade.libs.steemj.plugins.market.history.model.MarketTrade;
 import eu.bittrade.libs.steemj.plugins.market.history.model.MarketVolume;
@@ -83,10 +84,11 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
     @Test
     @Category({ IntegrationTest.class })
     public void testGetMarketHistory() throws SteemCommunicationException {
-        //List<Integer> marketHistoryBuckets = MarketHistoryApi.getMarketHistoryBuckets(COMMUNICATION_HANDLER);
+        List<Bucket> marketHistory = MarketHistoryApi.getMarketHistory(COMMUNICATION_HANDLER, 3600,
+                new TimePointSec(1504885989), new TimePointSec(1505058789));
 
         // TODO: Assert
-       // System.out.print(marketHistoryBuckets);
+        System.out.print(marketHistory);
     }
 
     @Test

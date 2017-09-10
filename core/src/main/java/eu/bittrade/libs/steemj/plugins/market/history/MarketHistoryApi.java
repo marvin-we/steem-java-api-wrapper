@@ -9,6 +9,7 @@ import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.plugins.market.history.model.Bucket;
 import eu.bittrade.libs.steemj.plugins.market.history.model.MarketTicker;
 import eu.bittrade.libs.steemj.plugins.market.history.model.MarketTrade;
 import eu.bittrade.libs.steemj.plugins.market.history.model.MarketVolume;
@@ -212,18 +213,46 @@ public class MarketHistoryApi {
     }
 
     /**
-     * @brief Returns the market history for the internal SBD:STEEM market.
-     * @param bucket_seconds
+     * Returns the market history for the internal SBD:STEEM market.
+     * 
+     * @param communicationHandler
+     *            A
+     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
+     *            CommunicationHandler} instance that should be used to send the
+     *            request.
+     * @param bucketSeconds
      *            The size of buckets the history is broken into. The bucket
      *            size must be configured in the plugin options.
      * @param start
      *            The start time to get market history.
      * @param end
-     *            The end time to get market history
-     * @return A list of market history buckets.
+     *            The end time to get market history.
+     * @return A list of market history
+     *         {@link eu.bittrade.libs.steemj.plugins.market.history.model.Bucket
+     *         Bucket}s.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
-    // std::vector< bucket_object > get_market_history( uint32_t bucket_seconds,
-    // time_point_sec start, time_point_sec end ) const;
+    public static List<Bucket> getMarketHistory(CommunicationHandler communicationHandler, long bucketSeconds,
+            TimePointSec start, TimePointSec end) throws SteemCommunicationException {
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.GET_MARKET_HISTORY);
+        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+
+        Object[] parameters = { bucketSeconds, start, end };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Bucket.class);
+    }
 
     /**
      * @param communicationHandler
