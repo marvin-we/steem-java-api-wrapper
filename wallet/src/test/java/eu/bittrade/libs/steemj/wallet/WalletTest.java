@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.util;
+package eu.bittrade.libs.steemj.wallet;
 
 import org.junit.Test;
 

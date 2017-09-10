@@ -64,11 +64,7 @@ public class SteemJUsageExample {
             voteOperation.setAuthor(new AccountName("dez1337"));
             voteOperation.setPermlink("steem-java-api-learned-to-speak-graphene-update-5");
             voteOperation.setVoter(new AccountName("dez1337"));
-            try {
-                voteOperation.setWeight((short) 10000);
-            } catch (InvalidActivityException e) {
-                LOGGER.error("Weight was to high.", e);
-            }
+            voteOperation.setWeight((short) 10000);
 
             ArrayList<Operation> operations = new ArrayList<>();
             operations.add(voteOperation);
