@@ -182,6 +182,9 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
         assertThat(marketHistory.get(0).getSbdVolume(), greaterThan(0L));
         assertThat(marketHistory.get(0).getSeconds(), greaterThan(0L));
         assertThat(marketHistory.get(0).getSteemVolume(), greaterThan(0L));
+        // Methods.
+        assertThat(marketHistory.get(0).calculateHigh(), greaterThan(0.01));
+        assertThat(marketHistory.get(0).calculateLow(), greaterThan(0.01));
     }
 
     /**

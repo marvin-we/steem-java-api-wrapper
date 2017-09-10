@@ -4,8 +4,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
 /**
  * This class represents a Steem "bucket_object" object of the
@@ -141,16 +143,22 @@ public class Bucket {
         return sbdVolume;
     }
 
-    public Price calculateHigh() {
-        // price high()const { return asset( high_sbd, SBD_SYMBOL ) / asset(
-        // high_steem, STEEM_SYMBOL ); }
-        return null;
+    /**
+     * Calculate the highest Price per Steem.
+     * 
+     * @return The highest Price per Steem.
+     */
+    public double calculateHigh() {
+        return this.getHighSbd() / (double) this.getHighSteem();
     }
 
-    public Price calculateLow() {
-        // price low()const { return asset( low_sbd, SBD_SYMBOL ) / asset(
-        // low_steem, STEEM_SYMBOL ); }
-        return null;
+    /**
+     * Calculate the lowest Price per Steem.
+     * 
+     * @return The lowest Price per Steem.
+     */
+    public double calculateLow() {
+        return this.getLowSbd() / (double) this.getLowSteem();
     }
 
     @Override
