@@ -26,7 +26,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 @JsonDeserialize(using = AssetDeserializer.class)
 @JsonSerialize(using = AssetSerializer.class)
 public class Asset implements ByteTransformable {
-    // Type is safe<int64_t> in the original code.
+    // Original type is "share_type" which is a "safe<int64_t>".
     private long amount;
     // Type us uint64_t in the original code.
     private AssetSymbolType symbol;

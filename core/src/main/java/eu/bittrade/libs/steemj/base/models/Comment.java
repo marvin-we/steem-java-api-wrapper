@@ -38,16 +38,16 @@ public class Comment {
     @Deprecated
     @JsonProperty("children_rshares2")
     private String childrenRshares2;
-    // Original type is safe<int64_t>.
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("net_rshares")
     private long netRshares;
-    // Original type is safe<int64_t>.
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("abs_rshares")
     private long absRshares;
-    // Original type is safe<int64_t>.
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("vote_rshares")
     private long voteRshares;
-    // Original type is safe<int64_t>.
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("children_abs_rshares")
     private long childrenAbsRshares;
     @JsonProperty("cashout_time")
@@ -66,7 +66,7 @@ public class Comment {
     private Asset totalPayoutValue;
     @JsonProperty("curator_payout_value")
     private Asset curatorPayoutValue;
-    // Original type is safe<int64_t>.
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("author_rewards")
     private long authorRewards;
     // Original type is int32_t.

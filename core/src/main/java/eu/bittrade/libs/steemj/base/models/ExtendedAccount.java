@@ -15,7 +15,7 @@ public class ExtendedAccount extends Account {
     @JsonProperty("vesting_balance")
     /** Convert vesting_shares to vesting steem. */
     private Asset vestingBalance;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     private long reputation;
     /*
      * TODO: Fix types for: map<uint64_t,applied_operation> transfer_history;

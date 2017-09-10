@@ -87,10 +87,10 @@ public class Account {
     private Asset rewardVestingBalance;
     @JsonProperty("reward_vesting_steem")
     private Asset rewardVestingSteem;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("curation_rewards")
     private long curationRewards;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("posting_rewards")
     private long postingRewards;
     @JsonProperty("vesting_shares")
@@ -103,10 +103,10 @@ public class Account {
     private Asset vestingWithdrawRate;
     @JsonProperty("next_vesting_withdrawal")
     private TimePointSec nextVestingWithdrawal;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("withdrawn")
     private long withdrwan;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("to_withdraw")
     private long toWithdraw;
     // Original type is uint16, but we have to use int here.
@@ -119,18 +119,18 @@ public class Account {
     // Original type is uint16, but we have to use int here.
     @JsonProperty("witnesses_voted_for")
     private int witnessesVotedFor;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("average_bandwidth")
     private long averageBandwidth;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("lifetime_bandwidth")
     private long lifetimeBandwidth;
     @JsonProperty("last_bandwidth_update")
     private TimePointSec lastBandwidthUpdate;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("average_market_bandwidth")
     private long averageMarketBandwidth;
-    // Original type is safe<int64_t>;
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("lifetime_market_bandwidth")
     private long lifetimeMarketBandwidth;
     @JsonProperty("last_market_bandwidth_update")
@@ -140,7 +140,7 @@ public class Account {
     @JsonProperty("last_root_post")
     private TimePointSec lastRootPost;
     /**
-     * Original type is safe<int64_t>;
+     * Original type is "share_type" which is a "safe<int64_t>".
      * 
      * @deprecated Has been removed with HF 19. Depending on the version of the
      *             used Steem Node the value of this field may be null.
@@ -149,7 +149,7 @@ public class Account {
     @JsonProperty("post_bandwidth")
     private long postBandwidth;
     /**
-     * Original type is safe<int64_t>;
+     * Original type is "share_type" which is a "safe<int64_t>".
      * 
      * @deprecated Has been removed with HF 19. Depending on the version of the
      *             used Steem Node the value of this field may be null.
@@ -158,7 +158,7 @@ public class Account {
     @JsonProperty("new_average_bandwidth")
     private long newAverageBandwidth;
     /**
-     * Original type is safe<int64_t>;
+     * Original type is "share_type" which is a "safe<int64_t>".
      * 
      * @deprecated Has been removed with HF 19. Depending on the version of the
      *             used Steem Node the value of this field may be null.

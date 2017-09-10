@@ -25,7 +25,7 @@ public class Discussion extends Comment {
     @JsonProperty("active_votes")
     private List<VoteState> activeVotes;
     private List<String> replies;
-    // Original type is safe<int64_t>.
+    // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("author_reputation")
     private long authorReputation;
     private Asset promoted;

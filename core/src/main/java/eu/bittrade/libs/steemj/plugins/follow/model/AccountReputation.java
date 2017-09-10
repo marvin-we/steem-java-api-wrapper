@@ -11,7 +11,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
  */
 public class AccountReputation {
     private AccountName account;
-    // Original type is safe<int64_t>.
+    // Original type is "share_type" which is a "safe<int64_t>".
     private long reputation;
 
     /**
