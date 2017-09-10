@@ -1,6 +1,14 @@
 package eu.bittrade.libs.steemj.plugins.market.history;
 
-import java.util.ArrayList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.isOneOf;
+import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -11,6 +19,7 @@ import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.plugins.market.history.model.Bucket;
 import eu.bittrade.libs.steemj.plugins.market.history.model.MarketTicker;
@@ -28,6 +37,12 @@ import eu.bittrade.libs.steemj.plugins.market.history.model.OrderBook;
 public class MarketHistoryApiIT extends BaseIntegrationTest {
     private static CommunicationHandler COMMUNICATION_HANDLER;
 
+    /**
+     * Setup the test environment.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @BeforeClass
     public static void init() throws SteemCommunicationException {
         setupIntegrationTestEnvironment();
@@ -35,68 +50,154 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
         COMMUNICATION_HANDLER = new CommunicationHandler();
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.market.history.MarketHistoryApi#getTicker(CommunicationHandler)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @Test
     @Category({ IntegrationTest.class })
     public void testGetTicker() throws SteemCommunicationException {
         MarketTicker marketTicker = MarketHistoryApi.getTicker(COMMUNICATION_HANDLER);
 
-        // TODO: Assert
-        System.out.print(marketTicker);
+        assertThat(marketTicker.getHighestBid(), greaterThan(0.0));
+        assertThat(marketTicker.getLatest(), greaterThan(0.0));
+        assertThat(marketTicker.getLowestAsk(), greaterThan(0.0));
+        assertThat(marketTicker.getPercentChange(), allOf(greaterThan(-100.0), lessThan(100.0)));
+        assertThat(marketTicker.getSbdVolume().getSymbol(), equalTo(AssetSymbolType.SBD));
+        assertThat(marketTicker.getSteemVolume().getAmount(), greaterThan(1.0));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.market.history.MarketHistoryApi#getVolume(CommunicationHandler)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @Test
     @Category({ IntegrationTest.class })
     public void testGetVolume() throws SteemCommunicationException {
         MarketVolume marketVolume = MarketHistoryApi.getVolume(COMMUNICATION_HANDLER);
 
-        // TODO: Assert
-        System.out.print(marketVolume);
+        assertThat(marketVolume.getSbdVolume().getAmount(), greaterThan(0.0));
+        assertThat(marketVolume.getSbdVolume().getSymbol(), equalTo(AssetSymbolType.SBD));
+        assertThat(marketVolume.getSteemVolume().getAmount(), greaterThan(0.0));
+        assertThat(marketVolume.getSteemVolume().getSymbol(), equalTo(AssetSymbolType.STEEM));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.market.history.MarketHistoryApi#getOrderBook(CommunicationHandler, short)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @Test
     @Category({ IntegrationTest.class })
     public void testGetOrderBook() throws SteemCommunicationException {
         OrderBook orderBook = MarketHistoryApi.getOrderBook(COMMUNICATION_HANDLER, (short) 50);
 
-        // TODO: Assert
-        System.out.print(orderBook);
+        assertThat(orderBook.getAsks().size(), lessThanOrEqualTo(50));
+        assertThat(orderBook.getAsks().get(0).getPrice(), greaterThan(0.0));
+        assertThat(orderBook.getAsks().get(0).getSbd(), greaterThan(0L));
+        assertThat(orderBook.getAsks().get(0).getSteem(), greaterThan(0L));
+        assertThat(orderBook.getBids().size(), lessThanOrEqualTo(50));
+        assertThat(orderBook.getBids().get(0).getPrice(), greaterThan(0.0));
+        assertThat(orderBook.getBids().get(0).getSbd(), greaterThan(0L));
+        assertThat(orderBook.getBids().get(0).getSteem(), greaterThan(0L));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.market.history.MarketHistoryApi#getTradeHistory(CommunicationHandler, TimePointSec, TimePointSec, short)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @Test
     @Category({ IntegrationTest.class })
     public void testGetTradeHistory() throws SteemCommunicationException {
         List<MarketTrade> marketTrades = MarketHistoryApi.getTradeHistory(COMMUNICATION_HANDLER,
-                new TimePointSec(1504885989), new TimePointSec(1505058789), (short) 10);
+                new TimePointSec(1497112817), new TimePointSec(System.currentTimeMillis()), (short) 10);
 
-        // TODO: Assert
-        System.out.print(marketTrades);
+        assertThat(marketTrades.size(), lessThanOrEqualTo(10));
+        assertThat(marketTrades.get(0).getDate().getDateTimeAsTimestamp(), greaterThanOrEqualTo(1441903217L));
+        assertThat(marketTrades.get(0).getCurrentPays().getSymbol(),
+                isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
+        assertThat(marketTrades.get(0).getOpenPays().getSymbol(), isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.market.history.MarketHistoryApi#getRecentTrades(CommunicationHandler, short)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @Test
     @Category({ IntegrationTest.class })
     public void testGetRecentTrades() throws SteemCommunicationException {
         List<MarketTrade> marketTrades = MarketHistoryApi.getRecentTrades(COMMUNICATION_HANDLER, (short) 30);
 
-        // TODO: Assert
-        System.out.print(marketTrades);
+        assertThat(marketTrades.size(), lessThanOrEqualTo(30));
+        assertThat(marketTrades.get(0).getDate().getDateTimeAsTimestamp(), greaterThanOrEqualTo(1441903217L));
+        assertThat(marketTrades.get(0).getCurrentPays().getSymbol(),
+                isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
+        assertThat(marketTrades.get(0).getOpenPays().getSymbol(), isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.market.history.MarketHistoryApi#getMarketHistory(CommunicationHandler, long, TimePointSec, TimePointSec)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @Test
     @Category({ IntegrationTest.class })
     public void testGetMarketHistory() throws SteemCommunicationException {
         List<Bucket> marketHistory = MarketHistoryApi.getMarketHistory(COMMUNICATION_HANDLER, 3600,
-                new TimePointSec(1504885989), new TimePointSec(1505058789));
+                new TimePointSec(1504885989), new TimePointSec(System.currentTimeMillis()));
 
-        // TODO: Assert
-        System.out.print(marketHistory);
+        assertThat(marketHistory.size(), greaterThan(0));
+        assertThat(marketHistory.get(0).getCloseSbd(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getCloseSteem(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getHighSbd(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getHighSteem(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getId(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getLowSbd(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getLowSteem(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getOpen().getDateTimeAsTimestamp(), greaterThan(1504885989L));
+        assertThat(marketHistory.get(0).getOpenSbd(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getOpenSteem(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getSbdVolume(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getSeconds(), greaterThan(0L));
+        assertThat(marketHistory.get(0).getSteemVolume(), greaterThan(0L));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.market.history.MarketHistoryApi#getMarketHistoryBuckets(CommunicationHandler)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     */
     @Test
     @Category({ IntegrationTest.class })
     public void testGetMarketHistoryBuckets() throws SteemCommunicationException {
         List<Integer> marketHistoryBuckets = MarketHistoryApi.getMarketHistoryBuckets(COMMUNICATION_HANDLER);
 
-        // TODO: Assert
-        System.out.print(marketHistoryBuckets);
+        assertThat(marketHistoryBuckets.size(), greaterThan(0));
+        assertThat(marketHistoryBuckets.get(0), greaterThan(1));
     }
 }
