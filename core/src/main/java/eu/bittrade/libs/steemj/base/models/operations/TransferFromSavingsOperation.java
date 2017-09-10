@@ -7,11 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -20,14 +18,10 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class TransferFromSavingsOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
-    private AccountName from;
+public class TransferFromSavingsOperation extends AbstractTransferOperation {
     // Original type is uint32_t so we use long here.
     @JsonProperty("request_id")
     private long requestId;
-    private AccountName to;
-    private Asset amount;
     private String memo;
 
     /**

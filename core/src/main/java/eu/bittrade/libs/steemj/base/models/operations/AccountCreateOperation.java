@@ -10,8 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -22,7 +20,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateOperation extends Operation {
+public class AccountCreateOperation extends AbstractAccountCreateOperation {
     @JsonProperty("fee")
     private Asset fee;
     // Accurate type is fixed_string
@@ -32,16 +30,6 @@ public class AccountCreateOperation extends Operation {
     // Accurate type is fixed_string
     @JsonProperty("new_account_name")
     private AccountName newAccountName;
-    @JsonProperty("owner")
-    private Authority owner;
-    @JsonProperty("active")
-    private Authority active;
-    @JsonProperty("posting")
-    private Authority posting;
-    @JsonProperty("memo_key")
-    private PublicKey memoKey;
-    @JsonProperty("json_metadata")
-    private String jsonMetadata;
 
     /**
      * Create a new create account operation. Use this operation to create a new
@@ -110,109 +98,6 @@ public class AccountCreateOperation extends Operation {
      */
     public void setNewAccountName(AccountName newAccountName) {
         this.newAccountName = newAccountName;
-    }
-
-    /**
-     * Get the owner {@link eu.bittrade.libs.steemj.base.models.Authority
-     * Authority} of the {@link #newAccountName newAccountName}.
-     * 
-     * @return The owner authority.
-     */
-    public Authority getOwner() {
-        return owner;
-    }
-
-    /**
-     * Set the owner {@link eu.bittrade.libs.steemj.base.models.Authority
-     * Authority} of the {@link #newAccountName newAccountName}.
-     * 
-     * @param owner
-     *            The owner authority.
-     */
-    public void setOwner(Authority owner) {
-        this.owner = owner;
-    }
-
-    /**
-     * Get the active {@link eu.bittrade.libs.steemj.base.models.Authority
-     * Authority} of the {@link #newAccountName newAccountName}.
-     * 
-     * @return The active authority.
-     */
-    public Authority getActive() {
-        return active;
-    }
-
-    /**
-     * Set the active {@link eu.bittrade.libs.steemj.base.models.Authority
-     * Authority} of the {@link #newAccountName newAccountName}.
-     * 
-     * @param active
-     *            The active authority.
-     */
-    public void setActive(Authority active) {
-        this.active = active;
-    }
-
-    /**
-     * Get the posting {@link eu.bittrade.libs.steemj.base.models.Authority
-     * Authority} of the {@link #newAccountName newAccountName}.
-     * 
-     * @return The posting authority.
-     */
-    public Authority getPosting() {
-        return posting;
-    }
-
-    /**
-     * Set the posting {@link eu.bittrade.libs.steemj.base.models.Authority
-     * Authority} of the {@link #newAccountName newAccountName}.
-     * 
-     * @param posting
-     *            The posting authority.
-     */
-    public void setPosting(Authority posting) {
-        this.posting = posting;
-    }
-
-    /**
-     * Get the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
-     * PublicKey} of the {@link #newAccountName newAccountName}.
-     * 
-     * @return The memo key.
-     */
-    public PublicKey getMemoKey() {
-        return memoKey;
-    }
-
-    /**
-     * Set the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
-     * PublicKey} of the {@link #newAccountName newAccountName}.
-     * 
-     * @param memoKey
-     *            The memo key.
-     */
-    public void setMemoKey(PublicKey memoKey) {
-        this.memoKey = memoKey;
-    }
-
-    /**
-     * Get the json metadata which have been added to this operation.
-     * 
-     * @return The json metadata which have been added to this operation.
-     */
-    public String getJsonMetadata() {
-        return jsonMetadata;
-    }
-
-    /**
-     * Add json metadata to this operation.
-     * 
-     * @param jsonMetadata
-     *            The json metadata.
-     */
-    public void setJsonMetadata(String jsonMetadata) {
-        this.jsonMetadata = jsonMetadata;
     }
 
     @Override

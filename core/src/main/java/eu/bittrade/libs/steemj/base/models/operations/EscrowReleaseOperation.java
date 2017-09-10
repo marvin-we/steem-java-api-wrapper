@@ -7,12 +7,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -21,16 +19,9 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class EscrowReleaseOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
-    private AccountName from;
-    private AccountName to;
-    private AccountName agent;
+public class EscrowReleaseOperation extends AbstractEscrowOperation {
     private AccountName who;
     private AccountName receiver;
-    // Original type is unit32_t so we use long here.
-    @JsonProperty("escrow_id")
-    private long escrowId;
     @JsonProperty("sbd_amount")
     private Asset sbdAmount;
     @JsonProperty("steem_amount")

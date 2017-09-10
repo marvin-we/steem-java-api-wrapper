@@ -6,14 +6,10 @@ import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -22,15 +18,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class TransferToVestingOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
-    @JsonProperty("from")
-    private AccountName from;
-    @JsonProperty("to")
-    private AccountName to;
-    @JsonProperty("amount")
-    private Asset amount;
-
+public class TransferToVestingOperation extends AbstractTransferOperation {
     /**
      * Create a new transfer to vesting operation to transfer Steem Power to
      * other users.
