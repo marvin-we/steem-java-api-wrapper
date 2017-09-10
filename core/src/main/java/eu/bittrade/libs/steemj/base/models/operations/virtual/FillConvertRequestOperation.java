@@ -29,9 +29,10 @@ public class FillConvertRequestOperation extends Operation {
     private Asset amountOut;
 
     /**
-     * Create a new fill convert request operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public FillConvertRequestOperation() {
+    private FillConvertRequestOperation() {
         super(true);
     }
     

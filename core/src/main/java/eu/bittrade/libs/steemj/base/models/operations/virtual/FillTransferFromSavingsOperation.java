@@ -25,9 +25,10 @@ public class FillTransferFromSavingsOperation extends Operation {
     private String memo;
 
     /**
-     * Create a new fill transfer from savings operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public FillTransferFromSavingsOperation() {
+    private FillTransferFromSavingsOperation() {
         super(true);
     }
 

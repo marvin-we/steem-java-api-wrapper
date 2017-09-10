@@ -17,9 +17,10 @@ public class LiquidityRewardOperation extends Operation {
     private Asset payout;
 
     /**
-     * Create a new liquidity reward operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public LiquidityRewardOperation() {
+    private LiquidityRewardOperation() {
         super(true);
     }
     

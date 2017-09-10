@@ -30,9 +30,10 @@ public class AuthorRewardOperation extends Operation {
     private Asset vestingPayout;
 
     /**
-     * Create a new author reward operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public AuthorRewardOperation() {
+    private AuthorRewardOperation() {
         super(true);
     }
 

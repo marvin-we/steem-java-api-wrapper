@@ -23,9 +23,10 @@ public class FillVestingWithdrawOperation extends Operation {
     private Asset deposited;
 
     /**
-     * Create a new fill vesting withdraw operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public FillVestingWithdrawOperation() {
+    private FillVestingWithdrawOperation() {
         super(true);
     }
     

@@ -20,9 +20,10 @@ public class ReturnVestingDelegationOperation extends Operation {
     private Asset vestingShares;
 
     /**
-     * Create a new return vesting delegation operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public ReturnVestingDelegationOperation() {
+    private ReturnVestingDelegationOperation() {
         super(true);
     }
 

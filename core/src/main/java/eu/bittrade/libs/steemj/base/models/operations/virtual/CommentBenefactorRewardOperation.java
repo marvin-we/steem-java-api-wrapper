@@ -19,9 +19,10 @@ public class CommentBenefactorRewardOperation extends Operation {
     private Asset reward;
 
     /**
-     * Create a new comment benefactor reward operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public CommentBenefactorRewardOperation() {
+    private CommentBenefactorRewardOperation() {
         super(true);
     }
 

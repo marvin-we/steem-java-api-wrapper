@@ -34,9 +34,10 @@ public class FillOrderOperation extends Operation {
     private Asset openPays;
 
     /**
-     * Create a new fill order operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public FillOrderOperation() {
+    private FillOrderOperation() {
         super(true);
     }
     

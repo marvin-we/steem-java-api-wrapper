@@ -20,9 +20,10 @@ public class HardforkOperation extends Operation {
     private long hardforkId;
 
     /**
-     * Create a new hardfork operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public HardforkOperation() {
+    private HardforkOperation() {
         super(true);
     }
     

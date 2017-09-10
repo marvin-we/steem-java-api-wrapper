@@ -28,9 +28,10 @@ public class CurationRewardOperation extends Operation {
     private String commentPermlink;
 
     /**
-     * Create a new curation reward operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public CurationRewardOperation() {
+    private CurationRewardOperation() {
         super(true);
     }
 

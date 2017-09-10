@@ -15,9 +15,10 @@ public class ShutdownWitnessOpeartion extends Operation {
     private AccountName owner;
 
     /**
-     * Create a new shutdown witness operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public ShutdownWitnessOpeartion() {
+    private ShutdownWitnessOpeartion() {
         super(true);
     }
 

@@ -16,9 +16,10 @@ public class CommentPayoutUpdateOperation extends Operation {
     private String permlink;
 
     /**
-     * Create a new comment payout update operation.
+     * This operation is a virtual one and can only be created by the blockchain
+     * itself. Due to that, this constructor is private.
      */
-    public CommentPayoutUpdateOperation() {
+    private CommentPayoutUpdateOperation() {
         super(true);
     }
 
