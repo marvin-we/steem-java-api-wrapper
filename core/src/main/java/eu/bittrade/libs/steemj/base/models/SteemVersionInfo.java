@@ -18,24 +18,21 @@ public class SteemVersionInfo {
     private String fcRevision;
 
     /**
-     * 
-     * @return
+     * @return The blockchain version.
      */
     public String getBlockchainVersion() {
         return blockchainVersion;
     }
 
     /**
-     * 
-     * @return
+     * @return The latest commit id of this Steem version.
      */
     public String getSteemRevision() {
         return steemRevision;
     }
 
     /**
-     * 
-     * @return
+     * @return The latest commit id of the used fc version.
      */
     public String getFcRevision() {
         return fcRevision;

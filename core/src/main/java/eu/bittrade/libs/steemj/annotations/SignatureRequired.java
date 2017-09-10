@@ -15,7 +15,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UserKeyRequired {
+public @interface SignatureRequired {
     /**
      * @return The required private key type.
      */
