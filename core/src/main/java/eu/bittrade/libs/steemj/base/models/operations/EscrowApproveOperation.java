@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -19,6 +20,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class EscrowApproveOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     private AccountName from;
     private AccountName to;
     private AccountName agent;
@@ -63,9 +65,6 @@ public class EscrowApproveOperation extends Operation {
      */
     public void setFrom(AccountName from) {
         this.from = from;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(from, PrivateKeyType.ACTIVE);
     }
 
     /**

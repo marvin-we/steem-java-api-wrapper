@@ -39,17 +39,18 @@ public class PrivateKeyStorage {
                 .get(accountName);
 
         if (privateKeysForAccount == null) {
-            throw new InvalidParameterException("No keys found for the given account name '" + accountName + "'.");
+            throw new InvalidParameterException(privateKeyType.name() + " for the account '" + accountName
+                    + "' has not been added to the PrivateKeyStore.");
         }
 
         for (ImmutablePair<PrivateKeyType, ECKey> privateKey : privateKeysForAccount) {
             if (privateKey != null && privateKey.getLeft().equals(privateKeyType)) {
                 return privateKey.getRight();
-
             }
         }
 
-        throw new InvalidParameterException("No keys found for the given account name '" + accountName + "'.");
+        throw new InvalidParameterException(privateKeyType.name() + " for the account '" + accountName
+                + "' has not been added to the PrivateKeyStore.");
     }
 
     /**

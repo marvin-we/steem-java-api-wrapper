@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -17,6 +18,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ReblogOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.POSTING)
     private AccountName account;
     private AccountName author;
     private String permlink;
@@ -49,9 +51,6 @@ public class ReblogOperation extends Operation {
      */
     public void setAccount(AccountName account) {
         this.account = account;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(account, PrivateKeyType.POSTING);
     }
 
     /**

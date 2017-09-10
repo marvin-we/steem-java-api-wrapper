@@ -31,5 +31,6 @@ public abstract class BaseUnitTest extends BaseTest {
         CONFIG.getPrivateKeyStorage().addAccount(new AccountName("foobarc"), privateKeys);
         CONFIG.getPrivateKeyStorage().addAccount(new AccountName("foo"), privateKeys);
         CONFIG.getPrivateKeyStorage().addAccount(new AccountName("steemj"), privateKeys);
+        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("xeroc"), privateKeys);
     }
 }

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Price;
@@ -24,6 +25,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class LimitOrderCreate2Operation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     private AccountName owner;
     // Original type is uint32 so we have to use long here.
     @JsonProperty("orderid")
@@ -70,9 +72,6 @@ public class LimitOrderCreate2Operation extends Operation {
      */
     public void setOwner(AccountName owner) {
         this.owner = owner;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(owner, PrivateKeyType.ACTIVE);
     }
 
     /**

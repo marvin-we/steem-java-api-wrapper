@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -20,6 +21,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class DelegateVestingSharesOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     private AccountName delegator;
     private AccountName delegatee;
     @JsonProperty("vesting_shares")
@@ -60,9 +62,6 @@ public class DelegateVestingSharesOperation extends Operation {
      */
     public void setDelegator(AccountName delegator) {
         this.delegator = delegator;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(delegator, PrivateKeyType.ACTIVE);
     }
 
     /**

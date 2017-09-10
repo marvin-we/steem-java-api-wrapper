@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -17,6 +18,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class DeclineVotingRightsOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.OWNER)
     private AccountName account;
     private Boolean decline;
 
@@ -47,9 +49,6 @@ public class DeclineVotingRightsOperation extends Operation {
      */
     public void setAccount(AccountName account) {
         this.account = account;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(account, PrivateKeyType.OWNER);
     }
 
     /**

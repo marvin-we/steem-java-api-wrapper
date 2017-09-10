@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bitcoinj.core.Utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.AuthorityRequired;
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -25,15 +26,19 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class CustomBinaryOperation extends Operation {
     // Original type is flat_set< account_name_type >.
+    @SignatureRequired(type = PrivateKeyType.OWNER)
     @JsonProperty("required_owner_auths")
     private List<AccountName> requiredOwnerAuths;
     // Original type is flat_set< account_name_type >.
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("required_active_auths")
     private List<AccountName> requiredActiveAuths;
     // Original type is flat_set< account_name_type >.
+    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("required_posting_auths")
     private List<AccountName> requiredPostingAuths;
     // Original type is vector< authority >.
+    @AuthorityRequired
     @JsonProperty("required_auths")
     private List<Authority> requiredAuths;
     private String id;
@@ -71,9 +76,6 @@ public class CustomBinaryOperation extends Operation {
      */
     public void setRequiredOwnerAuths(List<AccountName> requiredOwnerAuths) {
         this.requiredOwnerAuths = requiredOwnerAuths;
-
-        // Update the List of required private key types.
-        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -96,9 +98,6 @@ public class CustomBinaryOperation extends Operation {
      */
     public void setRequiredActiveAuths(List<AccountName> requiredActiveAuths) {
         this.requiredActiveAuths = requiredActiveAuths;
-
-        // Update the List of required private key types.
-        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -121,9 +120,6 @@ public class CustomBinaryOperation extends Operation {
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
         this.requiredPostingAuths = requiredPostingAuths;
-
-        // Update the List of required private key types.
-        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -145,9 +141,6 @@ public class CustomBinaryOperation extends Operation {
      */
     public void setRequiredAuths(List<Authority> requiredAuths) {
         this.requiredAuths = requiredAuths;
-
-        // Update the List of required private key types.
-        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -187,32 +180,6 @@ public class CustomBinaryOperation extends Operation {
      */
     public void setData(String data) {
         this.data = data;
-    }
-
-    /**
-     * Merge both required authorities list to determine all required keys.
-     * 
-     * @return A merged list of the required active and posting authorities.
-     */
-    private List<ImmutablePair<AccountName, PrivateKeyType>> mergeRequiredAuth() {
-        List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeys = new ArrayList<>();
-
-        // TODO: Support this auth.
-        // for (Authority authority : this.getRequiredAuths()) { }
-
-        for (AccountName accountName : this.getRequiredPostingAuths()) {
-            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
-        }
-
-        for (AccountName accountName : this.getRequiredActiveAuths()) {
-            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
-        }
-
-        for (AccountName accountName : this.getRequiredOwnerAuths()) {
-            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
-        }
-
-        return requiredPrivateKeys;
     }
 
     @Override

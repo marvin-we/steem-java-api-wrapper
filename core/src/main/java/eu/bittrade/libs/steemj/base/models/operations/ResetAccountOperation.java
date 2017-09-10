@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -20,6 +21,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ResetAccountOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("reset_account")
     private AccountName resetAccount;
     @JsonProperty("account_to_reset")
@@ -56,9 +58,6 @@ public class ResetAccountOperation extends Operation {
      */
     public void setResetAccount(AccountName resetAccount) {
         this.resetAccount = resetAccount;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(resetAccount, PrivateKeyType.ACTIVE);
     }
 
     /**

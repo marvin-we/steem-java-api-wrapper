@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -23,8 +23,10 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CustomJsonOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("required_auths")
     private List<AccountName> requiredAuths;
+    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("required_posting_auths")
     private List<AccountName> requiredPostingAuths;
     @JsonProperty("id")
@@ -67,9 +69,6 @@ public class CustomJsonOperation extends Operation {
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
         this.requiredAuths = requiredAuths;
-
-        // Update the List of required private key types.
-        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -92,9 +91,6 @@ public class CustomJsonOperation extends Operation {
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
         this.requiredPostingAuths = requiredPostingAuths;
-
-        // Update the List of required private key types.
-        this.addRequiredPrivateKeyType(this.mergeRequiredAuth());
     }
 
     /**
@@ -141,25 +137,6 @@ public class CustomJsonOperation extends Operation {
         }
 
         this.json = json;
-    }
-
-    /**
-     * Merge both required authorities list to determine all required keys.
-     * 
-     * @return A merged list of the required active and posting authorities.
-     */
-    private List<ImmutablePair<AccountName, PrivateKeyType>> mergeRequiredAuth() {
-        List<ImmutablePair<AccountName, PrivateKeyType>> requiredPrivateKeys = new ArrayList<>();
-
-        for (AccountName accountName : this.getRequiredAuths()) {
-            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.ACTIVE));
-        }
-
-        for (AccountName accountName : this.getRequiredPostingAuths()) {
-            requiredPrivateKeys.add(new ImmutablePair<>(accountName, PrivateKeyType.POSTING));
-        }
-
-        return requiredPrivateKeys;
     }
 
     @Override

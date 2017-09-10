@@ -2,17 +2,16 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import javax.activity.InvalidActivityException;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -24,6 +23,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class VoteOperation extends Operation {
     @JsonProperty("voter")
     private AccountName voter;
+    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
@@ -37,11 +37,7 @@ public class VoteOperation extends Operation {
     public VoteOperation() {
         super(false);
         // Set default values:
-        try {
-            this.setWeight((short) 0);
-        } catch (InvalidActivityException e) {
-            throw new SteemFatalErrorException("The weight was to high - This should never happen!", e);
-        }
+        this.setWeight((short) 0);
     }
 
     /**
@@ -91,9 +87,6 @@ public class VoteOperation extends Operation {
      */
     public void setVoter(AccountName voter) {
         this.voter = voter;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(voter, PrivateKeyType.POSTING);
     }
 
     /**
@@ -123,12 +116,12 @@ public class VoteOperation extends Operation {
      * 
      * @param weight
      *            The weight of this vote.
-     * @throws InvalidActivityException
+     * @throws InvalidParameterException
      *             If the weight is greater than 10000.
      */
-    public void setWeight(short weight) throws InvalidActivityException {
+    public void setWeight(short weight) {
         if (this.weight > 10000) {
-            throw new InvalidActivityException("The weight can't be higher than 10000 which is equivalent to 100%.");
+            throw new InvalidParameterException("The weight can't be higher than 10000 which is equivalent to 100%.");
         }
         this.weight = weight;
     }

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
@@ -25,6 +26,7 @@ public class AccountCreateOperation extends Operation {
     @JsonProperty("fee")
     private Asset fee;
     // Accurate type is fixed_string
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("creator")
     private AccountName creator;
     // Accurate type is fixed_string
@@ -89,9 +91,6 @@ public class AccountCreateOperation extends Operation {
      */
     public void setCreator(AccountName creator) {
         this.creator = creator;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(creator, PrivateKeyType.ACTIVE);
     }
 
     /**

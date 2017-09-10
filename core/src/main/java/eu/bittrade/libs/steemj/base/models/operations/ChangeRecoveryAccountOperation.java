@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -24,6 +25,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class ChangeRecoveryAccountOperation extends Operation {
     @JsonProperty("account_to_recover")
     private AccountName accountToRecover;
+    @SignatureRequired(type = PrivateKeyType.OWNER)
     @JsonProperty("new_recovery_account")
     private AccountName newRecoveryAccount;
     // Original type is "extension_type" which is an array of "future_extions".
@@ -93,9 +95,6 @@ public class ChangeRecoveryAccountOperation extends Operation {
      */
     public void setNewRecoveryAccount(AccountName newRecoveryAccount) {
         this.newRecoveryAccount = newRecoveryAccount;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(newRecoveryAccount, PrivateKeyType.OWNER);
     }
 
     /**

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -20,6 +21,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ClaimRewardBalanceOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.POSTING)
     private AccountName account;
     @JsonProperty("reward_steem")
     private Asset rewardSteem;
@@ -54,9 +56,6 @@ public class ClaimRewardBalanceOperation extends Operation {
      */
     public void setAccount(AccountName account) {
         this.account = account;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(account, PrivateKeyType.POSTING);
     }
 
     /**
@@ -95,8 +94,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * Set the amount of Steem Dollers that should be collected. Please note
      * that it is not possible to collect more than that what is available. You
      * can check the available amount by requesting the Account information
-     * using
-     * {@link eu.bittrade.libs.steemj.steemJ#getAccounts(java.util.List)
+     * using {@link eu.bittrade.libs.steemj.steemJ#getAccounts(java.util.List)
      * getAccounts(List)} method.
      * 
      * @param rewardSbd

@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
@@ -23,6 +24,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class RecoverAccountOperation extends Operation {
+    @SignatureRequired(type = PrivateKeyType.OWNER)
     @JsonProperty("account_to_recover")
     private AccountName accountToRecover;
     @JsonProperty("new_owner_authority")
@@ -99,9 +101,6 @@ public class RecoverAccountOperation extends Operation {
      */
     public void setAccountToRecover(AccountName accountToRecover) {
         this.accountToRecover = accountToRecover;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(accountToRecover, PrivateKeyType.OWNER);
     }
 
     /**

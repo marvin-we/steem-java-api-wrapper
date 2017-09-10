@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -23,6 +24,7 @@ public class CommentOperation extends Operation {
     private AccountName parentAuthor;
     @JsonProperty("parent_permlink")
     private String parentPermlink;
+    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
@@ -81,9 +83,6 @@ public class CommentOperation extends Operation {
      */
     public void setAuthor(AccountName author) {
         this.author = author;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(author, PrivateKeyType.POSTING);
     }
 
     /**

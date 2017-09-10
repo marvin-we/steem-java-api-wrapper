@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
@@ -28,6 +29,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class AccountCreateWithDelegationOperation extends Operation {
     private Asset fee;
     private Asset delegation;
+    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     private AccountName creator;
     @JsonProperty("new_account_name")
     private AccountName newAccountName;
@@ -109,9 +111,6 @@ public class AccountCreateWithDelegationOperation extends Operation {
      */
     public void setCreator(AccountName creator) {
         this.creator = creator;
-
-        // Update the List of required private key types.
-        addRequiredPrivateKeyType(creator, PrivateKeyType.ACTIVE);
     }
 
     /**
