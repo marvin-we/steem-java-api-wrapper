@@ -1,11 +1,16 @@
 package eu.bittrade.libs.steemj.base.models.operations.virtual;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
 /**
  * This class represents a Steem "hardfork_operation" object.
@@ -26,7 +31,7 @@ public class HardforkOperation extends Operation {
     private HardforkOperation() {
         super(true);
     }
-    
+
     /**
      * Get the hardfork id.
      * 
@@ -46,5 +51,13 @@ public class HardforkOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        // A virtual operation can't be created by the user, therefore it also
+        // does not require any authority.
+        return null;
     }
 }
