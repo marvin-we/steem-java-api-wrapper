@@ -10,12 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.primitives.Bytes;
 
-import eu.bittrade.libs.steemj.base.models.deserializer.PublicKeyDeserializer;
 import eu.bittrade.libs.steemj.base.models.serializer.PublicKeySerializer;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -28,7 +27,6 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@JsonDeserialize(using = PublicKeyDeserializer.class)
 @JsonSerialize(using = PublicKeySerializer.class)
 public class PublicKey implements ByteTransformable {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicKey.class);
@@ -51,6 +49,7 @@ public class PublicKey implements ByteTransformable {
      *             If the input is not base 58 or the checksum does not
      *             validate.
      */
+    @JsonCreator
     public PublicKey(String address) {
         // As this method is also used for parsing different operations where
         // the field could be empty we sadly have to handle "null" cases here.
