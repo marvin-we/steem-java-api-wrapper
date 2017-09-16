@@ -18,6 +18,13 @@ public class Vote {
     private TimePointSec time;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private Vote() {
+    }
+
+    /**
      * @return the authorperm
      */
     public String getAuthorperm() {

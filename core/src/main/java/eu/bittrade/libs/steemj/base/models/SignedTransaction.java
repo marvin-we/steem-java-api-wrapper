@@ -174,13 +174,12 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
         }
     }
 
-    // public Map<AccountName, PrivateKeyType> getRequiredAuthorities() {
+    /**
+     * Verify the configured authorities.
+     */
+    public void verifyAuthority() {
 
-    // }
-
-    // public void verifyAuthority() {
-
-    // }
+    }
 
     /**
      * This method collects the required signatures of all operations stored in

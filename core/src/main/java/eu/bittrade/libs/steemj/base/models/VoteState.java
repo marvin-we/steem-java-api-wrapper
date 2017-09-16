@@ -20,6 +20,13 @@ public class VoteState {
     private long reputation;
     private TimePointSec time;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private VoteState() {
+    }
+
     public AccountName getVoter() {
         return voter;
     }

@@ -23,6 +23,13 @@ public class Order {
     private long sbd;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private Order() {
+    }
+
+    /**
      * @return the created
      */
     public TimePointSec getCreated() {

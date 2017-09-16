@@ -28,6 +28,13 @@ public class LimitOrder {
     private long deferredFee;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected LimitOrder() {
+    }
+
+    /**
      * @return the id
      */
     public int getId() {

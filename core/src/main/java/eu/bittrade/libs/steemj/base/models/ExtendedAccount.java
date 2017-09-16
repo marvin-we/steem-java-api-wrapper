@@ -67,6 +67,13 @@ public class ExtendedAccount extends Account {
     @JsonProperty("blog_category")
     private Object[] blogCategory;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private ExtendedAccount() {
+    }
+
     public Asset getVestingBalance() {
         return vestingBalance;
     }

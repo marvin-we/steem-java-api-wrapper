@@ -167,6 +167,13 @@ public class Account {
     @JsonProperty("new_average_market_bandwidth")
     private long newAverageMarketBandwidth;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected Account() {
+    }
+
     public long getId() {
         return id;
     }

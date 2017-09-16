@@ -382,6 +382,13 @@ public class Config {
     @JsonProperty("VIRTUAL_SCHEDULE_LAP_LENGTH2")
     private BigInteger virtualScheduleLapLength2;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private Config() {
+    }
+
     public Boolean getIsTestNet() {
         return isTestNet;
     }

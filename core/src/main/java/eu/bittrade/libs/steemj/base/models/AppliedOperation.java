@@ -30,6 +30,13 @@ public class AppliedOperation {
     private Operation op;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private AppliedOperation() {
+    }
+
+    /**
      * Get the id of this transaction.
      * 
      * @return The transaction id.

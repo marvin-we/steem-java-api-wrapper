@@ -18,6 +18,13 @@ public class SteemVersionInfo {
     private String fcRevision;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private SteemVersionInfo() {
+    }
+
+    /**
      * @return The blockchain version.
      */
     public String getBlockchainVersion() {

@@ -14,7 +14,11 @@ public class ExtendedLimitOrder extends LimitOrder {
     private double realPrice;
     private boolean rewarded;
 
-    public ExtendedLimitOrder() {
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private ExtendedLimitOrder() {
         this.realPrice = 0.0;
         this.rewarded = false;
     }

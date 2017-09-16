@@ -40,6 +40,13 @@ public class Discussion extends Comment {
     private Optional<Date> firstRebloggedOn;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private Discussion() {
+    }
+
+    /**
      * @return the url
      */
     public String getUrl() {

@@ -25,7 +25,7 @@ public class AnnotatedSignedTransaction implements Serializable {
      * This object is only returned from some methods. As there is no need to
      * initiate it, the constructor is private.
      */
-    public AnnotatedSignedTransaction() {
+    private AnnotatedSignedTransaction() {
         // Apply default values:
         this.blockNum = 0;
         this.transactionNum = 0;

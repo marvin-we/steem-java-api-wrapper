@@ -18,6 +18,13 @@ public class FeedHistory {
     @JsonProperty("price_history")
     private List<Price> priceHistory;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private FeedHistory() {
+    }
+
     public int getId() {
         return id;
     }

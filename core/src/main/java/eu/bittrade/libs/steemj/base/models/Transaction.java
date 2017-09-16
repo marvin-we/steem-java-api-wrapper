@@ -6,10 +6,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bitcoinj.core.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 
 /**
  * This class represents a Steem "transaction" object.
@@ -19,6 +22,7 @@ import eu.bittrade.libs.steemj.base.models.operations.Operation;
 public class Transaction implements Serializable {
     /** Generated serial version uid. */
     private static final long serialVersionUID = -3834759301983200246L;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Transaction.class);
 
     /**
      * The ref_block_num indicates a particular block in the past by referring
@@ -164,13 +168,25 @@ public class Transaction implements Serializable {
     }
 
     /**
-     * Get the information about how long this transaction is valid. If not
-     * processed in the given time, the transaction will not be accepted.
+     * Get the currently configured expiration date. The expiration date defines
+     * in which time the operation has to be processed. If not processed in the
+     * given time, the transaction will not be accepted. <b>Notice</b> that this
+     * method will return the latest possible expiration date if no other time
+     * has been configured using the {@link #setExpirationDate(TimePointSec)
+     * setExpirationDate(TimePointSec)} method.
      * 
      * @return The expiration date.
      */
     public TimePointSec getExpirationDate() {
-        return expirationDate;
+        if (this.expirationDate == null || this.expirationDate.getDateTimeAsTimestamp() == 0) {
+            // The expiration date is not set by the user so we do it on our own
+            // by adding the maximal allowed offset to the current time.
+            LOGGER.debug("No expiration date has been provided so the latest possible time is used.");
+            return new TimePointSec(
+                    System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L);
+        }
+
+        return this.expirationDate;
     }
 
     /**

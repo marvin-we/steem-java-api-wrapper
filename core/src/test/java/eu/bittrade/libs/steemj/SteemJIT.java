@@ -165,8 +165,8 @@ public class SteemJIT extends BaseIntegrationTest {
         assertEquals("expect response to contain 1001 results", 1001, accountHistorySetTwo.size());
 
         assertThat(accountHistorySetTwo.get(0).getOp(), instanceOf(AccountCreateWithDelegationOperation.class));
-        assertThat(((AccountCreateWithDelegationOperation) accountHistorySetTwo.get(0).getOp()).getCreator()
-                .getAccountName(), equalTo(new AccountName("anonsteem").getAccountName()));
+        assertThat(((AccountCreateWithDelegationOperation) accountHistorySetTwo.get(0).getOp()).getCreator().getName(),
+                equalTo(new AccountName("anonsteem").getName()));
     }
 
     @Category({ IntegrationTest.class })
@@ -184,7 +184,7 @@ public class SteemJIT extends BaseIntegrationTest {
         boolean foundSelfVote = false;
 
         for (final VoteState vote : activeVotesForArticle) {
-            if (ACCOUNT.equals(vote.getVoter().getAccountName())) {
+            if (ACCOUNT.equals(vote.getVoter().getName())) {
                 foundSelfVote = true;
                 break;
             }
@@ -218,16 +218,27 @@ public class SteemJIT extends BaseIntegrationTest {
         assertEquals("expect current median price symbol", AssetSymbolType.STEEM, quote.getSymbol());
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.SteemJ#getAccounts(List)
+     * getAccounts(List)} method.
+     * 
+     * @throws Exception
+     */
     @Category({ IntegrationTest.class })
     @Test
     public void testGetAccounts() throws Exception {
         final List<AccountName> accountNames = new ArrayList<>();
+
         accountNames.add(new AccountName("dez1337"));
         accountNames.add(new AccountName("inertia"));
+        accountNames.add(new AccountName("baabeetaa"));
 
         List<ExtendedAccount> accounts = steemJ.getAccounts(accountNames);
 
-        assertThat("Expect that two results are returned.", accounts, hasSize(2));
+        assertThat("Expect that two results are returned.", accounts, hasSize(3));
+        assertThat(accounts.get(2).getName(), equalTo(new AccountName("baabeetaa")));
+        assertThat(accounts.get(0).getMemoKey().getAddressFromPublicKey(),
+                equalTo("STM5qu8gRh39y5AvY3kciA5P4CkRZEfSYbSo5xQKoZsZdDVsyn6fm"));
     }
 
     @Category({ IntegrationTest.class })
@@ -284,7 +295,7 @@ public class SteemJIT extends BaseIntegrationTest {
         final Discussion discussion = steemJ.getContent(ACCOUNT, PERMLINK);
 
         assertNotNull("expect discussion", discussion);
-        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor().getAccountName());
+        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor().getName());
     }
 
     @Category({ IntegrationTest.class })
@@ -341,7 +352,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
         assertEquals("expect " + ACCOUNT + " to be the first returned author",
-                repliesByLastUpdate.get(0).getAuthor().getAccountName(), ACCOUNT);
+                repliesByLastUpdate.get(0).getAuthor().getName(), ACCOUNT);
         assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK,
                 repliesByLastUpdate.get(0).getPermlink());
     }
@@ -366,7 +377,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertEquals("expect that 5 results are returned", repliesByLastUpdate.size(), 5);
         assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned account", WITNESS_ACCOUNT,
-                repliesByLastUpdate.get(0).getAccount().getAccountName());
+                repliesByLastUpdate.get(0).getAccount().getName());
     }
 
     @Category({ IntegrationTest.class })
@@ -376,7 +387,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertEquals("expect that 9 results are returned", repliesByLastUpdate.size(), 9);
         assertEquals("expect " + ACCOUNT + " to be the first returned author", ACCOUNT,
-                repliesByLastUpdate.get(0).getAuthor().getAccountName());
+                repliesByLastUpdate.get(0).getAuthor().getName());
     }
 
     @Category({ IntegrationTest.class })
@@ -551,7 +562,7 @@ public class SteemJIT extends BaseIntegrationTest {
         final List<CommentFeedEntry> feed = steemJ.getFeed(new AccountName("dez1337"), 0, (short) 100);
 
         assertThat(feed.size(), equalTo(100));
-        assertTrue(feed.get(0).getComment().getAuthor().getAccountName().matches("[a-z\\-_0-9]+"));
+        assertTrue(feed.get(0).getComment().getAuthor().getName().matches("[a-z\\-_0-9]+"));
     }
 
     @Category({ IntegrationTest.class })

@@ -20,6 +20,13 @@ public class Block extends SignedBlockWithInfo {
     private long blockNum;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private Block() {
+    }
+
+    /**
      * @return the id
      */
     public long getId() {

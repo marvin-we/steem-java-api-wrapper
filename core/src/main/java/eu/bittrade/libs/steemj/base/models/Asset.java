@@ -75,8 +75,7 @@ public class Asset implements ByteTransformable {
     /**
      * Get the symbol for this asset object.
      * 
-     * @return One type of
-     *         {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
+     * @return One type of {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
      *         AssetSymbolType}.
      */
     public AssetSymbolType getSymbol() {

@@ -57,6 +57,13 @@ public class WitnessSchedule {
     private String majorityVersion;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private WitnessSchedule() {
+    }
+
+    /**
      * @return the id
      */
     public long getId() {

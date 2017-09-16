@@ -18,21 +18,22 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
  */
 public class AccountAuthHashMapDeserializer extends JsonDeserializer<Map<String, Integer>> {
     @Override
-    public Map<String, Integer> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
+    public Map<String, Integer> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+            throws IOException, JsonProcessingException {
 
         HashMap<String, Integer> result = new HashMap<>();
 
         ObjectCodec codec = jsonParser.getCodec();
         TreeNode rootNode = codec.readTree(jsonParser);
 
-        if (rootNode.isArray()){
-            for (JsonNode node : (ArrayNode) rootNode){
+        if (rootNode.isArray()) {
+            for (JsonNode node : (ArrayNode) rootNode) {
                 result.put((node.get(0)).asText(), (node.get(0)).asInt());
             }
 
             return result;
         }
-        
+
         throw new IllegalArgumentException("JSON Node is not an array.");
     }
 }

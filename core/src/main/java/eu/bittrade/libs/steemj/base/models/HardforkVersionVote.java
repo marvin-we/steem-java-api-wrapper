@@ -17,6 +17,13 @@ public class HardforkVersionVote {
     protected TimePointSec hfTime;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private HardforkVersionVote() {
+    }
+
+    /**
      * @return the hfVersion
      */
     public String getHfVersion() {

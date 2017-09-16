@@ -13,10 +13,27 @@ public class OrderBook {
     private List<Order> asks;
     private List<Order> bids;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private OrderBook() {
+    }
+
+    /**
+     * @return A list of open buy
+     *         {@link eu.bittrade.libs.steemj.base.models.Order Order}s of the
+     *         internal market.
+     */
     public List<Order> getAsks() {
         return asks;
     }
 
+    /**
+     * @return A list of open sell
+     *         {@link eu.bittrade.libs.steemj.base.models.Order Order}s of the
+     *         internal market.
+     */
     public List<Order> getBids() {
         return bids;
     }

@@ -21,6 +21,13 @@ public class SignedBlockWithInfo extends SignedBlock {
     private List<TransactionId> transactionIds;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected SignedBlockWithInfo() {
+    }
+
+    /**
      * @return the blockId
      */
     public BlockId getBlockId() {

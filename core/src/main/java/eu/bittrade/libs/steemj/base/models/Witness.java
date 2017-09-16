@@ -47,6 +47,13 @@ public class Witness {
     @JsonProperty("hardfork_time_vote")
     private TimePointSec hardforkTimeVote;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private Witness() {
+    }
+
     public int getId() {
         return id;
     }

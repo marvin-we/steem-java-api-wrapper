@@ -57,8 +57,6 @@ import eu.bittrade.libs.steemj.plugins.follow.model.FeedEntry;
 import eu.bittrade.libs.steemj.plugins.follow.model.FollowApiObject;
 import eu.bittrade.libs.steemj.plugins.follow.model.FollowCountApiObject;
 import eu.bittrade.libs.steemj.plugins.follow.model.PostsPerAuthorPair;
-import eu.bittrade.libs.steemj.plugins.market.history.model.MarketTicker;
-import eu.bittrade.libs.steemj.plugins.market.history.model.MarketVolume;
 
 /**
  * This class is a wrapper for the Steem web socket API.
@@ -245,7 +243,7 @@ public class SteemJ {
         // The API expects an array of arrays here.
         String[] innerParameters = new String[accountNames.size()];
         for (int i = 0; i < accountNames.size(); i++) {
-            innerParameters[i] = accountNames.get(i).getAccountName();
+            innerParameters[i] = accountNames.get(i).getName();
         }
 
         String[][] parameters = { innerParameters };
@@ -564,7 +562,7 @@ public class SteemJ {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONVERSION_REQUESTS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { account.getAccountName() };
+        String[] parameters = { account.getName() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Object[].class).get(0);
@@ -890,7 +888,7 @@ public class SteemJ {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_OPEN_ORDERS);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { accountName.getAccountName() };
+        String[] parameters = { accountName.getName() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, ExtendedLimitOrder.class);
@@ -1312,7 +1310,7 @@ public class SteemJ {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.LOGIN);
         requestObject.setSteemApi(SteemApis.LOGIN_API);
-        String[] parameters = { accountName.getAccountName(), password };
+        String[] parameters = { accountName.getName(), password };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
@@ -1446,8 +1444,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { following.getAccountName(), startFollower.getAccountName(),
-                type.toString().toLowerCase(), limit };
+        Object[] parameters = { following.getName(), startFollower.getName(), type.toString().toLowerCase(), limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, FollowApiObject.class);
@@ -1489,8 +1486,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWING);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { follower.getAccountName(), startFollowing.getAccountName(),
-                type.toString().toLowerCase(), limit };
+        Object[] parameters = { follower.getName(), startFollowing.getName(), type.toString().toLowerCase(), limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, FollowApiObject.class);
@@ -1522,7 +1518,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_FOLLOW_COUNT);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { account.getAccountName() };
+        Object[] parameters = { account.getName() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, FollowCountApiObject.class).get(0);
@@ -1561,7 +1557,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_FEED_ENTRIES);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { account.getAccountName(), entryId, limit };
+        Object[] parameters = { account.getName(), entryId, limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, FeedEntry.class);
@@ -1599,7 +1595,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_FEED);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { account.getAccountName(), entryId, limit };
+        Object[] parameters = { account.getName(), entryId, limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, CommentFeedEntry.class);
@@ -1659,7 +1655,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_BLOG_ENTRIES);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { account.getAccountName(), entryId, limit };
+        Object[] parameters = { account.getName(), entryId, limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, BlogEntry.class);
@@ -1698,7 +1694,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_BLOG);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { account.getAccountName(), entryId, limit };
+        Object[] parameters = { account.getName(), entryId, limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, CommentBlogEntry.class);
@@ -1751,7 +1747,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { accountName.getAccountName(), limit };
+        Object[] parameters = { accountName.getName(), limit };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, AccountReputation.class);
@@ -1782,7 +1778,7 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { author.getAccountName(), permlink };
+        Object[] parameters = { author.getName(), permlink };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, AccountName.class);
@@ -1814,92 +1810,11 @@ public class SteemJ {
         requestObject.setApiMethod(RequestMethods.GET_BLOG_AUTHORS);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { blogAccount.getAccountName() };
+        Object[] parameters = { blogAccount.getName() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
     }
-
-    /**
-     * @return The market ticker for the internal SBD:STEEM market.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
-     *             <li>If there is a connection problem.</li>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public MarketTicker getTicker() throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_TICKER);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
-
-        Object[] parameters = { };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, MarketTicker.class).get(0);
-    }
-    
-    /**
-     * @return The market volume for the past 24 hours.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
-     *             <li>If there is a connection problem.</li>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public MarketVolume getVolume() throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_VOLUME);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
-
-        Object[] parameters = { };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, MarketVolume.class).get(0);
-    }
-
-    /**
-     * @brief Returns the trade history for the internal SBD:STEEM market.
-     * @param start The start time of the trade history.
-     * @param end The end time of the trade history.
-     * @param limit The number of trades to return. Maximum is 1000.
-     * @return A list of completed trades.
-     */
-    //std::vector< market_trade > get_trade_history( time_point_sec start, time_point_sec end, uint32_t limit = 1000 ) const;
-
-    /**
-     * @brief Returns the N most recent trades for the internal SBD:STEEM market.
-     * @param limit The number of recent trades to return. Maximum is 1000.
-     * @returns A list of completed trades.
-     */
-     //std::vector< market_trade > get_recent_trades( uint32_t limit = 1000 ) const;
-
-    /**
-     * @brief Returns the market history for the internal SBD:STEEM market.
-     * @param bucket_seconds The size of buckets the history is broken into. The bucket size must be configured in the plugin options.
-     * @param start The start time to get market history.
-     * @param end The end time to get market history
-     * @return A list of market history buckets.
-     */
-    //std::vector< bucket_object > get_market_history( uint32_t bucket_seconds, time_point_sec start, time_point_sec end ) const;
-
-    /**
-     * @brief Returns the bucket seconds being tracked by the plugin.
-     */
-    //flat_set< uint32_t > get_market_history_buckets() const;
-
 
     /**
      * Use this method to register a callback method that is called whenever a

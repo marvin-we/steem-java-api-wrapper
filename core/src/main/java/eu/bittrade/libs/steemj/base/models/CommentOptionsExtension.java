@@ -104,9 +104,9 @@ public class CommentOptionsExtension implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentOptionsExtension = new ByteArrayOutputStream()) {
-            serializedCommentOptionsExtension.write(
-                    SteemJUtils.transformIntToVarIntByteArray(this.getClassTypeIdentifier()));
-            
+            serializedCommentOptionsExtension
+                    .write(SteemJUtils.transformIntToVarIntByteArray(this.getClassTypeIdentifier()));
+
             serializedCommentOptionsExtension.write(this.getCommentPayoutBeneficiaries().toByteArray());
 
             return serializedCommentOptionsExtension.toByteArray();

@@ -14,6 +14,13 @@ public class LiquidityBalance {
     // Original type is uint128_t.
     private BigInteger weight;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private LiquidityBalance() {
+    }
+
     public AccountName getAccount() {
         return account;
     }

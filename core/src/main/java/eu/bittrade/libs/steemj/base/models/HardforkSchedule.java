@@ -13,6 +13,13 @@ public class HardforkSchedule {
     @JsonProperty("live_time")
     private String liveTime;
 
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    private HardforkSchedule() {
+    }
+
     public String getHardforkVersion() {
         return hardforkVersion;
     }
