@@ -18,7 +18,7 @@ import eu.bittrade.libs.steemj.base.models.serializer.AccountAuthHashMapSerializ
 import eu.bittrade.libs.steemj.base.models.serializer.PublicKeyHashMapSerializer;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.interfaces.SignUtilizable;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -26,7 +26,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Authority implements ByteTransformable, SignUtilizable {
+public class Authority implements ByteTransformable, SignatureObject {
     // Type is uint32 in the original code.
     @JsonProperty("weight_threshold")
     private long weightThreshold;
@@ -74,8 +74,7 @@ public class Authority implements ByteTransformable, SignUtilizable {
     }
 
     /**
-     * 
-     * @return
+     * @return A map of stored account names and their threshold.
      */
     public Map<AccountName, Integer> getAccountAuths() {
         return accountAuths;
@@ -90,8 +89,7 @@ public class Authority implements ByteTransformable, SignUtilizable {
     }
 
     /**
-     * 
-     * @return
+     * @return A map of stored public keys and their threshold.
      */
     public Map<PublicKey, Integer> getKeyAuths() {
         return keyAuths;
@@ -134,5 +132,36 @@ public class Authority implements ByteTransformable, SignUtilizable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public boolean equals(Object otherAuthority) {
+        if (this == otherAuthority)
+            return true;
+        if (otherAuthority == null || !(otherAuthority instanceof Authority))
+            return false;
+        Authority other = (Authority) otherAuthority;
+        return this.getAccountAuths().equals(other.getAccountAuths()) && this.getKeyAuths().equals(other.getKeyAuths())
+                && this.getWeightThreshold() == other.getWeightThreshold();
+    }
+
+    @Override
+    public int hashCode() {
+        int hashCode = 1;
+        hashCode = 31 * hashCode + (this.getAccountAuths() == null ? 0 : this.getAccountAuths().hashCode());
+        hashCode = 31 * hashCode + (this.getKeyAuths() == null ? 0 : this.getKeyAuths().hashCode());
+        hashCode = 31 * hashCode + Long.hashCode(this.getWeightThreshold());
+        return hashCode;
+    }
+
+    /**
+     * Returns {@code true} if, and only if, the account name has more than
+     * {@code 0} characters.
+     *
+     * @return {@code true} if the account name has more than {@code 0},
+     *         otherwise {@code false}
+     */
+    public boolean isEmpty() {
+        return this.getAccountAuths().isEmpty() && this.getKeyAuths().isEmpty();
     }
 }
