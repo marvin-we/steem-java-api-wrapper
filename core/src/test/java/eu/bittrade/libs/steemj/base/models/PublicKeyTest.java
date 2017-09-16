@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.bittrade.libs.steemj.BaseUnitTest;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 
 /**
  * Test the PublicKey object.

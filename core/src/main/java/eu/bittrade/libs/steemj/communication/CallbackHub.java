@@ -40,8 +40,8 @@ public class CallbackHub {
     }
 
     /**
-     * Receive a {@link eu.bittrade.libs.steemj.communication.CallbackHub CallbackHub}
-     * instance.
+     * Receive a {@link eu.bittrade.libs.steemj.communication.CallbackHub
+     * CallbackHub} instance.
      * 
      * @return A CallbackHub instance.
      */

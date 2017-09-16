@@ -3,8 +3,8 @@ package eu.bittrade.libs.steemj;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

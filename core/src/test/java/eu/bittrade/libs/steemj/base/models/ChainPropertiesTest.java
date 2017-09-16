@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.equalTo;
 import org.bitcoinj.core.Utils;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
 /**

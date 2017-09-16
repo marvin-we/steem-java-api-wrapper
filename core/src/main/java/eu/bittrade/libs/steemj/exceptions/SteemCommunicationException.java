@@ -11,16 +11,15 @@ public class SteemCommunicationException extends Exception {
     public SteemCommunicationException() {
         super();
     }
-    
+
     public SteemCommunicationException(String message) {
         super(message);
     }
 
     public SteemCommunicationException(Throwable cause) {
-        super("Sorry, an error occurred while processing your request." , cause);
+        super("Sorry, an error occurred while processing your request.", cause);
     }
-    
-    
+
     public SteemCommunicationException(String message, Throwable cause) {
         super(message, cause);
     }

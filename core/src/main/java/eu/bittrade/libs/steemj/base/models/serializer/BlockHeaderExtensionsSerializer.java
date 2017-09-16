@@ -15,8 +15,9 @@ import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
 public class BlockHeaderExtensionsSerializer extends JsonSerializer<BlockHeaderExtensions> {
 
     @Override
-    public void serialize(BlockHeaderExtensions blockHeaderExtensions, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-            throws IOException, JsonProcessingException {
-        // As long as Extensions are not supported we simply return nothing here.
+    public void serialize(BlockHeaderExtensions blockHeaderExtensions, JsonGenerator jsonGenerator,
+            SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+        // As long as Extensions are not supported we simply return nothing
+        // here.
     }
 }

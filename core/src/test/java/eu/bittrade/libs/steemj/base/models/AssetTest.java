@@ -94,7 +94,7 @@ public class AssetTest {
     @Test
     public void testTstdAssetToByteArray() throws Exception {
         Asset sbdAsset = new Asset();
-        sbdAsset.setSymbol(AssetSymbolType.TSTD);   
+        sbdAsset.setSymbol(AssetSymbolType.TSTD);
         sbdAsset.setAmount(78945214);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));

@@ -9,9 +9,6 @@ import java.util.Map;
 import org.bitcoinj.core.Utils;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
-
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

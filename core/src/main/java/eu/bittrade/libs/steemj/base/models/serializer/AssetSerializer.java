@@ -18,7 +18,8 @@ public class AssetSerializer extends JsonSerializer<Asset> {
     @Override
     public void serialize(Asset asset, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException, JsonProcessingException {
-        String amountFormat = "%." + (int)asset.getPrecision() + "f";
-        jsonGenerator.writeString(String.format(Locale.US, amountFormat, asset.getAmount()) + " " + asset.getSymbol().toString().toUpperCase());
+        String amountFormat = "%." + (int) asset.getPrecision() + "f";
+        jsonGenerator.writeString(String.format(Locale.US, amountFormat, asset.getAmount()) + " "
+                + asset.getSymbol().toString().toUpperCase());
     }
 }

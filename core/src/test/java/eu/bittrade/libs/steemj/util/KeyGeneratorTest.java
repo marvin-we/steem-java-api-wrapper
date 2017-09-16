@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.util.KeyGenerator;
-
 /**
  * Test the key generation. The test are a Java implementation of the
  * steem-python project (see <a href=

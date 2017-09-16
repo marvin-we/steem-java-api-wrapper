@@ -5,8 +5,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.util.BrainkeyDictionaryManager;
-
 /**
  * Test the brain key dictionary import.
  * 
