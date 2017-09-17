@@ -253,7 +253,7 @@ public class SteemJUtils {
      * @throws IllegalStateException
      *             If no private key is present in the given ECKey instance.
      */
-    public static String privateKeyToWIF(ECKey privateKey) throws IllegalStateException {
+    public static String privateKeyToWIF(ECKey privateKey) {
         ECKey currentPrivateKey = privateKey;
         if (currentPrivateKey.isCompressed()) {
             currentPrivateKey = currentPrivateKey.decompress();
