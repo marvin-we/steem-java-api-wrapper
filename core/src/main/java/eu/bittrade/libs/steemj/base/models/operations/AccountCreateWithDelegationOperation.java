@@ -7,14 +7,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -24,13 +19,8 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateWithDelegationOperation extends AbstractAccountOperation {
-    private Asset fee;
+public class AccountCreateWithDelegationOperation extends AccountCreateOperation {
     private Asset delegation;
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
-    private AccountName creator;
-    @JsonProperty("new_account_name")
-    private AccountName newAccountName;
     // Original type is "extension_type" which is an array of "future_extions".
     private List<FutureExtensions> extensions;
 
@@ -39,27 +29,6 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountOperati
      * to create a new account.
      */
     public AccountCreateWithDelegationOperation() {
-        super(false);
-    }
-
-    /**
-     * Get the fee the {@link #creator creator} has paid to create this new
-     * account.
-     * 
-     * @return The fee.
-     */
-    public Asset getFee() {
-        return fee;
-    }
-
-    /**
-     * Set the fee you are willing to pay to create a new acocunt.
-     * 
-     * @param fee
-     *            The fee.
-     */
-    public void setFee(Asset fee) {
-        this.fee = fee;
     }
 
     /**
@@ -81,46 +50,6 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountOperati
      */
     public void setDelegation(Asset delegation) {
         this.delegation = delegation;
-    }
-
-    /**
-     * Get the account name of the user who created a new account.
-     * 
-     * @return The account name of the user who created a new account.
-     */
-    public AccountName getCreator() {
-        return creator;
-    }
-
-    /**
-     * Set the account name of the user who created a new account.
-     * <b>Notice:</b> The private active key of this account needs to be stored
-     * in the key storage.
-     * 
-     * @param creator
-     *            The account name of the user who created a new account.
-     */
-    public void setCreator(AccountName creator) {
-        this.creator = creator;
-    }
-
-    /**
-     * Get the account name of the user which has been created.
-     * 
-     * @return The account name of the user which has been created.
-     */
-    public AccountName getNewAccountName() {
-        return newAccountName;
-    }
-
-    /**
-     * Set the account name of the account that should be created.
-     * 
-     * @param newAccountName
-     *            The account name of the user which should be created.
-     */
-    public void setNewAccountName(AccountName newAccountName) {
-        this.newAccountName = newAccountName;
     }
 
     /**

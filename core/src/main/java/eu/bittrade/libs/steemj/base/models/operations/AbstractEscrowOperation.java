@@ -20,6 +20,7 @@ abstract class AbstractEscrowOperation extends Operation {
     // Original type is unit32_t so we use long here.
     @JsonProperty("escrow_id")
     protected long escrowId;
+
     /**
      * Create a new Operation object by providing the operation type.
      */

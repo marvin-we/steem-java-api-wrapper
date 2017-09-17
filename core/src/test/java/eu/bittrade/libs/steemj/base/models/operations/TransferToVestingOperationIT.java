@@ -78,10 +78,9 @@ public class TransferToVestingOperationIT extends BaseIntegrationTest {
         assertThat(transferToVestingOperation, instanceOf(TransferToVestingOperation.class));
         assertThat(((TransferToVestingOperation) transferToVestingOperation).getAmount().getAmount(),
                 equalTo(EXPECTED_AMOUNT));
-        assertThat(((TransferToVestingOperation) transferToVestingOperation).getFrom().getAccountName(),
+        assertThat(((TransferToVestingOperation) transferToVestingOperation).getFrom().getName(),
                 equalTo(EXPECTED_FROM));
-        assertThat(((TransferToVestingOperation) transferToVestingOperation).getTo().getAccountName(),
-                equalTo(EXPECTED_TO));
+        assertThat(((TransferToVestingOperation) transferToVestingOperation).getTo().getName(), equalTo(EXPECTED_TO));
     }
 
     @Category({ IntegrationTest.class })

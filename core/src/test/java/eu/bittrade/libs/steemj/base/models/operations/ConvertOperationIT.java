@@ -77,7 +77,7 @@ public class ConvertOperationIT extends BaseIntegrationTest {
                 .getOperations().get(OPERATION_INDEX);
 
         assertThat(convertOperation, instanceOf(ConvertOperation.class));
-        assertThat(((ConvertOperation) convertOperation).getOwner().getAccountName(), equalTo(EXPECTED_OWNER));
+        assertThat(((ConvertOperation) convertOperation).getOwner().getName(), equalTo(EXPECTED_OWNER));
         assertThat(((ConvertOperation) convertOperation).getAmount(), equalTo(EXPECTED_AMOUNT));
     }
 

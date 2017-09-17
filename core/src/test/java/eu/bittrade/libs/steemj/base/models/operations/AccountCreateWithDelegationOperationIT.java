@@ -110,8 +110,8 @@ public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest 
                 .getTransactions().get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(accountCreateWithDelegationOperation, instanceOf(AccountCreateWithDelegationOperation.class));
-        assertThat(((AccountCreateWithDelegationOperation) accountCreateWithDelegationOperation).getCreator()
-                .getAccountName(), equalTo(EXPECTED_CREATOR));
+        assertThat(((AccountCreateWithDelegationOperation) accountCreateWithDelegationOperation).getCreator().getName(),
+                equalTo(EXPECTED_CREATOR));
         assertThat(((AccountCreateWithDelegationOperation) accountCreateWithDelegationOperation).getOwner()
                 .getKeyAuths().containsKey(EXPECTED_OWNER_KEY), equalTo(true));
     }

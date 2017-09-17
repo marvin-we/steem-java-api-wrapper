@@ -71,9 +71,9 @@ public class DelegateVestingSharesOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(delegateVestingSharesOperation, instanceOf(DelegateVestingSharesOperation.class));
-        assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getDelegator().getAccountName(),
+        assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getDelegator().getName(),
                 equalTo(EXPECTED_FROM_ACCOUNT));
-        assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getDelegatee().getAccountName(),
+        assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getDelegatee().getName(),
                 equalTo(EXPECTED_TO_ACCOUNT));
         assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getVestingShares().getAmount(),
                 equalTo(EXPECTED_AMOUNT));

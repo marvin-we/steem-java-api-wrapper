@@ -77,8 +77,7 @@ public class EscrowReleaseOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(escrowReleaseOperation, instanceOf(EscrowReleaseOperation.class));
-        assertThat(((EscrowReleaseOperation) escrowReleaseOperation).getFrom().getAccountName(),
-                equalTo(EXPECTED_FROM));
+        assertThat(((EscrowReleaseOperation) escrowReleaseOperation).getFrom().getName(), equalTo(EXPECTED_FROM));
         assertThat(((EscrowReleaseOperation) escrowReleaseOperation).getEscrowId(), equalTo(EXPECTED_ESCROW_ID));
     }
 

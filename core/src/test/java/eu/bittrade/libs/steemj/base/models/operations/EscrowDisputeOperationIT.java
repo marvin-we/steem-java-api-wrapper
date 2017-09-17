@@ -60,8 +60,7 @@ public class EscrowDisputeOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(escrowDisputeOperation, instanceOf(EscrowDisputeOperation.class));
-        assertThat(((EscrowDisputeOperation) escrowDisputeOperation).getFrom().getAccountName(),
-                equalTo(EXPECTED_FROM));
+        assertThat(((EscrowDisputeOperation) escrowDisputeOperation).getFrom().getName(), equalTo(EXPECTED_FROM));
         assertThat(((EscrowDisputeOperation) escrowDisputeOperation).getEscrowId(), equalTo(EXPECTED_ESCROW_ID));
     }
 

@@ -83,7 +83,7 @@ public class CustomJsonOperationIT extends BaseIntegrationTest {
 
         assertThat(customJsonOperation, instanceOf(CustomJsonOperation.class));
         assertThat(((CustomJsonOperation) customJsonOperation).getId(), equalTo(EXPECTED_ID));
-        assertThat(((CustomJsonOperation) customJsonOperation).getRequiredPostingAuths().get(0).getAccountName(),
+        assertThat(((CustomJsonOperation) customJsonOperation).getRequiredPostingAuths().get(0).getName(),
                 equalTo(EXPECTED_ACCOUNT));
         assertThat(((CustomJsonOperation) customJsonOperation).getJson(), equalTo(EXPECTED_JSON));
     }

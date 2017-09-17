@@ -71,8 +71,7 @@ public class DeleteCommentOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(deleteCommentOperation, instanceOf(DeleteCommentOperation.class));
-        assertThat(((DeleteCommentOperation) deleteCommentOperation).getAuthor().getAccountName(),
-                equalTo(EXPECTED_AUTHOR));
+        assertThat(((DeleteCommentOperation) deleteCommentOperation).getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
         assertThat(((DeleteCommentOperation) deleteCommentOperation).getPermlink(), equalTo(EXPECTED_PERMANENT_LINK));
     }
 

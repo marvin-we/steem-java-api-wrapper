@@ -78,8 +78,7 @@ public class CommentOptionsOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(commentOptionsOperation, instanceOf(CommentOptionsOperation.class));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAuthor().getAccountName(),
-                equalTo(EXPECTED_AUTHOR));
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getAllowVotes(),
                 equalTo(EXPECTED_VOTES_ALLOWED));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink(), equalTo(EXPECTED_PERMANENT_LINK));

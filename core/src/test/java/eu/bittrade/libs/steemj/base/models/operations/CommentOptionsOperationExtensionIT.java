@@ -100,7 +100,7 @@ public class CommentOptionsOperationExtensionIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX_WITH_EXTENSION).getOperations().get(OPERATION_INDEX_WITH_EXTENSION);
 
         assertThat(commentOptionsOperation, instanceOf(CommentOptionsOperation.class));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAuthor().getAccountName(),
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAuthor().getName(),
                 equalTo(EXPECTED_AUTHOR_WITH_EXTENSION));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getAllowVotes(),
                 equalTo(EXPECTED_VOTES_ALLOWED_WITH_EXTENSION));
@@ -110,7 +110,7 @@ public class CommentOptionsOperationExtensionIT extends BaseIntegrationTest {
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0)
                 .getCommentPayoutBeneficiaries().getBeneficiaries().size(), equalTo(1));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0)
-                .getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getAccount().getAccountName(),
+                .getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getAccount().getName(),
                 equalTo(EXPECTED_BENEFICIARY_ACCOUNT));
         assertThat(
                 ((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0)

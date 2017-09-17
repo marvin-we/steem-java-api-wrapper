@@ -67,7 +67,7 @@ public class AccountWitnessVoteOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(accountWitnessVoteOperation, instanceOf(AccountWitnessVoteOperation.class));
-        assertThat(((AccountWitnessVoteOperation) accountWitnessVoteOperation).getAccount().getAccountName(),
+        assertThat(((AccountWitnessVoteOperation) accountWitnessVoteOperation).getAccount().getName(),
                 equalTo(EXPECTED_ACCOUNT));
         assertThat(((AccountWitnessVoteOperation) accountWitnessVoteOperation).getApprove(), equalTo(EXPECTED_APPROVE));
     }

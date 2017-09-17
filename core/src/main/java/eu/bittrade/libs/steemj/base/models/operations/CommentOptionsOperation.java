@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -17,6 +18,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -239,5 +241,11 @@ public class CommentOptionsOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+    
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }

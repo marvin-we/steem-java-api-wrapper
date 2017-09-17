@@ -2,17 +2,21 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -20,24 +24,127 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateOperation extends AbstractAccountOperation {
-    @JsonProperty("fee")
-    private Asset fee;
-    // Accurate type is fixed_string
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
-    @JsonProperty("creator")
-    private AccountName creator;
-    // Accurate type is fixed_string
-    @JsonProperty("new_account_name")
-    private AccountName newAccountName;
+public class AccountCreateOperation extends Operation {
+    protected Asset fee;
+    protected AccountName creator;
+    protected AccountName newAccountName;
+    protected Authority owner;
+    protected Authority active;
+    protected Authority posting;
+    @JsonProperty("memo_key")
+    protected PublicKey memoKey;
+    @JsonProperty("json_metadata")
+    protected String jsonMetadata;
 
     /**
      * Create a new create account operation. Use this operation to create a new
      * account.
      */
     public AccountCreateOperation() {
-        // Define the required key type for this operation.
         super(false);
+    }
+
+    /**
+     * Get the owner {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @return The owner authority.
+     */
+    public Authority getOwner() {
+        return owner;
+    }
+
+    /**
+     * Set the owner {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @param owner
+     *            The owner authority.
+     */
+    public void setOwner(Authority owner) {
+        this.owner = owner;
+    }
+
+    /**
+     * Get the active {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @return The active authority.
+     */
+    public Authority getActive() {
+        return active;
+    }
+
+    /**
+     * Set the active {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @param active
+     *            The active authority.
+     */
+    public void setActive(Authority active) {
+        this.active = active;
+    }
+
+    /**
+     * Get the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @return The posting authority.
+     */
+    public Authority getPosting() {
+        return posting;
+    }
+
+    /**
+     * Set the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Authority} of the {@link #newAccountName newAccountName}.
+     * 
+     * @param posting
+     *            The posting authority.
+     */
+    public void setPosting(Authority posting) {
+        this.posting = posting;
+    }
+
+    /**
+     * Get the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * PublicKey} of the {@link #newAccountName newAccountName}.
+     * 
+     * @return The memo key.
+     */
+    public PublicKey getMemoKey() {
+        return memoKey;
+    }
+
+    /**
+     * Set the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * PublicKey} of the {@link #newAccountName newAccountName}.
+     * 
+     * @param memoKey
+     *            The memo key.
+     */
+    public void setMemoKey(PublicKey memoKey) {
+        this.memoKey = memoKey;
+    }
+
+    /**
+     * Get the json metadata which have been added to this operation.
+     * 
+     * @return The json metadata which have been added to this operation.
+     */
+    public String getJsonMetadata() {
+        return jsonMetadata;
+    }
+
+    /**
+     * Add json metadata to this operation.
+     * 
+     * @param jsonMetadata
+     *            The json metadata.
+     */
+    public void setJsonMetadata(String jsonMetadata) {
+        this.jsonMetadata = jsonMetadata;
     }
 
     /**
@@ -125,5 +232,11 @@ public class AccountCreateOperation extends AbstractAccountOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getCreator(), PrivateKeyType.ACTIVE);
     }
 }

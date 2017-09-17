@@ -80,8 +80,7 @@ public class CustomOperationIT extends BaseIntegrationTest {
 
         assertThat(customOperation, instanceOf(CustomOperation.class));
         assertThat(((CustomOperation) customOperation).getId(), equalTo(EXPECTED_ID));
-        assertThat(((CustomOperation) customOperation).getRequiredAuths().get(0).getAccountName(),
-                equalTo(EXPECTED_ACCOUNT));
+        assertThat(((CustomOperation) customOperation).getRequiredAuths().get(0).getName(), equalTo(EXPECTED_ACCOUNT));
         assertThat(((CustomOperation) customOperation).getData(), equalTo(EXPECTED_DATA));
     }
 

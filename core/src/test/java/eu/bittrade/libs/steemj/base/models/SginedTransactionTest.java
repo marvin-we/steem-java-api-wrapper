@@ -23,19 +23,22 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  *
  */
-public class SginedTransactionTest extends BaseUnitTest {
-    private static VoteOperation voteOperation = new VoteOperation();
+public class SginedTransactionTest extends BaseTransactionalUnitTest {
+    private static VoteOperation voteOperation;
     private static CustomJsonOperation customJsonOperation = new CustomJsonOperation();
 
+    /**
+     * Prepare the environment for the test execution.
+     */
     @BeforeClass
     public static void init() {
         setupUnitTestEnvironment();
 
-        voteOperation = new VoteOperation();
-        voteOperation.setAuthor(new AccountName("xeroc"));
-        voteOperation.setPermlink("piston");
-        voteOperation.setVoter(new AccountName("xeroc"));
-        voteOperation.setWeight((short) 10000);
+        AccountName voter = new AccountName("xeroc");
+        AccountName author = new AccountName("xeroc");
+        String permlink = "piston";
+        short weight = 10000;
+        voteOperation = new VoteOperation(voter, author, permlink, weight);
 
         customJsonOperation = new CustomJsonOperation();
 
@@ -57,7 +60,7 @@ public class SginedTransactionTest extends BaseUnitTest {
         final String EXPECTED_RESULT = "0000000000000000000000000000000000000000000000000000000000000000f68585abf4dce7c804"
                 + "570100057865726f63057865726f6306706973746f6e102700";
         final String EXPECTED_HASH = "2581eb832809ca62a75871c72c275e32b5d2c320a761412a1158f52798530490";
-        
+
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
@@ -79,7 +82,7 @@ public class SginedTransactionTest extends BaseUnitTest {
         operations.add(voteOperation);
 
         transaction.setOperations(operations);
-        
+
         assertThat(transaction.getRequiredSignatures().size(), equalTo(1));
         assertThat(transaction.getRequiredSignatures().get(0), equalTo(SteemJConfig.getInstance().getPrivateKeyStorage()
                 .getKeyForAccount(PrivateKeyType.POSTING, new AccountName("xeroc"))));

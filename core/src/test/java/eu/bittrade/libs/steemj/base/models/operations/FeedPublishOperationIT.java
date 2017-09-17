@@ -93,8 +93,7 @@ public class FeedPublishOperationIT extends BaseIntegrationTest {
                 .getOperations().get(OPERATION_INDEX);
 
         assertThat(feedPublishOperation, instanceOf(FeedPublishOperation.class));
-        assertThat(((FeedPublishOperation) feedPublishOperation).getPublisher().getAccountName(),
-                equalTo(EXPECTED_PUBLISHER));
+        assertThat(((FeedPublishOperation) feedPublishOperation).getPublisher().getName(), equalTo(EXPECTED_PUBLISHER));
         assertThat(((FeedPublishOperation) feedPublishOperation).getExchangeRate(), equalTo(EXPECTED_PRICE));
     }
 

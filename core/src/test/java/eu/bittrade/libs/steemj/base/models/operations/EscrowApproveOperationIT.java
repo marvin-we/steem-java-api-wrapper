@@ -62,8 +62,7 @@ public class EscrowApproveOperationIT extends BaseIntegrationTest {
                 .getOperations().get(OPERATION_INDEX);
 
         assertThat(escrowApproveOperation, instanceOf(EscrowApproveOperation.class));
-        assertThat(((EscrowApproveOperation) escrowApproveOperation).getFrom().getAccountName(),
-                equalTo(EXPECTED_FROM));
+        assertThat(((EscrowApproveOperation) escrowApproveOperation).getFrom().getName(), equalTo(EXPECTED_FROM));
         assertThat(((EscrowApproveOperation) escrowApproveOperation).getEscrowId(), equalTo(EXPECTED_ESCROW_ID));
     }
 

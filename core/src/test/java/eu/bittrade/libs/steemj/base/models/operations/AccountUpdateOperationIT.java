@@ -93,7 +93,7 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(accountUpdateOperation, instanceOf(AccountUpdateOperation.class));
-        assertThat(((AccountUpdateOperation) accountUpdateOperation).getAccount().getAccountName().toString(),
+        assertThat(((AccountUpdateOperation) accountUpdateOperation).getAccount().getName().toString(),
                 equalTo(EXPECTED_ACCOUNT));
         System.out.println(((PublicKey) (((AccountUpdateOperation) accountUpdateOperation).getActive().getKeyAuths()
                 .keySet().toArray())[0]).getAddressFromPublicKey());

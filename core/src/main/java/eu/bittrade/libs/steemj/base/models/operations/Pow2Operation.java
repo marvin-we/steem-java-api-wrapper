@@ -1,11 +1,16 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
 /**
  * This class represents the Steem "pow2_operation" object.
@@ -81,5 +86,13 @@ public class Pow2Operation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        // TODO: return mergeRequiredAuthorities(requiredAuthoritiesBase,
+        // this.getOwner(), PrivateKeyType.ACTIVE);
+        return requiredAuthoritiesBase;
     }
 }

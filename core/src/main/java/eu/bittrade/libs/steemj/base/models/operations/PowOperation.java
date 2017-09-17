@@ -1,18 +1,20 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Checksum;
 import eu.bittrade.libs.steemj.base.models.Pow;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
 /**
  * This class represents the Steem "pow_operation" object.
@@ -20,7 +22,6 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class PowOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("worker_account")
     private AccountName workerAccount;
     @JsonProperty("block_id")
@@ -129,5 +130,13 @@ public class PowOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        // TODO: return mergeRequiredAuthorities(requiredAuthoritiesBase,
+        // this.getOwner(), PrivateKeyType.ACTIVE);
+        return requiredAuthoritiesBase;
     }
 }

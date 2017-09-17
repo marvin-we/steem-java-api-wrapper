@@ -106,8 +106,7 @@ public class AccountCreateOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(accountCreateOperation, instanceOf(AccountCreateOperation.class));
-        assertThat(((AccountCreateOperation) accountCreateOperation).getCreator().getAccountName(),
-                equalTo(EXPECTED_CREATOR));
+        assertThat(((AccountCreateOperation) accountCreateOperation).getCreator().getName(), equalTo(EXPECTED_CREATOR));
         assertThat(((AccountCreateOperation) accountCreateOperation).getOwner().getKeyAuths()
                 .containsKey(EXPECTED_OWNER_KEY), equalTo(true));
     }

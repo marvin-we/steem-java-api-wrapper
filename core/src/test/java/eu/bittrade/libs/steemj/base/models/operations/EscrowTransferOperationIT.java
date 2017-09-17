@@ -83,8 +83,7 @@ public class EscrowTransferOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(escrowTransferOperation, instanceOf(EscrowTransferOperation.class));
-        assertThat(((EscrowTransferOperation) escrowTransferOperation).getFrom().getAccountName(),
-                equalTo(EXPECTED_FROM));
+        assertThat(((EscrowTransferOperation) escrowTransferOperation).getFrom().getName(), equalTo(EXPECTED_FROM));
         assertThat(((EscrowTransferOperation) escrowTransferOperation).getEscrowId(), equalTo(EXPECTED_ESCROW_ID));
         assertThat(
                 ((EscrowTransferOperation) escrowTransferOperation).getEscrowExpirationDate().getDateTimeAsTimestamp(),

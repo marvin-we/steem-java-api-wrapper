@@ -65,7 +65,7 @@ public class LimitOrderCancelOperationIT extends BaseIntegrationTest {
                 .get(OPERATION_INDEX);
 
         assertThat(voteOperation, instanceOf(LimitOrderCancelOperation.class));
-        assertThat(((LimitOrderCancelOperation) voteOperation).getOwner().getAccountName(), equalTo(EXPECTED_AUTHOR));
+        assertThat(((LimitOrderCancelOperation) voteOperation).getOwner().getName(), equalTo(EXPECTED_AUTHOR));
         assertThat(((LimitOrderCancelOperation) voteOperation).getOrderId(), equalTo(EXPECTED_ORDER_ID));
     }
 

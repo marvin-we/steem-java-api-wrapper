@@ -87,7 +87,7 @@ public class ClaimRewardBalanceOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(claimRewardBalanceOperation, instanceOf(ClaimRewardBalanceOperation.class));
-        assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getAccount().getAccountName(),
+        assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getAccount().getName(),
                 equalTo(EXPECTED_ACCOUNT));
         assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getRewardVests().getAmount(),
                 equalTo(EXPECTED_VESTS));

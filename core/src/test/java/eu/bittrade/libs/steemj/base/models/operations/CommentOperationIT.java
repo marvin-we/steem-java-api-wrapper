@@ -110,7 +110,7 @@ public class CommentOperationIT extends BaseIntegrationTest {
                 .getOperations().get(OPERATION_INDEX);
 
         assertThat(commentOperation, instanceOf(CommentOperation.class));
-        assertThat(((CommentOperation) commentOperation).getAuthor().getAccountName(), equalTo(EXPECTED_AUTHOR));
+        assertThat(((CommentOperation) commentOperation).getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
         assertThat(((CommentOperation) commentOperation).getJsonMetadata(), equalTo(EXPECTED_JSON_METADATA));
         assertThat(((CommentOperation) commentOperation).getTitle(), equalTo(EXPECTED_TITLE));
     }
