@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -38,8 +39,21 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     private static final long serialVersionUID = 4821422578657270330L;
     private static final Logger LOGGER = LoggerFactory.getLogger(SignedTransaction.class);
 
-    @JsonProperty("signatures")
     protected transient List<String> signatures;
+
+    /**
+     * This constructor is only used to create the POJO from a JSON response.
+     */
+    @JsonCreator
+    private SignedTransaction(@JsonProperty("ref_block_num") int refBlockNum,
+            @JsonProperty("ref_block_prefix") long refBlockPrefix,
+            @JsonProperty("expiration") TimePointSec expirationDate,
+            @JsonProperty("operations") List<Operation> operations,
+            @JsonProperty("extensions") List<FutureExtensions> extensions,
+            @JsonProperty("signatures") List<String> signatures) {
+        super(refBlockNum, refBlockPrefix, expirationDate, operations, extensions);
+        this.signatures = signatures;
+    }
 
     /**
      * Create a new signed transaction object.
@@ -59,11 +73,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *            Extensions are currently not supported and will be ignored
      *            (see {@link #setExtensions(List)}).
      */
-    @JsonCreator
-    public SignedTransaction(@JsonProperty("ref_block_num") int refBlockNum,
-            @JsonProperty("ref_block_prefix") long refBlockPrefix,
-            @JsonProperty("expiration") TimePointSec expirationDate, List<Operation> operations,
-            List<FutureExtensions> extensions) {
+    public SignedTransaction(int refBlockNum, long refBlockPrefix, TimePointSec expirationDate,
+            List<Operation> operations, List<FutureExtensions> extensions) {
         super(refBlockNum, refBlockPrefix, expirationDate, operations, extensions);
         this.signatures = new ArrayList<>();
     }
@@ -91,12 +102,23 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     }
 
     /**
-     * Get the signatures for this transaction. This method is only used for
-     * JSON deserialization and for testing purposes.
+     * <b>This method is only used by JUnit-Tests</b>
+     * 
+     * Create a new signed transaction object.
+     */
+    @VisibleForTesting
+    protected SignedTransaction() {
+        super();
+        this.signatures = new ArrayList<>();
+    }
+
+    /**
+     * Get the signatures for this transaction.
      * 
      * @return An array of currently appended signatures.
      */
-    protected List<String> getSignatures() {
+    @JsonProperty("signatures")
+    public List<String> getSignatures() {
         return this.signatures;
     }
 
@@ -124,8 +146,21 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * @throws SteemInvalidTransactionException
      *             If the transaction can not be signed.
      */
+    @VisibleForTesting
+    protected void sign(boolean skipValidation) throws SteemInvalidTransactionException {
+        sign(SteemJConfig.getInstance().getChainId(), skipValidation);
+    }
+
+    /**
+     *
+     * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
+     * id.
+     *
+     * @throws SteemInvalidTransactionException
+     *             If the transaction can not be signed.
+     */
     public void sign() throws SteemInvalidTransactionException {
-        sign(SteemJConfig.getInstance().getChainId());
+        sign(SteemJConfig.getInstance().getChainId(), false);
     }
 
     /**
@@ -138,7 +173,22 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *             If the transaction can not be signed.
      */
     public void sign(String chainId) throws SteemInvalidTransactionException {
-        this.validate();
+        sign(chainId, false);
+    }
+
+    /**
+     * Use this method if you want to specify a different chainId than the
+     * default one for STEEM. Otherwise use the {@link #sign() sign()} method.
+     * 
+     * @param chainId
+     *            The chain id that should be used during signing.
+     * @throws SteemInvalidTransactionException
+     *             If the transaction can not be signed.
+     */
+    protected void sign(String chainId, boolean skipValidation) throws SteemInvalidTransactionException {
+        if (!skipValidation) {
+            this.validate();
+        }
 
         for (ECKey requiredPrivateKey : getRequiredSignatureKeys()) {
             boolean isCanonical = false;
@@ -244,7 +294,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                     accountName);
         } catch (InvalidParameterException ipe) {
             throw new SteemInvalidTransactionException(
-                    "Could not find private " + privateKeyType + " key for the user + " + accountName);
+                    "Could not find private " + privateKeyType + " key for the user + " + accountName.toString());
         }
 
         if (!requiredSignatures.contains(privateKey)) {

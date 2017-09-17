@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -41,6 +42,7 @@ public class Transaction implements Serializable {
      * not support unsigned types. For sure we will only use 2 bytes of this
      * field when we serialize it.
      */
+    @JsonProperty("ref_block_num")
     protected short refBlockNum;
     /**
      * The ref_block_prefix on the other hand is obtain from the block id of
@@ -51,10 +53,14 @@ public class Transaction implements Serializable {
      * this field when we serialize it.
      * 
      */
+    @JsonProperty("ref_block_prefix")
     protected int refBlockPrefix;
+    @JsonProperty("expiration")
     protected transient TimePointSec expirationDate;
+    @JsonProperty("operations")
     protected transient List<Operation> operations;
     // Original type is "extension_type" which is an array of "future_extions".
+    @JsonProperty("extensions")
     protected transient List<FutureExtensions> extensions;
 
     /**
@@ -78,8 +84,9 @@ public class Transaction implements Serializable {
     @JsonCreator
     public Transaction(@JsonProperty("ref_block_num") int refBlockNum,
             @JsonProperty("ref_block_prefix") long refBlockPrefix,
-            @JsonProperty("expiration") TimePointSec expirationDate, List<Operation> operations,
-            List<FutureExtensions> extensions) {
+            @JsonProperty("expiration") TimePointSec expirationDate,
+            @JsonProperty("operations") List<Operation> operations,
+            @JsonProperty("extensions") List<FutureExtensions> extensions) {
         this.setRefBlockNum(refBlockNum);
         this.setRefBlockPrefix(refBlockPrefix);
         this.setExpirationDate(expirationDate);
@@ -111,6 +118,15 @@ public class Transaction implements Serializable {
                 System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
         this.setOperations(operations);
         this.setExtensions(extensions);
+    }
+
+    /**
+     * <b>This method is only used by JUnit-Tests</b>
+     * 
+     * Create a new signed transaction object.
+     */
+    @VisibleForTesting
+    protected Transaction() {
     }
 
     /**
