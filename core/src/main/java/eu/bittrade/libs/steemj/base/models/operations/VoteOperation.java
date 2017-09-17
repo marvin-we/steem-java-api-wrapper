@@ -121,8 +121,14 @@ public class VoteOperation extends Operation {
      * 
      * @param voter
      *            The account name that should perform the vote.
+     * @throws InvalidParameterException
+     *             If no voter is provided.
      */
     public void setVoter(AccountName voter) {
+        if (voter == null) {
+            throw new InvalidParameterException("An voter needs to be provided.");
+        }
+
         this.voter = voter;
     }
 
@@ -131,8 +137,14 @@ public class VoteOperation extends Operation {
      * 
      * @param author
      *            The author of the post or comment that should be voted for.
+     * @throws InvalidParameterException
+     *             If no author is provided.
      */
     public void setAuthor(AccountName author) {
+        if (author == null) {
+            throw new InvalidParameterException("An author needs to be provided.");
+        }
+
         this.author = author;
     }
 
@@ -142,8 +154,13 @@ public class VoteOperation extends Operation {
      * @param permlink
      *            The permanent link of the post or comment that should be voted
      *            for.
+     * @throws InvalidParameterException
+     *             If no permlink has been provided.
      */
     public void setPermlink(String permlink) {
+        if (permlink == null) {
+            throw new InvalidParameterException("A permlink needs to be provided.");
+        }
         this.permlink = permlink;
     }
 

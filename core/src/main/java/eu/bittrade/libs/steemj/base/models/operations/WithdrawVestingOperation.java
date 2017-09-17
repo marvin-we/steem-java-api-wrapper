@@ -80,8 +80,13 @@ public class WithdrawVestingOperation extends Operation {
      * @param account
      *            The account name for which the withdraw vesting operation
      *            should be executed for.
+     * @throws InvalidParameterException
+     *             If no account name has been provided.
      */
     public void setAccount(AccountName account) {
+        if (account == null) {
+            throw new InvalidParameterException("An account name needs to be provided.");
+        }
         this.account = account;
     }
 
