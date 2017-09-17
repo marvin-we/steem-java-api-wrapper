@@ -25,14 +25,23 @@ public class FeedHistory {
     private FeedHistory() {
     }
 
+    /**
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @return the currentPrice
+     */
     public Price getCurrentPrice() {
         return currentPrice;
     }
 
+    /**
+     * @return the priceHistory
+     */
     public List<Price> getPriceHistory() {
         return priceHistory;
     }
