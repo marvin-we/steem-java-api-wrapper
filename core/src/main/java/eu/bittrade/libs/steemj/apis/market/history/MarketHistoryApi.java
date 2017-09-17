@@ -284,5 +284,4 @@ public class MarketHistoryApi {
 
         return communicationHandler.performRequest(requestObject, Integer.class);
     }
-
 }

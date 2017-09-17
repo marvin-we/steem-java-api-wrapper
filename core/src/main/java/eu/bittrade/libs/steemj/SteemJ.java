@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steemj;
 
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,6 +24,11 @@ import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
 import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
+import eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi;
+import eu.bittrade.libs.steemj.apis.market.history.model.Bucket;
+import eu.bittrade.libs.steemj.apis.market.history.model.MarketTicker;
+import eu.bittrade.libs.steemj.apis.market.history.model.MarketTrade;
+import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
@@ -42,6 +48,7 @@ import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -913,7 +920,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public OrderBook getOrderBook(int limit) throws SteemCommunicationException {
+    public OrderBook getOrderBookUsingDatabaseApi(int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
@@ -1411,6 +1418,57 @@ public class SteemJ {
     }
 
     /**
+     * Use this method to register a callback method that is called whenever a
+     * new block has been applied.
+     * 
+     * <p>
+     * <b>Notice:</b>
+     * 
+     * That there can only be one active Callback. If you call this method
+     * multiple times with different callback methods, only the last one will be
+     * called.
+     * 
+     * Beside that there is currently no way to cancel a subscription. Once
+     * you've registered a callback it will be called until the connection has
+     * been closed.
+     * </p>
+     * 
+     * @param blockAppliedCallback
+     *            A class implementing the
+     *            {@link eu.bittrade.libs.steemj.communication.BlockAppliedCallback
+     *            BlockAppliedCallback}.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public void setBlockAppliedCallback(BlockAppliedCallback blockAppliedCallback) throws SteemCommunicationException {
+        // Register the given callback at the callback hub.
+        CallbackHub.getInstance().addCallback(blockAppliedCallback);
+
+        // Register the callback at the steem node.
+        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        requestObject.setApiMethod(RequestMethods.SET_BLOCK_APPLIED_CALLBACK);
+        requestObject.setSteemApi(SteemApis.DATABASE_API);
+
+        Object[] parameters = { blockAppliedCallback.getUuid() };
+        requestObject.setAdditionalParameters(parameters);
+
+        communicationHandler.performRequest(requestObject, Object.class);
+    }
+
+    // #########################################################################
+    // ## FOLLOW API ###########################################################
+    // #########################################################################
+
+    /**
      * Get a list of account names which the <code>following</code> account is
      * followed by.
      * 
@@ -1747,26 +1805,12 @@ public class SteemJ {
         return FollowApi.getBlogAuthors(communicationHandler, blogAccount);
     }
 
+    // #########################################################################
+    // ## MARKET HISTORY API ###################################################
+    // #########################################################################
+
     /**
-     * Use this method to register a callback method that is called whenever a
-     * new block has been applied.
-     * 
-     * <p>
-     * <b>Notice:</b>
-     * 
-     * That there can only be one active Callback. If you call this method
-     * multiple times with different callback methods, only the last one will be
-     * called.
-     * 
-     * Beside that there is currently no way to cancel a subscription. Once
-     * you've registered a callback it will be called until the connection has
-     * been closed.
-     * </p>
-     * 
-     * @param blockAppliedCallback
-     *            A class implementing the
-     *            {@link eu.bittrade.libs.steemj.communication.BlockAppliedCallback
-     *            BlockAppliedCallback}.
+     * @return The market ticker for the internal SBD:STEEM market.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1779,18 +1823,151 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public void setBlockAppliedCallback(BlockAppliedCallback blockAppliedCallback) throws SteemCommunicationException {
-        // Register the given callback at the callback hub.
-        CallbackHub.getInstance().addCallback(blockAppliedCallback);
+    public MarketTicker getTicker() throws SteemCommunicationException {
+        return MarketHistoryApi.getTicker(communicationHandler);
+    }
 
-        // Register the callback at the steem node.
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.SET_BLOCK_APPLIED_CALLBACK);
-        requestObject.setSteemApi(SteemApis.DATABASE_API);
+    /**
+     * @return The market volume for the past 24 hours.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public MarketVolume getVolume() throws SteemCommunicationException {
+        return MarketHistoryApi.getVolume(communicationHandler);
+    }
 
-        Object[] parameters = { blockAppliedCallback.getUuid() };
-        requestObject.setAdditionalParameters(parameters);
+    /**
+     * @param limit
+     *            The number of orders to have on each side of the order book.
+     *            Maximum is 500.
+     * @return Returns the current order book for the internal SBD:STEEM market.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws InvalidParameterException
+     *             If the limit is less than 0 or greater than 500.
+     */
+    public eu.bittrade.libs.steemj.apis.market.history.model.OrderBook getOrderBookUsingMarketApi(short limit)
+            throws SteemCommunicationException {
+        return MarketHistoryApi.getOrderBook(communicationHandler, limit);
+    }
 
-        communicationHandler.performRequest(requestObject, Object.class);
+    /**
+     * Returns the trade history for the internal SBD:STEEM market.
+     * 
+     * @param start
+     *            The start time of the trade history.
+     * @param end
+     *            The end time of the trade history.
+     * @param limit
+     *            The number of trades to return. Maximum is 1000.
+     * @return A list of completed trades.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws InvalidParameterException
+     *             If the limit is less than 0 or greater than 500.
+     */
+    public List<MarketTrade> getTradeHistory(TimePointSec start, TimePointSec end, short limit)
+            throws SteemCommunicationException {
+        return MarketHistoryApi.getTradeHistory(communicationHandler, start, end, limit);
+    }
+
+    /**
+     * Returns the <code>limit</code> most recent trades for the internal
+     * SBD:STEEM market.
+     *
+     * @param limit
+     *            The number of trades to return. Maximum is 1000.
+     * @return A list of completed trades.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws InvalidParameterException
+     *             If the limit is less than 0 or greater than 500.
+     */
+    public List<MarketTrade> getRecentTrades(short limit) throws SteemCommunicationException {
+        return MarketHistoryApi.getRecentTrades(communicationHandler, limit);
+    }
+
+    /**
+     * Returns the market history for the internal SBD:STEEM market.
+     * 
+     * @param bucketSeconds
+     *            The size of buckets the history is broken into. The bucket
+     *            size must be configured in the plugin options.
+     * @param start
+     *            The start time to get market history.
+     * @param end
+     *            The end time to get market history.
+     * @return A list of market history
+     *         {@link eu.bittrade.libs.steemj.apis.market.history.model.Bucket
+     *         Bucket}s.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<Bucket> getMarketHistory(long bucketSeconds, TimePointSec start, TimePointSec end)
+            throws SteemCommunicationException {
+        return MarketHistoryApi.getMarketHistory(communicationHandler, bucketSeconds, start, end);
+    }
+
+    /**
+     * @return Returns the bucket seconds being tracked by the plugin.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
+     *             setTimeout})</li>
+     *             <li>If there is a connection problem.</li>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<Integer> getMarketHistoryBuckets() throws SteemCommunicationException {
+        return MarketHistoryApi.getMarketHistoryBuckets(communicationHandler);
     }
 }
