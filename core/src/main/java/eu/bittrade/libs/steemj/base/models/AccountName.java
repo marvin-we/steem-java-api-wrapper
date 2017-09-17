@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -35,6 +36,7 @@ public class AccountName implements ByteTransformable, SignatureObject {
      *             If the account name is not valid (@see #setName(String)).
      * 
      */
+    @JsonCreator
     public AccountName(String name) {
         this.setName(name);
     }
@@ -63,7 +65,7 @@ public class AccountName implements ByteTransformable, SignatureObject {
      *            <li>End with: a-z, 0-9</li>
      *            </ul>
      *            If the account name contains a '.', the rules above are only
-     *            checked for the characters before the first '.' occured.
+     *            checked for the characters before the first '.' occurred.
      * @throws InvalidParameterException
      *             If the account does not fulfill the requirements describes
      *             above.
@@ -96,7 +98,7 @@ public class AccountName implements ByteTransformable, SignatureObject {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        return SteemJUtils.transformStringToVarIntByteArray(name);
+        return SteemJUtils.transformStringToVarIntByteArray(this.getName());
     }
 
     @Override
