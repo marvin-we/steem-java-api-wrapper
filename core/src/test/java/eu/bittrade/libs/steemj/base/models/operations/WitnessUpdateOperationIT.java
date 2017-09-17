@@ -50,7 +50,7 @@ public class WitnessUpdateOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForOperationTest();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         PublicKey blockSigningKey = new PublicKey("STM6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb");
 
@@ -77,7 +77,7 @@ public class WitnessUpdateOperationIT extends BaseTransactionalIntegrationTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(witnessUpdateOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
 
         sign();
     }
@@ -102,12 +102,12 @@ public class WitnessUpdateOperationIT extends BaseTransactionalIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

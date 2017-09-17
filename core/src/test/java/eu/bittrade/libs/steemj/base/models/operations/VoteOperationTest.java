@@ -11,8 +11,8 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -20,45 +20,57 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class VoteOperationTest extends BaseUnitTest {
-    final String EXPECTED_BYTE_REPRESENTATION = "0007666f6f6261726107666f6f6261726307666f6f62617264e803";
-    final String EXPECTED_TRANSACTION_HASH = "baeec6f72307dec3a7ffa78b6aa56ebd8eb9fa1390d69653d76613646fecc058";
+public class VoteOperationTest extends BaseTransactionalUnitTest {
+    final String EXPECTED_BYTE_REPRESENTATION = "000764657a313333370764657a3133333728737465656d6a2d76302d322d342"
+            + "d6861732d6265656e2d72656c65617365642d7570646174652d39e803";
+    final String EXPECTED_TRANSACTION_HASH = "32072376b387b4b22b9bd23ca487be12341a48646a8c6d68812b2a25140c524b";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000000"
-            + "00000000f68585abf4dcf0c80457010007666f6f6261726107666f6f6261726307666f6f62617264e80300";
+            + "00000000f68585abf4dcefc8045701000764657a313333370764657a3133333728737465656d6a2d76302d322d342d68"
+            + "61732d6265656e2d72656c65617365642d7570646174652d39e80300";
 
     private static VoteOperation voteOperation;
 
+    /**
+     * Prepare the environment for this specific test.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
 
-        voteOperation = new VoteOperation();
-        voteOperation.setAuthor(new AccountName("foobarc"));
-        voteOperation.setPermlink("foobard");
-        voteOperation.setVoter(new AccountName("foobara"));
-        voteOperation.setWeight((short) 1000);
+        AccountName author = new AccountName("dez1337");
+        String permlink = "steemj-v0-2-4-has-been-released-update-9";
+        AccountName voter = new AccountName("dez1337");
+        short weight = 1000;
+
+        voteOperation = new VoteOperation(author, voter, permlink, weight);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
     }
 
+    @Override
     @Test
-    public void testVoteOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(voteOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
+    @Override
     @Test
-    public void testVoteOperationTransactionHex()
+    public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        transaction.sign();
+        // Sign the transaction.
+        sign();
 
-        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
-                equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+        assertThat("The serialized transaction should look like expected.",
+                Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

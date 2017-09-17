@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
@@ -11,9 +12,9 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
@@ -25,65 +26,74 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class WitnessUpdateOperationTest extends BaseUnitTest {
+public class WitnessUpdateOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "0b0764657a313333371c68747470733a2f2f737465656d69742e636f6d2f4"
-            + "064657a3133333703f4a7be25c7664b349b34c16ffc9c9ddcd44d02dd732fa789afd2f5d05c8a70a588130000000000"
-            + "0003535445454d0000000001000000000000000000000003535445454d0000";
+            + "064657a3133333702e5127bd7d41f01d9981a5a2c2524a60706040bbec8838a39719550ea2507100088130000000000"
+            + "0003535445454d0000000001000000010000000000000003535445454d0000";
     final String EXPECTED_TRANSACTION_HASH = "5d01935dc58925f39d156fd26160049d81a4a4d669d29183150719086a296b0a";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000000"
             + "000000000f68585abf4dceac80457010b0764657a313333371c68747470733a2f2f737465656d69742e636f6d2f4064"
-            + "657a3133333703f4a7be25c7664b349b34c16ffc9c9ddcd44d02dd732fa789afd2f5d05c8a70a588130000000000000"
-            + "3535445454d0000000001000000000000000000000003535445454d000000";
+            + "657a3133333702e5127bd7d41f01d9981a5a2c2524a60706040bbec8838a39719550ea2507100088130000000000000"
+            + "3535445454d0000000001000000010000000000000003535445454d000000";
 
     private static WitnessUpdateOperation witnessUpdateOperation;
 
+    /**
+     * Prepare the environment for this specific test.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
 
-        witnessUpdateOperation = new WitnessUpdateOperation();
-        witnessUpdateOperation
-                .setBlockSigningKey(new PublicKey("STM8gyvJtYyv5ZbT2ZxbAtgufQ5ovV2bq6EQp4YDTzQuSwyg7Ckry"));
+        PublicKey blockSigningKey = new PublicKey("STM6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb");
 
         Asset fee = new Asset();
-        fee.setAmount(0L);
+        fee.setAmount(1L);
         fee.setSymbol(AssetSymbolType.STEEM);
-        witnessUpdateOperation.setFee(fee);
-        witnessUpdateOperation.setOwner(new AccountName("dez1337"));
 
-        ChainProperties chainProperties = new ChainProperties();
+        AccountName owner = new AccountName("dez1337");
+
         Asset accountCreationFee = new Asset();
         accountCreationFee.setAmount(5000L);
         accountCreationFee.setSymbol(AssetSymbolType.STEEM);
-        chainProperties.setAccountCreationFee(accountCreationFee);
-        chainProperties.setMaximumBlockSize(65536);
-        chainProperties.setSdbInterestRate(0);
 
-        witnessUpdateOperation.setProperties(chainProperties);
-        witnessUpdateOperation.setUrl("https://steemit.com/@dez1337");
+        long maximumBlockSize = 65536;
+        int sbdInterestRate = 0;
+
+        ChainProperties chainProperties = new ChainProperties(accountCreationFee, maximumBlockSize, sbdInterestRate);
+
+        URL url = new URL("https://steemit.com/@dez1337");
+
+        witnessUpdateOperation = new WitnessUpdateOperation(owner, url, blockSigningKey, chainProperties, fee);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(witnessUpdateOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
     }
 
+    @Override
     @Test
-    public void testWitnessUpdateOperationToByteArray()
+    public void testOperationToByteArray()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(witnessUpdateOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
+    @Override
     @Test
-    public void testWitnessUpdateOperationTransactionHex()
+    public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        transaction.sign();
+        // Sign the transaction.
+        sign();
 
-        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
-                equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+        assertThat("The serialized transaction should look like expected.",
+                Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

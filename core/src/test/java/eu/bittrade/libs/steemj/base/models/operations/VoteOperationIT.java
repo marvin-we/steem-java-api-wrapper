@@ -45,7 +45,7 @@ public class VoteOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForOperationTest();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         AccountName author = new AccountName("dez1337");
         String permlink = "steemj-v0-2-4-has-been-released-update-9";
@@ -57,7 +57,7 @@ public class VoteOperationIT extends BaseTransactionalIntegrationTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
         // Sign the transaction without validation.
         sign();
     }
@@ -78,12 +78,12 @@ public class VoteOperationIT extends BaseTransactionalIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

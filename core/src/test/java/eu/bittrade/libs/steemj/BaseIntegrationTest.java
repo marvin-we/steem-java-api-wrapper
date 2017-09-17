@@ -14,9 +14,10 @@ public abstract class BaseIntegrationTest extends BaseTest {
 
     protected static SteemJ steemJ;
 
+    /**
+     * Prepare a the environment for standard integration tests.
+     */
     protected static void setupIntegrationTestEnvironment() {
-        setupBasicTestEnvironment();
-
         try {
             // Change the default settings if needed.
             CONFIG.setWebSocketEndpointURI(new URI("wss://this.piston.rocks"));

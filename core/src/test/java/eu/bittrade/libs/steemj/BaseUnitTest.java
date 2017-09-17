@@ -18,9 +18,10 @@ public abstract class BaseUnitTest extends BaseTest {
     protected static final String PRIVATE_POSTING_KEY = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
     protected static final String PRIVATE_ACTIVE_KEY = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
 
+    /**
+     * Prepare a the environment for standard unit tests.
+     */
     protected static void setupUnitTestEnvironment() {
-        setupBasicTestEnvironment();
-
         List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
 
         privateKeys.add(new ImmutablePair<>(PrivateKeyType.POSTING, PRIVATE_POSTING_KEY));
