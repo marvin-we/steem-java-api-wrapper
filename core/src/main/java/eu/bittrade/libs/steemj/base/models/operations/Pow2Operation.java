@@ -28,6 +28,9 @@ public class Pow2Operation extends Operation {
     @JsonProperty("props")
     private ChainProperties properties;
 
+    /**
+     * Create a new Pow2 Operation.
+     */
     public Pow2Operation() {
         super(false);
     }
