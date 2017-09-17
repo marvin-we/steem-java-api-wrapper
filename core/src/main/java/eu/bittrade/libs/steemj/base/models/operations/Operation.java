@@ -1,5 +1,10 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
+import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
@@ -21,9 +29,9 @@ import eu.bittrade.libs.steemj.base.models.operations.virtual.InterestOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.LiquidityRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.ReturnVestingDelegationOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.ShutdownWitnessOpeartion;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.plugins.follow.models.operations.FollowOperation;
-import eu.bittrade.libs.steemj.plugins.follow.models.operations.ReblogOperation;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user
@@ -114,6 +122,50 @@ public abstract class Operation implements ByteTransformable {
      */
     public boolean isVirtual() {
         return virtual;
+    }
+
+    /**
+     * Add the authorities which are required to sign this operation to an
+     * existing map.
+     * 
+     * @param requiredAuthoritiesBase
+     *            A map to which the required authorities of this operation
+     *            should be added to.
+     * 
+     * @return A map of required authorities.
+     */
+    public abstract Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase);
+
+    /**
+     * Use this helper method to merge a single <code>accountName</code> into
+     * the <code>requiredAuthoritiesBase</code.
+     * 
+     * @param requiredAuthoritiesBase
+     *            A map to which the required authorities of this operation
+     *            should be added to.
+     * @param accountName
+     *            The account name to merge into the list.
+     * @param privateKeyType
+     *            The required key type.
+     * @return
+     */
+    protected Map<SignatureObject, List<PrivateKeyType>> mergeRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase, AccountName accountName,
+            PrivateKeyType privateKeyType) {
+        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
+        if (requiredAuthorities == null) {
+            requiredAuthorities = new HashMap<>();
+        } else if (requiredAuthorities.containsKey(accountName) && requiredAuthorities.get(accountName) != null) {
+            requiredAuthorities.get(accountName).add(privateKeyType);
+        } else {
+            ArrayList<PrivateKeyType> requiredKeyType = new ArrayList<>();
+            requiredKeyType.add(privateKeyType);
+
+            requiredAuthorities.put(accountName, requiredKeyType);
+        }
+
+        return requiredAuthorities;
     }
 
     @Override
