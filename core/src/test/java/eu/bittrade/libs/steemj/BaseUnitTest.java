@@ -17,6 +17,7 @@ public abstract class BaseUnitTest extends BaseTest {
 
     protected static final String PRIVATE_POSTING_KEY = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
     protected static final String PRIVATE_ACTIVE_KEY = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
+    protected static final String PRIVATE_OWNER_KEY = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";
 
     /**
      * Prepare a the environment for standard unit tests.
@@ -26,6 +27,7 @@ public abstract class BaseUnitTest extends BaseTest {
 
         privateKeys.add(new ImmutablePair<>(PrivateKeyType.POSTING, PRIVATE_POSTING_KEY));
         privateKeys.add(new ImmutablePair<>(PrivateKeyType.ACTIVE, PRIVATE_ACTIVE_KEY));
+        privateKeys.add(new ImmutablePair<>(PrivateKeyType.OWNER, PRIVATE_OWNER_KEY));
 
         CONFIG.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
         CONFIG.getPrivateKeyStorage().addAccount(new AccountName("foobara"), privateKeys);

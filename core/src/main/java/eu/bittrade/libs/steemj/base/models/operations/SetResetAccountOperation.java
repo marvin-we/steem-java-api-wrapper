@@ -2,14 +2,15 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -23,7 +24,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SetResetAccountOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.OWNER)
+    @JsonProperty("account")
     private AccountName account;
     @JsonProperty("current_reset_account")
     private AccountName currentResetAccount;
@@ -36,9 +37,28 @@ public class SetResetAccountOperation extends Operation {
      * This operation allows the {@link #account account} owner to control which
      * account has the power to execute the 'reset_account_operation' after 60
      * days.
+     * 
+     * @param account
+     *            The account to set the reset account for (see
+     *            {@link #setAccount(AccountName)}).
+     * @param currentResetAccount
+     *            The current reset account (see
+     *            {@link #setResetAccount(AccountName)}).
+     * @param resetAccount
+     *            The new reset account to set (see
+     *            {@link #setResetAccount(AccountName)}).
+     * @throws InvalidParameterException
+     *             If a parameter does not fulfill the requirements.
      */
-    public SetResetAccountOperation() {
+    @JsonCreator
+    public SetResetAccountOperation(@JsonProperty("account") AccountName account,
+            @JsonProperty("current_reset_account") AccountName currentResetAccount,
+            @JsonProperty("reset_account") AccountName resetAccount) {
         super(false);
+
+        this.setAccount(account);
+        this.setCurrentResetAccount(currentResetAccount);
+        this.setResetAccount(resetAccount);
     }
 
     /**
@@ -60,8 +80,14 @@ public class SetResetAccountOperation extends Operation {
      * @param account
      *            The account which the "set reset account operation" has been
      *            executed for.
+     * @throws InvalidParameterException
+     *             If no account has been provided.
      */
     public void setAccount(AccountName account) {
+        if (account == null) {
+            throw new InvalidParameterException("The account can't be null.");
+        }
+
         this.account = account;
     }
 
@@ -76,13 +102,18 @@ public class SetResetAccountOperation extends Operation {
     }
 
     /**
-     * Set the current reset account of the {@link #account account}. For newly
-     * created accounts this is <i> new AccountName("null") </i> in most cases.
+     * Set the current reset account of the {@link #account account}. For
+     * accounts created by Steemit.com the current reset account is
+     * <code>new AccountName("")</code>.
      * 
      * @param currentResetAccount
-     *            The current reset account for the {@link #account account}.
+     *            The current reset account for the {@link #account account}. I
      */
     public void setCurrentResetAccount(AccountName currentResetAccount) {
+        if (currentResetAccount.equals(this.getResetAccount())) {
+            throw new InvalidParameterException(
+                    "The current reset account can't be set to the same account as the new reset account.");
+        }
         this.currentResetAccount = currentResetAccount;
     }
 
@@ -100,8 +131,19 @@ public class SetResetAccountOperation extends Operation {
      * 
      * @param resetAccount
      *            The new reset account which has been set with this operation.
+     * @throws InvalidParameterException
+     *             If no reset account has been provided or if the
+     *             <code>resetAccount</code> is set to the same value than the
+     *             {@link #currentResetAccount}.
      */
     public void setResetAccount(AccountName resetAccount) {
+        if (resetAccount == null) {
+            throw new InvalidParameterException("The reset account can't be null.");
+        } else if (resetAccount.equals(this.getCurrentResetAccount())) {
+            throw new InvalidParameterException(
+                    "The new reset account can't be the same as the current reset account.");
+        }
+
         this.resetAccount = resetAccount;
     }
 
@@ -111,7 +153,9 @@ public class SetResetAccountOperation extends Operation {
             serializedSetResetAccountOperation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.SET_RESET_ACCOUNT_OPERATION.ordinal()));
             serializedSetResetAccountOperation.write(this.getAccount().toByteArray());
-            serializedSetResetAccountOperation.write(this.getCurrentResetAccount().toByteArray());
+            if (this.getCurrentResetAccount() != null) {
+                serializedSetResetAccountOperation.write(this.getCurrentResetAccount().toByteArray());
+            }
             serializedSetResetAccountOperation.write(this.getResetAccount().toByteArray());
 
             return serializedSetResetAccountOperation.toByteArray();
@@ -125,10 +169,10 @@ public class SetResetAccountOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.OWNER);
     }
 }

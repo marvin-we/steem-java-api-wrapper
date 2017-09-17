@@ -6,13 +6,12 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -21,10 +20,10 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class SetResetAccountOperationIT extends BaseIntegrationTest {
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c8045701260764657a3133333707646"
-            + "57a313333370764657a3133333700011c6b5763051fa0e1ebac3998d38aab5de61d08e9b9d56575443f74955ed"
-            + "2ea0e1a7aba8e851b6e8396a4fe4b6cfdf03374796fbe2f0ae1de6180ab169b1df94f6a";
+public class SetResetAccountOperationIT extends BaseTransactionalIntegrationTest {
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcebc8045701260764657a313333370006737465656d6a"
+            + "00011b7d16fb4917505355d0ae04ceab7aa063904b692c321c850fed56a6bedd86967f2f225260e699a5ec23984b03d81824e"
+            + "8ff0ba0a16164e03a730b5575f87f1097";
 
     /**
      * <b>Attention:</b> This test class requires a valid owner key of the used
@@ -37,19 +36,21 @@ public class SetResetAccountOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        SetResetAccountOperation setResetAccountOperation = new SetResetAccountOperation();
+        AccountName account = new AccountName("dez1337");
+        AccountName currentResetAccount = new AccountName("");
+        AccountName newResetAccount = new AccountName("steemj");
 
-        setResetAccountOperation.setAccount(new AccountName("dez1337"));
-        setResetAccountOperation.setCurrentResetAccount(new AccountName("dez1337"));
-        setResetAccountOperation.setResetAccount(new AccountName("dez1337"));
+        SetResetAccountOperation setResetAccountOperation = new SetResetAccountOperation(account, currentResetAccount,
+                newResetAccount);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(setResetAccountOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -60,15 +61,13 @@ public class SetResetAccountOperationIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    @Ignore
     public void verifyTransaction() throws Exception {
-        // TODO: Check if working
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
