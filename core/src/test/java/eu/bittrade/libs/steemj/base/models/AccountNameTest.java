@@ -23,6 +23,7 @@ public class AccountNameTest {
      * toByteArray()} method.
      * 
      * @throws Exception
+     *             In case of a problem.
      */
     @Test
     public void testAccountNameToByteArray() throws Exception {
