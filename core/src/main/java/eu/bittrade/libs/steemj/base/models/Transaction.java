@@ -1,18 +1,27 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.io.Serializable;
+import java.security.InvalidParameterException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bitcoinj.core.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
 /**
  * This class represents a Steem "transaction" object.
@@ -32,9 +41,7 @@ public class Transaction implements Serializable {
      * not support unsigned types. For sure we will only use 2 bytes of this
      * field when we serialize it.
      */
-    @JsonProperty("ref_block_num")
     protected short refBlockNum;
-
     /**
      * The ref_block_prefix on the other hand is obtain from the block id of
      * that particular reference block.
@@ -44,9 +51,7 @@ public class Transaction implements Serializable {
      * this field when we serialize it.
      * 
      */
-    @JsonProperty("ref_block_prefix")
     protected int refBlockPrefix;
-    @JsonProperty("expiration")
     protected transient TimePointSec expirationDate;
     protected transient List<Operation> operations;
     // Original type is "extension_type" which is an array of "future_extions".
@@ -54,11 +59,58 @@ public class Transaction implements Serializable {
 
     /**
      * Create a new transaction object.
+     * 
+     * @param refBlockNum
+     *            The reference block number (see {@link #setRefBlockNum(int)}).
+     * @param refBlockPrefix
+     *            The reference block index (see
+     *            {@link #setRefBlockPrefix(int)}).
+     * @param expirationDate
+     *            Define until when the transaction has to be processed (see
+     *            {@link #setExpirationDate(TimePointSec)}).
+     * @param operations
+     *            A list of operations to process within this Transaction (see
+     *            {@link #setOperations(List)}).
+     * @param extensions
+     *            Extensions are currently not supported and will be ignored
+     *            (see {@link #setExtensions(List)}).
      */
-    public Transaction() {
-        // Apply default values:
-        this.setRefBlockNum(0);
-        this.setRefBlockPrefix(0);
+    @JsonCreator
+    public Transaction(@JsonProperty("ref_block_num") int refBlockNum,
+            @JsonProperty("ref_block_prefix") long refBlockPrefix,
+            @JsonProperty("expiration") TimePointSec expirationDate, List<Operation> operations,
+            List<FutureExtensions> extensions) {
+        this.setRefBlockNum(refBlockNum);
+        this.setRefBlockPrefix(refBlockPrefix);
+        this.setExpirationDate(expirationDate);
+        this.setOperations(operations);
+        this.setExtensions(extensions);
+    }
+
+    /**
+     * Like {@link #Transaction(int, long, TimePointSec, List, List)}, but
+     * allows you to provide a
+     * {@link eu.bittrade.libs.steemj.base.models.BlockId} object as the
+     * reference block and will also set the <code>expirationDate</code> to the
+     * latest possible time.
+     * 
+     * @param blockId
+     *            The block reference (see {@link #setRefBlockNum(int)} and
+     *            {@link #setRefBlockPrefix(long)}).
+     * @param operations
+     *            A list of operations to process within this Transaction (see
+     *            {@link #setOperations(List)}).
+     * @param extensions
+     *            Extensions are currently not supported and will be ignored
+     *            (see {@link #setExtensions(List)}).
+     */
+    public Transaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
+        this.setRefBlockNum(blockId.getNumberFromHash());
+        this.setRefBlockPrefix(blockId.getHashValue());
+        this.setExpirationDate(new TimePointSec(
+                System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
+        this.setOperations(operations);
+        this.setExtensions(extensions);
     }
 
     /**
@@ -124,8 +176,14 @@ public class Transaction implements Serializable {
      * 
      * @param operations
      *            A list of operations.
+     * @throws InvalidParameterException
+     *             If the given object does not contain at least one Operation.
      */
     public void setOperations(List<Operation> operations) {
+        if (operations == null || operations.isEmpty()) {
+            throw new InvalidParameterException("At least one Operation is required.");
+        }
+
         this.operations = operations;
     }
 
@@ -198,6 +256,65 @@ public class Transaction implements Serializable {
      */
     public void setExpirationDate(TimePointSec expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    /**
+     * This method collects the required authorities for all operations stored
+     * in this transaction. The returned list is already a minimized version to
+     * avoid an "irrelevant signature included Unnecessary signature(s)
+     * detected" error.
+     * 
+     * @return All required authorities and private key types.
+     */
+    protected Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities() {
+
+        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = new HashMap<>();
+
+        // Iterate over all Operations and collect the requried authorities.
+        for (Operation operation : this.getOperations()) {
+            requiredAuthorities.putAll(operation.getRequiredAuthorities(requiredAuthorities));
+        }
+
+        return requiredAuthorities;
+    }
+
+    /**
+     * Validate if all fields of this transaction object have acceptable values.
+     * 
+     * @throws SteemInvalidTransactionException
+     *             In case a field does not fullfil the requirements.
+     */
+    public void validate() throws SteemInvalidTransactionException {
+        if (this.getExpirationDate().getDateTimeAsTimestamp() > (new Timestamp(System.currentTimeMillis())).getTime()
+                + SteemJConfig.getInstance().getMaximumExpirationDateOffset()) {
+            LOGGER.warn("The configured expiration date for this transaction is to far "
+                    + "in the future and may not be accepted by the Steem node.");
+        } else if (this.getExpirationDate().getDateTimeAsTimestamp() < (new Timestamp(System.currentTimeMillis()))
+                .getTime()) {
+            throw new SteemInvalidTransactionException("The expiration date can't be in the past.");
+        }
+
+        boolean isPostingKeyRequired = false;
+        boolean isActiveKeyRequired = false;
+        boolean isOwnerKeyRequired = false;
+
+        // Posting authority cannot be mixed with active authority in same
+        // transaction
+        for (Entry<SignatureObject, List<PrivateKeyType>> requiredAuthorities : getRequiredAuthorities().entrySet()) {
+            for (PrivateKeyType keyType : requiredAuthorities.getValue()) {
+                if (keyType.equals(PrivateKeyType.POSTING) && !isActiveKeyRequired && !isOwnerKeyRequired) {
+                    isPostingKeyRequired = true;
+                } else if (keyType.equals(PrivateKeyType.ACTIVE) && !isPostingKeyRequired) {
+                    isActiveKeyRequired = true;
+                } else if (keyType.equals(PrivateKeyType.OWNER) && !isPostingKeyRequired) {
+                    isOwnerKeyRequired = true;
+                } else {
+                    throw new SteemInvalidTransactionException(
+                            "Steem does not allow to process Operation requiring a POSTING "
+                                    + "key together with Operations requireing an ACTIVE or OWNER key.");
+                }
+            }
+        }
     }
 
     @Override

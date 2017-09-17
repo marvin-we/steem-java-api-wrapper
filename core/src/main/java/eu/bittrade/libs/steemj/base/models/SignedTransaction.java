@@ -3,16 +3,13 @@ package eu.bittrade.libs.steemj.base.models;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.annotation.AnnotationFormatError;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.security.InvalidParameterException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
@@ -20,15 +17,16 @@ import org.bitcoinj.core.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.configuration.PrivateKeyStorage;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -40,13 +38,55 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     private static final long serialVersionUID = 4821422578657270330L;
     private static final Logger LOGGER = LoggerFactory.getLogger(SignedTransaction.class);
 
+    @JsonProperty("signatures")
     protected transient List<String> signatures;
 
     /**
-     * Create a new Transaction.
+     * Create a new signed transaction object.
+     * 
+     * @param refBlockNum
+     *            The reference block number (see {@link #setRefBlockNum(int)}).
+     * @param refBlockPrefix
+     *            The reference block index (see
+     *            {@link #setRefBlockPrefix(int)}).
+     * @param expirationDate
+     *            Define until when the transaction has to be processed (see
+     *            {@link #setExpirationDate(TimePointSec)}).
+     * @param operations
+     *            A list of operations to process within this Transaction (see
+     *            {@link #setOperations(List)}).
+     * @param extensions
+     *            Extensions are currently not supported and will be ignored
+     *            (see {@link #setExtensions(List)}).
      */
-    public SignedTransaction() {
-        // Set default values to avoid null pointer exceptions.
+    @JsonCreator
+    public SignedTransaction(@JsonProperty("ref_block_num") int refBlockNum,
+            @JsonProperty("ref_block_prefix") long refBlockPrefix,
+            @JsonProperty("expiration") TimePointSec expirationDate, List<Operation> operations,
+            List<FutureExtensions> extensions) {
+        super(refBlockNum, refBlockPrefix, expirationDate, operations, extensions);
+        this.signatures = new ArrayList<>();
+    }
+
+    /**
+     * Like {@link #SignedTransaction(int, long, TimePointSec, List, List)}, but
+     * allows you to provide a
+     * {@link eu.bittrade.libs.steemj.base.models.BlockId} object as the
+     * reference block and will also set the <code>expirationDate</code> to the
+     * latest possible time.
+     * 
+     * @param blockId
+     *            The block reference (see {@link #setRefBlockNum(int)} and
+     *            {@link #setRefBlockPrefix(long)}).
+     * @param operations
+     *            A list of operations to process within this Transaction (see
+     *            {@link #setOperations(List)}).
+     * @param extensions
+     *            Extensions are currently not supported and will be ignored
+     *            (see {@link #setExtensions(List)}).
+     */
+    public SignedTransaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
+        super(blockId, operations, extensions);
         this.signatures = new ArrayList<>();
     }
 
@@ -56,7 +96,6 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * 
      * @return An array of currently appended signatures.
      */
-    @JsonProperty("signatures")
     protected List<String> getSignatures() {
         return this.signatures;
     }
@@ -66,7 +105,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * 
      * Original implementation can be found <a href=
      * "https://github.com/kenCode-de/graphenej/blob/master/graphenej/src/main/java/de/bitsharesmunich/graphenej/Transaction.java"
-     * >here.</a>
+     * >here</a>.
      * 
      * @param signature
      *            A single signature in its byte representation.
@@ -99,31 +138,9 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *             If the transaction can not be signed.
      */
     public void sign(String chainId) throws SteemInvalidTransactionException {
-        // Before we start signing the transaction we check if all required
-        // fields are present, which private keys are required and if those keys
-        // are provided.
-        if (this.getExpirationDate() == null || this.getExpirationDate().getDateTimeAsTimestamp() == 0) {
-            // The expiration date is not set by the user so we do it on our own
-            // by adding the maximal allowed offset to the current time.
-            this.setExpirationDate(new TimePointSec(
-                    System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
-            LOGGER.debug("No expiration date has been provided so the latest possible time is used.");
-        } else if (this.getExpirationDate()
-                .getDateTimeAsTimestamp() > (new Timestamp(System.currentTimeMillis())).getTime()
-                        + SteemJConfig.getInstance().getMaximumExpirationDateOffset()) {
-            LOGGER.warn("The configured expiration date for this transaction is to far "
-                    + "in the future and may not be accepted by the Steem node.");
-        } else if (this.operations == null || this.operations.isEmpty()) {
-            throw new SteemInvalidTransactionException("At least one operation is required to sign the transaction.");
-        } else if (this.refBlockNum == 0) {
-            throw new SteemInvalidTransactionException("The refBlockNum field needs to be set.");
-        } else if (this.refBlockPrefix == 0) {
-            throw new SteemInvalidTransactionException("The refBlockPrefix field needs to be set.");
-        }
+        this.validate();
 
-        List<ECKey> requiredPrivateKeys = getRequiredSignatures();
-
-        for (ECKey requiredPrivateKey : requiredPrivateKeys) {
+        for (ECKey requiredPrivateKey : getRequiredSignatureKeys()) {
             boolean isCanonical = false;
             byte[] signedTransaction = null;
 
@@ -175,65 +192,63 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     }
 
     /**
-     * Verify the configured authorities.
+     * @return The list of private keys required to sign this transaction.
+     * @throws SteemInvalidTransactionException
+     *             If the required private key is not present in the
+     *             {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
      */
-    public void verifyAuthority() {
+    protected List<ECKey> getRequiredSignatureKeys() throws SteemInvalidTransactionException {
+        List<ECKey> requiredSignatures = new ArrayList<>();
+        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = getRequiredAuthorities();
 
+        for (Entry<SignatureObject, List<PrivateKeyType>> requiredAuthority : requiredAuthorities.entrySet()) {
+            if (requiredAuthority.getKey() instanceof AccountName) {
+                for (PrivateKeyType requiredKeyType : requiredAuthority.getValue()) {
+                    requiredSignatures = getRequiredSignatureKeyForAccount(requiredSignatures,
+                            (AccountName) requiredAuthority.getKey(), requiredKeyType);
+                }
+            } else if (requiredAuthority.getKey() instanceof Authority) {
+                // TODO: Support authorities.
+            } else {
+                LOGGER.warn("Unknown SigningObject type {}", requiredAuthority.getKey());
+            }
+        }
+
+        return requiredSignatures;
     }
 
     /**
-     * This method collects the required signatures of all operations stored in
-     * this transaction. The returned list is already a minimized version to
-     * avoid an "irrelevant signature included Unnecessary signature(s)
-     * detected" error.
+     * Fetch the requested private key for the given <code>accountName</code>
+     * from the {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}
+     * and merge it into the <code>requiredSignatures</code> list.
      * 
-     * @return A list of the required private keys.
+     * @param requiredSignatures
+     *            A list of already fetched keys. This list is used to make sure
+     *            that a key is not added twice.
+     * @param accountName
+     *            The account name to fetch the key for.
+     * @param privateKeyType
+     *            The key type to fetch.
+     * @return The <code>requiredSignatures</code> including the
+     *         <code>privateKeyType</code> for <code>accountName</code>.
      * @throws SteemInvalidTransactionException
-     *             If required private keys are missing in the
-     *             {@link PrivateKeyStorage PrivateKeyStorage}.
+     *             If the required private key is not present in the
+     *             {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
      */
-    protected List<ECKey> getRequiredSignatures() throws SteemInvalidTransactionException {
-        List<ECKey> requiredSignatures = new ArrayList<>();
+    private List<ECKey> getRequiredSignatureKeyForAccount(List<ECKey> requiredSignatures, AccountName accountName,
+            PrivateKeyType privateKeyType) throws SteemInvalidTransactionException {
+        ECKey privateKey;
 
-        // Iterate over all Operations.
-        for (Operation operation : this.getOperations()) {
-            List<Field> fields = FieldUtils.getFieldsListWithAnnotation(operation.getClass(), SignatureRequired.class);
-            for (Field field : fields) {
-                SignatureRequired signatureRequired = field.getDeclaredAnnotation(SignatureRequired.class);
+        try {
+            privateKey = SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(privateKeyType,
+                    accountName);
+        } catch (InvalidParameterException ipe) {
+            throw new SteemInvalidTransactionException(
+                    "Could not find private " + privateKeyType + " key for the user + " + accountName);
+        }
 
-                try {
-                    // Disable access check.
-                    field.setAccessible(true);
-                    if (field.getType().equals(AccountName.class)) {
-                        ECKey privateKey = SteemJConfig.getInstance().getPrivateKeyStorage()
-                                .getKeyForAccount(signatureRequired.type(), (AccountName) field.get(operation));
-                        if (!requiredSignatures.contains(privateKey)) {
-                            requiredSignatures.add(privateKey);
-                        }
-                    } else if (field.getType().equals(List.class)
-                            && ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0]
-                                    .equals(AccountName.class)) {
-                        List<AccountName> accountNameList = (List<AccountName>) field.get(operation);
-                        if (!accountNameList.isEmpty()) {
-                            for (AccountName accountName : accountNameList) {
-                                ECKey privateKey = SteemJConfig.getInstance().getPrivateKeyStorage()
-                                        .getKeyForAccount(signatureRequired.type(), accountName);
-                                if (!requiredSignatures.contains(privateKey)) {
-                                    requiredSignatures.add(privateKey);
-                                }
-                            }
-                        }
-                    } else {
-                        throw new AnnotationFormatError("Wrong annotation usage. Please report this issue at GitHub.");
-                    }
-                } catch (IllegalAccessException e) {
-                    throw new AnnotationFormatError("Not allowed to access the field.");
-                } catch (InvalidParameterException ipe) {
-                    throw new SteemInvalidTransactionException("Could not find all required keys to sign the '"
-                            + operation.getClass().getSimpleName() + "'.", ipe);
-                }
-
-            }
+        if (!requiredSignatures.contains(privateKey)) {
+            requiredSignatures.add(privateKey);
         }
 
         return requiredSignatures;
@@ -266,7 +281,6 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *             If the transaction can not be signed.
      */
     protected byte[] toByteArray(String chainId) throws SteemInvalidTransactionException {
-        getRequiredSignatures();
         try (ByteArrayOutputStream serializedTransaction = new ByteArrayOutputStream()) {
             if (chainId != null && !chainId.isEmpty()) {
                 serializedTransaction.write(Utils.HEX.decode(chainId));
