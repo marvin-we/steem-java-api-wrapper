@@ -3,6 +3,7 @@ package eu.bittrade.libs.steemj.base.models;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
@@ -10,12 +11,12 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
  * Test the transaction object.
@@ -64,12 +65,12 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
 
         // Use 'toByteArray("")' so no chainId will be added.
-        assertThat(Utils.HEX.encode(transaction.toByteArray("")), equalTo(EXPECTED_BYTE_REPRESENTATION));
+        assertThat(Utils.HEX.encode(signedTransaction.toByteArray("")), equalTo(EXPECTED_BYTE_REPRESENTATION));
 
-        byte[] transactionAsByteArrayWithDefaultChainId = transaction.toByteArray();
+        byte[] transactionAsByteArrayWithDefaultChainId = signedTransaction.toByteArray();
         assertThat(Utils.HEX.encode(transactionAsByteArrayWithDefaultChainId), equalTo(EXPECTED_RESULT));
         assertThat(
                 Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transactionAsByteArrayWithDefaultChainId)).getBytes()),
@@ -81,11 +82,11 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
 
-        assertThat(transaction.getRequiredSignatures().size(), equalTo(1));
-        assertThat(transaction.getRequiredSignatures().get(0), equalTo(SteemJConfig.getInstance().getPrivateKeyStorage()
-                .getKeyForAccount(PrivateKeyType.POSTING, new AccountName("xeroc"))));
+        assertThat(signedTransaction.getRequiredSignatureKeys().size(), equalTo(1));
+        assertThat(signedTransaction.getRequiredSignatureKeys().get(0), equalTo(SteemJConfig.getInstance()
+                .getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.POSTING, new AccountName("xeroc"))));
     }
 
     @Test
@@ -93,11 +94,24 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customJsonOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
 
-        assertThat(transaction.getRequiredSignatures().size(), equalTo(1));
-        assertThat(transaction.getRequiredSignatures().get(0), equalTo(SteemJConfig.getInstance().getPrivateKeyStorage()
-                .getKeyForAccount(PrivateKeyType.POSTING, new AccountName("dez1337"))));
+        assertThat(signedTransaction.getRequiredSignatureKeys().size(), equalTo(1));
+        assertThat(signedTransaction.getRequiredSignatureKeys().get(0), equalTo(SteemJConfig.getInstance()
+                .getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.POSTING, new AccountName("dez1337"))));
+
+    }
+
+    @Override
+    public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void testTransactionWithOperationToHex()
+            throws UnsupportedEncodingException, SteemInvalidTransactionException {
+        // TODO Auto-generated method stub
 
     }
 }

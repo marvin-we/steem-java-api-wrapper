@@ -76,7 +76,7 @@ public class Permlink implements ByteTransformable {
                 } else if (!link.matches("^[a-z0-9\\-]{0,256}")) {
                     throw new InvalidParameterException(
                             "The provided permlink contains invalid characters. Only 'a-z', '0-9' and '-' are allowed. "
-                                    + "If copied from steemit.com, the permlink is string after the last '/'.");
+                                    + "If copied from steemit.com, the permlink is only the part of the URL after the last '/'.");
                 }
             }
 

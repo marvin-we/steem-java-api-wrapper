@@ -154,11 +154,12 @@ public class VoteOperation extends Operation {
      * @param weight
      *            The weight of this vote.
      * @throws InvalidParameterException
-     *             If the weight is greater than 10000.
+     *             If the weight is greater than 10000 or less than -10000.
      */
     public void setWeight(short weight) {
-        if (this.weight > 10000) {
-            throw new InvalidParameterException("The weight can't be higher than 10000 which is equivalent to 100%.");
+        if (this.weight > 10000 || this.weight < 10000) {
+            throw new InvalidParameterException(
+                    "The weight can't be higher than 10000 or lower than -10000 which is equivalent to 100% and -100%.");
         }
         this.weight = weight;
     }
