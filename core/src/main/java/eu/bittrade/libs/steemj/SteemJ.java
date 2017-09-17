@@ -13,6 +13,16 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import eu.bittrade.libs.steemj.apis.follow.FollowApi;
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
+import eu.bittrade.libs.steemj.apis.follow.model.BlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentBlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentFeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
@@ -48,15 +58,6 @@ import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
-import eu.bittrade.libs.steemj.plugins.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.plugins.follow.model.AccountReputation;
-import eu.bittrade.libs.steemj.plugins.follow.model.BlogEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.CommentBlogEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.CommentFeedEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.FeedEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.FollowApiObject;
-import eu.bittrade.libs.steemj.plugins.follow.model.FollowCountApiObject;
-import eu.bittrade.libs.steemj.plugins.follow.model.PostsPerAuthorPair;
 
 /**
  * This class is a wrapper for the Steem web socket API.
@@ -1440,14 +1441,7 @@ public class SteemJ {
      */
     public List<FollowApiObject> getFollowers(AccountName following, AccountName startFollower, FollowType type,
             short limit) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { following.getName(), startFollower.getName(), type.toString().toLowerCase(), limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
+        return FollowApi.getFollowers(communicationHandler, following, startFollower, type, limit);
     }
 
     /**
@@ -1482,14 +1476,7 @@ public class SteemJ {
      */
     public List<FollowApiObject> getFollowing(AccountName follower, AccountName startFollowing, FollowType type,
             short limit) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_FOLLOWING);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { follower.getName(), startFollowing.getName(), type.toString().toLowerCase(), limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
+        return FollowApi.getFollowing(communicationHandler, follower, startFollowing, type, limit);
     }
 
     /**
@@ -1514,14 +1501,7 @@ public class SteemJ {
      *             </ul>
      */
     public FollowCountApiObject getFollowCount(AccountName account) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_FOLLOW_COUNT);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { account.getName() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FollowCountApiObject.class).get(0);
+        return FollowApi.getFollowCount(communicationHandler, account);
     }
 
     /**
@@ -1553,14 +1533,7 @@ public class SteemJ {
      */
     public List<FeedEntry> getFeedEntries(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_FEED_ENTRIES);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FeedEntry.class);
+        return FollowApi.getFeedEntries(communicationHandler, account, entryId, limit);
     }
 
     /**
@@ -1591,14 +1564,7 @@ public class SteemJ {
      */
     public List<CommentFeedEntry> getFeed(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_FEED);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, CommentFeedEntry.class);
+        return FollowApi.getFeed(communicationHandler, account, entryId, limit);
     }
 
     /**
@@ -1651,14 +1617,7 @@ public class SteemJ {
      */
     public List<BlogEntry> getBlogEntries(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_BLOG_ENTRIES);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, BlogEntry.class);
+        return FollowApi.getBlogEntries(communicationHandler, account, entryId, limit);
 
     }
 
@@ -1690,14 +1649,7 @@ public class SteemJ {
      */
     public List<CommentBlogEntry> getBlog(AccountName account, int entryId, short limit)
             throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_BLOG);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, CommentBlogEntry.class);
+        return FollowApi.getBlog(communicationHandler, account, entryId, limit);
     }
 
     /**
@@ -1727,7 +1679,7 @@ public class SteemJ {
      * @param limit
      *            The number of results.
      * @return A list of
-     *         {@link eu.bittrade.libs.steemj.plugins.follow.model.AccountReputation
+     *         {@link eu.bittrade.libs.steemj.apis.follow.model.AccountReputation
      *         AccountReputation}.
      * @throws SteemCommunicationException
      *             <ul>
@@ -1743,14 +1695,7 @@ public class SteemJ {
      */
     public List<AccountReputation> getAccountReputations(AccountName accountName, int limit)
             throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { accountName.getName(), limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, AccountReputation.class);
+        return FollowApi.getAccountReputations(communicationHandler, accountName, limit);
     }
 
     /**
@@ -1774,14 +1719,7 @@ public class SteemJ {
      *             </ul>
      */
     public List<AccountName> getRebloggedBy(AccountName author, String permlink) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { author.getName(), permlink };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, AccountName.class);
+        return FollowApi.getRebloggedBy(communicationHandler, author, permlink);
     }
 
     /**
@@ -1806,14 +1744,7 @@ public class SteemJ {
      *             </ul>
      */
     public List<PostsPerAuthorPair> getBlogAuthors(AccountName blogAccount) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
-        requestObject.setApiMethod(RequestMethods.GET_BLOG_AUTHORS);
-        requestObject.setSteemApi(SteemApis.FOLLOW_API);
-
-        Object[] parameters = { blogAccount.getName() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
+        return FollowApi.getBlogAuthors(communicationHandler, blogAccount);
     }
 
     /**

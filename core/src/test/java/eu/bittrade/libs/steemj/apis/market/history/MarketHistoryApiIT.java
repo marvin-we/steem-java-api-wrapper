@@ -30,8 +30,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
  * This class contains all test connected to the
- * {@link eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi
- * MarketHistoryApi}.
+ * {@link eu.bittrade.libs.steemj.apis.follow.FollowApi FollowApi}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

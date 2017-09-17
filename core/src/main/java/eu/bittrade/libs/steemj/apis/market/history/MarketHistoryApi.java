@@ -16,7 +16,7 @@ import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
- * This class is a wrapper for the Steem web socket API.
+ * This class implements the market history api.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

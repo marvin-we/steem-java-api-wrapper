@@ -30,6 +30,15 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
+import eu.bittrade.libs.steemj.apis.follow.model.BlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentBlogEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.CommentFeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
+import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
@@ -63,15 +72,6 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
-import eu.bittrade.libs.steemj.plugins.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.plugins.follow.model.AccountReputation;
-import eu.bittrade.libs.steemj.plugins.follow.model.BlogEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.CommentBlogEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.CommentFeedEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.FeedEntry;
-import eu.bittrade.libs.steemj.plugins.follow.model.FollowApiObject;
-import eu.bittrade.libs.steemj.plugins.follow.model.FollowCountApiObject;
-import eu.bittrade.libs.steemj.plugins.follow.model.PostsPerAuthorPair;
 
 /**
  * @author Anthony Martin
@@ -516,99 +516,6 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertNotNull("expect hardfork version", witnessSchedule);
         assertThat(witnessSchedule.getTop19Weight(), equalTo((short) 1));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetFollowers() throws Exception {
-        final List<FollowApiObject> followers = steemJ.getFollowers(new AccountName("dez1337"),
-                new AccountName("dez1337"), FollowType.BLOG, (short) 100);
-
-        assertThat(followers.size(), equalTo(100));
-        assertThat(followers.get(0).getFollower(), equalTo(new AccountName("dhwoodland")));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetFollowing() throws Exception {
-        final List<FollowApiObject> following = steemJ.getFollowing(new AccountName("dez1337"),
-                new AccountName("dez1337"), FollowType.BLOG, (short) 10);
-
-        assertThat(following.size(), equalTo(10));
-        assertThat(following.get(0).getFollowing(), equalTo(new AccountName("furion")));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetFollowCount() throws Exception {
-        final FollowCountApiObject followCount = steemJ.getFollowCount(new AccountName("dez1337"));
-
-        assertThat(followCount.getFollowerCount(), greaterThan(10));
-        assertThat(followCount.getFollowingCount(), greaterThan(10));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetFeedEntries() throws Exception {
-        final List<FeedEntry> feedEntries = steemJ.getFeedEntries(new AccountName("dez1337"), 0, (short) 100);
-
-        assertThat(feedEntries.size(), equalTo(100));
-        assertTrue(feedEntries.get(0).getPermlink().matches("[a-z0-9\\-]+"));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetFeed() throws Exception {
-        final List<CommentFeedEntry> feed = steemJ.getFeed(new AccountName("dez1337"), 0, (short) 100);
-
-        assertThat(feed.size(), equalTo(100));
-        assertTrue(feed.get(0).getComment().getAuthor().getName().matches("[a-z\\-_0-9]+"));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetBlogEntries() throws Exception {
-        final List<BlogEntry> blogEntries = steemJ.getBlogEntries(new AccountName("dez1337"), 0, (short) 10);
-
-        assertThat(blogEntries.size(), equalTo(10));
-        assertThat(blogEntries.get(0).getBlog(), equalTo(new AccountName("dez1337")));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetBlog() throws Exception {
-        final List<CommentBlogEntry> blog = steemJ.getBlog(new AccountName("dez1337"), 0, (short) 10);
-
-        assertThat(blog.size(), equalTo(10));
-        assertThat(blog.get(0).getBlog(), equalTo(new AccountName("dez1337")));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetAccountReputation() throws Exception {
-        final List<AccountReputation> accountReputations = steemJ.getAccountReputations(new AccountName("dez1337"), 10);
-
-        assertThat(accountReputations.size(), equalTo(10));
-        assertThat(accountReputations.get(0).getReputation(), greaterThan(14251747809260L));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetRebloggedBy() throws Exception {
-        final List<AccountName> accountNames = steemJ.getRebloggedBy(new AccountName("dez1337"),
-                "steemj-v0-2-6-has-been-released-update-11");
-
-        assertThat(accountNames.size(), greaterThan(2));
-        assertThat(accountNames.get(1), equalTo(new AccountName("jesuscirino")));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetBlogAuthors() throws Exception {
-        final List<PostsPerAuthorPair> blogAuthors = steemJ.getBlogAuthors(new AccountName("dez1337"));
-
-        assertThat(blogAuthors.size(), greaterThan(2));
-        assertThat(blogAuthors.get(1).getAccount(), equalTo(new AccountName("good-karma")));
     }
 
     @Category({ IntegrationTest.class })
