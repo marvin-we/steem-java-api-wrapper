@@ -521,7 +521,7 @@ public class SteemJIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetOrderBook() throws Exception {
-        final OrderBook orderBook = steemJ.getOrderBook(1);
+        final OrderBook orderBook = steemJ.getOrderBookUsingDatabaseApi(1);
 
         assertThat(orderBook.getAsks().size(), equalTo(1));
         assertThat(orderBook.getBids().get(0).getSbd(), greaterThan(1L));
