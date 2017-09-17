@@ -2,17 +2,22 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -21,7 +26,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class WithdrawVestingOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("account")
     private AccountName account;
     @JsonProperty("vesting_shares")
@@ -40,9 +44,21 @@ public class WithdrawVestingOperation extends Operation {
      * the blockchain.
      *
      * This operation is not valid if the user has no vesting shares.
+     * 
+     * @param account
+     *            Set the account that wants to start powering down (see
+     *            {@link #setAccount(AccountName)}).
+     * @param vestingShares
+     *            Set the amount of VESTS to power down (see
+     *            {@link #setVestingShares(Asset)}).
      */
-    public WithdrawVestingOperation() {
+    @JsonCreator
+    public WithdrawVestingOperation(@JsonProperty("account") AccountName account,
+            @JsonProperty("vesting_shares") Asset vestingShares) {
         super(false);
+
+        this.setAccount(account);
+        this.setVestingShares(vestingShares);
     }
 
     /**
@@ -84,8 +100,13 @@ public class WithdrawVestingOperation extends Operation {
      * 
      * @param vestingShares
      *            The amount that should be requested for withdrawing.
+     * @throws InvalidParameterException
+     *             If the asset type is not VESTS.
      */
     public void setVestingShares(Asset vestingShares) {
+        if (vestingShares == null || !vestingShares.getSymbol().equals(AssetSymbolType.VESTS)) {
+            throw new InvalidParameterException("The provided asset needs to have the symbol type VESTS.");
+        }
         this.vestingShares = vestingShares;
     }
 
@@ -107,5 +128,11 @@ public class WithdrawVestingOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.ACTIVE);
     }
 }

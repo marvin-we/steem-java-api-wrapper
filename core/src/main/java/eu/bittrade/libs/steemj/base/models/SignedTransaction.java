@@ -294,7 +294,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                     accountName);
         } catch (InvalidParameterException ipe) {
             throw new SteemInvalidTransactionException(
-                    "Could not find private " + privateKeyType + " key for the user + " + accountName.toString());
+                    "Could not find private " + privateKeyType + " key for the user " + accountName.getName() + ".");
         }
 
         if (!requiredSignatures.contains(privateKey)) {

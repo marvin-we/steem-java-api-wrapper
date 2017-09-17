@@ -10,10 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class WithdrawVestingOperationIT extends BaseIntegrationTest {
+public class WithdrawVestingOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5763343;
     private static final int TRANSACTION_INDEX = 2;
     private static final int OPERATION_INDEX = 0;
@@ -45,22 +45,22 @@ public class WithdrawVestingOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        WithdrawVestingOperation withdrawVestingOperation = new WithdrawVestingOperation();
-        withdrawVestingOperation.setAccount(new AccountName("dez1337"));
+        AccountName account = new AccountName("dez1337");
 
         Asset vestingShares = new Asset();
         vestingShares.setAmount(1000);
         vestingShares.setSymbol(AssetSymbolType.VESTS);
 
-        withdrawVestingOperation.setVestingShares(vestingShares);
+        WithdrawVestingOperation withdrawVestingOperation = new WithdrawVestingOperation(account, vestingShares);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(withdrawVestingOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -73,7 +73,7 @@ public class WithdrawVestingOperationIT extends BaseIntegrationTest {
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(withdrawVestingOperation, instanceOf(WithdrawVestingOperation.class));
-        assertThat(((WithdrawVestingOperation) withdrawVestingOperation).getAccount().getAccountName(),
+        assertThat(((WithdrawVestingOperation) withdrawVestingOperation).getAccount().getName(),
                 equalTo(EXPECTED_ACCOUNT));
         assertThat(((WithdrawVestingOperation) withdrawVestingOperation).getVestingShares().getSymbol(),
                 equalTo(EXPECTED_ASSET_SYMBOL));
@@ -82,12 +82,12 @@ public class WithdrawVestingOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
