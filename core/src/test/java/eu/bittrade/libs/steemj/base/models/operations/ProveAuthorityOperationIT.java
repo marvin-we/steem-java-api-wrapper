@@ -26,7 +26,10 @@ public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest 
             + "d000000011c2125f9ad6d2a0a9b5f75ee042f71d44029f361df17be8da017f784b75ebe33152404af3e11c1e2ed853e0e85a58fc9cea4cc9f2d17803766edd5d917a9b21081";
 
     /**
-     * Prepare the environment for this specific test.
+     * <b>Attention:</b> This test class requires a valid posting key of the
+     * used "voter". If no posting key is provided or the posting key is not
+     * valid an Exception will be thrown. The private key is passed as a -D
+     * parameter during test execution.
      * 
      * @throws Exception
      *             If something went wrong.

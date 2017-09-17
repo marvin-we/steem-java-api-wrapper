@@ -10,9 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class PowOperationIT extends BaseIntegrationTest {
+public class PowOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 3585;
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
@@ -31,6 +31,15 @@ public class PowOperationIT extends BaseIntegrationTest {
     private static final AccountName EXPECTED_WORKER_ACCOUNT = new AccountName("steemit63");
     private static final long EXPECTED_MAXIMUM_BLOCK_SIZE = 131072L;
 
+    /**
+     * <b>Attention:</b> This test class requires a valid posting key of the
+     * used "voter". If no posting key is provided or the posting key is not
+     * valid an Exception will be thrown. The private key is passed as a -D
+     * parameter during test execution.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
