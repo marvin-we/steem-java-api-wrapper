@@ -10,9 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class VoteOperationIT extends BaseIntegrationTest {
+public class VoteOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681456;
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
@@ -45,19 +45,21 @@ public class VoteOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForOperationTest();
 
-        VoteOperation voteOperation = new VoteOperation();
-        voteOperation.setAuthor(new AccountName("dez1337"));
-        voteOperation.setPermlink("steemj-v0-2-4-has-been-released-update-9");
-        voteOperation.setVoter(new AccountName("dez1337"));
-        voteOperation.setWeight((short) 1000);
+        AccountName author = new AccountName("dez1337");
+        String permlink = "steemj-v0-2-4-has-been-released-update-9";
+        AccountName voter = new AccountName("dez1337");
+        short weight = 1000;
+
+        VoteOperation voteOperation = new VoteOperation(author, voter, permlink, weight);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
         transaction.setOperations(operations);
-        transaction.sign();
+        // Sign the transaction without validation.
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -69,8 +71,8 @@ public class VoteOperationIT extends BaseIntegrationTest {
                 .get(OPERATION_INDEX);
 
         assertThat(voteOperation, instanceOf(VoteOperation.class));
-        assertThat(((VoteOperation) voteOperation).getAuthor().getAccountName(), equalTo(EXPECTED_AUTHOR));
-        assertThat(((VoteOperation) voteOperation).getVoter().getAccountName(), equalTo(EXPECTED_VOTER));
+        assertThat(((VoteOperation) voteOperation).getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
+        assertThat(((VoteOperation) voteOperation).getVoter().getName(), equalTo(EXPECTED_VOTER));
     }
 
     @Category({ IntegrationTest.class })

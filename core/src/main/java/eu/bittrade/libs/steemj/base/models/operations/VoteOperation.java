@@ -3,16 +3,19 @@ package eu.bittrade.libs.steemj.base.models.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -21,22 +24,56 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class VoteOperation extends Operation {
-    @JsonProperty("voter")
     private AccountName voter;
-    @SignatureRequired(type = PrivateKeyType.POSTING)
-    @JsonProperty("author")
     private AccountName author;
-    @JsonProperty("permlink")
     private String permlink;
-    @JsonProperty("weight")
     private short weight;
 
     /**
      * Create a new vote operation to vote for a comment or a post.
+     * 
+     * @param voter
+     *            Set the account that votes. {@link #setVoter(AccountName)}.
+     * @param author
+     *            Set the author of the post/comment to vote for.
+     *            {@link #setAuthor(AccountName)}.
+     * @param permlink
+     *            Set the permanent link of the post/comment to vote for.
+     *            {@link #setPermlink(String)}.
+     * @param weight
+     *            Set the voting weight. {@link #setWeight(short)}.
      */
-    public VoteOperation() {
+    @JsonCreator
+    public VoteOperation(@JsonProperty("voter") AccountName voter, @JsonProperty("author") AccountName author,
+            @JsonProperty("permlink") String permlink, @JsonProperty("weight") short weight) {
         super(false);
         // Set default values:
+        this.setVoter(voter);
+        this.setAuthor(author);
+        this.setPermlink(permlink);
+        this.setWeight(weight);
+    }
+
+    /**
+     * Like {@link #VoteOperation(AccountName, AccountName, String, short)
+     * VoteOperation(AccountName, AccountName, String, short)}, but will use a
+     * default weight of '0'.
+     * 
+     * @param voter
+     *            Set the account that votes. {@link #setVoter(AccountName)}.
+     * @param author
+     *            Set the author of the post/comment to vote for.
+     *            {@link #setAuthor(AccountName)}.
+     * @param permlink
+     *            Set the permanent link of the post/comment to vote for.
+     *            {@link #setPermlink(String)}.
+     */
+    public VoteOperation(AccountName voter, AccountName author, String permlink) {
+        super(false);
+        // Set default values:
+        this.setVoter(voter);
+        this.setAuthor(author);
+        this.setPermlink(permlink);
         this.setWeight((short) 0);
     }
 
@@ -146,5 +183,11 @@ public class VoteOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getVoter(), PrivateKeyType.POSTING);
     }
 }

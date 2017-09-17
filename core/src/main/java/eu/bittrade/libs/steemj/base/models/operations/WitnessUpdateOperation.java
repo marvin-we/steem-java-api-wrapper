@@ -2,19 +2,25 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -23,11 +29,10 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class WitnessUpdateOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("owner")
     private AccountName owner;
     @JsonProperty("url")
-    private String url;
+    private URL url;
     @JsonProperty("block_signing_key")
     private PublicKey blockSigningKey;
     @JsonProperty("props")
@@ -54,9 +59,66 @@ public class WitnessUpdateOperation extends Operation {
      * {@link eu.bittrade.libs.steemj.base.models.operations.WitnessUpdateOperation#blockSigningKey
      * blockSigningKey} is null then the witness is removed from contention. The
      * network will pick the top 21 witnesses for producing blocks.
+     * 
+     * @param owner
+     *            The Witness account name to set (see
+     *            {@link #setOwner(AccountName)}).
+     * @param url
+     *            The URL to a statement post (see {@link #setUrl(URL)}).
+     * @param blockSigningKey
+     *            The public part of the key used to sign a block (see
+     *            {@link #setBlockSigningKey(PublicKey)}).
+     * @param properties
+     *            The chain properties the witness is voting for (see
+     *            {@link #setChainProperties}).
+     * @param fee
+     *            The fee to pay for this update (see {@link #setFee(Asset)}).
      */
-    public WitnessUpdateOperation() {
+    @JsonCreator
+    public WitnessUpdateOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("url") URL url,
+            @JsonProperty("block_signing_key") PublicKey blockSigningKey,
+            @JsonProperty("props") ChainProperties properties, @JsonProperty("fee") Asset fee) {
         super(false);
+
+        this.setOwner(owner);
+        this.setUrl(url);
+        this.setBlockSigningKey(blockSigningKey);
+        this.setProperties(properties);
+        this.setFee(fee);
+    }
+
+    /**
+     * Like
+     * {@link #WitnessUpdateOperation(AccountName, URL, PublicKey, ChainProperties, Asset)},
+     * but creates a new ChainProperties object with default values (Account
+     * creation fee = 0.001 STEEM, maximum block size = minimum block size * 2,
+     * SBD interest rate = 10%).
+     * 
+     * @param owner
+     *            The Witness account name to set (see
+     *            {@link #setOwner(AccountName)}).
+     * @param url
+     *            The URL to a statement post (see {@link #setUrl(URL)}).
+     * @param blockSigningKey
+     *            The public part of the key used to sign a block (see
+     *            {@link #setBlockSigningKey(PublicKey)}).
+     * @param fee
+     *            The fee to pay for this update (see {@link #setFee(Asset)}).
+     */
+    public WitnessUpdateOperation(AccountName owner, URL url, PublicKey blockSigningKey, Asset fee) {
+        super(false);
+
+        this.setOwner(owner);
+        this.setUrl(url);
+        this.setBlockSigningKey(blockSigningKey);
+        this.setFee(fee);
+
+        Asset accountCreationFee = new Asset(1, AssetSymbolType.STEEM);
+        long maximumBlockSize = 131072;
+        int sdbInterestRate = 1000;
+        ChainProperties chainProperties = new ChainProperties(accountCreationFee, maximumBlockSize, sdbInterestRate);
+
+        this.setProperties(chainProperties);
     }
 
     /**
@@ -78,8 +140,14 @@ public class WitnessUpdateOperation extends Operation {
      * @param owner
      *            The name of the account that this operation should be executed
      *            for.
+     * @throws InvalidParameterException
+     *             If the owner is null.
      */
     public void setOwner(AccountName owner) {
+        if (owner == null) {
+            throw new InvalidParameterException("The owner can't be null.");
+        }
+
         this.owner = owner;
     }
 
@@ -89,7 +157,7 @@ public class WitnessUpdateOperation extends Operation {
      * 
      * @return The URL that has been added to this witness update operation.
      */
-    public String getUrl() {
+    public URL getUrl() {
         return url;
     }
 
@@ -100,8 +168,14 @@ public class WitnessUpdateOperation extends Operation {
      * 
      * @param url
      *            The URL that should be added to this witness update operation.
+     * @throws InvalidParameterException
+     *             If the url is null or empty.
      */
-    public void setUrl(String url) {
+    public void setUrl(URL url) {
+        if (url == null || url.toString().isEmpty()) {
+            throw new InvalidParameterException("You need to provide a URL.");
+        }
+
         this.url = url;
     }
 
@@ -120,8 +194,13 @@ public class WitnessUpdateOperation extends Operation {
      * @param blockSigningKey
      *            The public key of the key pair that will be used to sign
      *            blocks.
+     * @throws InvalidParameterException
+     *             If the blockSigningKey is null.
      */
     public void setBlockSigningKey(PublicKey blockSigningKey) {
+        if (blockSigningKey == null) {
+            throw new InvalidParameterException("You need to provide a block signing key.");
+        }
         this.blockSigningKey = blockSigningKey;
     }
 
@@ -139,8 +218,13 @@ public class WitnessUpdateOperation extends Operation {
      * 
      * @param properties
      *            The chain properties used by this witness.
+     * @throws InvalidParameterException
+     *             If the properties are null.
      */
     public void setProperties(ChainProperties properties) {
+        if (properties == null) {
+            throw new InvalidParameterException("You need to provide the blockchain properties.");
+        }
         this.properties = properties;
     }
 
@@ -158,8 +242,14 @@ public class WitnessUpdateOperation extends Operation {
      * 
      * @param fee
      *            The fee that should be paid for this witness update.
+     * @throws InvalidParameterException
+     *             If the provided asset object is null, the amount is 0 or the
+     *             asset symbol is not STEEM.
      */
     public void setFee(Asset fee) {
+        if (fee == null || fee.getAmount() < 0 || fee.getSymbol() != AssetSymbolType.STEEM) {
+            throw new InvalidParameterException("The fee needs to be a positive amount of STEEM.");
+        }
         this.fee = fee;
     }
 
@@ -169,7 +259,8 @@ public class WitnessUpdateOperation extends Operation {
             serializedWitnessUpdateOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.WITNESS_UPDATE_OPERATION.ordinal()));
             serializedWitnessUpdateOperation.write(this.getOwner().toByteArray());
-            serializedWitnessUpdateOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getUrl()));
+            serializedWitnessUpdateOperation
+                    .write(SteemJUtils.transformStringToVarIntByteArray(this.getUrl().toString()));
             serializedWitnessUpdateOperation.write(this.getBlockSigningKey().toByteArray());
             serializedWitnessUpdateOperation.write(this.getProperties().toByteArray());
             serializedWitnessUpdateOperation.write(this.getFee().toByteArray());
@@ -184,5 +275,11 @@ public class WitnessUpdateOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }
