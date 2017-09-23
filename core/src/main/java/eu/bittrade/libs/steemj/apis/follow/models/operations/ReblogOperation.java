@@ -86,7 +86,7 @@ public class ReblogOperation extends Operation {
      *            The permanent link of the post or comment that should be
      *            resteened.
      */
-    public void setPermlink(String permlink) {
+    public void setPermlink(Permlink permlink) {
         this.permlink = permlink;
     }
 
@@ -95,7 +95,7 @@ public class ReblogOperation extends Operation {
         try (ByteArrayOutputStream serializedVoteOperation = new ByteArrayOutputStream()) {
             serializedVoteOperation.write(this.getAccount().toByteArray());
             serializedVoteOperation.write(this.getAuthor().toByteArray());
-            serializedVoteOperation.write(this.getPermlink().toByteArray()));
+            serializedVoteOperation.write(this.getPermlink().toByteArray());
 
             return serializedVoteOperation.toByteArray();
         } catch (IOException e) {
