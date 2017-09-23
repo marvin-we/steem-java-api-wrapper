@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.activity.InvalidActivityException;
-
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +14,7 @@ import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -28,9 +27,20 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
+/**
+ * This class provides shows some common SteemJ commands.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class SteemJUsageExample {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJUsageExample.class);
 
+    /**
+     * Called at startup.
+     * 
+     * @param args
+     *            The arguments to set.
+     */
     public static void main(String args[]) {
         // Change the default settings if needed.
         SteemJConfig myConfig = SteemJConfig.getInstance();
@@ -60,11 +70,11 @@ public class SteemJUsageExample {
             }
 
             // Perform a transaction
-            VoteOperation voteOperation = new VoteOperation();
-            voteOperation.setAuthor(new AccountName("dez1337"));
-            voteOperation.setPermlink("steem-java-api-learned-to-speak-graphene-update-5");
-            voteOperation.setVoter(new AccountName("dez1337"));
-            voteOperation.setWeight((short) 10000);
+            AccountName voter = new AccountName("dez1337");
+            AccountName author = new AccountName("dez1337");
+            Permlink permlinkOfAPost = new Permlink("steem-java-api-learned-to-speak-graphene-update-5");
+            Short votingWeight = 10000;
+            VoteOperation voteOperation = new VoteOperation(voter, author, permlinkOfAPost, votingWeight);
 
             ArrayList<Operation> operations = new ArrayList<>();
             operations.add(voteOperation);
@@ -73,20 +83,18 @@ public class SteemJUsageExample {
             // properties.
             GlobalProperties globalProperties = steemJ.getDynamicGlobalProperties();
 
-            SignedTransaction transaction = new SignedTransaction();
-
-            transaction.setRefBlockPrefix(globalProperties.getHeadBlockId().getHashValue());
-            transaction.setRefBlockNum(globalProperties.getHeadBlockId().getNumberFromHash());
-            transaction.setOperations(operations);
+            SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                    null);
 
             try {
-                transaction.sign();
+                signedTransaction.sign();
             } catch (SteemInvalidTransactionException e) {
                 LOGGER.error("A propblem occured while signing your Transaction.", e);
             }
-            steemJ.broadcastTransaction(transaction);
+            steemJ.broadcastTransaction(signedTransaction);
 
-            LOGGER.info("The HEX representation of this transaction it {}.", steemJ.getTransactionHex(transaction));
+            LOGGER.info("The HEX representation of this transaction it {}.",
+                    steemJ.getTransactionHex(signedTransaction));
 
             // Get the current Price
             LOGGER.info("The current price in the internal market is {}.",
@@ -102,8 +110,8 @@ public class SteemJUsageExample {
                     "dez1337 is one of {} accounts on steemit and may increase the number witnesses to {} in the near future.",
                     numberOfAccounts, numberOfWitnesses + 1);
 
-            List<VoteState> activeVotesForArticle = steemJ.getActiveVotes("dez1337",
-                    "steem-api-wrapper-for-java-update1");
+            List<VoteState> activeVotesForArticle = steemJ.getActiveVotes(new AccountName("dez1337"),
+                    new Permlink("steem-api-wrapper-for-java-update1"));
             LOGGER.info("The last vote for a article of dez1337 has been done from {}.",
                     activeVotesForArticle.get(activeVotesForArticle.size() - 1).getVoter());
             LOGGER.info(
