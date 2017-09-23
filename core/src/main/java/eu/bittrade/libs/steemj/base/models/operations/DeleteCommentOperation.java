@@ -2,14 +2,15 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -24,7 +25,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class DeleteCommentOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
@@ -33,9 +33,19 @@ public class DeleteCommentOperation extends Operation {
     /**
      * Create a new and empty delete comment operation. User this operation to
      * delete a comment.
+     * 
+     * @param author
+     *            Set the author of the post to delete (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            Set the permlink of the post to delete (see
+     *            {@link #setPermlink(Permlink)}).
+     * @throws InvalidParameterException
+     *             If one of the arguemnts does not fulfill the requirements.
      */
-    public DeleteCommentOperation() {
-        // Define the required key type for this operation.
+    @JsonCreator
+    public DeleteCommentOperation(@JsonProperty("author") AccountName author,
+            @JsonProperty("permlink") Permlink permlink) {
         super(false);
     }
 
@@ -56,8 +66,14 @@ public class DeleteCommentOperation extends Operation {
      * @param author
      *            The account name of the author whose comment should be
      *            deleted.
+     * @throws InvalidParameterException
+     *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
+        if (author == null) {
+            throw new InvalidParameterException("The author can't be null.");
+        }
+
         this.author = author;
     }
 
@@ -75,8 +91,14 @@ public class DeleteCommentOperation extends Operation {
      * 
      * @param permlink
      *            The permanent link of the comment to delete.
+     * @throws InvalidParameterException
+     *             If the <code>permlink</code> is null.
      */
     public void setPermlink(Permlink permlink) {
+        if (permlink == null) {
+            throw new InvalidParameterException("The permlink can't be null.");
+        }
+
         this.permlink = permlink;
     }
 
@@ -103,6 +125,6 @@ public class DeleteCommentOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAuthor(), PrivateKeyType.POSTING);
     }
 }

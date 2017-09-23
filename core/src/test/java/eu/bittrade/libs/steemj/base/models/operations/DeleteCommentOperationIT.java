@@ -10,9 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -22,7 +23,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class DeleteCommentOperationIT extends BaseIntegrationTest {
+public class DeleteCommentOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5717145;
     private static final int TRANSACTION_INDEX = 4;
     private static final int OPERATION_INDEX = 0;
@@ -48,18 +49,20 @@ public class DeleteCommentOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        DeleteCommentOperation deleteCommentOperation = new DeleteCommentOperation();
-        deleteCommentOperation.setAuthor(new AccountName("dez1337"));
-        deleteCommentOperation.setPermlink(
+        AccountName author = new AccountName("dez1337");
+        Permlink permlink = new Permlink(
                 "re-re-businesswri-re-dez1337-how-to-secure-your-web-service-with-a-valid-ssl-certificate-for-free-part-3-20170527t161702118z");
+
+        DeleteCommentOperation deleteCommentOperation = new DeleteCommentOperation(author, permlink);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(deleteCommentOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -78,12 +81,12 @@ public class DeleteCommentOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
