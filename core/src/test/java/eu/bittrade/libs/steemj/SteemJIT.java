@@ -30,15 +30,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
-import eu.bittrade.libs.steemj.apis.follow.model.BlogEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.CommentBlogEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.CommentFeedEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
-import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
-import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
@@ -54,6 +45,7 @@ import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
@@ -78,10 +70,10 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
  */
 public class SteemJIT extends BaseIntegrationTest {
     private static final Logger LOGGER = LogManager.getLogger(SteemJIT.class);
-    private static final String ACCOUNT = "dez1337";
-    private static final String ACCOUNT_TWO = "randowhale";
-    private static final String WITNESS_ACCOUNT = "riverhead";
-    private static final String PERMLINK = "steem-api-wrapper-for-java-update1";
+    private static final AccountName ACCOUNT = new AccountName("dez1337");
+    private static final AccountName ACCOUNT_TWO = new AccountName("randowhale");
+    private static final AccountName WITNESS_ACCOUNT = new AccountName("riverhead");
+    private static final Permlink PERMLINK = new Permlink("steem-api-wrapper-for-java-update1");
 
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
@@ -184,7 +176,7 @@ public class SteemJIT extends BaseIntegrationTest {
         boolean foundSelfVote = false;
 
         for (final VoteState vote : activeVotesForArticle) {
-            if (ACCOUNT.equals(vote.getVoter().getName())) {
+            if (ACCOUNT.equals(vote.getVoter())) {
                 foundSelfVote = true;
                 break;
             }
@@ -295,7 +287,7 @@ public class SteemJIT extends BaseIntegrationTest {
         final Discussion discussion = steemJ.getContent(ACCOUNT, PERMLINK);
 
         assertNotNull("expect discussion", discussion);
-        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor().getName());
+        assertEquals("expect correct author", ACCOUNT, discussion.getAuthor());
     }
 
     @Category({ IntegrationTest.class })
@@ -352,8 +344,8 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
         assertEquals("expect " + ACCOUNT + " to be the first returned author",
-                repliesByLastUpdate.get(0).getAuthor().getName(), ACCOUNT);
-        assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK,
+                repliesByLastUpdate.get(0).getAuthor(), ACCOUNT);
+        assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK.getLink(),
                 repliesByLastUpdate.get(0).getPermlink());
     }
 
@@ -377,7 +369,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertEquals("expect that 5 results are returned", repliesByLastUpdate.size(), 5);
         assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned account", WITNESS_ACCOUNT,
-                repliesByLastUpdate.get(0).getAccount().getName());
+                repliesByLastUpdate.get(0).getAccount());
     }
 
     @Category({ IntegrationTest.class })
@@ -387,7 +379,7 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertEquals("expect that 9 results are returned", repliesByLastUpdate.size(), 9);
         assertEquals("expect " + ACCOUNT + " to be the first returned author", ACCOUNT,
-                repliesByLastUpdate.get(0).getAuthor().getName());
+                repliesByLastUpdate.get(0).getAuthor());
     }
 
     @Category({ IntegrationTest.class })
@@ -395,7 +387,7 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetWitnessByAccount() throws Exception {
         final Witness activeWitnessesByVote = steemJ.getWitnessByAccount(WITNESS_ACCOUNT);
 
-        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account", WITNESS_ACCOUNT,
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account", WITNESS_ACCOUNT.getName(),
                 activeWitnessesByVote.getOwner());
     }
 
@@ -405,7 +397,7 @@ public class SteemJIT extends BaseIntegrationTest {
         final List<Witness> activeWitnessesByVote = steemJ.getWitnessByVote(WITNESS_ACCOUNT, 10);
 
         assertEquals("expect that 10 results are returned", activeWitnessesByVote.size(), 10);
-        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned witness", WITNESS_ACCOUNT,
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned witness", WITNESS_ACCOUNT.getName(),
                 activeWitnessesByVote.get(0).getOwner());
     }
 
@@ -423,7 +415,7 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetInvalidAccountVotes() throws Exception {
         // Force an error response:
         try {
-            steemJ.getAccountVotes("thisAcountDoesNotExistYet");
+            steemJ.getAccountVotes(new AccountName("thisacountdoes"));
         } catch (final SteemResponseError steemResponseError) {
             // success
         } catch (final Exception e) {
@@ -443,7 +435,7 @@ public class SteemJIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetLookupAccount() throws Exception {
-        final List<String> accounts = steemJ.lookupAccounts(ACCOUNT, 10);
+        final List<String> accounts = steemJ.lookupAccounts(ACCOUNT.getName(), 10);
 
         assertNotNull("expect accounts", accounts);
         assertThat("expect at least one account", accounts.size(), greaterThan(0));
@@ -541,7 +533,7 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetOpenOrders() throws Exception {
         // TODO: If dez1337 removes this operation, the test will fail. Use the
         // SteemJ account for this.
-        final List<ExtendedLimitOrder> openOrders = steemJ.getOpenOrders(new AccountName(ACCOUNT));
+        final List<ExtendedLimitOrder> openOrders = steemJ.getOpenOrders(ACCOUNT);
 
         assertThat(openOrders.size(), greaterThanOrEqualTo(1));
         assertThat(openOrders.get(0).getCreated().getDateTime(), equalTo("2017-07-20T19:30:27"));
@@ -550,7 +542,7 @@ public class SteemJIT extends BaseIntegrationTest {
         assertThat(openOrders.get(0).getForSale(), equalTo(1L));
         assertThat(openOrders.get(0).getId(), equalTo(675734));
         assertThat(openOrders.get(0).getOrderId(), equalTo(1500579025L));
-        assertThat(openOrders.get(0).getSeller(), equalTo(new AccountName(ACCOUNT)));
+        assertThat(openOrders.get(0).getSeller(), equalTo(ACCOUNT));
         assertThat(openOrders.get(0).getSellPrice().getBase(), equalTo(new Asset(1, AssetSymbolType.SBD)));
     }
 

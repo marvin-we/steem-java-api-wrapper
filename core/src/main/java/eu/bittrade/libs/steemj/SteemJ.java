@@ -214,12 +214,12 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Map<Integer, AppliedOperation> getAccountHistory(String accountName, int from, int limit)
+    public Map<Integer, AppliedOperation> getAccountHistory(AccountName accountName, int from, int limit)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
-        String[] parameters = { accountName, String.valueOf(from), String.valueOf(limit) };
+        String[] parameters = { accountName.getName(), String.valueOf(from), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
         Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
@@ -285,11 +285,11 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Vote> getAccountVotes(String accountName) throws SteemCommunicationException {
+    public List<Vote> getAccountVotes(AccountName accountName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_VOTES);
-        String[] parameters = { accountName };
+        String[] parameters = { accountName.getName() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Vote.class);
@@ -515,11 +515,11 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Discussion getContent(String author, Permlink permlink) throws SteemCommunicationException {
+    public Discussion getContent(AccountName author, Permlink permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { author, permlink.getLink() };
+        String[] parameters = { author.getName(), permlink.getLink() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
@@ -545,11 +545,12 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getContentReplies(String author, Permlink permlink) throws SteemCommunicationException {
+    public List<Discussion> getContentReplies(AccountName author, Permlink permlink)
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { author, permlink.getLink() };
+        String[] parameters = { author.getName(), permlink.getLink() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
@@ -666,8 +667,8 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getDiscussionsByAuthorBeforeDate(String author, Permlink permlink, String date, int limit)
-            throws SteemCommunicationException {
+    public List<Discussion> getDiscussionsByAuthorBeforeDate(AccountName author, Permlink permlink, String date,
+            int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
 
         requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
@@ -683,7 +684,7 @@ public class SteemJ {
             throw new SteemTransformationException("Could not parse the received date to a Date object.", e);
         }
 
-        String[] parameters = { author, permlink.getLink(), simpleDateFormat.format(beforeDate),
+        String[] parameters = { author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
                 String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
@@ -818,11 +819,12 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<LiquidityBalance> getLiquidityQueue(String accoutName, int limit) throws SteemCommunicationException {
+    public List<LiquidityBalance> getLiquidityQueue(AccountName accoutName, int limit)
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_LIQUIDITY_QUEUE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        Object[] parameters = { accoutName, String.valueOf(limit) };
+        Object[] parameters = { accoutName.getName(), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, LiquidityBalance.class);
@@ -1003,7 +1005,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getRepliesByLastUpdate(String username, Permlink permlink, int limit)
+    public List<Discussion> getRepliesByLastUpdate(AccountName username, Permlink permlink, int limit)
             throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
@@ -1150,11 +1152,11 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Witness getWitnessByAccount(String witnessName) throws SteemCommunicationException {
+    public Witness getWitnessByAccount(AccountName witnessName) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESS_BY_ACCOUNT);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { witnessName };
+        String[] parameters = { witnessName.getName() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Witness.class).get(0);
@@ -1182,11 +1184,11 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Witness> getWitnessByVote(String witnessName, int limit) throws SteemCommunicationException {
+    public List<Witness> getWitnessByVote(AccountName witnessName, int limit) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_WITNESSES_BY_VOTE);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
-        String[] parameters = { witnessName, String.valueOf(limit) };
+        String[] parameters = { witnessName.getName(), String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Witness.class);
