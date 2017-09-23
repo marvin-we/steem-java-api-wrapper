@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -23,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 public class VoteOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "000764657a313333370764657a3133333728737465656d6a2d76302d322d342"
             + "d6861732d6265656e2d72656c65617365642d7570646174652d39e803";
-    final String EXPECTED_TRANSACTION_HASH = "32072376b387b4b22b9bd23ca487be12341a48646a8c6d68812b2a25140c524b";
+    final String EXPECTED_TRANSACTION_HASH = "2c8d2c29eb0ee309df9de900fc65b68f9492a5f54f6c6a6f7a94360e585d5348";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000000"
             + "00000000f68585abf4dcefc8045701000764657a313333370764657a3133333728737465656d6a2d76302d322d342d68"
             + "61732d6265656e2d72656c65617365642d7570646174652d39e80300";
@@ -41,7 +42,7 @@ public class VoteOperationTest extends BaseTransactionalUnitTest {
         setupUnitTestEnvironmentForTransactionalTests();
 
         AccountName author = new AccountName("dez1337");
-        String permlink = "steemj-v0-2-4-has-been-released-update-9";
+        Permlink permlink = new Permlink("steemj-v0-2-4-has-been-released-update-9");
         AccountName voter = new AccountName("dez1337");
         short weight = 1000;
 

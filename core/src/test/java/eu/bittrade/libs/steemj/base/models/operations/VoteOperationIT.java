@@ -13,6 +13,7 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -48,7 +49,7 @@ public class VoteOperationIT extends BaseTransactionalIntegrationTest {
         setupIntegrationTestEnvironmentForTransactionalTests();
 
         AccountName author = new AccountName("dez1337");
-        String permlink = "steemj-v0-2-4-has-been-released-update-9";
+        Permlink permlink = new Permlink("steemj-v0-2-4-has-been-released-update-9");
         AccountName voter = new AccountName("dez1337");
         short weight = 1000;
 
