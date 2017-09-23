@@ -149,6 +149,6 @@
 		<apache.commons.lang.version>3.6</apache.commons.lang.version>
 		<apache.commons.io.version>2.5</apache.commons.io.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<log4j.version>2.9.0</log4j.version>
+		<log4j.version>2.9.1</log4j.version>
 	</properties>
 </project>
