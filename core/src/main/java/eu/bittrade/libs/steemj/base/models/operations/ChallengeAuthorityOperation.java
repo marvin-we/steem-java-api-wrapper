@@ -2,16 +2,19 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -20,66 +23,131 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ChallengeAuthorityOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
+    @JsonProperty("challenger")
     private AccountName challenger;
+    @JsonProperty("challenged")
     private AccountName challenged;
     @JsonProperty("require_owner")
     private Boolean requireOwner;
 
     /**
      * Create a new challenge authority operation.
+     * 
+     * @param challenger
+     *            Set the account that challenges the <code>challenged</code>
+     *            account (see {@link #setChallenger(AccountName)}).
+     * @param challenged
+     *            Define the account to challenge (see
+     *            {@link #setChallenged(AccountName)}).
+     * @param requireOwner
+     *            Define if the owner key or the active key should be used to
+     *            sign this operation ({@link #setRequireOwner(Boolean)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public ChallengeAuthorityOperation() {
+    public ChallengeAuthorityOperation(@JsonProperty("challenger") AccountName challenger,
+            @JsonProperty("challenged") AccountName challenged, @JsonProperty("require_owner") Boolean requireOwner) {
         super(false);
-        // Set default values:
-        this.setRequireOwner(false);
+
+        this.setChallenger(challenger);
+        this.setChallenged(challenged);
+        this.setRequireOwner(requireOwner);
     }
 
     /**
-     * @return the challenger
+     * Like
+     * {@link #ChallengeAuthorityOperation(AccountName, AccountName, Boolean)},
+     * but sets the <code>requireOwner</code> to false.
+     * 
+     * @param challenger
+     *            Set the account that challenges the <code>challenged</code>
+     *            account (see {@link #setChallenger(AccountName)}).
+     * @param challenged
+     *            Define the account to challenge (see
+     *            {@link #setChallenged(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public ChallengeAuthorityOperation(AccountName challenger, AccountName challenged) {
+        this(challenger, challenged, false);
+    }
+
+    /**
+     * Get the account name that challenges the <code>challenged</code> account.
+     * 
+     * @return The challenger.
      */
     public AccountName getChallenger() {
         return challenger;
     }
 
     /**
+     * Set the account name that challenges the <code>challenged</code> account.
      * <b>Notice:</b> The private active key of this account needs to be stored
      * in the key storage.
      * 
      * @param challenger
-     *            the challenger to set
+     *            The account name that challenges the <code>challenged</code>
+     *            account.
+     * @throws InvalidParameterException
+     *             If the challenger account is null or equal to the
+     *             <code>challenged</code> account.
      */
     public void setChallenger(AccountName challenger) {
+        if (challenger == null) {
+            throw new InvalidParameterException("The challenger can't be null");
+        } else if (challenger == this.getChallenger()) {
+            throw new InvalidParameterException(
+                    "The challenged account and the challenger account can't be the same account.");
+        }
+
         this.challenger = challenger;
     }
 
     /**
-     * @return the challenged
+     * @return The account to challenge.
      */
     public AccountName getChallenged() {
         return challenged;
     }
 
     /**
+     * Set the account to challenge.
+     * 
      * @param challenged
-     *            the challenged to set
+     *            The account to challenge.
+     * @throws InvalidParameterException
+     *             If the challenged account is null or equal to the
+     *             <code>challenger</code> account.
      */
     public void setChallenged(AccountName challenged) {
+        if (challenged == null) {
+            throw new InvalidParameterException("The challenged can't be null");
+        } else if (challenged == this.getChallenger()) {
+            throw new InvalidParameterException(
+                    "The challenged account and the challenger account can't be the same account.");
+        }
+
         this.challenged = challenged;
     }
 
     /**
-     * @return the requireOwner
+     * @return <code>true</code> if the owner key should be used to sign this
+     *         operation, or false, if the active key is sufficient.
      */
     public Boolean getRequireOwner() {
         return requireOwner;
     }
 
     /**
+     * Define if the owner key should be used to sign this operation
+     * (<code>true</code>) or if if the active key is sufficient
+     * (<code>false</code>).
+     * 
      * @param requireOwner
-     *            the requireOwner to set
+     *            Define if the owner or active key should be used.
      */
-    public void setRequireOwner(Boolean requireOwner) {
+    public void setRequireOwner(boolean requireOwner) {
         this.requireOwner = requireOwner;
     }
 
@@ -105,4 +173,13 @@ public class ChallengeAuthorityOperation extends Operation {
         return ToStringBuilder.reflectionToString(this);
     }
 
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        if (this.getRequireOwner()) {
+            return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getChallenger(), PrivateKeyType.OWNER);
+        } else {
+            return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getChallenger(), PrivateKeyType.ACTIVE);
+        }
+    }
 }
