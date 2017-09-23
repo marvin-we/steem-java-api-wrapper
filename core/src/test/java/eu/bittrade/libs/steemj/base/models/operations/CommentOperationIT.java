@@ -10,9 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -22,7 +23,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommentOperationIT extends BaseIntegrationTest {
+public class CommentOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5688416;
     private static final int TRANSACTION_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
@@ -68,36 +69,37 @@ public class CommentOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        CommentOperation commentOperation = new CommentOperation();
-        commentOperation.setAuthor(new AccountName("dez1337"));
-        commentOperation.setPermlink("re-steemj-v0-2-4-has-been-released-update-9");
+        AccountName author = new AccountName("dez1337");
+        Permlink permlink = new Permlink("re-steemj-v0-2-4-has-been-released-update-9");
+        String body = "안녕하세요Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temp"
+                + "or invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et j"
+                + "usto duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum do"
+                + "lor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempo"
+                + "r invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ju"
+                + "sto duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dol"
+                + "or sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor"
+                + " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et jus"
+                + "to duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolo"
+                + "r sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat"
+                + ", vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui "
+                + "blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum do"
+                + "lor sit amet,";
+        String jsonMetadata = "{}";
+        AccountName parentAuthor = new AccountName("dez1337");
+        Permlink parentPermlink = new Permlink("steemj-v0-2-4-has-been-released-update-9");
+        String title = "-";
 
-        commentOperation
-                .setBody("안녕하세요Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod temp"
-                        + "or invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et j"
-                        + "usto duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum do"
-                        + "lor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempo"
-                        + "r invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et ju"
-                        + "sto duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dol"
-                        + "or sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor"
-                        + " invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et jus"
-                        + "to duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolo"
-                        + "r sit amet. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat"
-                        + ", vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui "
-                        + "blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum do"
-                        + "lor sit amet,");
-        commentOperation.setJsonMetadata("{}");
-        commentOperation.setParentAuthor(new AccountName("dez1337"));
-        commentOperation.setParentPermlink("steemj-v0-2-4-has-been-released-update-9");
-        commentOperation.setTitle("-");
+        CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, author, permlink, title,
+                body, jsonMetadata);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -118,12 +120,12 @@ public class CommentOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

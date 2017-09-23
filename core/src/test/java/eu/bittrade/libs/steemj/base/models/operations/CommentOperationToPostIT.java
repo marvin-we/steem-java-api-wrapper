@@ -9,9 +9,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
  * Verify the functionality of the "comment operation" under the use of real api
@@ -19,7 +21,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommentOperationToPostIT extends BaseIntegrationTest {
+public class CommentOperationToPostIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcecc8045701010018612d6e65772d706f73742d6861732d6265656e2d626f726e07"
             + "64657a31333337086d61696e2d7461671f41206e657720706f737420686173206265656e20626f726e207469746c6521800154686973206973206e65772"
             + "0706f7374206f6e2074686520626c6f636b636861696e2e205768696368206973207573656420617320616e206578616d706c652e20417320796f752063"
@@ -39,35 +41,40 @@ public class CommentOperationToPostIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        CommentOperation commentOperation = new CommentOperation();
-        commentOperation.setAuthor(new AccountName("dez1337"));
-        commentOperation.setPermlink("main-tag");
-        commentOperation.setBody(
-                "This is new post on the blockchain. Which is used as an example. As you can see below, a new post does not have a parent author.");
-        commentOperation.setParentAuthor(new AccountName(""));
-        commentOperation.setJsonMetadata(
-                "{\"tags\":[\"main-tag\",\"literature\",\"blog\",\"writing\"],\"image\":[\"\"],\"app\":\"steemj\",\"format\":\"markdown\"}");
-        commentOperation.setParentPermlink("a-new-post-has-been-born");
-        commentOperation.setTitle("A new post has been born title!");
+        AccountName author = new AccountName("dez1337");
+        Permlink permlink = new Permlink("main-tag");
+        String body = "This is new post on the blockchain. Which is used as an example. As you can see below, a new post does not have a parent author.";
+        String jsonMetadata = "{\"tags\":[\"main-tag\",\"literature\",\"blog\",\"writing\"],\"image\":[\"\"],\"app\":\"steemj\",\"format\":\"markdown\"}";
+        Permlink parentPermlink = new Permlink("a-new-post-has-been-born");
+        String title = "A new post has been born title!";
+
+        CommentOperation commentOperation = new CommentOperation(parentPermlink, author, permlink, title, body,
+                jsonMetadata);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+    }
+
+    @Override
+    public void testOperationParsing() throws SteemCommunicationException {
+        // Already implemented in the normal IT test.
     }
 }

@@ -2,11 +2,13 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
@@ -39,10 +41,118 @@ public class CommentOperation extends Operation {
     private String jsonMetadata;
 
     /**
-     * Create a new and empty comment operation.
+     * Create a new and empty comment operation. This operation can be used to:
+     * <ul>
+     * <li>Create a post</li>
+     * <li>Update a post</li>
+     * <li>Write a comment to a post</li>
+     * <li>Update a comment</li>
+     * </ul>
+     * 
+     * @param parentAuthor
+     *            Define the parent author in case of a comment or set this to
+     *            an empty account name in case of a new post (see
+     *            {@link #setParentAuthor(AccountName)}).
+     * @param parentPermlink
+     *            Define the parent permlink. In case of a new post, this field
+     *            will be used to define the main tag of the post (see
+     *            {@link #setParentAuthor(AccountName)}).
+     * @param author
+     *            Set the author of the comment/post (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            Define the permlink of this comment/post (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param title
+     *            Define the title of this comment/post (see
+     *            {@link #setTitle(String)}).
+     * @param body
+     *            Define the body of this comment/post (see
+     *            {@link #setBody(String)}).
+     * @param jsonMetadata
+     *            Define additional JSON meta data like additional tags (see
+     *            {@link #setJsonMetadata(String)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
      */
-    public CommentOperation() {
+    @JsonCreator
+    public CommentOperation(@JsonProperty("parent_author") AccountName parentAuthor,
+            @JsonProperty("parent_permlink") Permlink parentPermlink, @JsonProperty("author") AccountName author,
+            @JsonProperty("permlink") Permlink permlink, @JsonProperty("title") String title,
+            @JsonProperty("body") String body, @JsonProperty("json_metadata") String jsonMetadata) {
         super(false);
+
+        this.setParentAuthor(parentAuthor);
+        this.setParentPermlink(parentPermlink);
+        this.setAuthor(author);
+        this.setPermlink(permlink);
+        this.setTitle(title);
+        this.setBody(body);
+        this.setJsonMetadata(jsonMetadata);
+    }
+
+    /**
+     * Like
+     * {@link #CommentOperation(Permlink, AccountName, Permlink, String, String, String)},
+     * but does not require a parent author. This should mainly be used for new
+     * posts.
+     * 
+     * @param parentPermlink
+     *            Define the parent permlink. In case of a new post, this field
+     *            will be used to define the main tag of the post (see
+     *            {@link #setParentAuthor(AccountName)}).
+     * @param author
+     *            Set the author of the comment/post (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            Define the permlink of this comment/post (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param title
+     *            Define the title of this comment/post (see
+     *            {@link #setTitle(String)}).
+     * @param body
+     *            Define the body of this comment/post (see
+     *            {@link #setBody(String)}).
+     * @param jsonMetadata
+     *            Define additional JSON meta data like additional tags (see
+     *            {@link #setJsonMetadata(String)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public CommentOperation(Permlink parentPermlink, AccountName author, Permlink permlink, String title, String body,
+            String jsonMetadata) {
+        this(new AccountName(""), parentPermlink, author, permlink, title, body, jsonMetadata);
+    }
+
+    /**
+     * Like
+     * {@link #CommentOperation(Permlink, AccountName, Permlink, String, String, String)},
+     * but does not require a title and JSON data. This should mainly be used to
+     * write comments.
+     * 
+     * @param parentAuthor
+     *            Define the parent author in case of a comment or set this to
+     *            an empty account name in case of a new post (see
+     *            {@link #setParentAuthor(AccountName)}).
+     * @param parentPermlink
+     *            Define the parent permlink. In case of a new post, this field
+     *            will be used to define the main tag of the post (see
+     *            {@link #setParentAuthor(AccountName)}).
+     * @param author
+     *            Set the author of the comment/post (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            Define the permlink of this comment/post (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param body
+     *            Define the body of this comment/post (see
+     *            {@link #setBody(String)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public CommentOperation(AccountName parentAuthor, Permlink parentPermlink, AccountName author, Permlink permlink,
+            String body) {
+        this(parentAuthor, parentPermlink, author, permlink, "", body, "");
     }
 
     /**
@@ -55,14 +165,18 @@ public class CommentOperation extends Operation {
     }
 
     /**
-     * Set the author of the parent article you want to comment on.
-     *
+     * Set the author of the parent article you want to comment on. If you want
+     * to create a new post, set this field to null or an empty account name.
      * 
      * @param parentAuthor
      *            The author of the parent article you want to comment on.
      */
     public void setParentAuthor(AccountName parentAuthor) {
-        this.parentAuthor = parentAuthor;
+        if (parentAuthor == null || parentAuthor.isEmpty()) {
+            this.parentAuthor = new AccountName("");
+        } else {
+            this.parentAuthor = parentAuthor;
+        }
     }
 
     /**
@@ -81,8 +195,14 @@ public class CommentOperation extends Operation {
      * 
      * @param author
      *            The account name that will publish the comment.
+     * @throws InvalidParameterException
+     *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
+        if (author == null) {
+            throw new InvalidParameterException("The author can't be null.");
+        }
+
         this.author = author;
     }
 
@@ -100,8 +220,14 @@ public class CommentOperation extends Operation {
      * 
      * @param permlink
      *            The permanent link of this comment.
+     * @throws InvalidParameterException
+     *             If the <code>permlink</code> is null.
      */
     public void setPermlink(Permlink permlink) {
+        if (permlink == null) {
+            throw new InvalidParameterException("The permlink can't be null.");
+        }
+
         this.permlink = permlink;
     }
 
@@ -115,10 +241,13 @@ public class CommentOperation extends Operation {
     }
 
     /**
-     * Set the permanent link of the parent comment.
+     * Set the permanent link of the parent comment. If you wan't to write a new
+     * post, the <code>parentPermlink</code> will be used as the first tag.
      * 
      * @param parentPermlink
      *            The permanent link of the parent comment.
+     * @throws InvalidParameterException
+     *             If the <code>parentPermlink</code> is null.
      */
     public void setParentPermlink(Permlink parentPermlink) {
         this.parentPermlink = parentPermlink;
@@ -138,9 +267,17 @@ public class CommentOperation extends Operation {
      * 
      * @param title
      *            The title of this comment.
+     * @throws InvalidParameterException
+     *             If the title is larger than 255 characters.
      */
     public void setTitle(String title) {
-        this.title = title;
+        if (title == null) {
+            this.title = "";
+        } else if (title.length() > 255) {
+            throw new InvalidParameterException("The title can't have more than 255 characters.");
+        } else {
+            this.title = title;
+        }
     }
 
     /**
@@ -157,8 +294,14 @@ public class CommentOperation extends Operation {
      * 
      * @param body
      *            The content of this comment.
+     * @throws InvalidParameterException
+     *             If no body has been provided.
      */
     public void setBody(String body) {
+        if (body == null || body.isEmpty()) {
+            throw new InvalidParameterException("The body can't be empty.");
+        }
+
         this.body = body;
     }
 
@@ -176,9 +319,19 @@ public class CommentOperation extends Operation {
      * 
      * @param jsonMetadata
      *            the additional Json metadata
+     * @throws InvalidParameterException
+     *             If the provided <code>jsonMetadata</code> has been provided,
+     *             but the JSON is invalid.
      */
     public void setJsonMetadata(String jsonMetadata) {
-        this.jsonMetadata = jsonMetadata;
+        if (jsonMetadata != null && !jsonMetadata.isEmpty()) {
+            if (!SteemJUtils.verifyJsonString(jsonMetadata)) {
+                throw new InvalidParameterException("The given String is no valid JSON");
+            }
+            this.jsonMetadata = jsonMetadata;
+        } else {
+            this.jsonMetadata = "";
+        }
     }
 
     @Override
