@@ -22,6 +22,12 @@ public class PublicKeyTest extends BaseUnitTest {
 
     private static PublicKey publicKey;
 
+    /**
+     * Prepare the environment for this specific test.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass
     public static void prepareTestClass() throws Exception {
         publicKey = new PublicKey(ADDRESS);

@@ -26,35 +26,38 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  */
 public class SginedTransactionTest extends BaseTransactionalUnitTest {
     private static VoteOperation voteOperation;
-    private static CustomJsonOperation customJsonOperation = new CustomJsonOperation();
+    private static CustomJsonOperation customJsonOperation;
 
     /**
      * Prepare the environment for the test execution.
      */
     @BeforeClass
     public static void init() {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
 
         AccountName voter = new AccountName("xeroc");
         AccountName author = new AccountName("xeroc");
-        String permlink = "piston";
+        Permlink permlink = new Permlink("piston");
         short weight = 10000;
         voteOperation = new VoteOperation(voter, author, permlink, weight);
 
-        customJsonOperation = new CustomJsonOperation();
-
-        customJsonOperation.setId("follow");
-        customJsonOperation
-                .setJson("[\"follow\",{\"follower\":\"dez1337\",\"following\":\"steemj\",\"what\":[\"blog\"]}]");
-        customJsonOperation.setRequiredAuths(new ArrayList<>());
+        ArrayList<AccountName> requiredAuth = new ArrayList<>();
 
         ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
         requiredPostingAuths.add(new AccountName("dez1337"));
 
-        customJsonOperation.setRequiredPostingAuths(requiredPostingAuths);
+        String id = "follow";
+        String json = "[\"follow\",{\"follower\":\"dez1337\",\"following\":\"steemj\",\"what\":[\"blog\"]}]";
 
+        customJsonOperation = new CustomJsonOperation(requiredAuth, requiredPostingAuths, id, json);
     }
 
+    /**
+     * Test the transaction serialization without providing a chain id.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testTransactionSerializationWithoutChainId() throws Exception {
         final String EXPECTED_BYTE_REPRESENTATION = "f68585abf4dce7c804570100057865726f63057865726f6306706973746f6e102700";
@@ -77,6 +80,12 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
                 equalTo(EXPECTED_HASH));
     }
 
+    /**
+     * Test if the required authorities are collected correctly.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testGetRequiredSignaturesSingleField() throws Exception {
         ArrayList<Operation> operations = new ArrayList<>();
@@ -89,6 +98,12 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
                 .getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.POSTING, new AccountName("xeroc"))));
     }
 
+    /**
+     * Test if multiple required authorities are collected correctly.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testGetRequiredSignaturesMapField() throws Exception {
         ArrayList<Operation> operations = new ArrayList<>();
@@ -102,16 +117,44 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
 
     }
 
+    /**
+     * Test the transaction serialization using the default chain id.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Override
+    @Test
     public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
+        final String EXPECTED_BYTE_REPRESENTATION = "0000000000000000000000000000000000000000000000000000000000000000f6858"
+                + "5abf4dce7c804570100057865726f63057865726f6306706973746f6e102700";
 
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
+
+        signedTransaction.setOperations(operations);
+
+        assertThat(Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the transaction serialization using the default chain id.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Override
+    @Test
     public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        // TODO Auto-generated method stub
+        final String EXPECTED_HASH = "2581eb832809ca62a75871c72c275e32b5d2c320a761412a1158f52798530490";
 
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
+
+        signedTransaction.setOperations(operations);
+
+        assertThat(Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
+                equalTo(EXPECTED_HASH));
     }
 }
