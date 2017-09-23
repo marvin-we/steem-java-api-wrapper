@@ -2,14 +2,15 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -24,7 +25,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SetWithdrawVestingRouteOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("from_account")
     private AccountName fromAccount;
     @JsonProperty("to_account")
@@ -43,12 +43,51 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      * account's balance rather than the withdrawing account. In addition, those
      * funds can be immediately vested again, circumventing the conversion from
      * vests to steem and back, guaranteeing they maintain their value.
+     * 
+     * @param fromAccount
+     *            The account to set the route for (see
+     *            {@link #setFromAccount(AccountName)}).
+     * @param toAccount
+     *            The account to transfer the funds to (see
+     *            {@link #setToAccount(AccountName)}).
+     * @param percent
+     *            Define the percentage of the reward that should be transferred
+     *            to the <code>toAccount</code> (see {@link #setPercent(int)}).
+     * @param autoVest
+     *            Define if the founds should automatically be vested again (see
+     *            {@link #setAutoVest(Boolean)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public SetWithdrawVestingRouteOperation() {
+    @JsonCreator
+    public SetWithdrawVestingRouteOperation(@JsonProperty("from_account") AccountName fromAccount,
+            @JsonProperty("to_account") AccountName toAccount, @JsonProperty("percent") int percent,
+            @JsonProperty("auto_vest") Boolean autoVest) {
         super(false);
-        // Set default values:
-        this.setPercent(0);
-        this.setAutoVest(false);
+
+        this.setFromAccount(fromAccount);
+        this.setToAccount(toAccount);
+        this.setPercent(percent);
+        this.setAutoVest(autoVest);
+    }
+
+    /**
+     * Like
+     * {@link #SetWithdrawVestingRouteOperation(AccountName, AccountName, int, Boolean)},
+     * but will automatically use the default values (<code>percent=0</code> and
+     * <code>autoVest=false</code>).
+     * 
+     * @param fromAccount
+     *            The account to set the route for (see
+     *            {@link #setFromAccount(AccountName)}).
+     * @param toAccount
+     *            The account to transfer the funds to (see
+     *            {@link #setToAccount(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public SetWithdrawVestingRouteOperation(AccountName fromAccount, AccountName toAccount) {
+        this(fromAccount, toAccount, 0, Boolean.FALSE);
     }
 
     /**
@@ -68,8 +107,14 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      * 
      * @param fromAccount
      *            The account whose funds will be transfered.
+     * @throws InvalidParameterException
+     *             If the <code>fromAccount</code> is null.
      */
     public void setFromAccount(AccountName fromAccount) {
+        if (fromAccount == null) {
+            throw new InvalidParameterException("The fromAccount can't be null.");
+        }
+
         this.fromAccount = fromAccount;
     }
 
@@ -87,8 +132,14 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      * 
      * @param toAccount
      *            The account to which the funds getting redirected.
+     * @throws InvalidParameterException
+     *             If the <code>toAccount</code> is null.
      */
     public void setToAccount(AccountName toAccount) {
+        if (toAccount == null) {
+            throw new InvalidParameterException("The toAccount can't be null.");
+        }
+
         this.toAccount = toAccount;
     }
 
@@ -108,8 +159,15 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      * 
      * @param percent
      *            The percentage to redirect.
+     * @throws InvalidParameterException
+     *             If the given percentage is lower than 0 or higher than 10000
+     *             which is equivalent to 0.00%-100.00%.
      */
     public void setPercent(int percent) {
+        if (percent < 0 || percent > 10000) {
+            throw new InvalidParameterException(
+                    "The given percentage must be a postive number between 0 and 10000 which is equivalent to 0.00%-100.00%.");
+        }
         this.percent = percent;
     }
 
@@ -129,7 +187,11 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      *            True if the funds should be reinvested or false if not.
      */
     public void setAutoVest(Boolean autoVest) {
-        this.autoVest = autoVest;
+        if (autoVest == null) {
+            this.autoVest = Boolean.FALSE;
+        } else {
+            this.autoVest = autoVest;
+        }
     }
 
     @Override
@@ -154,10 +216,10 @@ public class SetWithdrawVestingRouteOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getFromAccount(), PrivateKeyType.ACTIVE);
     }
 }

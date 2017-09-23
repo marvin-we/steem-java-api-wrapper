@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -20,7 +20,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class SetWithdrawVestingRouteOperationIT extends BaseIntegrationTest {
+public class SetWithdrawVestingRouteOperationIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c8045701140764657a3133333"
             + "706737465656d6a10270100011c30579bb23bc91cd01af4c54820dc3d76573cfb2a2973871ae5bd2824b"
             + "9811c1017ae23d98f135d79418db21933727df866013321794b388ad29f96154d28bddc";
@@ -36,19 +36,22 @@ public class SetWithdrawVestingRouteOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        SetWithdrawVestingRouteOperation setWithdrawVestingRouteOperation = new SetWithdrawVestingRouteOperation();
-        setWithdrawVestingRouteOperation.setFromAccount(new AccountName("dez1337"));
-        setWithdrawVestingRouteOperation.setToAccount(new AccountName("steemj"));
-        setWithdrawVestingRouteOperation.setPercent(10000);
-        setWithdrawVestingRouteOperation.setAutoVest(true);
+        AccountName fromAccount = new AccountName("dez1337");
+        AccountName toAccount = new AccountName("steemj");
+        int percentage = 10000;
+        boolean autoVest = true;
+
+        SetWithdrawVestingRouteOperation setWithdrawVestingRouteOperation = new SetWithdrawVestingRouteOperation(
+                fromAccount, toAccount, percentage, autoVest);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(setWithdrawVestingRouteOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -60,12 +63,12 @@ public class SetWithdrawVestingRouteOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
