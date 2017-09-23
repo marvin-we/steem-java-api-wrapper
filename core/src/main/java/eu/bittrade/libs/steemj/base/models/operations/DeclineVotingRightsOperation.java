@@ -2,12 +2,14 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -21,17 +23,31 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class DeclineVotingRightsOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.OWNER)
+    @JsonProperty("account")
     private AccountName account;
+    @JsonProperty("decline")
     private Boolean decline;
 
     /**
      * Create a new decline voting rights operation. Use this operation with
      * care as it is used to <b>permanently</b> revoke its voting rights after a
      * 7 day waiting period.
+     * 
+     * @param account
+     *            Set the account to decline the voting rights for (see
+     *            {@link #setAccount(AccountName)}).
+     * @param decline
+     *            Define if the voting rights should be declined or not (see
+     *            {@link #setDecline(Boolean)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public DeclineVotingRightsOperation() {
+    public DeclineVotingRightsOperation(@JsonProperty("account") AccountName account,
+            @JsonProperty("decline") Boolean decline) {
         super(false);
+
+        this.setAccount(account);
+        this.setDecline(decline);
     }
 
     /**
@@ -49,8 +65,13 @@ public class DeclineVotingRightsOperation extends Operation {
      * 
      * @param account
      *            The account which updated its voting rights.
+     * @throws InvalidParameterException
+     *             If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
+        if (account == null) {
+            throw new InvalidParameterException("The account can't be null.");
+        }
         this.account = account;
     }
 
@@ -73,7 +94,11 @@ public class DeclineVotingRightsOperation extends Operation {
      *            voting rights or not.
      */
     public void setDecline(Boolean decline) {
-        this.decline = decline;
+        if (decline == null) {
+            this.decline = false;
+        } else {
+            this.decline = decline;
+        }
     }
 
     @Override
@@ -95,10 +120,10 @@ public class DeclineVotingRightsOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.OWNER);
     }
 }

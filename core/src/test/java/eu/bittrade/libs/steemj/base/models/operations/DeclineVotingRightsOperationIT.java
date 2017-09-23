@@ -6,13 +6,12 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -21,10 +20,10 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class DeclineVotingRightsOperationIT extends BaseIntegrationTest {
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcedc8045701240764657a313333"
-            + "370000011c235972a4aee54b1477ec55762d6d7e7bee4311a16b97f9d074937affd5cf0a3b3ed2ba3b0"
-            + "428c8284c7c747e6237c80c2fae3284c354b05fb5c54753c0c6ba58";
+public class DeclineVotingRightsOperationIT extends BaseTransactionalIntegrationTest {
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dceac8045701240764657a313333370000011c79"
+            + "abd06afe01810282b23034df82c8213611311d563c75ccc9c185ab795ae86b2c40952782388455ca18267c7c7ba8474"
+            + "3bde3234a12360db6d5a210a9a43c19";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -37,18 +36,19 @@ public class DeclineVotingRightsOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        DeclineVotingRightsOperation declineVotingRightsOperation = new DeclineVotingRightsOperation();
+        AccountName account = new AccountName("dez1337");
+        boolean decline = false;
 
-        declineVotingRightsOperation.setAccount(new AccountName("dez1337"));
-        declineVotingRightsOperation.setDecline(false);
+        DeclineVotingRightsOperation declineVotingRightsOperation = new DeclineVotingRightsOperation(account, decline);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(declineVotingRightsOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -59,15 +59,13 @@ public class DeclineVotingRightsOperationIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    @Ignore
     public void verifyTransaction() throws Exception {
-        // TODO: Check if working
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
