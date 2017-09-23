@@ -10,10 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
@@ -25,12 +25,12 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class FeedPublishOperationIT extends BaseIntegrationTest {
+public class FeedPublishOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5716934;
     private static final int TRANSACTION_INDEX = 4;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_PUBLISHER = "steve-walschot";
-    private static final Price EXPECTED_PRICE = new Price();
+    private static Price EXPECTED_PRICE;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c8045701070764657a31"
             + "33333773000000000000000353424400000000640000000000000003535445454d000000011b1d2"
             + "64143ac5f04d46e563aae4e657100b45a74380e9afaa5c9148a4ec77c0c3b5ef08414d0c210ed3e"
@@ -47,10 +47,7 @@ public class FeedPublishOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
-
-        FeedPublishOperation feedPublishOperation = new FeedPublishOperation();
-        feedPublishOperation.setPublisher(new AccountName("dez1337"));
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         // 1 STEEM = 1.15 SBD
         Asset base = new Asset();
@@ -60,17 +57,16 @@ public class FeedPublishOperationIT extends BaseIntegrationTest {
         quote.setAmount(100);
         quote.setSymbol(AssetSymbolType.STEEM);
 
-        Price exchangeRate = new Price();
-        exchangeRate.setBase(base);
-        exchangeRate.setQuote(quote);
-
-        feedPublishOperation.setExchangeRate(exchangeRate);
+        Price exchangeRate = new Price(base, quote);
+        AccountName publisher = new AccountName("dez1337");
+        FeedPublishOperation feedPublishOperation = new FeedPublishOperation(publisher, exchangeRate);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(feedPublishOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
 
         // Set expected objects.
         Asset expectedBase = new Asset();
@@ -80,8 +76,7 @@ public class FeedPublishOperationIT extends BaseIntegrationTest {
         expectedQuote.setAmount(1000);
         expectedQuote.setSymbol(AssetSymbolType.STEEM);
 
-        EXPECTED_PRICE.setBase(expectedBase);
-        EXPECTED_PRICE.setQuote(expectedQuote);
+        EXPECTED_PRICE = new Price(expectedBase, expectedQuote);
     }
 
     @Category({ IntegrationTest.class })
@@ -100,12 +95,12 @@ public class FeedPublishOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

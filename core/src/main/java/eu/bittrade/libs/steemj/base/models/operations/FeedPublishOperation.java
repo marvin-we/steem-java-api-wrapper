@@ -2,16 +2,18 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -24,7 +26,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FeedPublishOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("publisher")
     private AccountName publisher;
     @JsonProperty("exchange_rate")
@@ -34,9 +35,23 @@ public class FeedPublishOperation extends Operation {
      * Create a new feed publish operation. Feeds can only be published by the
      * top N witnesses which are included in every round and are used to define
      * the exchange rate between steem and the dollar.
+     * 
+     * @param publisher
+     *            Set the account name of the account publishing this price feed
+     *            (see {@link #setPublisher(AccountName)}).
+     * @param exchangeRate
+     *            Set the STEEM/SBD Price feed (see
+     *            {@link #setExchangeRate(Price)}).
+     * @throws InvalidParameterException
+     *             If the arguments do not fulfill the requirements.
      */
-    public FeedPublishOperation() {
+    @JsonCreator
+    public FeedPublishOperation(@JsonProperty("publisher") AccountName publisher,
+            @JsonProperty("exchange_rate") Price exchangeRate) {
         super(false);
+
+        this.setPublisher(publisher);
+        this.setExchangeRate(exchangeRate);
     }
 
     /**
@@ -56,8 +71,14 @@ public class FeedPublishOperation extends Operation {
      * @param publisher
      *            The account name of the witness that will publish a new price
      *            feed.
+     * @throws InvalidParameterException
+     *             If no account name has been provided.
      */
     public void setPublisher(AccountName publisher) {
+        if (publisher == null) {
+            throw new InvalidParameterException("The publisher can't be null.");
+        }
+
         this.publisher = publisher;
     }
 
@@ -75,8 +96,19 @@ public class FeedPublishOperation extends Operation {
      * 
      * @param exchangeRate
      *            The exchange rate suggested by the witness.
+     * @throws InvalidParameterException
+     *             If no account name has been provided.
      */
     public void setExchangeRate(Price exchangeRate) {
+        if (exchangeRate == null) {
+            throw new InvalidParameterException("The price feed can't be null");
+        } else if (!(exchangeRate.getBase().getSymbol().equals(AssetSymbolType.STEEM)
+                && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.SBD)
+                || exchangeRate.getBase().getSymbol().equals(AssetSymbolType.SBD)
+                        && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.STEEM))) {
+            throw new InvalidParameterException("The Price feed must be a STEEM/SBD price");
+        }
+
         this.exchangeRate = exchangeRate;
     }
 
@@ -99,10 +131,10 @@ public class FeedPublishOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getPublisher(), PrivateKeyType.ACTIVE);
     }
 }
