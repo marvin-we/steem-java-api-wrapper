@@ -148,7 +148,8 @@ public abstract class Operation implements ByteTransformable {
      *            The account name to merge into the list.
      * @param privateKeyType
      *            The required key type.
-     * @return
+     * @return The merged set of signature objects and required private key
+     *         types.
      */
     protected Map<SignatureObject, List<PrivateKeyType>> mergeRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase, AccountName accountName,
@@ -163,6 +164,32 @@ public abstract class Operation implements ByteTransformable {
             requiredKeyType.add(privateKeyType);
 
             requiredAuthorities.put(accountName, requiredKeyType);
+        }
+
+        return requiredAuthorities;
+    }
+
+    /**
+     * Use this helper method to merge a a list of account names into the
+     * <code>requiredAuthoritiesBase</code.
+     * 
+     * @param requiredAuthoritiesBase
+     *            A map to which the required authorities of this operation
+     *            should be added to.
+     * @param accountName
+     *            The account names to merge into the list.
+     * @param privateKeyType
+     *            The required key type.
+     * @return The merged set of signature objects and required private key
+     *         types.
+     */
+    protected Map<SignatureObject, List<PrivateKeyType>> mergeRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase, List<AccountName> accountName,
+            PrivateKeyType privateKeyType) {
+        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
+
+        for (AccountName account : accountName) {
+            requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, account, privateKeyType);
         }
 
         return requiredAuthorities;

@@ -9,9 +9,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -25,10 +25,8 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CustomJsonOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("required_auths")
     private List<AccountName> requiredAuths;
-    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("required_posting_auths")
     private List<AccountName> requiredPostingAuths;
     @JsonProperty("id")
@@ -44,12 +42,58 @@ public class CustomJsonOperation extends Operation {
      * {@link eu.bittrade.libs.steemj.base.models.operations.CustomOperation
      * CustomOperation}, this operation is designed to be human
      * readable/developer friendly.
+     * 
+     * @param requiredAuths
+     *            A list of account names whose private active key is required
+     *            to sign the transaction (see {@link #setRequiredAuths(List)}).
+     * @param requiredPostingAuths
+     *            A list of account names whose private posting key is required
+     *            to sign the transaction (see
+     *            {@link #setRequiredPostingAuths(List)}).
+     * @param id
+     *            The plugin id (e.g. <code>follow</code>) (see
+     *            {@link #setId(String)}).
+     * @param json
+     *            The payload provided as a valid JSON string (see
+     *            {@link #setJson(String)}).
+     * @throws InvalidParameterException
+     *             If a parameter does not fulfill the requirements.
      */
-    public CustomJsonOperation() {
+    @JsonCreator
+    public CustomJsonOperation(@JsonProperty("required_auths") List<AccountName> requiredAuths,
+            @JsonProperty("required_posting_auths") List<AccountName> requiredPostingAuths,
+            @JsonProperty("id") String id, @JsonProperty("json") String json) {
         super(false);
-        // Apply default values:
-        this.requiredAuths = new ArrayList<>();
-        this.requiredPostingAuths = new ArrayList<>();
+
+        if ((requiredAuths == null || requiredAuths.isEmpty())
+                && (requiredPostingAuths == null || requiredPostingAuths.isEmpty())) {
+            throw new InvalidParameterException("At least one authority needs to be provided (POSTING or ACTIVE).");
+        }
+
+        if (requiredAuths == null) {
+            this.requiredAuths = new ArrayList<>();
+        } else {
+            this.requiredAuths = requiredAuths;
+        }
+
+        if (requiredPostingAuths == null) {
+            this.requiredPostingAuths = new ArrayList<>();
+        } else {
+            this.requiredPostingAuths = requiredPostingAuths;
+        }
+
+        if (id == null) {
+            this.setId("");
+        } else {
+            this.setId(id);
+        }
+
+        if (json == null) {
+            this.setJson("");
+        } else {
+            this.setJson(json);
+        }
+
     }
 
     /**
@@ -68,9 +112,22 @@ public class CustomJsonOperation extends Operation {
      * 
      * @param requiredAuths
      *            The account names whose private active keys are required.
+     * @throws InvalidParameterException
+     *             If the provided <code>requiredAuths</code> is empty and in
+     *             addition no {@link #requiredPostingAuths} are provided.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
-        this.requiredAuths = requiredAuths;
+        if ((requiredAuths == null || requiredAuths.isEmpty())
+                && (this.getRequiredPostingAuths() == null || this.getRequiredPostingAuths().isEmpty())) {
+            throw new InvalidParameterException(
+                    "The list of required posting authorities is empty too - At least one authority type (POSTING or ACTIVE) needs to be provided.");
+        }
+
+        if (requiredAuths == null) {
+            this.requiredAuths = new ArrayList<>();
+        } else {
+            this.requiredAuths = requiredAuths;
+        }
     }
 
     /**
@@ -90,9 +147,22 @@ public class CustomJsonOperation extends Operation {
      * 
      * @param requiredPostingAuths
      *            The account names whose private posting keys are required.
+     * @throws InvalidParameterException
+     *             If the provided <code>requiredPostingAuths</code> is empty
+     *             and in addition no {@link #requiredAuths} are provided.
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
-        this.requiredPostingAuths = requiredPostingAuths;
+        if ((requiredPostingAuths == null || requiredPostingAuths.isEmpty())
+                && (this.getRequiredAuths() == null || this.getRequiredAuths().isEmpty())) {
+            throw new InvalidParameterException(
+                    "The list of required active authorities is empty too - At least one authority type (POSTING or ACTIVE) needs to be provided.");
+        }
+
+        if (requiredPostingAuths == null) {
+            this.requiredPostingAuths = new ArrayList<>();
+        } else {
+            this.requiredPostingAuths = requiredPostingAuths;
+        }
     }
 
     /**
@@ -108,10 +178,13 @@ public class CustomJsonOperation extends Operation {
      * @param id
      *            The plugin id of this Operation (e.g. <code>follow</code>").
      * @throws InvalidParameterException
-     *             If the id has more than 31 characters.
+     *             If the id has more than 31 characters or has not been
+     *             provided.
      */
     public void setId(String id) {
-        if (id.length() > 32) {
+        if (id == null) {
+            throw new InvalidParameterException("An ID is required.");
+        } else if (id.length() > 32) {
             throw new InvalidParameterException("The ID must be less than 32 characters long.");
         }
 
@@ -174,10 +247,17 @@ public class CustomJsonOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
+
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRequiredAuths(),
+                PrivateKeyType.ACTIVE);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRequiredPostingAuths(),
+                PrivateKeyType.POSTING);
+
+        return requiredAuthorities;
     }
 }
