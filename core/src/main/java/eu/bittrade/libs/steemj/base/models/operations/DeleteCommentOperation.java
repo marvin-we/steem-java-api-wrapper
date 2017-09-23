@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -27,7 +28,7 @@ public class DeleteCommentOperation extends Operation {
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
-    private String permlink;
+    private Permlink permlink;
 
     /**
      * Create a new and empty delete comment operation. User this operation to
@@ -65,7 +66,7 @@ public class DeleteCommentOperation extends Operation {
      * 
      * @return The permanent link of the comment to delete.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 
@@ -75,7 +76,7 @@ public class DeleteCommentOperation extends Operation {
      * @param permlink
      *            The permanent link of the comment to delete.
      */
-    public void setPermlink(String permlink) {
+    public void setPermlink(Permlink permlink) {
         this.permlink = permlink;
     }
 
@@ -85,7 +86,7 @@ public class DeleteCommentOperation extends Operation {
             serializedDeleteCommentOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.DELETE_COMMENT_OPERATION.ordinal()));
             serializedDeleteCommentOperation.write(this.getAuthor().toByteArray());
-            serializedDeleteCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
+            serializedDeleteCommentOperation.write(this.getPermlink().toByteArray());
 
             return serializedDeleteCommentOperation.toByteArray();
         } catch (IOException e) {
@@ -98,7 +99,7 @@ public class DeleteCommentOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {

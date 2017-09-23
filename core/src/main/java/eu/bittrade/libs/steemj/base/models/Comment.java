@@ -18,9 +18,9 @@ public class Comment {
     @JsonProperty("parent_author")
     private AccountName parentAuthor;
     @JsonProperty("parent_permlink")
-    private String parentPermlink;
+    private Permlink parentPermlink;
     private AccountName author;
-    private String permlink;
+    private Permlink permlink;
     private String title;
     private String body;
     @JsonProperty("json_metadata")
@@ -124,7 +124,7 @@ public class Comment {
     /**
      * @return the parentPermlink
      */
-    public String getParentPermlink() {
+    public Permlink getParentPermlink() {
         return parentPermlink;
     }
 
@@ -138,7 +138,7 @@ public class Comment {
     /**
      * @return the permlink
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 

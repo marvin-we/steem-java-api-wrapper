@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -25,11 +26,11 @@ public class CommentOperation extends Operation {
     @JsonProperty("parent_author")
     private AccountName parentAuthor;
     @JsonProperty("parent_permlink")
-    private String parentPermlink;
+    private Permlink parentPermlink;
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
-    private String permlink;
+    private Permlink permlink;
     @JsonProperty("title")
     private String title;
     @JsonProperty("body")
@@ -90,7 +91,7 @@ public class CommentOperation extends Operation {
      * 
      * @return The permanent link of this comment.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 
@@ -100,7 +101,7 @@ public class CommentOperation extends Operation {
      * @param permlink
      *            The permanent link of this comment.
      */
-    public void setPermlink(String permlink) {
+    public void setPermlink(Permlink permlink) {
         this.permlink = permlink;
     }
 
@@ -109,7 +110,7 @@ public class CommentOperation extends Operation {
      * 
      * @return The permanent link of the parent comment.
      */
-    public String getParentPermlink() {
+    public Permlink getParentPermlink() {
         return parentPermlink;
     }
 
@@ -119,7 +120,7 @@ public class CommentOperation extends Operation {
      * @param parentPermlink
      *            The permanent link of the parent comment.
      */
-    public void setParentPermlink(String parentPermlink) {
+    public void setParentPermlink(Permlink parentPermlink) {
         this.parentPermlink = parentPermlink;
     }
 
@@ -186,9 +187,9 @@ public class CommentOperation extends Operation {
             serializedCommentOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPERATION.ordinal()));
             serializedCommentOperation.write(this.getParentAuthor().toByteArray());
-            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getParentPermlink()));
+            serializedCommentOperation.write(this.getParentPermlink().toByteArray());
             serializedCommentOperation.write(this.getAuthor().toByteArray());
-            serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
+            serializedCommentOperation.write(this.getPermlink().toByteArray());
             serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getTitle()));
             serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getBody()));
             serializedCommentOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));

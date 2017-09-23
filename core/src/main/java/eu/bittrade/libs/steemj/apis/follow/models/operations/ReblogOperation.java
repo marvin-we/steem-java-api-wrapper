@@ -8,11 +8,11 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class represents the Steem "reblog_operation" object.
@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class ReblogOperation extends Operation {
     private AccountName account;
     private AccountName author;
-    private String permlink;
+    private Permlink permlink;
 
     /**
      * Create a new reblog operation to reblog a comment a post. *
@@ -75,7 +75,7 @@ public class ReblogOperation extends Operation {
      * @return The permanent link of the post or comment that has been
      *         resteemed.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 
@@ -95,7 +95,7 @@ public class ReblogOperation extends Operation {
         try (ByteArrayOutputStream serializedVoteOperation = new ByteArrayOutputStream()) {
             serializedVoteOperation.write(this.getAccount().toByteArray());
             serializedVoteOperation.write(this.getAuthor().toByteArray());
-            serializedVoteOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
+            serializedVoteOperation.write(this.getPermlink().toByteArray()));
 
             return serializedVoteOperation.toByteArray();
         } catch (IOException e) {

@@ -12,6 +12,7 @@ import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
@@ -439,12 +440,12 @@ public class FollowApi {
      *             </ul>
      */
     public static List<AccountName> getRebloggedBy(CommunicationHandler communicationHandler, AccountName author,
-            String permlink) throws SteemCommunicationException {
+            Permlink permlink) throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
         requestObject.setSteemApi(SteemApis.FOLLOW_API);
 
-        Object[] parameters = { author.getName(), permlink };
+        Object[] parameters = { author.getName(), permlink.getLink() };
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, AccountName.class);

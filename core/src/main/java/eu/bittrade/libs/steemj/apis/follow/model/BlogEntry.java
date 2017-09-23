@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
@@ -14,7 +15,7 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
  */
 public class BlogEntry {
     private AccountName author;
-    private String permlink;
+    private Permlink permlink;
     private AccountName blog;
     @JsonProperty("reblog_on")
     private TimePointSec reblogOn;
@@ -32,7 +33,7 @@ public class BlogEntry {
     /**
      * @return The permlink of the post.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 

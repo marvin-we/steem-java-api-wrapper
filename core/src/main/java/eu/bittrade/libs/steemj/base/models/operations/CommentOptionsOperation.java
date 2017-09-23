@@ -14,6 +14,7 @@ import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -31,7 +32,7 @@ public class CommentOptionsOperation extends Operation {
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
-    private String permlink;
+    private Permlink permlink;
     @JsonProperty("max_accepted_payout")
     private Asset maxAcceptedPayout;
     @JsonProperty("percent_steem_dollars")
@@ -96,7 +97,7 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @return The permanent link.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 
@@ -216,7 +217,7 @@ public class CommentOptionsOperation extends Operation {
             serializedCommentOptionsOperation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPTIONS_OPERATION.ordinal()));
             serializedCommentOptionsOperation.write(this.getAuthor().toByteArray());
-            serializedCommentOptionsOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
+            serializedCommentOptionsOperation.write(this.getPermlink().toByteArray());
             serializedCommentOptionsOperation.write(this.getMaxAcceptedPayout().toByteArray());
             serializedCommentOptionsOperation
                     .write(SteemJUtils.transformShortToByteArray(this.getPercentSteemDollars()));
@@ -242,7 +243,7 @@ public class CommentOptionsOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {

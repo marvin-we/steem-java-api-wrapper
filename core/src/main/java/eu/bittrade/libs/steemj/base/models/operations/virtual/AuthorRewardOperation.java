@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -26,7 +27,7 @@ public class AuthorRewardOperation extends Operation {
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
-    private String permlink;
+    private Permlink permlink;
     @JsonProperty("sbd_payout")
     private Asset sbdPayout;
     @JsonProperty("steem_payout")
@@ -56,7 +57,7 @@ public class AuthorRewardOperation extends Operation {
      * 
      * @return The permanent link of the article.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 

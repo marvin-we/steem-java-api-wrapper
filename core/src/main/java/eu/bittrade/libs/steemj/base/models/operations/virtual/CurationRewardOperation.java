@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -30,7 +31,7 @@ public class CurationRewardOperation extends Operation {
     @JsonProperty("comment_author")
     private AccountName commentAuthor;
     @JsonProperty("comment_permlink")
-    private String commentPermlink;
+    private Permlink commentPermlink;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -74,7 +75,7 @@ public class CurationRewardOperation extends Operation {
      * @return The permanent link of the post or comment that this curation
      *         reward is for.
      */
-    public String getCommentPermlink() {
+    public Permlink getCommentPermlink() {
         return commentPermlink;
     }
 

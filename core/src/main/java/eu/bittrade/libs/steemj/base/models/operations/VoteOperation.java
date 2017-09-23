@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -26,7 +27,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class VoteOperation extends Operation {
     private AccountName voter;
     private AccountName author;
-    private String permlink;
+    private Permlink permlink;
     private short weight;
 
     /**
@@ -45,7 +46,7 @@ public class VoteOperation extends Operation {
      */
     @JsonCreator
     public VoteOperation(@JsonProperty("voter") AccountName voter, @JsonProperty("author") AccountName author,
-            @JsonProperty("permlink") String permlink, @JsonProperty("weight") short weight) {
+            @JsonProperty("permlink") Permlink permlink, @JsonProperty("weight") short weight) {
         super(false);
         // Set default values:
         this.setVoter(voter);
@@ -68,7 +69,7 @@ public class VoteOperation extends Operation {
      *            Set the permanent link of the post/comment to vote for.
      *            {@link #setPermlink(String)}.
      */
-    public VoteOperation(AccountName voter, AccountName author, String permlink) {
+    public VoteOperation(AccountName voter, AccountName author, Permlink permlink) {
         super(false);
         // Set default values:
         this.setVoter(voter);
@@ -101,7 +102,7 @@ public class VoteOperation extends Operation {
      * @return The permanent link of the post or comment that has been voted
      *         for.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 
@@ -157,7 +158,7 @@ public class VoteOperation extends Operation {
      * @throws InvalidParameterException
      *             If no permlink has been provided.
      */
-    public void setPermlink(String permlink) {
+    public void setPermlink(Permlink permlink) {
         if (permlink == null) {
             throw new InvalidParameterException("A permlink needs to be provided.");
         }
@@ -191,7 +192,7 @@ public class VoteOperation extends Operation {
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.ordinal()));
             serializedVoteOperation.write(this.getVoter().toByteArray());
             serializedVoteOperation.write(this.getAuthor().toByteArray());
-            serializedVoteOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getPermlink()));
+            serializedVoteOperation.write(this.getPermlink().toByteArray());
             serializedVoteOperation.write(SteemJUtils.transformShortToByteArray(this.getWeight()));
 
             return serializedVoteOperation.toByteArray();

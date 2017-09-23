@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -22,7 +23,7 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
  */
 public class CommentRewardOperation extends Operation {
     private AccountName author;
-    private String permlink;
+    private Permlink permlink;
     private Asset payout;
 
     /**
@@ -47,7 +48,7 @@ public class CommentRewardOperation extends Operation {
      * 
      * @return The permanent link.
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 

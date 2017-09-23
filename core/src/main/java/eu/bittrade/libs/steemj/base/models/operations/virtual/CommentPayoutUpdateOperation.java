@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -18,7 +19,7 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
  */
 public class CommentPayoutUpdateOperation extends Operation {
     private AccountName author;
-    private String permlink;
+    private Permlink permlink;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -38,7 +39,7 @@ public class CommentPayoutUpdateOperation extends Operation {
     /**
      * @return the permlink
      */
-    public String getPermlink() {
+    public Permlink getPermlink() {
         return permlink;
     }
 

@@ -30,11 +30,11 @@ public class DiscussionQuery {
     @JsonProperty("start_author")
     private AccountName startAuthor;
     @JsonProperty("start_permlink")
-    private String startPermlink;
+    private Permlink startPermlink;
     @JsonProperty("parent_author")
     private AccountName parentAuthor;
     @JsonProperty("parent_permlink")
-    private String parentPermlink;
+    private Permlink parentPermlink;
 
     /**
      * Create a new DiscussionQuery instance to filter for discussions.
@@ -169,7 +169,7 @@ public class DiscussionQuery {
     /**
      * @return the startPermlink
      */
-    public String getStartPermlink() {
+    public Permlink getStartPermlink() {
         return startPermlink;
     }
 
@@ -177,7 +177,7 @@ public class DiscussionQuery {
      * @param startPermlink
      *            the startPermlink to set
      */
-    public void setStartPermlink(String startPermlink) {
+    public void setStartPermlink(Permlink startPermlink) {
         this.startPermlink = startPermlink;
     }
 
@@ -199,7 +199,7 @@ public class DiscussionQuery {
     /**
      * @return the parentPermlink
      */
-    public String getParentPermlink() {
+    public Permlink getParentPermlink() {
         return parentPermlink;
     }
 
@@ -207,7 +207,7 @@ public class DiscussionQuery {
      * @param parentPermlink
      *            the parentPermlink to set
      */
-    public void setParentPermlink(String parentPermlink) {
+    public void setParentPermlink(Permlink parentPermlink) {
         this.parentPermlink = parentPermlink;
     }
 
