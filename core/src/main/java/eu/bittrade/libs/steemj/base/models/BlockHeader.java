@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -74,11 +75,8 @@ public class BlockHeader implements ByteTransformable {
      * @return All extensions.
      */
     public List<BlockHeaderExtensions> getExtensions() {
-        if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList that contains an empty FutureExtension so
-            // one byte gets added to the signature for sure.
+        if (extensions == null) {
             extensions = new ArrayList<>();
-            extensions.add(new BlockHeaderExtensions());
         }
         return extensions;
     }
@@ -116,6 +114,8 @@ public class BlockHeader implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // TODO Auto-generated method stub
+        // serializedRecoverAccountOperation
+        //.write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
         return null;
     }
 }

@@ -58,12 +58,6 @@ public class AccountCreateWithDelegationOperation extends AccountCreateOperation
      * @return All extensions.
      */
     public List<FutureExtensions> getExtensions() {
-        if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList that contains an empty FutureExtension so
-            // one byte gets added to the signature for sure.
-            extensions = new ArrayList<>();
-            extensions.add(new FutureExtensions());
-        }
         return extensions;
     }
 
@@ -74,7 +68,11 @@ public class AccountCreateWithDelegationOperation extends AccountCreateOperation
      *            Define a list of extensions.
      */
     public void setExtensions(List<FutureExtensions> extensions) {
-        this.extensions = extensions;
+        if (extensions == null) {
+            this.extensions = new ArrayList<>();
+        } else {
+            this.extensions = extensions;
+        }
     }
 
     @Override
@@ -92,6 +90,9 @@ public class AccountCreateWithDelegationOperation extends AccountCreateOperation
             serializedAccountCreateWithDelegationOperation.write(this.getMemoKey().toByteArray());
             serializedAccountCreateWithDelegationOperation
                     .write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));
+
+            serializedAccountCreateWithDelegationOperation
+                    .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedAccountCreateWithDelegationOperation.write(futureExtensions.toByteArray());
             }

@@ -187,11 +187,8 @@ public class RequestAccountRecoveryOperation extends Operation {
      *            Define a list of extensions.
      */
     public void setExtensions(List<FutureExtensions> extensions) {
-        if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList that contains an empty FutureExtension so
-            // one byte gets added to the signature for sure.
+        if (extensions == null) {
             this.extensions = new ArrayList<>();
-            this.extensions.add(new FutureExtensions());
         } else {
             this.extensions = extensions;
         }
@@ -206,6 +203,8 @@ public class RequestAccountRecoveryOperation extends Operation {
             serializedRequestAccountRecoveryOperation.write(this.getAccountToRecover().toByteArray());
             serializedRequestAccountRecoveryOperation.write(this.getNewOwnerAuthority().toByteArray());
 
+            serializedRequestAccountRecoveryOperation
+                    .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedRequestAccountRecoveryOperation.write(futureExtensions.toByteArray());
             }

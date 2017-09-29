@@ -338,12 +338,13 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
             serializedTransaction.write(SteemJUtils.transformShortToByteArray(this.getRefBlockNum()));
             serializedTransaction.write(SteemJUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
             serializedTransaction.write(this.getExpirationDate().toByteArray());
-            serializedTransaction.write(SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size()));
 
+            serializedTransaction.write(SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size()));
             for (Operation operation : this.getOperations()) {
                 serializedTransaction.write(operation.toByteArray());
             }
 
+            serializedTransaction.write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedTransaction.write(futureExtensions.toByteArray());
             }

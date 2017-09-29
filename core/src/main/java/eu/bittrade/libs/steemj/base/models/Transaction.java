@@ -135,11 +135,8 @@ public class Transaction implements Serializable {
      * @return All extensions.
      */
     public List<FutureExtensions> getExtensions() {
-        if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList that contains an empty FutureExtension so
-            // one byte gets added to the signature for sure.
+        if (extensions == null) {
             extensions = new ArrayList<>();
-            extensions.add(new FutureExtensions());
         }
         return extensions;
     }
