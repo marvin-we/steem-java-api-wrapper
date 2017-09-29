@@ -25,6 +25,13 @@ public class AssetTest {
     private final String EXPECTED_TBD_ASSET_BYTE_REPRESENTATION = "c3110000000000000354424400000000";
     private final String EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION = "be9bb404000000000354535444000000";
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * method for the VESTS asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testVestsAssetToByteArray() throws Exception {
         Asset vestsAsset = new Asset();
@@ -36,6 +43,13 @@ public class AssetTest {
                 Utils.HEX.encode(vestsAsset.toByteArray()), equalTo(EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * method for the STEEM asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testSteemAssetToByteArray() throws Exception {
         Asset steemAsset = new Asset();
@@ -47,6 +61,13 @@ public class AssetTest {
                 Utils.HEX.encode(steemAsset.toByteArray()), equalTo(EXPECTED_STEEM_ASSET_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * method for the SBD asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testSbdAssetToByteArray() throws Exception {
         Asset sbdAsset = new Asset();
@@ -58,6 +79,13 @@ public class AssetTest {
                 Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_SBD_ASSET_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * method for the STMD asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testStmdAssetToByteArray() throws Exception {
         Asset sbdAsset = new Asset();
@@ -69,6 +97,13 @@ public class AssetTest {
                 Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_STMD_ASSET_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * method for the TESTS asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testTestsAssetToByteArray() throws Exception {
         Asset sbdAsset = new Asset();
@@ -80,6 +115,13 @@ public class AssetTest {
                 Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TESTS_ASSET_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * method for the TBD asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testTbdAssetToByteArray() throws Exception {
         Asset sbdAsset = new Asset();
@@ -91,6 +133,13 @@ public class AssetTest {
                 Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TBD_ASSET_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * method for the TSTD asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testTstdAssetToByteArray() throws Exception {
         Asset sbdAsset = new Asset();
@@ -102,6 +151,13 @@ public class AssetTest {
                 Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#equals(Object)}
+     * method for the VESTS asset type.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testAssetEqualsMethod() {
 
