@@ -62,7 +62,8 @@ public class SteemJUsageExample {
             myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
             // Let's have a look at the account history of dez1337
-            Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory("dez1337", 100, 100);
+            Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), 100,
+                    100);
             if (accountHistory.get(0).getOp() instanceof AccountCreateOperation) {
                 AccountCreateOperation accountCreateOperation = (AccountCreateOperation) (accountHistory.get(0)
                         .getOp());
@@ -101,7 +102,7 @@ public class SteemJUsageExample {
                     steemJ.getCurrentMedianHistoryPrice().getBase().getAmount());
 
             // Get votes
-            List<Vote> votes = steemJ.getAccountVotes("dez1337");
+            List<Vote> votes = steemJ.getAccountVotes(new AccountName("dez1337"));
             LOGGER.info("The user dez1337 has done {} votes so far.", votes.size());
             LOGGER.info("His last vote has been done on {}.", votes.get(votes.size() - 1).getTime());
             int numberOfAccounts = steemJ.getAccountCount();
@@ -119,7 +120,7 @@ public class SteemJUsageExample {
                     steemJ.getCurrentMedianHistoryPrice().getBase());
 
             // Force an error response:
-            steemJ.getAccountVotes("thisAcountDoesNotExistYet");
+            steemJ.getAccountVotes(new AccountName("thisAcountDoesNotExistYet"));
         } catch (SteemResponseError e) {
             // The SteemResponseError contains the error response.
             LOGGER.error("An error with code {} occured with the following message {}.",
