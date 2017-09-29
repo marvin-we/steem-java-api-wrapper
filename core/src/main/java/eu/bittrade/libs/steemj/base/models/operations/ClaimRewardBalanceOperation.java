@@ -2,6 +2,8 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -13,6 +15,7 @@ import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -21,7 +24,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ClaimRewardBalanceOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.POSTING)
     private AccountName account;
     @JsonProperty("reward_steem")
     private Asset rewardSteem;
@@ -29,6 +31,15 @@ public class ClaimRewardBalanceOperation extends Operation {
     private Asset rewardSbd;
     @JsonProperty("reward_vests")
     private Asset rewardVests;
+    
+    validate_account_name( account );
+    FC_ASSERT( is_asset_type( reward_steem, STEEM_SYMBOL ), "Reward Steem must be STEEM" );
+    FC_ASSERT( is_asset_type( reward_sbd, SBD_SYMBOL ), "Reward Steem must be SBD" );
+    FC_ASSERT( is_asset_type( reward_vests, VESTS_SYMBOL ), "Reward Steem must be VESTS" );
+    FC_ASSERT( reward_steem.amount >= 0, "Cannot claim a negative amount" );
+    FC_ASSERT( reward_sbd.amount >= 0, "Cannot claim a negative amount" );
+    FC_ASSERT( reward_vests.amount >= 0, "Cannot claim a negative amount" );
+    FC_ASSERT( reward_steem.amount > 0 || reward_sbd.amount > 0 || reward_vests.amount > 0, "Must claim something." );
 
     /**
      * Create a new and empty claim reward balance operation.
@@ -147,5 +158,11 @@ public class ClaimRewardBalanceOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.POSTING);
     }
 }

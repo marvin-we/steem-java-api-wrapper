@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -20,7 +20,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountWitnessProxyOperationIT extends BaseIntegrationTest {
+public class AccountWitnessProxyOperationIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcecc80457010d0764657a313"
             + "3333706737465656d6a00011b0272a590d9302a4b49ab85683ec714fc85c8c4da928770185301686"
             + "7fb834f6e4d28fea91a6e6f00690b8ac1c54fbc3db4d7c1d798ee66a638a431ab87640b0a";
@@ -36,18 +36,19 @@ public class AccountWitnessProxyOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        AccountWitnessProxyOperation accountWitnessProxyOperation = new AccountWitnessProxyOperation();
+        AccountName account = new AccountName("dez1337");
+        AccountName proxy = new AccountName("steemj");
 
-        accountWitnessProxyOperation.setAccount(new AccountName("dez1337"));
-        accountWitnessProxyOperation.setProxy(new AccountName("steemj"));
+        AccountWitnessProxyOperation accountWitnessProxyOperation = new AccountWitnessProxyOperation(account, proxy);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountWitnessProxyOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -59,12 +60,12 @@ public class AccountWitnessProxyOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

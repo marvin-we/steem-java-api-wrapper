@@ -2,16 +2,20 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -21,7 +25,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CancelTransferFromSavingsOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
+    @JsonProperty("from")
     private AccountName from;
     // Original type is uint32_t so we use long here.
     @JsonProperty("request_id")
@@ -32,11 +36,37 @@ public class CancelTransferFromSavingsOperation extends Operation {
      * to cancel a
      * {@link eu.bittrade.libs.steemj.base.models.operations.TransferFromSavingsOperation
      * TransferFromSavingsOperation}.
+     * 
+     * @param from
+     *            Set the owner of the transfer from savings operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param requestId
+     *            Set the id of the transfer operation (see
+     *            {@link #setRequestId(long)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
      */
-    public CancelTransferFromSavingsOperation() {
+    @JsonCreator
+    public CancelTransferFromSavingsOperation(@JsonProperty("from") AccountName from,
+            @JsonProperty("request_id") long requestId) {
         super(false);
+
+    }
+
+    /**
+     * Like {@link #CancelTransferFromSavingsOperation(AccountName, long)}, but
+     * automatically sets the request id to 0.
+     * 
+     * @param from
+     *            Set the owner of the transfer from savings operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @throws InvalidParameterException
+     *             If the <code>from</code> parameter does not fulfill the
+     *             requirements.
+     */
+    public CancelTransferFromSavingsOperation(AccountName from) {
         // Set default values.
-        this.setRequestId(0);
+        this(from, 0);
     }
 
     /**
@@ -60,8 +90,14 @@ public class CancelTransferFromSavingsOperation extends Operation {
      * @param from
      *            The account whose transfer to savings operation should be
      *            canceled.
+     * @throws InvalidParameterException
+     *             If the from account is null.
      */
     public void setFrom(AccountName from) {
+        if (from == null) {
+            throw new InvalidParameterException("The from acccount can't be null.");
+        }
+
         this.from = from;
     }
 
@@ -107,5 +143,11 @@ public class CancelTransferFromSavingsOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getFrom(), PrivateKeyType.POSTING);
     }
 }

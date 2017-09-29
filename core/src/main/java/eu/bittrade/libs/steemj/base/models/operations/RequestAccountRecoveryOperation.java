@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class RequestAccountRecoveryOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("recovery_account")
     private AccountName recoveryAccount;
     @JsonProperty("account_to_recover")
@@ -34,6 +34,7 @@ public class RequestAccountRecoveryOperation extends Operation {
     @JsonProperty("new_owner_authority")
     private Authority newOwnerAuthority;
     // Original type is "extension_type" which is an array of "future_extions".
+    @JsonProperty("extensions")
     private List<FutureExtensions> extensions;
 
     /**
@@ -66,9 +67,40 @@ public class RequestAccountRecoveryOperation extends Operation {
      * account to recover confirms its identity to the blockchain in the
      * {@link eu.bittrade.libs.steemj.base.models.operations.RecoverAccountOperation
      * RecoverAccountOperation}.
+     * 
+     * @param recoveryAccount
+     * @param accountToRecover
+     * @param newOwnerAuthority
+     * @param extensions
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public RequestAccountRecoveryOperation() {
+    public RequestAccountRecoveryOperation(@JsonProperty("recovery_account") AccountName recoveryAccount,
+            @JsonProperty("account_to_recover") AccountName accountToRecover,
+            @JsonProperty("new_owner_authority") Authority newOwnerAuthority,
+            @JsonProperty("extensions") List<FutureExtensions> extensions) {
         super(false);
+
+        this.setRecoveryAccount(recoveryAccount);
+        this.setAccountToRecover(accountToRecover);
+        this.setNewOwnerAuthority(newOwnerAuthority);
+        this.setExtensions(extensions);
+    }
+
+    /**
+     * Like
+     * {@link #RequestAccountRecoveryOperation(AccountName, AccountName, Authority, List)},
+     * but does not require extensions to be added.
+     * 
+     * @param recoveryAccount
+     * @param accountToRecover
+     * @param newOwnerAuthority
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public RequestAccountRecoveryOperation(AccountName recoveryAccount, AccountName accountToRecover,
+            Authority newOwnerAuthority) {
+        this(recoveryAccount, accountToRecover, newOwnerAuthority, null);
     }
 
     /**
@@ -145,12 +177,6 @@ public class RequestAccountRecoveryOperation extends Operation {
      * @return All extensions.
      */
     public List<FutureExtensions> getExtensions() {
-        if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList that contains an empty FutureExtension so
-            // one byte gets added to the signature for sure.
-            extensions = new ArrayList<>();
-            extensions.add(new FutureExtensions());
-        }
         return extensions;
     }
 
@@ -161,7 +187,14 @@ public class RequestAccountRecoveryOperation extends Operation {
      *            Define a list of extensions.
      */
     public void setExtensions(List<FutureExtensions> extensions) {
-        this.extensions = extensions;
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
+            this.extensions = new ArrayList<>();
+            this.extensions.add(new FutureExtensions());
+        } else {
+            this.extensions = extensions;
+        }
     }
 
     @Override
@@ -172,6 +205,7 @@ public class RequestAccountRecoveryOperation extends Operation {
             serializedRequestAccountRecoveryOperation.write(this.getRecoveryAccount().toByteArray());
             serializedRequestAccountRecoveryOperation.write(this.getAccountToRecover().toByteArray());
             serializedRequestAccountRecoveryOperation.write(this.getNewOwnerAuthority().toByteArray());
+
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedRequestAccountRecoveryOperation.write(futureExtensions.toByteArray());
             }
@@ -187,10 +221,10 @@ public class RequestAccountRecoveryOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getRecoveryAccount(), PrivateKeyType.ACTIVE);
     }
 }

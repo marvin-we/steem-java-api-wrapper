@@ -28,7 +28,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommentOptionsOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("author")
     private AccountName author;
     @JsonProperty("permlink")
@@ -247,6 +246,6 @@ public class CommentOptionsOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAuthor(), PrivateKeyType.ACTIVE);
     }
 }

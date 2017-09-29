@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ReportOverProductionOperation extends Operation {
+    @JsonProperty("reporter")
     private AccountName reporter;
     @JsonProperty("first_block")
     private SignedBlockHeader firstBlock;
@@ -43,8 +45,16 @@ public class ReportOverProductionOperation extends Operation {
      *
      * The result of the operation is to transfer the full VESTING STEEM balance
      * of the block producer to the reporter.
+     * 
+     * @param reporter
+     * @param firstBlock
+     * @param secondBlock
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public ReportOverProductionOperation() {
+    public ReportOverProductionOperation(@JsonProperty("reporter") AccountName reporter,
+            @JsonProperty("first_block") SignedBlockHeader firstBlock,
+            @JsonProperty("second_block") SignedBlockHeader secondBlock) {
         super(false);
     }
 
@@ -84,6 +94,12 @@ public class ReportOverProductionOperation extends Operation {
      */
     public void setFirstBlock(SignedBlockHeader firstBlock) {
         this.firstBlock = firstBlock;
+
+        validate_account_name(first_block.witness);
+        FC_ASSERT(first_block.witness == second_block.witness);
+        FC_ASSERT(first_block.timestamp == second_block.timestamp);
+        FC_ASSERT(first_block.signee() == second_block.signee());
+        FC_ASSERT(first_block.id() != second_block.id());
     }
 
     /**
@@ -103,6 +119,11 @@ public class ReportOverProductionOperation extends Operation {
      */
     public void setSecondBlock(SignedBlockHeader secondBlock) {
         this.secondBlock = secondBlock;
+
+        FC_ASSERT(first_block.witness == second_block.witness);
+        FC_ASSERT(first_block.timestamp == second_block.timestamp);
+        FC_ASSERT(first_block.signee() == second_block.signee());
+        FC_ASSERT(first_block.id() != second_block.id());
     }
 
     @Override
@@ -125,10 +146,10 @@ public class ReportOverProductionOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return requiredAuthoritiesBase;
     }
 }

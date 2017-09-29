@@ -2,16 +2,20 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -20,7 +24,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AccountWitnessVoteOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("account")
     private AccountName account;
     @JsonProperty("witness")
@@ -34,11 +37,46 @@ public class AccountWitnessVoteOperation extends Operation {
      * All accounts with a VFS can vote for or against any witness.
      *
      * If a proxy is specified then all existing votes are removed.
+     * 
+     * @param account
+     *            Set the <code>account</code> that votes for a
+     *            <code>witness</code> (see {@link #getAccount()}).
+     * @param witness
+     *            Set the <code>witness</code> to vote for (see
+     *            {@link #setWitness(AccountName)}).
+     * @param approve
+     *            Define if the vote is be approved or not (see
+     *            {@link #setApprove(Boolean)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
      */
-    public AccountWitnessVoteOperation() {
+    @JsonCreator
+    public AccountWitnessVoteOperation(@JsonProperty("account") AccountName account,
+            @JsonProperty("witness") AccountName witness, @JsonProperty("approve") Boolean approve) {
         super(false);
+
+        this.setAccount(account);
+        this.setWitness(witness);
+        this.setApprove(approve);
+    }
+
+    /**
+     * Like
+     * {@link #AccountWitnessVoteOperation(AccountName, AccountName, Boolean)},
+     * but the <code>approve</code> parameter is automatically set to true.
+     * 
+     * @param account
+     *            Set the <code>account</code> that votes for a
+     *            <code>witness</code> (see {@link #getAccount()}).
+     * @param witness
+     *            Set the <code>witness</code> to vote for (see
+     *            {@link #setWitness(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public AccountWitnessVoteOperation(AccountName account, AccountName witness) {
         // Set default values:
-        this.setApprove(true);
+        this(account, witness, true);
     }
 
     /**
@@ -118,5 +156,11 @@ public class AccountWitnessVoteOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.ACTIVE);
     }
 }

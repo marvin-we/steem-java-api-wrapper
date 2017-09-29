@@ -26,7 +26,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class RecoverAccountOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.OWNER)
     @JsonProperty("account_to_recover")
     private AccountName accountToRecover;
     @JsonProperty("new_owner_authority")
@@ -36,6 +35,14 @@ public class RecoverAccountOperation extends Operation {
     // Original type is "extension_type" which is an array of "future_extions".
     private List<FutureExtensions> extensions;
 
+    validate_account_name( account_to_recover );
+    FC_ASSERT( !( new_owner_authority == recent_owner_authority ), "Cannot set new owner authority to the recent owner authority" );
+    FC_ASSERT( !new_owner_authority.is_impossible(), "new owner authority cannot be impossible" );
+    FC_ASSERT( !recent_owner_authority.is_impossible(), "recent owner authority cannot be impossible" );
+    FC_ASSERT( new_owner_authority.weight_threshold, "new owner authority cannot be trivial" );
+    new_owner_authority.validate();
+    recent_owner_authority.validate();
+    
     /**
      * Create a new recover account operation.
      * 
@@ -204,6 +211,6 @@ public class RecoverAccountOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccountToRecover(), PrivateKeyType.OWNER);
     }
 }

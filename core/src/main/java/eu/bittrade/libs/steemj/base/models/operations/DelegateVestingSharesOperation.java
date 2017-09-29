@@ -24,11 +24,12 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class DelegateVestingSharesOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     private AccountName delegator;
     private AccountName delegatee;
     @JsonProperty("vesting_shares")
     private Asset vestingShares;
+    validate_account_name( delegator );
+    validate_account_name( delegatee );
 
     /**
      * Create a new delegate vesting shares operation.
@@ -64,6 +65,8 @@ public class DelegateVestingSharesOperation extends Operation {
      *            The account name of the delegator.
      */
     public void setDelegator(AccountName delegator) {
+        FC_ASSERT( delegator != delegatee, "You cannot delegate VESTS to yourself" );
+
         this.delegator = delegator;
     }
 
@@ -83,6 +86,7 @@ public class DelegateVestingSharesOperation extends Operation {
      *            The account name of the delegatee.
      */
     public void setDelegatee(AccountName delegatee) {
+        FC_ASSERT( delegator != delegatee, "You cannot delegate VESTS to yourself" );
         this.delegatee = delegatee;
     }
 
@@ -102,6 +106,9 @@ public class DelegateVestingSharesOperation extends Operation {
      *            The amount of vesting shares delegated.
      */
     public void setVestingShares(Asset vestingShares) {
+        
+        FC_ASSERT( is_asset_type( vesting_shares, VESTS_SYMBOL ), "Delegation must be VESTS" );
+        FC_ASSERT( vesting_shares >= asset( 0, VESTS_SYMBOL ), "Delegation cannot be negative" );
         this.vestingShares = vestingShares;
     }
 
@@ -125,10 +132,10 @@ public class DelegateVestingSharesOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getDelegator(), PrivateKeyType.ACTIVE);
     }
 }

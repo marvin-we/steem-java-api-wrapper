@@ -2,16 +2,19 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -20,7 +23,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AccountWitnessProxyOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("account")
     private AccountName account;
     @JsonProperty("proxy")
@@ -29,9 +31,22 @@ public class AccountWitnessProxyOperation extends Operation {
     /**
      * Create a new create account witness proxy operation. Use this operation
      * to allow {@link #account account} to vote for a witness on your behalf.
+     * 
+     * @param account
+     *            Define the account to set the proxy for (see
+     *            {@link #setAccount(AccountName)}).
+     * @param proxy
+     *            Define the proxy for the <code>account</code> (see
+     *            {@link #setProxy(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
      */
-    public AccountWitnessProxyOperation() {
+    public AccountWitnessProxyOperation(@JsonProperty("account") AccountName account,
+            @JsonProperty("proxy") AccountName proxy) {
         super(false);
+
+        this.setAccount(account);
+        this.setProxy(proxy);
     }
 
     /**
@@ -50,8 +65,17 @@ public class AccountWitnessProxyOperation extends Operation {
      * 
      * @param account
      *            The account for which a witness proxy should be set.
+     * @throws InvalidParameterException
+     *             If the account is null or if the same account has already
+     *             been configured as the proxy.
      */
     public void setAccount(AccountName account) {
+        if (account == null) {
+            throw new InvalidParameterException("The account can't be null.");
+        } else if (this.getProxy() != null && this.getProxy().equals(account)) {
+            throw new InvalidParameterException("You can't proxy yourself.");
+        }
+
         this.account = account;
     }
 
@@ -69,9 +93,19 @@ public class AccountWitnessProxyOperation extends Operation {
      * 
      * @param proxy
      *            The account name of the witness proxy.
+     * @throws InvalidParameterException
+     *             If the proxy is null or if the same account has already been
+     *             configured as the <code>account</code>.
      */
     public void setProxy(AccountName proxy) {
-        this.proxy = proxy;
+        AccountName localProxy = proxy;
+        if (localProxy == null) {
+            localProxy = new AccountName("");
+        } else if (this.getAccount() != null && this.getAccount().equals(proxy)) {
+            throw new InvalidParameterException("You can't proxy yourself.");
+        }
+
+        this.proxy = localProxy;
     }
 
     @Override
@@ -92,5 +126,11 @@ public class AccountWitnessProxyOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.ACTIVE);
     }
 }

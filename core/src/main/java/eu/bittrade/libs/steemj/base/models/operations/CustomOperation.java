@@ -25,7 +25,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class CustomOperation extends Operation {
     // Original type is flat_set< account_name_type >.
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("required_auths")
     private List<AccountName> requiredAuths;
     // Original type is uint16_t.
@@ -138,6 +137,6 @@ public class CustomOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getRequiredAuths(), PrivateKeyType.ACTIVE);
     }
 }

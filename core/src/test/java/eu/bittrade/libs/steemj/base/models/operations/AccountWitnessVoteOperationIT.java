@@ -10,9 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountWitnessVoteOperationIT extends BaseIntegrationTest {
+public class AccountWitnessVoteOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5716844;
     private static final int TRANSACTION_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
@@ -45,16 +45,17 @@ public class AccountWitnessVoteOperationIT extends BaseIntegrationTest {
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
 
-        AccountWitnessVoteOperation accountWitnessVoteOperation = new AccountWitnessVoteOperation();
-        accountWitnessVoteOperation.setAccount(new AccountName("dez1337"));
-        accountWitnessVoteOperation.setWitness(new AccountName("good-karma"));
-        accountWitnessVoteOperation.setApprove(true);
+        AccountName account = new AccountName("dez1337");
+        AccountName witness = new AccountName("good-karma");
+
+        AccountWitnessVoteOperation accountWitnessVoteOperation = new AccountWitnessVoteOperation(account, witness);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountWitnessVoteOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -75,12 +76,12 @@ public class AccountWitnessVoteOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

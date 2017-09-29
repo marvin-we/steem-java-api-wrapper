@@ -2,11 +2,14 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.annotations.SignatureRequired;
@@ -15,6 +18,7 @@ import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -25,10 +29,10 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class ChangeRecoveryAccountOperation extends Operation {
     @JsonProperty("account_to_recover")
     private AccountName accountToRecover;
-    @SignatureRequired(type = PrivateKeyType.OWNER)
     @JsonProperty("new_recovery_account")
     private AccountName newRecoveryAccount;
     // Original type is "extension_type" which is an array of "future_extions".
+    @JsonProperty("extensions")
     private List<FutureExtensions> extensions;
 
     /**
@@ -50,9 +54,46 @@ public class ChangeRecoveryAccountOperation extends Operation {
      * effective recovery account of an account with no listed recovery account
      * can change at any time as witness vote weights. The top voted witness is
      * explicitly the most trusted witness according to stake.
+     * 
+     * @param accountToRecover
+     *            Set the account to define a <code>newRecoveryAccount</code>
+     *            for (see {@link #setAccountToRecover(AccountName)}).
+     * @param newRecoveryAccount
+     *            The new recovery account to set (see
+     *            {@link #setNewRecoveryAccount(AccountName)}).
+     * @param extensions
+     *            Add additional extensions to this operation (see
+     *            {@link #setExtensions(List)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
      */
-    public ChangeRecoveryAccountOperation() {
+    @JsonCreator
+    public ChangeRecoveryAccountOperation(@JsonProperty("account_to_recover") AccountName accountToRecover,
+            @JsonProperty("new_recovery_account") AccountName newRecoveryAccount,
+            @JsonProperty("extensions") List<FutureExtensions> extensions) {
         super(false);
+
+        this.setAccountToRecover(accountToRecover);
+        this.setNewRecoveryAccount(newRecoveryAccount);
+        this.setExtensions(extensions);
+    }
+
+    /**
+     * Like
+     * {@link #ChangeRecoveryAccountOperation(AccountName, AccountName, List)},
+     * but does not require a list of extensions.
+     * 
+     * @param accountToRecover
+     *            Set the account to define a <code>newRecoveryAccount</code>
+     *            for (see {@link #setAccountToRecover(AccountName)}).
+     * @param newRecoveryAccount
+     *            The new recovery account to set (see
+     *            {@link #setNewRecoveryAccount(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public ChangeRecoveryAccountOperation(AccountName accountToRecover, AccountName newRecoveryAccount) {
+        this(accountToRecover, newRecoveryAccount, null);
     }
 
     /**
@@ -71,6 +112,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
      *            The account that would be recovered in case of compromise.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
+        if()
         this.accountToRecover = accountToRecover;
     }
 
@@ -94,6 +136,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
      *            The account that creates the recover request.
      */
     public void setNewRecoveryAccount(AccountName newRecoveryAccount) {
+        if()
         this.newRecoveryAccount = newRecoveryAccount;
     }
 
@@ -103,12 +146,6 @@ public class ChangeRecoveryAccountOperation extends Operation {
      * @return The extensions added to this operation.
      */
     public List<FutureExtensions> getExtensions() {
-        if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList that contains an empty FutureExtension so
-            // one byte gets added to the signature for sure.
-            extensions = new ArrayList<>();
-            extensions.add(new FutureExtensions());
-        }
         return extensions;
     }
 
@@ -119,6 +156,12 @@ public class ChangeRecoveryAccountOperation extends Operation {
      *            The extensions added to this operation.
      */
     public void setExtensions(List<FutureExtensions> extensions) {
+        if (extensions == null || extensions.isEmpty()) {
+            // Create a new ArrayList that contains an empty FutureExtension so
+            // one byte gets added to the signature for sure.
+            extensions = new ArrayList<>();
+            extensions.add(new FutureExtensions());
+        }
         this.extensions = extensions;
     }
 
@@ -129,6 +172,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
                     .transformIntToVarIntByteArray(OperationType.CHANGE_RECOVERY_ACCOUNT_OPERATION.ordinal()));
             serializedChangeRecoveryAccountOperation.write(this.getAccountToRecover().toByteArray());
             serializedChangeRecoveryAccountOperation.write(this.getNewRecoveryAccount().toByteArray());
+
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedChangeRecoveryAccountOperation.write(futureExtensions.toByteArray());
             }
@@ -143,5 +187,11 @@ public class ChangeRecoveryAccountOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getNewRecoveryAccount(), PrivateKeyType.OWNER);
     }
 }
