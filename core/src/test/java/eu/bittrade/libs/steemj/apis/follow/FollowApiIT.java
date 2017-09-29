@@ -27,6 +27,7 @@ import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -125,7 +126,7 @@ public class FollowApiIT extends BaseIntegrationTest {
         final List<FeedEntry> feedEntries = FollowApi.getFeedEntries(COMMUNICATION_HANDLER, new AccountName("dez1337"),
                 0, (short) 100);
         assertThat(feedEntries.size(), equalTo(100));
-        assertTrue(feedEntries.get(0).getPermlink().matches("[a-z0-9\\-]+"));
+        assertTrue(feedEntries.get(0).getPermlink().getLink().matches("[a-z0-9\\-]+"));
         assertFalse(feedEntries.get(0).getAuthor().isEmpty());
         assertThat(feedEntries.get(0).getEntryId(), greaterThanOrEqualTo(0));
         assertTrue(feedEntries.get(0).getReblogBy().isEmpty());
@@ -148,7 +149,7 @@ public class FollowApiIT extends BaseIntegrationTest {
         assertThat(feed.size(), equalTo(5));
 
         assertFalse(feed.get(0).getComment().getAuthor().isEmpty());
-        assertTrue(feed.get(0).getComment().getPermlink().matches("[a-z0-9\\-]+"));
+        assertTrue(feed.get(0).getComment().getPermlink().getLink().matches("[a-z0-9\\-]+"));
         assertFalse(feed.get(0).getComment().getTitle().isEmpty());
 
         assertThat(feed.get(0).getEntryId(), greaterThanOrEqualTo(0));
@@ -171,7 +172,7 @@ public class FollowApiIT extends BaseIntegrationTest {
                 0, (short) 5);
 
         assertThat(blogEntries.size(), equalTo(5));
-        assertTrue(blogEntries.get(0).getPermlink().matches("[a-z0-9\\-]+"));
+        assertTrue(blogEntries.get(0).getPermlink().getLink().matches("[a-z0-9\\-]+"));
         assertFalse(blogEntries.get(0).getAuthor().isEmpty());
         assertThat(blogEntries.get(0).getEntryId(), greaterThanOrEqualTo(0));
         assertFalse(blogEntries.get(0).getBlog().isEmpty());
@@ -195,7 +196,7 @@ public class FollowApiIT extends BaseIntegrationTest {
         assertThat(blog.size(), equalTo(5));
 
         assertFalse(blog.get(0).getComment().getAuthor().isEmpty());
-        assertTrue(blog.get(0).getComment().getPermlink().matches("[a-z0-9\\-]+"));
+        assertTrue(blog.get(0).getComment().getPermlink().getLink().matches("[a-z0-9\\-]+"));
         assertFalse(blog.get(0).getComment().getTitle().isEmpty());
 
         assertThat(blog.get(0).getEntryId(), greaterThan(0));
@@ -234,7 +235,7 @@ public class FollowApiIT extends BaseIntegrationTest {
     @Test
     public void testGetRebloggedBy() throws SteemCommunicationException {
         final List<AccountName> accountNames = FollowApi.getRebloggedBy(COMMUNICATION_HANDLER,
-                new AccountName("dez1337"), "steemj-v0-2-6-has-been-released-update-11");
+                new AccountName("dez1337"), new Permlink("steemj-v0-2-6-has-been-released-update-11"));
 
         assertThat(accountNames.size(), greaterThan(2));
         assertThat(accountNames.get(1), equalTo(new AccountName("jesuscirino")));
