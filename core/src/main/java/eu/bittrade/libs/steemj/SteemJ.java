@@ -2005,4 +2005,41 @@ public class SteemJ {
 
         return new ImmutablePair<>(new PublicKey(keyPair), SteemJUtils.privateKeyToWIF(keyPair));
     }
+
+    // #########################################################################
+    // ## SIMPLIFIED OPERATIONS ################################################
+    // #########################################################################
+
+    public void upVote() {
+    }
+
+    public void downVote() {
+    }
+
+    public void cancelVote() {
+    }
+
+    public void follow() {
+    }
+
+    public void unfollow() {
+    }
+
+    public void createPost() {
+    }
+
+    public void updatePost() {
+    }
+
+    public void deletePost() {
+    }
+
+    public void createComment() {
+    }
+
+    public void updateComment() {
+    }
+
+    public void deleteComment() {
+    }
 }
