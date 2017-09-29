@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -115,7 +114,7 @@ public class BlockHeader implements ByteTransformable {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // TODO Auto-generated method stub
         // serializedRecoverAccountOperation
-        //.write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
+        // .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
         return null;
     }
 }
