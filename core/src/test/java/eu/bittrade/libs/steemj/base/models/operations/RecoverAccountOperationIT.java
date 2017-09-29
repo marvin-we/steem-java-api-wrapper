@@ -12,10 +12,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -25,7 +25,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class RecoverAccountOperationIT extends BaseIntegrationTest {
+public class RecoverAccountOperationIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c8045701250764657a313"
             + "3333706737465656d6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9e"
             + "a6eedec21de6fa4c4010000011c79f3dfadf424b2f5b7eb5e49b1ea559b1f5f3efec747df108abf7"
@@ -42,10 +42,9 @@ public class RecoverAccountOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        RecoverAccountOperation recoverAccountOperation = new RecoverAccountOperation();
-        recoverAccountOperation.setAccountToRecover(new AccountName("dez1337"));
+        AccountName accountToRecover = new AccountName("dez1337");
 
         Authority newOwnerAuthority = new Authority();
         newOwnerAuthority.setAccountAuths(new HashMap<>());
@@ -54,8 +53,6 @@ public class RecoverAccountOperationIT extends BaseIntegrationTest {
         newOwnerAuthority.setKeyAuths(ownerKeyAuth);
         newOwnerAuthority.setWeightThreshold(1);
 
-        recoverAccountOperation.setNewOwnerAuthority(newOwnerAuthority);
-
         Authority recentOwnerAuthority = new Authority();
         recentOwnerAuthority.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> ownerKeyAuth2 = new HashMap<>();
@@ -63,13 +60,15 @@ public class RecoverAccountOperationIT extends BaseIntegrationTest {
         recentOwnerAuthority.setKeyAuths(ownerKeyAuth2);
         recentOwnerAuthority.setWeightThreshold(1);
 
-        recoverAccountOperation.setRecentOwnerAuthority(recentOwnerAuthority);
+        RecoverAccountOperation recoverAccountOperation = new RecoverAccountOperation(accountToRecover,
+                newOwnerAuthority, recentOwnerAuthority);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(recoverAccountOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -82,13 +81,13 @@ public class RecoverAccountOperationIT extends BaseIntegrationTest {
     @Test
     @Ignore
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     @Ignore
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

@@ -2,15 +2,16 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
@@ -33,16 +34,9 @@ public class RecoverAccountOperation extends Operation {
     @JsonProperty("recent_owner_authority")
     private Authority recentOwnerAuthority;
     // Original type is "extension_type" which is an array of "future_extions".
+    @JsonProperty("extensions")
     private List<FutureExtensions> extensions;
 
-    validate_account_name( account_to_recover );
-    FC_ASSERT( !( new_owner_authority == recent_owner_authority ), "Cannot set new owner authority to the recent owner authority" );
-    FC_ASSERT( !new_owner_authority.is_impossible(), "new owner authority cannot be impossible" );
-    FC_ASSERT( !recent_owner_authority.is_impossible(), "recent owner authority cannot be impossible" );
-    FC_ASSERT( new_owner_authority.weight_threshold, "new owner authority cannot be trivial" );
-    new_owner_authority.validate();
-    recent_owner_authority.validate();
-    
     /**
      * Create a new recover account operation.
      * 
@@ -85,10 +79,54 @@ public class RecoverAccountOperation extends Operation {
      * account. The actual process of verifying authority may become
      * complicated, but that is an application level concern, not the
      * blockchain's concern.
+     * 
+     * @param accountToRecover
+     *            The account to recover (see
+     *            {@link #setAccountToRecover(AccountName)}).
+     * @param newOwnerAuthority
+     *            The new owner authority for the <code>accountToRecover</code>
+     *            (see {@link #setNewOwnerAuthority(Authority)}).
+     * @param recentOwnerAuthority
+     *            The recent owner authority (see
+     *            {@link #setRecentOwnerAuthority(Authority)}).
+     * @param extensions
+     *            Additional extensions (see {@link #setExtensions(List)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public RecoverAccountOperation() {
-        // Define the required key type for this operation.
+    @JsonCreator
+    public RecoverAccountOperation(@JsonProperty("account_to_recover") AccountName accountToRecover,
+            @JsonProperty("new_owner_authority") Authority newOwnerAuthority,
+            @JsonProperty("recent_owner_authority") Authority recentOwnerAuthority,
+            @JsonProperty("extensions") List<FutureExtensions> extensions) {
         super(false);
+
+        this.setAccountToRecover(accountToRecover);
+        this.setNewOwnerAuthority(newOwnerAuthority);
+        this.setRecentOwnerAuthority(recentOwnerAuthority);
+        this.setExtensions(extensions);
+    }
+
+    /**
+     * Like
+     * {@link #RecoverAccountOperation(AccountName, Authority, Authority, List)},
+     * but does not require a list of extensions.
+     * 
+     * @param accountToRecover
+     *            The account to recover (see
+     *            {@link #setAccountToRecover(AccountName)}).
+     * @param newOwnerAuthority
+     *            The new owner authority for the <code>accountToRecover</code>
+     *            (see {@link #setNewOwnerAuthority(Authority)}).
+     * @param recentOwnerAuthority
+     *            The recent owner authority (see
+     *            {@link #setRecentOwnerAuthority(Authority)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public RecoverAccountOperation(AccountName accountToRecover, Authority newOwnerAuthority,
+            Authority recentOwnerAuthority) {
+        this(accountToRecover, newOwnerAuthority, recentOwnerAuthority, null);
     }
 
     /**
@@ -107,8 +145,14 @@ public class RecoverAccountOperation extends Operation {
      * 
      * @param accountToRecover
      *            The account to recover.
+     * @throws InvalidParameterException
+     *             If the <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
+        if (accountToRecover == null) {
+            throw new InvalidParameterException("The account to recover can't be null.");
+        }
+
         this.accountToRecover = accountToRecover;
     }
 
@@ -132,8 +176,19 @@ public class RecoverAccountOperation extends Operation {
      * 
      * @param newOwnerAuthority
      *            The new owner authority.
+     * @throws InvalidParameterException
+     *             If the <code>newOwnerAuthority</code> is null, equal to the
+     *             recentOwnerAuhtority, or trivial.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
+        if (newOwnerAuthority == null) {
+            throw new InvalidParameterException("The new owner authority can't be null.");
+        } else if (this.getRecentOwnerAuthority() != null && this.getRecentOwnerAuthority().equals(newOwnerAuthority)) {
+            throw new InvalidParameterException("Cannot set new owner authority to the recent owner authority.");
+        } else if (newOwnerAuthority.isImpossible()) {
+            throw new InvalidParameterException("The new owner authority cannot be trivial.");
+        }
+
         this.newOwnerAuthority = newOwnerAuthority;
     }
 
@@ -154,8 +209,19 @@ public class RecoverAccountOperation extends Operation {
      * 
      * @param recentOwnerAuthority
      *            The previous owner authority.
+     * @throws InvalidParameterException
+     *             If the <code>recentOwnerAuthority</code> is null, equal to
+     *             the newOwnerAuthority, or trivial.
      */
     public void setRecentOwnerAuthority(Authority recentOwnerAuthority) {
+        if (recentOwnerAuthority == null) {
+            throw new InvalidParameterException("The recent owner authority can't be null.");
+        } else if (this.getNewOwnerAuthority() != null && this.getNewOwnerAuthority().equals(recentOwnerAuthority)) {
+            throw new InvalidParameterException("Cannot set recent owner authority to the recent owner authority.");
+        } else if (recentOwnerAuthority.isImpossible()) {
+            throw new InvalidParameterException("The recent owner authority cannot be trivial.");
+        }
+
         this.recentOwnerAuthority = recentOwnerAuthority;
     }
 
@@ -189,7 +255,7 @@ public class RecoverAccountOperation extends Operation {
             serializedRecoverAccountOperation.write(this.getAccountToRecover().toByteArray());
             serializedRecoverAccountOperation.write(this.getNewOwnerAuthority().toByteArray());
             serializedRecoverAccountOperation.write(this.getRecentOwnerAuthority().toByteArray());
-            
+
             serializedRecoverAccountOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
             for (FutureExtensions futureExtensions : this.getExtensions()) {
@@ -207,7 +273,7 @@ public class RecoverAccountOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
