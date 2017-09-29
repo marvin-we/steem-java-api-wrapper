@@ -10,10 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class DelegateVestingSharesOperationIT extends BaseIntegrationTest {
+public class DelegateVestingSharesOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 12614179;
     private static final int TRANSACTION_INDEX = 11;
     private static final int OPERATION_INDEX = 0;
@@ -46,19 +46,21 @@ public class DelegateVestingSharesOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        DelegateVestingSharesOperation delegateVestingSharesOperation = new DelegateVestingSharesOperation();
+        AccountName delegator = new AccountName("dez1337");
+        AccountName delegatee = new AccountName("steemj");
+        Asset vestingShares = new Asset(418772164L, AssetSymbolType.VESTS);
 
-        delegateVestingSharesOperation.setDelegator(new AccountName("dez1337"));
-        delegateVestingSharesOperation.setDelegatee(new AccountName("steemj"));
-        delegateVestingSharesOperation.setVestingShares(new Asset(418772164L, AssetSymbolType.VESTS));
+        DelegateVestingSharesOperation delegateVestingSharesOperation = new DelegateVestingSharesOperation(delegator,
+                delegatee, vestingShares);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(delegateVestingSharesOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -82,12 +84,12 @@ public class DelegateVestingSharesOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

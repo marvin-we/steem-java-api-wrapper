@@ -11,9 +11,9 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ConvertOperationTest extends BaseUnitTest {
+public class ConvertOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "080764657a313333373905000001000000000000000353424400000000";
     final String EXPECTED_TRANSACTION_HASH = "c17ce69d8d6acc37912e9f6ea5a5c89b9303086df684d0590154c40df75b82e1";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000"
@@ -30,42 +30,48 @@ public class ConvertOperationTest extends BaseUnitTest {
 
     private static ConvertOperation convertOperation;
 
+    /**
+     * Prepare the environment for this specific test.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
 
-        convertOperation = new ConvertOperation();
+        AccountName owner = new AccountName("dez1337");
+        long requestId = 1337L;
 
         Asset amount = new Asset();
         amount.setAmount(1L);
         amount.setSymbol(AssetSymbolType.SBD);
 
-        convertOperation.setAmount(amount);
-        convertOperation.setOwner(new AccountName("dez1337"));
-        convertOperation.setRequestId(1337L);
+        convertOperation = new ConvertOperation(owner, requestId, amount);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(convertOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
     }
 
+    @Override
     @Test
-    public void testConvertOperationToByteArray()
-            throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(convertOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
+    @Override
     @Test
-    public void testConvertOperationTransactionHex()
+    public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        transaction.sign();
+        sign();
 
-        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
-                equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+        assertThat("The serialized transaction should look like expected.",
+                Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

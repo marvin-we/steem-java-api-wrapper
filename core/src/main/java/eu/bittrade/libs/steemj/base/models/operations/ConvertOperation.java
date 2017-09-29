@@ -2,16 +2,18 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -36,11 +38,40 @@ public class ConvertOperation extends Operation {
      * Create a new convert operation. This operation instructs the blockchain
      * to start a conversion between STEEM and SBD, The funds are deposited
      * after STEEMIT_CONVERSION_DELAY.
+     * 
+     * @param owner
+     *            The account to covert the asset for (see
+     *            {@link #setOwner(AccountName)}).
+     * @param requestId
+     *            The request id of this transaction (see
+     *            {@link #setRequestId(long)}).
+     * @param amount
+     *            The amount to convert (see {@link #setAmount(Asset)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public ConvertOperation() {
+    @JsonCreator
+    public ConvertOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("requestid") long requestId,
+            @JsonProperty("amount") Asset amount) {
         super(false);
         // Set default values.
         this.setRequestId(0);
+    }
+
+    /**
+     * Like {@link #ConvertOperation(AccountName, long, Asset)}, but
+     * automatically sets the request id to 0.
+     * 
+     * @param owner
+     *            The account to covert the asset for (see
+     *            {@link #setOwner(AccountName)}).
+     * @param amount
+     *            The amount to convert (see {@link #setAmount(Asset)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public ConvertOperation(AccountName owner, Asset amount) {
+        this(owner, 0, amount);
     }
 
     /**
@@ -59,8 +90,14 @@ public class ConvertOperation extends Operation {
      * 
      * @param owner
      *            The account for which the operation should be performed.
+     * @throws InvalidParameterException
+     *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
+        if (owner == null) {
+            throw new InvalidParameterException("The owner can't be null.");
+        }
+
         this.owner = owner;
     }
 
@@ -97,8 +134,22 @@ public class ConvertOperation extends Operation {
      * 
      * @param amount
      *            The amount of SBD or STEEM that should be converted.
+     * @throws InvalidParameterException
+     *             If the provided <code>amount</code> is null, the symbol type
+     *             is not SBD or the amount is less than 1.
      */
     public void setAmount(Asset amount) {
+        if (amount == null) {
+            throw new InvalidParameterException("The amount to convert can't be null.");
+        } else if (!amount.getSymbol().equals(AssetSymbolType.SBD)) {
+            // Only allow conversion from SBD to STEEM, allowing the opposite
+            // can enable traders to abuse market fluxuations through converting
+            // large quantities without moving the price.
+            throw new InvalidParameterException("Can only convert SBD to STEEM.");
+        } else if (amount.getAmount() <= 0) {
+            throw new InvalidParameterException("Can only convert more than 0 SBD.");
+        }
+
         this.amount = amount;
     }
 
@@ -122,7 +173,7 @@ public class ConvertOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {

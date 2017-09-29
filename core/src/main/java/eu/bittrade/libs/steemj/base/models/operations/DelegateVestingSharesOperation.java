@@ -2,16 +2,18 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -24,12 +26,12 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class DelegateVestingSharesOperation extends Operation {
+    @JsonProperty("delegator")
     private AccountName delegator;
+    @JsonProperty("delegatee")
     private AccountName delegatee;
     @JsonProperty("vesting_shares")
     private Asset vestingShares;
-    validate_account_name( delegator );
-    validate_account_name( delegatee );
 
     /**
      * Create a new delegate vesting shares operation.
@@ -42,9 +44,26 @@ public class DelegateVestingSharesOperation extends Operation {
      *
      * When a delegation is removed the shares are placed in limbo for a week to
      * prevent a satoshi of VESTS from voting on the same content twice.
+     * 
+     * @param delegator
+     *            The account that delegates the <code>vestingShares</code> (see
+     *            {@link #setDelegator(AccountName)}).
+     * @param delegatee
+     *            The account to send the <code>vestingShares</code> to (see
+     *            {@link #setDelegatee(AccountName)}).
+     * @param vestingShares
+     *            The amount to deletage (see {@link #setVestingShares(Asset)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public DelegateVestingSharesOperation() {
+    @JsonCreator
+    public DelegateVestingSharesOperation(@JsonProperty("delegator") AccountName delegator,
+            @JsonProperty("delegatee") AccountName delegatee, @JsonProperty("vesting_shares") Asset vestingShares) {
         super(false);
+
+        this.setDelegator(delegator);
+        this.setDelegatee(delegatee);
+        this.setVestingShares(vestingShares);
     }
 
     /**
@@ -63,9 +82,16 @@ public class DelegateVestingSharesOperation extends Operation {
      * 
      * @param delegator
      *            The account name of the delegator.
+     * @throws InvalidParameterException
+     *             If the <code>delegator</code> account is null or equal to the
+     *             {@link #getDelegatee()} account.
      */
     public void setDelegator(AccountName delegator) {
-        FC_ASSERT( delegator != delegatee, "You cannot delegate VESTS to yourself" );
+        if (delegator == null) {
+            throw new InvalidParameterException("The delegatee account can't be null.");
+        } else if (this.getDelegatee() != null && this.getDelegatee().equals(delegator)) {
+            throw new InvalidParameterException("The delegatee account can't be equal to the delegator account.");
+        }
 
         this.delegator = delegator;
     }
@@ -84,9 +110,17 @@ public class DelegateVestingSharesOperation extends Operation {
      * 
      * @param delegatee
      *            The account name of the delegatee.
+     * @throws InvalidParameterException
+     *             If the <code>delegatee</code> account is null or equal to the
+     *             {@link #getDelegator()} account.
      */
     public void setDelegatee(AccountName delegatee) {
-        FC_ASSERT( delegator != delegatee, "You cannot delegate VESTS to yourself" );
+        if (delegatee == null) {
+            throw new InvalidParameterException("The delegatee account can't be null.");
+        } else if (this.getDelegator() != null && this.getDelegator().equals(delegatee)) {
+            throw new InvalidParameterException("The delegatee account can't be equal to the delegator account.");
+        }
+
         this.delegatee = delegatee;
     }
 
@@ -104,11 +138,19 @@ public class DelegateVestingSharesOperation extends Operation {
      * 
      * @param vestingShares
      *            The amount of vesting shares delegated.
+     * @throws InvalidParameterException
+     *             If the provided <code>vestingShares</code> is null, the asset
+     *             symbol is not VESTS or the amount is negative.
      */
     public void setVestingShares(Asset vestingShares) {
-        
-        FC_ASSERT( is_asset_type( vesting_shares, VESTS_SYMBOL ), "Delegation must be VESTS" );
-        FC_ASSERT( vesting_shares >= asset( 0, VESTS_SYMBOL ), "Delegation cannot be negative" );
+        if (vestingShares == null) {
+            throw new InvalidParameterException("The vesting shares to delegate can't be null.");
+        } else if (!vestingShares.getSymbol().equals(AssetSymbolType.VESTS)) {
+            throw new InvalidParameterException("Can only delegate VESTS.");
+        } else if (vestingShares.getAmount() <= 0) {
+            throw new InvalidParameterException("Can't delegate a negative amount of VESTS.");
+        }
+
         this.vestingShares = vestingShares;
     }
 

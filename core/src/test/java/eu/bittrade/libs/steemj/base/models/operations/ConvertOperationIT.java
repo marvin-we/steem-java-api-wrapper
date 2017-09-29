@@ -10,10 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ConvertOperationIT extends BaseIntegrationTest {
+public class ConvertOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5764515;
     private static final int TRANSACTION_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
@@ -45,23 +45,23 @@ public class ConvertOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        ConvertOperation convertOperation = new ConvertOperation();
+        AccountName owner = new AccountName("dez1337");
+        long requestId = 1337L;
 
         Asset amount = new Asset();
         amount.setAmount(1L);
         amount.setSymbol(AssetSymbolType.SBD);
 
-        convertOperation.setAmount(amount);
-        convertOperation.setOwner(new AccountName("dez1337"));
-        convertOperation.setRequestId(1337L);
+        ConvertOperation convertOperation = new ConvertOperation(owner, requestId, amount);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(convertOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
 
         // Set expected objects.
         EXPECTED_AMOUNT.setAmount(24);
@@ -84,12 +84,12 @@ public class ConvertOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
