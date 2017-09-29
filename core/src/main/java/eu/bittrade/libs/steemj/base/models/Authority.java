@@ -103,6 +103,24 @@ public class Authority implements ByteTransformable, SignatureObject {
         this.keyAuths = keyAuths;
     }
 
+    /**
+     * Check if the authority is impossible.
+     * 
+     * @return <code>true</code> if the authority is impossible, otherwise
+     *         <code>false</code>.
+     */
+    public boolean isImpossible() {
+        long authWeights = 0;
+        for (int weight : this.getAccountAuths().values()) {
+            authWeights += weight;
+        }
+        for (int weight : this.getKeyAuths().values()) {
+            authWeights += weight;
+        }
+
+        return authWeights < this.getWeightThreshold();
+    }
+
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAuthority = new ByteArrayOutputStream()) {
