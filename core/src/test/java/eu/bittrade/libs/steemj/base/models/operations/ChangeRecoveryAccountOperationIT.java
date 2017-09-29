@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -20,7 +20,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ChangeRecoveryAccountOperationIT extends BaseIntegrationTest {
+public class ChangeRecoveryAccountOperationIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcf3c80457011a06737465656d6a07646"
             + "57a313333370000011c5f10b6238b7783f0e99fc6a610a5b7188a66afa72ccc633a460c9683285df7371bbad"
             + "cad04ae7407f87fb0ff24bd3cc787fec0a85037ec88c76579deef009b7c";
@@ -36,18 +36,20 @@ public class ChangeRecoveryAccountOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        ChangeRecoveryAccountOperation changeRecoveryAccountOperation = new ChangeRecoveryAccountOperation();
+        AccountName accountToRecover = new AccountName("steemj");
+        AccountName newRecoveryAccount = new AccountName("dez1337");
 
-        changeRecoveryAccountOperation.setAccountToRecover(new AccountName("steemj"));
-        changeRecoveryAccountOperation.setNewRecoveryAccount(new AccountName("dez1337"));
+        ChangeRecoveryAccountOperation changeRecoveryAccountOperation = new ChangeRecoveryAccountOperation(
+                accountToRecover, newRecoveryAccount);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(changeRecoveryAccountOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -59,12 +61,12 @@ public class ChangeRecoveryAccountOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

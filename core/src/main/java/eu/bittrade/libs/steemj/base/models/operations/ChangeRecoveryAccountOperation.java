@@ -12,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -110,9 +109,14 @@ public class ChangeRecoveryAccountOperation extends Operation {
      * 
      * @param accountToRecover
      *            The account that would be recovered in case of compromise.
+     * @throws InvalidParameterException
+     *             If the <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
-        if()
+        if (accountToRecover == null) {
+            throw new InvalidParameterException("The account to recover can't be null.");
+        }
+
         this.accountToRecover = accountToRecover;
     }
 
@@ -134,9 +138,14 @@ public class ChangeRecoveryAccountOperation extends Operation {
      * 
      * @param newRecoveryAccount
      *            The account that creates the recover request.
+     * @throws InvalidParameterException
+     *             If the <code>newRecoveryAccount</code> is null.
      */
     public void setNewRecoveryAccount(AccountName newRecoveryAccount) {
-        if()
+        if (newRecoveryAccount == null) {
+            throw new InvalidParameterException("The new recovery account can't be null.");
+        }
+
         this.newRecoveryAccount = newRecoveryAccount;
     }
 
@@ -157,9 +166,10 @@ public class ChangeRecoveryAccountOperation extends Operation {
      */
     public void setExtensions(List<FutureExtensions> extensions) {
         if (extensions == null) {
-            extensions = new ArrayList<>();
+            this.extensions = new ArrayList<>();
+        } else {
+            this.extensions = extensions;
         }
-        this.extensions = extensions;
     }
 
     @Override
@@ -171,7 +181,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
             serializedChangeRecoveryAccountOperation.write(this.getNewRecoveryAccount().toByteArray());
 
             serializedChangeRecoveryAccountOperation
-            .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
             for (FutureExtensions futureExtensions : this.getExtensions()) {
                 serializedChangeRecoveryAccountOperation.write(futureExtensions.toByteArray());
             }
