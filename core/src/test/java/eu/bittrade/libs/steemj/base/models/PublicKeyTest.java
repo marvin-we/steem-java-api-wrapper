@@ -33,16 +33,37 @@ public class PublicKeyTest extends BaseUnitTest {
         publicKey = new PublicKey(ADDRESS);
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.base.models.PublicKey#toByteArray()}
+     * method by creating a new PublicKey from an Address.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testPublicKeyFromAddress() throws Exception {
         assertThat(Utils.HEX.encode(publicKey.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.base.models.PublicKey#getAddressFromPublicKey}
+     * method.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testAddressFromPublicKey() throws Exception {
         assertThat(ADDRESS, equalTo(publicKey.getAddressFromPublicKey()));
     }
 
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.base.models.PublicKey#equals(Object)}
+     * method.
+     */
     @Test
     public void testPublicKeyEqualsMethod() {
         PublicKey publicKey = new PublicKey(ADDRESS);
