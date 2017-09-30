@@ -3,18 +3,17 @@ package eu.bittrade.libs.steemj.base.models.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -31,69 +30,63 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
      * current exchange rate. With this operation it is possible to give another
      * account vesting shares so that faucets can pre-fund new accounts with
      * vesting shares.
-     */
-    public TransferToVestingOperation() {
-        super(false);
-    }
-
-    /**
-     * Get the account name of the user who send the VFS.
-     * 
-     * @return The user that send the VFS.
-     */
-    public AccountName getFrom() {
-        return from;
-    }
-
-    /**
-     * Set the account name of the user who will send the VFS. <b>Notice:</b>
-     * The private active key of this account needs to be stored in the key
-     * storage.
      * 
      * @param from
-     *            The account name of the user who will send the VFS.
+     *            The account to transfer the vestings from (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The account that will receive the transfered vestings (see
+     *            {@link #setTo(AccountName)}).
+     * @param amount
+     *            The amount of vests to transfer (see
+     *            {@link #setAmount(Asset)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public void setFrom(AccountName from) {
-        this.from = from;
+    @JsonCreator
+    public TransferToVestingOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
+            @JsonProperty("amount") Asset amount) {
+        super(false);
+
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAmount(amount);
     }
 
     /**
-     * Get the account name of the user who received the VFS.
-     * 
-     * @return The account name of the user who received the VFS.
-     */
-    public AccountName getTo() {
-        return to;
-    }
-
-    /**
-     * Set the account name of the user who will received the VFS.
+     * Set the account name of the user who will received the
+     * <code>amount</code>.
      * 
      * @param to
-     *            The account name of the user who will received the VFS.
+     *            The account name of the user who will received the
+     *            <code>amount</code>.
      */
+    @Override
     public void setTo(AccountName to) {
-        this.to = to;
+        if (to == null) {
+            this.to = new AccountName();
+        } else {
+            this.to = to;
+        }
     }
 
     /**
-     * Get the amount of Steem that has been send.
-     * 
-     * @return The amount of Steem that has been send.
-     */
-    public Asset getAmount() {
-        return amount;
-    }
-
-    /**
-     * Set the amount of Steem that will be send.
+     * Set the <code>amount</code> of that will be send.
      * 
      * @param amount
-     *            The amount of Steem that will be send.
+     *            The <code>amount</code> of that will be send.
+     * @throws InvalidParameterException
+     *             If the <code>amount</code> is null, not of symbol type STEEM
+     *             or less than 1.
      */
+    @Override
     public void setAmount(Asset amount) {
-        if (!amount.getSymbol().equals(AssetSymbolType.STEEM)) {
-            throw new InvalidParameterException("The Symbol needs to be STEEM.");
+        if (amount == null) {
+            throw new InvalidParameterException("The amount can't be null.");
+        } else if (!amount.getSymbol().equals(AssetSymbolType.STEEM)) {
+            throw new InvalidParameterException("The amount must be of type STEEM.");
+        } else if (amount.getAmount() <= 0) {
+            throw new InvalidParameterException("Must transfer a nonzero amount.");
         }
 
         this.amount = amount;
@@ -118,11 +111,5 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-    
-    @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }

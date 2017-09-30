@@ -11,9 +11,9 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -23,7 +23,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class TransferToVestingOperationTest extends BaseUnitTest {
+public class TransferToVestingOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "030764657a313333370764657a31333337010000000000000003535445454d0000";
     final String EXPECTED_TRANSACTION_HASH = "541167c321d11aa086d5c57a4489e335e303bf1e6fb5588cfa2eca34fe46434f";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000000"
@@ -31,41 +31,48 @@ public class TransferToVestingOperationTest extends BaseUnitTest {
 
     private static TransferToVestingOperation transferToVestingOperation;
 
+    /**
+     * Prepare the environment for this specific test.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
+
+        AccountName from = new AccountName("dez1337");
+        AccountName to = new AccountName("dez1337");
 
         Asset steemAmount = new Asset();
         steemAmount.setAmount(1L);
         steemAmount.setSymbol(AssetSymbolType.STEEM);
 
-        transferToVestingOperation = new TransferToVestingOperation();
-        transferToVestingOperation.setFrom(new AccountName("dez1337"));
-        transferToVestingOperation.setTo(new AccountName("dez1337"));
-        transferToVestingOperation.setAmount(steemAmount);
+        transferToVestingOperation = new TransferToVestingOperation(from, to, steemAmount);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(transferToVestingOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
     }
 
+    @Override
     @Test
-    public void testTransferToVestingOperationToByteArray()
-            throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(transferToVestingOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
+    @Override
     @Test
-    public void testTransferToVestingOperationTransactionHex()
+    public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        transaction.sign();
+        sign();
 
-        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
-                equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+        assertThat("The serialized transaction should look like expected.",
+                Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

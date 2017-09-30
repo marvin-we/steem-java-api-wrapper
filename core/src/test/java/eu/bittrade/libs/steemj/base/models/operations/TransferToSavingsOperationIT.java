@@ -9,10 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class TransferToSavingsOperationIT extends BaseIntegrationTest {
+public class TransferToSavingsOperationIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c80457012007646"
             + "57a3133333706737465656d6a54dd00000000000003535445454d00000000011b64310c9be"
             + "405a03053f120109e01557a51b33858f84d96068d208b22c1c0e0352073e075f6dbb5c057a"
@@ -41,22 +41,23 @@ public class TransferToSavingsOperationIT extends BaseIntegrationTest {
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
 
-        TransferToSavingsOperation transferFromSavingsOperation = new TransferToSavingsOperation();
-        transferFromSavingsOperation.setFrom(new AccountName("dez1337"));
-        transferFromSavingsOperation.setTo(new AccountName("steemj"));
-        transferFromSavingsOperation.setMemo("");
+        AccountName from = new AccountName("dez1337");
+        AccountName to = new AccountName("steemj");
+        String memo = "";
 
         Asset amount = new Asset();
         amount.setAmount(56660L);
         amount.setSymbol(AssetSymbolType.STEEM);
 
-        transferFromSavingsOperation.setAmount(amount);
+        TransferToSavingsOperation transferFromSavingsOperation = new TransferToSavingsOperation(from, to, amount,
+                memo);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(transferFromSavingsOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -68,12 +69,12 @@ public class TransferToSavingsOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

@@ -2,17 +2,18 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -21,73 +22,60 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class TransferToSavingsOperation extends AbstractTransferOperation {
+    @JsonProperty("memo")
     private String memo;
 
     /**
      * Create a new transfer to savings operation to transfer an {@link #amount
      * amount} from the {@link #from from} account into the savings wallet of
      * the {@link #to to} account.
-     */
-    public TransferToSavingsOperation() {
-        super(false);
-    }
-
-    /**
-     * Get the account name of the user who transfered the amount.
-     * 
-     * @return The user that transfered the amount.
-     */
-    public AccountName getFrom() {
-        return from;
-    }
-
-    /**
-     * Set the account name of the user who wants to transfer the amount.
-     * <b>Notice:</b> The private active key of this account needs to be stored
-     * in the key storage.
      * 
      * @param from
-     *            The user that transfered the amount.
-     */
-    public void setFrom(AccountName from) {
-        this.from = from;
-    }
-
-    /**
-     * Get the user who received the transfered amount.
-     * 
-     * @return The user who received the transfered amount.
-     */
-    public AccountName getTo() {
-        return to;
-    }
-
-    /**
-     * Get the user who should receive the amount.
-     * 
+     *            The account to transfer the vestings from (see
+     *            {@link #setFrom(AccountName)}).
      * @param to
-     *            The user who should receive the amount.
+     *            The account that will receive the transfered vestings (see
+     *            {@link #setTo(AccountName)}).
+     * @param amount
+     *            The amount of vests to transfer (see
+     *            {@link #setAmount(Asset)}).
+     * @param memo
+     *            An additional message added to the operation (see
+     *            {@link #setMemo(String)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public void setTo(AccountName to) {
-        this.to = to;
+    @JsonCreator
+    public TransferToSavingsOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
+            @JsonProperty("amount") Asset amount, @JsonProperty("memo") String memo) {
+        super(false);
+
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAmount(amount);
+        this.setMemo(memo);
     }
 
     /**
-     * Get the transfered amount.
-     * 
-     * @return The transfered amount.
-     */
-    public Asset getAmount() {
-        return amount;
-    }
-
-    /**
-     * Set the amount to transfer.
+     * Set the <code>amount</code> of that will be send.
      * 
      * @param amount
-     *            The amount to transfer.
+     *            The <code>amount</code> of that will be send.
+     * @throws InvalidParameterException
+     *             If the <code>amount</code> is null, not of symbol type
+     *             STEEM/SBD or less than 1.
      */
+    @Override
     public void setAmount(Asset amount) {
+        if (amount == null) {
+            throw new InvalidParameterException("The amount can't be null.");
+        } else if (!amount.getSymbol().equals(AssetSymbolType.STEEM)
+                && !amount.getSymbol().equals(AssetSymbolType.SBD)) {
+            throw new InvalidParameterException("The amount must be of type STEEM or SBD.");
+        } else if (amount.getAmount() <= 0) {
+            throw new InvalidParameterException("Must transfer a nonzero amount.");
+        }
+
         this.amount = amount;
     }
 
@@ -105,8 +93,13 @@ public class TransferToSavingsOperation extends AbstractTransferOperation {
      * 
      * @param memo
      *            The message added to this operation.
+     * @throws InvalidParameterException
+     *             If the <code>memo</code> has more than 2048 characters.
      */
     public void setMemo(String memo) {
+        if (memo.length() > 2048) {
+            throw new InvalidParameterException("The memo is too long. Only 2048 characters are allowed.");
+        }
         this.memo = memo;
     }
 
@@ -130,12 +123,5 @@ public class TransferToSavingsOperation extends AbstractTransferOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    
-    @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }

@@ -10,10 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class TransferToVestingOperationIT extends BaseIntegrationTest {
+public class TransferToVestingOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5716852;
     private static final int TRANSACTION_INDEX = 8;
     private static final int OPERATION_INDEX = 0;
@@ -47,23 +47,23 @@ public class TransferToVestingOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        TransferToVestingOperation transferToVestingOperation = new TransferToVestingOperation();
-        transferToVestingOperation.setFrom(new AccountName("dez1337"));
-        transferToVestingOperation.setTo(new AccountName("dez1337"));
+        AccountName from = new AccountName("dez1337");
+        AccountName to = new AccountName("dez1337");
 
-        Asset amount = new Asset();
-        amount.setSymbol(AssetSymbolType.STEEM);
-        amount.setAmount(1L);
+        Asset steemAmount = new Asset();
+        steemAmount.setAmount(1L);
+        steemAmount.setSymbol(AssetSymbolType.STEEM);
 
-        transferToVestingOperation.setAmount(amount);
+        TransferToVestingOperation transferToVestingOperation = new TransferToVestingOperation(from, to, steemAmount);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(transferToVestingOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -86,12 +86,12 @@ public class TransferToVestingOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
