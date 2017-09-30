@@ -11,8 +11,8 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -21,7 +21,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCancelOperationTest extends BaseUnitTest {
+public class LimitOrderCancelOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "060764657a31333337c3850700";
     final String EXPECTED_TRANSACTION_HASH = "8206897b01c87e6ef07fcf39259ce27b19050d2f2a5603c1c1b075a1498a0c05";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "00000000000000000000000000000000000000000000000000000"
@@ -29,37 +29,44 @@ public class LimitOrderCancelOperationTest extends BaseUnitTest {
 
     private static LimitOrderCancelOperation limitOrderCancelOperation;
 
+    /**
+     * Prepare the environment for this specific test.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
 
-        limitOrderCancelOperation = new LimitOrderCancelOperation();
+        long orderId = 492995L;
+        AccountName owner = new AccountName("dez1337");
 
-        limitOrderCancelOperation.setOwner(new AccountName("dez1337"));
-        limitOrderCancelOperation.setOrderId(492995L);
+        limitOrderCancelOperation = new LimitOrderCancelOperation(owner, orderId);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(limitOrderCancelOperation);
 
-        transaction.setOperations(operations);
+        signedTransaction.setOperations(operations);
     }
 
+    @Override
     @Test
-    public void testLimitOrderCreateOperationToByteArray()
-            throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(limitOrderCancelOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
+    @Override
     @Test
-    public void testLimitOrderCreateOperationTransactionHex()
+    public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        transaction.sign();
+        sign();
 
-        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
-                equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+        assertThat("The serialized transaction should look like expected.",
+                Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

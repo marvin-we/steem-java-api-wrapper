@@ -17,11 +17,11 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
  */
 public abstract class AbstractLimitOrderOperation extends Operation {
     @JsonProperty("owner")
-    private AccountName owner;
+    protected AccountName owner;
     // Type is uint32 in the original code, but has to be long here as Java does
     // not support unsigned numbers accurate.
     @JsonProperty("orderid")
-    private long orderId;
+    protected long orderId;
 
     /**
      * Create a new Operation object by providing the operation type.

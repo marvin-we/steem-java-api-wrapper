@@ -2,19 +2,16 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -22,22 +19,40 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCancelOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
-    @JsonProperty("owner")
-    private AccountName owner;
-    // Original type is uint32_t so we use long here.
-    @JsonProperty("orderid")
-    private long orderId;
+public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
 
     /**
      * Create a new limit order cancel operation. This order is used to cancel
      * an order. The balance will be returned to the owner.
+     * 
+     * @param owner
+     *            The owner of the operation (see
+     *            {@link #setOwner(AccountName)}).
+     * @param orderId
+     *            The id of the order to cancel (see {@link #setOrderId(long)}).
+     * @throws InvalidParameterException
+     *             If the provided <code>owner</code> is null.
      */
-    public LimitOrderCancelOperation() {
+    @JsonCreator
+    public LimitOrderCancelOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("orderid") long orderId) {
         super(false);
-        // Set default values:
-        this.setOrderId(0);
+
+        this.setOwner(owner);
+        this.setOrderId(orderId);
+    }
+
+    /**
+     * Like {@link #LimitOrderCancelOperation(AccountName, long)}, but sets the
+     * <code>orderId</code> to its default value (0).
+     * 
+     * @param owner
+     *            The owner of the operation (see
+     *            {@link #setOwner(AccountName)}).
+     * @throws InvalidParameterException
+     *             If the provided <code>owner</code> is null.
+     */
+    public LimitOrderCancelOperation(AccountName owner) {
+        this(owner, 0);
     }
 
     /**
@@ -55,8 +70,14 @@ public class LimitOrderCancelOperation extends Operation {
      * 
      * @param owner
      *            The owner of the order that should be canceled.
+     * @throws InvalidParameterException
+     *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
+        if (owner == null) {
+            throw new InvalidParameterException("The provided owner can't be null.");
+        }
+
         this.owner = owner;
     }
 
@@ -97,11 +118,5 @@ public class LimitOrderCancelOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-    
-    @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }
