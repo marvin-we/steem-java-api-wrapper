@@ -13,15 +13,15 @@ import eu.bittrade.libs.steemj.base.models.PublicKey;
  */
 public abstract class AbstractAccountOperation extends Operation {
     @JsonProperty("owner")
-    private Authority owner;
+    protected Authority owner;
     @JsonProperty("active")
-    private Authority active;
+    protected Authority active;
     @JsonProperty("posting")
-    private Authority posting;
+    protected Authority posting;
     @JsonProperty("memo_key")
-    private PublicKey memoKey;
+    protected PublicKey memoKey;
     @JsonProperty("json_metadata")
-    private String jsonMetadata;
+    protected String jsonMetadata;
 
     /**
      * Create a new Operation object by providing the operation type.
@@ -88,6 +88,16 @@ public abstract class AbstractAccountOperation extends Operation {
      * @return The memo key.
      */
     public abstract PublicKey getMemoKey();
+    
+    /**
+     * Set the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * PublicKey}.
+     * 
+     * @param memoKey
+     *            The memo key.
+     */
+    public abstract void setMemoKey(PublicKey memoKey);
+
 
     /**
      * Get the json metadata that has been added to this operation.
