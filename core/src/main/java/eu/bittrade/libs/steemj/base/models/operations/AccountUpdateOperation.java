@@ -2,11 +2,13 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
@@ -30,9 +32,39 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
     /**
      * Create a new create account update operation. Use this operation to
      * update the keys of an existing account.
+     * 
+     * @param account
+     *            The account to update (see {@link #setAccount(AccountName)}).
+     * @param owner
+     *            The new owner authority or null if the owner authority should
+     *            not be updated (see {@link #setOwner(Authority)}).
+     * @param active
+     *            The new active authority or null if the active authority
+     *            should not be updated (see {@link #setActive(Authority)}).
+     * @param posting
+     *            The new posting authority or null if the posting authority
+     *            should not be updated (see {@link #setPosting(Authority)}).
+     * @param memoKey
+     *            The new memo key or null if the memo key should not be updated
+     *            (see {@link #setMemoKey(PublicKey)}).
+     * @param jsonMetadata
+     *            Set the additional information for the <code>account</code>
+     *            (see {@link #setJsonMetadata(String)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public AccountUpdateOperation() {
+    @JsonCreator
+    public AccountUpdateOperation(@JsonProperty("account") AccountName account, @JsonProperty("owner") Authority owner,
+            @JsonProperty("active") Authority active, @JsonProperty("posting") Authority posting,
+            @JsonProperty("memo_key") PublicKey memoKey, @JsonProperty("json_metadata") String jsonMetadata) {
         super(false);
+
+        this.setAccount(account);
+        this.setOwner(owner);
+        this.setActive(active);
+        this.setPosting(posting);
+        this.setMemoKey(memoKey);
+        this.setJsonMetadata(jsonMetadata);
     }
 
     /**
@@ -143,8 +175,14 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
      * 
      * @param account
      *            The account name of the account to change.
+     * @throws InvalidParameterException
+     *             If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
+        if (account == null) {
+            throw new InvalidParameterException("The account can't be null.");
+        }
+
         this.account = account;
     }
 
@@ -154,10 +192,17 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
             serializedAccountUpdateOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_UPDATE_OPERATION.ordinal()));
             serializedAccountUpdateOperation.write(this.getAccount().toByteArray());
-            serializedAccountUpdateOperation.write(this.getOwner().toByteArray());
-            serializedAccountUpdateOperation.write(this.getActive().toByteArray());
-            serializedAccountUpdateOperation.write(this.getPosting().toByteArray());
-            serializedAccountUpdateOperation.write(this.getMemoKey().toByteArray());
+
+            // Handle optional values.
+            if (this.getOwner() != null) {
+                serializedAccountUpdateOperation.write(this.getOwner().toByteArray());
+            } else if (this.getActive() != null) {
+                serializedAccountUpdateOperation.write(this.getActive().toByteArray());
+            } else if (this.getPosting() != null) {
+                serializedAccountUpdateOperation.write(this.getPosting().toByteArray());
+            } else if (this.getMemoKey() != null) {
+                serializedAccountUpdateOperation.write(this.getMemoKey().toByteArray());
+            }
             serializedAccountUpdateOperation
                     .write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));
 

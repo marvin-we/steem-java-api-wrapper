@@ -9,14 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -27,7 +26,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountUpdateOperationIT extends BaseIntegrationTest {
+public class AccountUpdateOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681154;
     private static final int TRANSACTION_INDEX = 0;
     private static final int OPERATION_INDEX = 0;
@@ -41,13 +40,21 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
             + "9a011c01000314aa202c9158990b3ec51a1aa49b2ab5d300c97b391df3beb34bb74f3c62699e0000011c792fac8bfdee0dac9086a4908"
             + "f3d3798a7e551292f13c2dbfaa8c2b4b71cb6767136f8d7c11a6a24993980480ea45eef40485995e04062d5329ab1e98e80c6a5";
 
+    /**
+     * <b>Attention:</b> This test class requires a valid active key of the used
+     * "creator". If no owner key is provided or the owner key is not valid an
+     * Exception will be thrown. The owner key is passed as a -D parameter
+     * during test execution.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        AccountUpdateOperation accountUpdateOperation = new AccountUpdateOperation();
-        accountUpdateOperation.setAccount(new AccountName("dez1337"));
-        accountUpdateOperation.setMemoKey(new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp"));
+        AccountName account = new AccountName("dez1337");
+        PublicKey memoKey = new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp");
 
         Authority posting = new Authority();
         posting.setAccountAuths(new HashMap<>());
@@ -56,16 +63,12 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
         posting.setKeyAuths(postingKeyAuth);
         posting.setWeightThreshold(1);
 
-        accountUpdateOperation.setPosting(posting);
-
         Authority active = new Authority();
         active.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> activeKeyAuth = new HashMap<>();
         activeKeyAuth.put(new PublicKey("STM6uWaRvGTtvKTdciKU3rtBbeq3ZfBopvjewQdngeAG31EGSXA2f"), 1);
         active.setKeyAuths(activeKeyAuth);
         active.setWeightThreshold(1);
-
-        accountUpdateOperation.setActive(active);
 
         Authority owner = new Authority();
         owner.setAccountAuths(new HashMap<>());
@@ -74,14 +77,17 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
         owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 
-        accountUpdateOperation.setOwner(owner);
-        accountUpdateOperation.setJsonMetadata("");
+        String jsonMetadata = "";
+
+        AccountUpdateOperation accountUpdateOperation = new AccountUpdateOperation(account, owner, active, posting,
+                memoKey, jsonMetadata);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountUpdateOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -103,15 +109,13 @@ public class AccountUpdateOperationIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    @Ignore
     public void verifyTransaction() throws Exception {
-        // TODO: Check if working
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

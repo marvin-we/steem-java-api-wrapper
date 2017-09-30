@@ -11,12 +11,11 @@ import java.util.Map;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -27,7 +26,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateOperationTest extends BaseUnitTest {
+public class AccountCreateOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "09102700000000000003535445454d00000764657a3133333706737465656d"
             + "6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9ea6eedec21de6fa4c40100010000000001"
             + "02fe8cc11cc8251de6977636b55c1ab8a9d12b0b26154ac78e56e7c4257d8bcf69010001000000000103b453f46013fd"
@@ -43,16 +42,21 @@ public class AccountCreateOperationTest extends BaseUnitTest {
 
     private static AccountCreateOperation accountCreateOperation;
 
+    /**
+     * Prepare the environment for this specific test.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
 
-        accountCreateOperation = new AccountCreateOperation();
-        accountCreateOperation.setFee(new Asset(10000, AssetSymbolType.STEEM));
-        accountCreateOperation.setCreator(new AccountName("dez1337"));
-        accountCreateOperation.setJsonMetadata("");
-        accountCreateOperation.setMemoKey(new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp"));
-        accountCreateOperation.setNewAccountName(new AccountName("steemj"));
+        Asset fee = new Asset(10000, AssetSymbolType.STEEM);
+        AccountName creator = new AccountName("dez1337");
+        String jsonMetadata = "";
+        PublicKey memoKey = new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp");
+        AccountName newAccountName = new AccountName("steemj");
 
         Authority posting = new Authority();
         posting.setAccountAuths(new HashMap<>());
@@ -61,16 +65,12 @@ public class AccountCreateOperationTest extends BaseUnitTest {
         posting.setKeyAuths(postingKeyAuth);
         posting.setWeightThreshold(1);
 
-        accountCreateOperation.setPosting(posting);
-
         Authority active = new Authority();
         active.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> activeKeyAuth = new HashMap<>();
         activeKeyAuth.put(new PublicKey("STM6pbVDAjRFiw6fkiKYCrkz7PFeL7XNAfefrsREwg8MKpJ9VYV9x"), 1);
         active.setKeyAuths(activeKeyAuth);
         active.setWeightThreshold(1);
-
-        accountCreateOperation.setActive(active);
 
         Authority owner = new Authority();
         owner.setAccountAuths(new HashMap<>());
@@ -79,30 +79,30 @@ public class AccountCreateOperationTest extends BaseUnitTest {
         owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 
-        accountCreateOperation.setOwner(owner);
+        accountCreateOperation = new AccountCreateOperation(creator, fee, newAccountName, owner, active, posting,
+                memoKey, jsonMetadata);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountCreateOperation);
 
-        transaction.setOperations(operations);
-    }
+        signedTransaction.setOperations(operations);
+    }   
 
-    @Test
-    public void testAccountCreateOperationToByteArray()
-            throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    @Override
+    public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(accountCreateOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
-    @Test
-    public void testAccountCreateOperationTransactionHex()
+    @Override
+    public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        transaction.sign();
+        sign();
 
-        assertThat("The serialized transaction should look like expected.", Utils.HEX.encode(transaction.toByteArray()),
-                equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+        assertThat("The serialized transaction should look like expected.",
+                Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transaction.toByteArray())).getBytes()),
+                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

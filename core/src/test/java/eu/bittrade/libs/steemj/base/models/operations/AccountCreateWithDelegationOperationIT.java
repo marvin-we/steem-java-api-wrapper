@@ -12,11 +12,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
@@ -28,7 +28,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest {
+public class AccountCreateWithDelegationOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 12326238;
     private static final int TRANSACTION_INDEX = 3;
     private static final int OPERATION_INDEX = 0;
@@ -55,16 +55,14 @@ public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest 
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        AccountCreateWithDelegationOperation accountCreateWithDelegationOperation = new AccountCreateWithDelegationOperation();
-        accountCreateWithDelegationOperation.setFee(new Asset(500, AssetSymbolType.STEEM));
-        accountCreateWithDelegationOperation.setDelegation(new Asset(155440933151L, AssetSymbolType.VESTS));
-        accountCreateWithDelegationOperation.setCreator(new AccountName("dez1337"));
-        accountCreateWithDelegationOperation.setJsonMetadata("");
-        accountCreateWithDelegationOperation
-                .setMemoKey(new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp"));
-        accountCreateWithDelegationOperation.setNewAccountName(new AccountName("steemj"));
+        Asset fee = new Asset(500, AssetSymbolType.STEEM);
+        Asset delegation = new Asset(155440933151L, AssetSymbolType.VESTS);
+        AccountName creator = new AccountName("dez1337");
+        String jsonMetadata = "";
+        PublicKey memoKey = new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp");
+        AccountName newAccountName = new AccountName("steemj");
 
         Authority posting = new Authority();
         posting.setAccountAuths(new HashMap<>());
@@ -73,16 +71,12 @@ public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest 
         posting.setKeyAuths(postingKeyAuth);
         posting.setWeightThreshold(1);
 
-        accountCreateWithDelegationOperation.setPosting(posting);
-
         Authority active = new Authority();
         active.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> activeKeyAuth = new HashMap<>();
         activeKeyAuth.put(new PublicKey("STM6pbVDAjRFiw6fkiKYCrkz7PFeL7XNAfefrsREwg8MKpJ9VYV9x"), 1);
         active.setKeyAuths(activeKeyAuth);
         active.setWeightThreshold(1);
-
-        accountCreateWithDelegationOperation.setActive(active);
 
         Authority owner = new Authority();
         owner.setAccountAuths(new HashMap<>());
@@ -91,13 +85,15 @@ public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest 
         owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 
-        accountCreateWithDelegationOperation.setOwner(owner);
+        AccountCreateWithDelegationOperation accountCreateWithDelegationOperation = new AccountCreateWithDelegationOperation(
+                creator, fee, newAccountName, delegation, owner, active, posting, memoKey, jsonMetadata, null);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountCreateWithDelegationOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -119,12 +115,12 @@ public class AccountCreateWithDelegationOperationIT extends BaseIntegrationTest 
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
