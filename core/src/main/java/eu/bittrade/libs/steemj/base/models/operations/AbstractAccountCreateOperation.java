@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
@@ -49,8 +51,19 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      * 
      * @param fee
      *            The fee.
+     * @throws InvalidParameterException
+     *             If the <code>fee</code> is null, of symbol type STEEM or less
+     *             than 0.
      */
     public void setFee(Asset fee) {
+        if (fee == null) {
+            throw new InvalidParameterException("The fee can't be null.");
+        } else if (fee.getSymbol().equals(AssetSymbolType.STEEM)) {
+            throw new InvalidParameterException("The fee must be paid in STEEM.");
+        } else if (fee.getAmount() < 0) {
+            throw new InvalidParameterException("The fee must be a postive amount.");
+        }
+
         this.fee = fee;
     }
 
@@ -69,8 +82,14 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      * 
      * @param creator
      *            The the user who creates a new account.
+     * @throws InvalidParameterException
+     *             If the <code>creator</code> is null.
      */
     public void setCreator(AccountName creator) {
+        if (creator == null) {
+            throw new InvalidParameterException("The creator can't be null.");
+        }
+
         this.creator = creator;
     }
 
@@ -88,8 +107,14 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      * 
      * @param newAccountName
      *            The account name of the user which should be created.
+     * @throws InvalidParameterException
+     *             If the <code>newAccountName</code> is null.
      */
     public void setNewAccountName(AccountName newAccountName) {
+        if (newAccountName == null) {
+            throw new InvalidParameterException("The new account name can't be null.");
+        }
+
         this.newAccountName = newAccountName;
     }
 
@@ -110,9 +135,15 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      * 
      * @param owner
      *            The owner authority.
+     * @throws InvalidParameterException
+     *             If the <code>owner</code> is null.
      */
     @Override
     public void setOwner(Authority owner) {
+        if (owner == null) {
+            throw new InvalidParameterException("The owner can't be null.");
+        }
+
         this.owner = owner;
     }
 
@@ -133,9 +164,15 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      * 
      * @param active
      *            The active authority.
+     * @throws InvalidParameterException
+     *             If the <code>active</code> is null.
      */
     @Override
     public void setActive(Authority active) {
+        if (active == null) {
+            throw new InvalidParameterException("The active can't be null.");
+        }
+
         this.active = active;
     }
 
@@ -156,9 +193,15 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      * 
      * @param posting
      *            The posting authority.
+     * @throws InvalidParameterException
+     *             If the <code>posting</code> is null.
      */
     @Override
     public void setPosting(Authority posting) {
+        if (posting == null) {
+            throw new InvalidParameterException("The posting can't be null.");
+        }
+
         this.posting = posting;
     }
 

@@ -1,9 +1,12 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.security.InvalidParameterException;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This abstract class contains fields that exist in all Steem Operations
@@ -88,7 +91,7 @@ public abstract class AbstractAccountOperation extends Operation {
      * @return The memo key.
      */
     public abstract PublicKey getMemoKey();
-    
+
     /**
      * Set the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
      * PublicKey}.
@@ -97,7 +100,6 @@ public abstract class AbstractAccountOperation extends Operation {
      *            The memo key.
      */
     public abstract void setMemoKey(PublicKey memoKey);
-
 
     /**
      * Get the json metadata that has been added to this operation.
@@ -115,6 +117,10 @@ public abstract class AbstractAccountOperation extends Operation {
      *            The json metadata.
      */
     public void setJsonMetadata(String jsonMetadata) {
+        if (!jsonMetadata.isEmpty() && !SteemJUtils.verifyJsonString(jsonMetadata)) {
+            throw new InvalidParameterException("The given json metadata is no valid JSON");
+        }
+
         this.jsonMetadata = jsonMetadata;
     }
 }

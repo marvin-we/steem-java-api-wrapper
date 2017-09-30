@@ -13,7 +13,7 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
 /**
  * This abstract class contains fields that exist in all Steem
- * "trasnfer_operation" types.
+ * "trasnfer_operation" objects.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

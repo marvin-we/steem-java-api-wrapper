@@ -8,12 +8,11 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 
 /**
  * This abstract class contains fields that exist in all Steem
- * "escrow_operation" types.
+ * "escrow_operation" objects.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 abstract class AbstractEscrowOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     protected AccountName from;
     protected AccountName to;
     protected AccountName agent;
