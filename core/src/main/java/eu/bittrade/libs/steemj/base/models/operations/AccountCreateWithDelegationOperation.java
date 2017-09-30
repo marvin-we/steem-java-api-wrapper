@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -19,9 +21,11 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateWithDelegationOperation extends AccountCreateOperation {
+public class AccountCreateWithDelegationOperation extends AbstractAccountCreateOperation {
+    @JsonProperty("delegation")
     private Asset delegation;
     // Original type is "extension_type" which is an array of "future_extions".
+    @JsonProperty("extensions")
     private List<FutureExtensions> extensions;
 
     /**
@@ -29,11 +33,12 @@ public class AccountCreateWithDelegationOperation extends AccountCreateOperation
      * to create a new account.
      */
     public AccountCreateWithDelegationOperation() {
+        super(false);
     }
 
     /**
-     * Get the amount of VESTS the {@link #creator creator} has delegated to the
-     * {{@link #newAccountName newAccountName}.
+     * Get the amount of VESTS the {@link #getCreator() creator} has delegated
+     * to the {@link #getNewAccountName() newAccountName}.
      * 
      * @return The amount of VESTS delegated to the new account.
      */
@@ -42,8 +47,8 @@ public class AccountCreateWithDelegationOperation extends AccountCreateOperation
     }
 
     /**
-     * Set the amount of VESTS the {@link #creator creator} has delegated to the
-     * {{@link #newAccountName newAccountName}.
+     * Set the amount of VESTS the {@link #getCreator() creator} will delegate
+     * to the {@link #getNewAccountName() newAccountName}.
      * 
      * @param delegation
      *            The amount of VESTS delegated to the new account.
