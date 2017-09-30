@@ -47,8 +47,13 @@ public class ReportOverProductionOperation extends Operation {
      * of the block producer to the reporter.
      * 
      * @param reporter
+     *            The miner account (see {@link #setReporter(AccountName)}).
      * @param firstBlock
+     *            The first Block (see
+     *            {@link #setFirstBlock(SignedBlockHeader)}).
      * @param secondBlock
+     *            The second Block (see
+     *            {@link #setSecondBlock(SignedBlockHeader)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
@@ -56,6 +61,10 @@ public class ReportOverProductionOperation extends Operation {
             @JsonProperty("first_block") SignedBlockHeader firstBlock,
             @JsonProperty("second_block") SignedBlockHeader secondBlock) {
         super(false);
+
+        this.setReporter(reporter);
+        this.setFirstBlock(firstBlock);
+        this.setSecondBlock(secondBlock);
     }
 
     /**
@@ -72,8 +81,14 @@ public class ReportOverProductionOperation extends Operation {
      * 
      * @param reporter
      *            The account who reported the violation.
+     * @throws InvalidParameterException
+     *             If the reporter is not set.
      */
     public void setReporter(AccountName reporter) {
+        if (reporter == null) {
+            throw new InvalidParameterException("The reporter can't be null.");
+        }
+
         this.reporter = reporter;
     }
 
@@ -91,15 +106,35 @@ public class ReportOverProductionOperation extends Operation {
      * 
      * @param firstBlock
      *            The first block signed by the witness.
+     * @throws InvalidParameterException
+     *             If the <code>firstBlock</code> is null, does not contain a
+     *             valid witness, does not have the same: witness, timestamp or
+     *             signee than the <code>secondBlock</code> or if has the same
+     *             id than the <code>secondBlock</code>.
      */
     public void setFirstBlock(SignedBlockHeader firstBlock) {
-        this.firstBlock = firstBlock;
+        if (firstBlock == null) {
+            throw new InvalidParameterException("The provided first block can't be null.");
+        } else if (this.getSecondBlock() != null
+                && this.getSecondBlock().getWitness().equals(firstBlock.getWitness())) {
+            throw new InvalidParameterException(
+                    "The first block witness needs to be the same than the second block witness.");
+        } else if (this.getSecondBlock() != null
+                && this.getSecondBlock().getTimestamp().equals(firstBlock.getTimestamp())) {
+            throw new InvalidParameterException(
+                    "The first block timestamp needs to be the same than the second block timestamp.");
+        }
 
-        validate_account_name(first_block.witness);
-        FC_ASSERT(first_block.witness == second_block.witness);
-        FC_ASSERT(first_block.timestamp == second_block.timestamp);
-        FC_ASSERT(first_block.signee() == second_block.signee());
-        FC_ASSERT(first_block.id() != second_block.id());
+        /*
+         * TODO: Implement additional checks:
+         * 
+         * - first_block.signee() == second_block.signee() - first_block.id() !=
+         * second_block.id()
+         * 
+         * Both checks require that the SignedBlockHeader has the signee() and
+         * the id().
+         */
+        this.firstBlock = firstBlock;
     }
 
     /**
@@ -116,14 +151,34 @@ public class ReportOverProductionOperation extends Operation {
      * 
      * @param secondBlock
      *            The second block signed by the witness.
+     * @throws InvalidParameterException
+     *             If the <code>secondBlock</code> is null, does not contain a
+     *             valid witness, does not have the same: witness, timestamp or
+     *             signee than the <code>firstBlock</code> or if has the same id
+     *             than the <code>firstBlock</code>.
      */
     public void setSecondBlock(SignedBlockHeader secondBlock) {
-        this.secondBlock = secondBlock;
+        if (secondBlock == null) {
+            throw new InvalidParameterException("The provided second block can't be null.");
+        } else if (this.getFirstBlock() != null && this.getFirstBlock().getWitness().equals(secondBlock.getWitness())) {
+            throw new InvalidParameterException(
+                    "The first block witness needs to be the same than the second block witness.");
+        } else if (this.getFirstBlock() != null
+                && this.getFirstBlock().getTimestamp().equals(secondBlock.getTimestamp())) {
+            throw new InvalidParameterException(
+                    "The first block timestamp needs to be the same than the second block timestamp.");
+        }
 
-        FC_ASSERT(first_block.witness == second_block.witness);
-        FC_ASSERT(first_block.timestamp == second_block.timestamp);
-        FC_ASSERT(first_block.signee() == second_block.signee());
-        FC_ASSERT(first_block.id() != second_block.id());
+        /*
+         * TODO: Implement additional checks:
+         * 
+         * - first_block.signee() == second_block.signee() - first_block.id() !=
+         * second_block.id()
+         * 
+         * Both checks require that the SignedBlockHeader has the signee() and
+         * the id().
+         */
+        this.secondBlock = secondBlock;
     }
 
     @Override
