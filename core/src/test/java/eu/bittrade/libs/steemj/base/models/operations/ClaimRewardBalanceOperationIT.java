@@ -10,10 +10,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ClaimRewardBalanceOperationIT extends BaseIntegrationTest {
+public class ClaimRewardBalanceOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 12000608;
     private static final int TRANSACTION_INDEX = 4;
     private static final int OPERATION_INDEX = 0;
@@ -47,34 +47,31 @@ public class ClaimRewardBalanceOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        ClaimRewardBalanceOperation claimRewardBalanceOperation = new ClaimRewardBalanceOperation();
-        claimRewardBalanceOperation.setAccount(new AccountName("dez1337"));
+        AccountName account = new AccountName("dez1337");
 
         Asset rewardSbd = new Asset();
         rewardSbd.setAmount(1);
         rewardSbd.setSymbol(AssetSymbolType.SBD);
 
-        claimRewardBalanceOperation.setRewardSbd(rewardSbd);
-
         Asset rewardSteem = new Asset();
         rewardSteem.setAmount(2);
         rewardSteem.setSymbol(AssetSymbolType.STEEM);
-
-        claimRewardBalanceOperation.setRewardSteem(rewardSteem);
 
         Asset rewardVests = new Asset();
         rewardVests.setAmount(2);
         rewardVests.setSymbol(AssetSymbolType.VESTS);
 
-        claimRewardBalanceOperation.setRewardVests(rewardVests);
+        ClaimRewardBalanceOperation claimRewardBalanceOperation = new ClaimRewardBalanceOperation(account, rewardSteem,
+                rewardSbd, rewardVests);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(claimRewardBalanceOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -96,12 +93,12 @@ public class ClaimRewardBalanceOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
