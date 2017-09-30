@@ -11,10 +11,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class RequestAccountRecoveryOperationIT extends BaseIntegrationTest {
+public class RequestAccountRecoveryOperationIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c8045701180764657a313333"
             + "3706737465656d6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9ea6eede"
             + "c21de6fa4c401000000011c64dca26c66c15e1ae1f9d6f3f2c94b9189ac9e46adc309deda2a8570c253"
@@ -41,11 +41,10 @@ public class RequestAccountRecoveryOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        RequestAccountRecoveryOperation requestAccountRecoveryOperation = new RequestAccountRecoveryOperation();
-        requestAccountRecoveryOperation.setAccountToRecover(new AccountName("steemj"));
-        requestAccountRecoveryOperation.setRecoveryAccount(new AccountName("dez1337"));
+        AccountName accountToRecover = new AccountName("steemj");
+        AccountName recoveryAccount = new AccountName("dez1337");
 
         Authority newOwnerAuthority = new Authority();
         newOwnerAuthority.setAccountAuths(new HashMap<>());
@@ -54,16 +53,16 @@ public class RequestAccountRecoveryOperationIT extends BaseIntegrationTest {
         newOwnerAuthority.setKeyAuths(ownerKeyAuth);
         newOwnerAuthority.setWeightThreshold(1);
 
-        requestAccountRecoveryOperation.setNewOwnerAuthority(newOwnerAuthority);
-
-        // TODO: Test Extensions when they are supported.
-        // requestAccountRecoveryOperation.setExtensions(extensions);
+        // Test Extensions when they are supported.
+        RequestAccountRecoveryOperation requestAccountRecoveryOperation = new RequestAccountRecoveryOperation(
+                recoveryAccount, accountToRecover, newOwnerAuthority);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(requestAccountRecoveryOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -75,12 +74,12 @@ public class RequestAccountRecoveryOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

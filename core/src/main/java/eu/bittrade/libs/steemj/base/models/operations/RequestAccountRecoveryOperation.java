@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
@@ -69,9 +68,17 @@ public class RequestAccountRecoveryOperation extends Operation {
      * RecoverAccountOperation}.
      * 
      * @param recoveryAccount
+     *            The recovery account to set (see
+     *            {@link #setRecoveryAccount(Account)}).
      * @param accountToRecover
+     *            The account to recover (see
+     *            {@link #setAccountToRecover(Account)}).
      * @param newOwnerAuthority
+     *            The new owner authority (see
+     *            {@link #setNewOwnerAuthority(Authority)}).
      * @param extensions
+     *            Additional extensions to set (see
+     *            {@link #setExtensions(List)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
@@ -93,8 +100,14 @@ public class RequestAccountRecoveryOperation extends Operation {
      * but does not require extensions to be added.
      * 
      * @param recoveryAccount
+     *            The recovery account to set (see
+     *            {@link #setRecoveryAccount(Account)}).
      * @param accountToRecover
+     *            The account to recover (see
+     *            {@link #setAccountToRecover(Account)}).
      * @param newOwnerAuthority
+     *            The new owner authority (see
+     *            {@link #setNewOwnerAuthority(Authority)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
@@ -124,8 +137,14 @@ public class RequestAccountRecoveryOperation extends Operation {
      * 
      * @param recoveryAccount
      *            The recovery account.
+     * @throws InvalidParameterException
+     *             If the provided <code>recoveryAccount</code> is null.
      */
     public void setRecoveryAccount(AccountName recoveryAccount) {
+        if (recoveryAccount == null) {
+            throw new InvalidParameterException("The recovery account can't be null.");
+        }
+
         this.recoveryAccount = recoveryAccount;
     }
 
@@ -143,8 +162,14 @@ public class RequestAccountRecoveryOperation extends Operation {
      * 
      * @param accountToRecover
      *            The account to recover.
+     * @throws InvalidParameterException
+     *             If the provided <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
+        if (accountToRecover == null) {
+            throw new InvalidParameterException("The account to recover can't be null.");
+        }
+
         this.accountToRecover = accountToRecover;
     }
 
@@ -166,8 +191,14 @@ public class RequestAccountRecoveryOperation extends Operation {
      * 
      * @param newOwnerAuthority
      *            The new owner authority.
+     * @throws InvalidParameterException
+     *             If the provided <code>newOwnerAuthority</code> is null.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
+        if (newOwnerAuthority == null) {
+            throw new InvalidParameterException("The new owner authority can't be null.");
+        }
+
         this.newOwnerAuthority = newOwnerAuthority;
     }
 
