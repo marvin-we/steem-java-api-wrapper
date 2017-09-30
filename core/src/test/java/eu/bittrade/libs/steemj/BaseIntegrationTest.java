@@ -20,7 +20,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
     protected static void setupIntegrationTestEnvironment() {
         try {
             // Change the default settings if needed.
-            CONFIG.setWebSocketEndpointURI(new URI("wss://this.piston.rocks"));
+            CONFIG.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"));
             // Create a new apiWrapper with your config object.
             CONFIG.setTimeout(0);
             CONFIG.setSslVerificationDisabled(true);

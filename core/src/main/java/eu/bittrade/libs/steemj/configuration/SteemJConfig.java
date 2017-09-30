@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
  */
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
-    private static final String DEFAULT_STEEM_NODE_URI = "wss://node.steem.ws";
+    private static final String DEFAULT_STEEM_NODE_URI = "wss://steemd.steemit.com";
 
     private static SteemJConfig steemJConfigInstance;
 
