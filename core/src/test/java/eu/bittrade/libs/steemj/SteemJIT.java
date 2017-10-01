@@ -34,6 +34,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
+import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
@@ -43,6 +44,7 @@ import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
+import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
@@ -51,6 +53,7 @@ import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
+import eu.bittrade.libs.steemj.base.models.Version;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
@@ -102,8 +105,12 @@ public class SteemJIT extends BaseIntegrationTest {
         assertThat(signedBlockWithInfoWithExtension.getTimestamp().getDateTime(),
                 equalTo(new TimePointSec("2017-06-07T15:33:27").getDateTime()));
         assertThat(signedBlockWithInfoWithExtension.getWitness(), equalTo("dragosroua"));
-        assertThat(signedBlockWithInfoWithExtension.getExtensions().get(0).getHardforkVersionVote().getHfVersion(),
-                equalTo("0.19.0"));
+
+        BlockHeaderExtensions versionExtension = signedBlockWithInfoWithExtension.getExtensions().get(0);
+        BlockHeaderExtensions hardforkVersionVoteExtension = signedBlockWithInfoWithExtension.getExtensions().get(1);
+
+        assertThat(versionExtension, instanceOf(Version.class));
+        assertThat(hardforkVersionVoteExtension, instanceOf(HardforkVersionVote.class));
     }
 
     @Category({ IntegrationTest.class })
@@ -343,8 +350,8 @@ public class SteemJIT extends BaseIntegrationTest {
                 "2017-02-10T22:00:06", 8);
 
         assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
-        assertEquals("expect " + ACCOUNT + " to be the first returned author",
-                repliesByLastUpdate.get(0).getAuthor(), ACCOUNT);
+        assertEquals("expect " + ACCOUNT + " to be the first returned author", repliesByLastUpdate.get(0).getAuthor(),
+                ACCOUNT);
         assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK.getLink(),
                 repliesByLastUpdate.get(0).getPermlink());
     }
@@ -387,8 +394,8 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetWitnessByAccount() throws Exception {
         final Witness activeWitnessesByVote = steemJ.getWitnessByAccount(WITNESS_ACCOUNT);
 
-        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account", WITNESS_ACCOUNT.getName(),
-                activeWitnessesByVote.getOwner());
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account",
+                WITNESS_ACCOUNT.getName(), activeWitnessesByVote.getOwner());
     }
 
     @Category({ IntegrationTest.class })
