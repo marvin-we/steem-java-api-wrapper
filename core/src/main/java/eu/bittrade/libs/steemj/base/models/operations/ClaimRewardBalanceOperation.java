@@ -117,7 +117,7 @@ public class ClaimRewardBalanceOperation extends Operation {
     public void setRewardSteem(Asset rewardSteem) {
         if (rewardSteem == null) {
             throw new InvalidParameterException("The STEEM reward can't be null.");
-        } else if (!rewardSteem.getSymbol().equals(AssetSymbolType.VESTS)) {
+        } else if (!rewardSteem.getSymbol().equals(AssetSymbolType.STEEM)) {
             throw new InvalidParameterException("The STEEM reward must be of symbol type STEEM.");
         } else if (rewardSteem.getAmount() < 0) {
             throw new InvalidParameterException("Cannot claim a negative STEEM amount");
