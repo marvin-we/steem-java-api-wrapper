@@ -2,21 +2,17 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -26,14 +22,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCreateOperation extends Operation {
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
-    @JsonProperty("owner")
-    private AccountName owner;
-    @JsonProperty("orderid")
-    // Type is uint32 in the original code, but has to be long here as Java does
-    // not support unsigned numbers accurate.
-    private long orderId;
+public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     @JsonProperty("amount_to_sell")
     private Asset amountToSell;
     @JsonProperty("min_to_receive")
@@ -45,13 +34,81 @@ public class LimitOrderCreateOperation extends Operation {
 
     /**
      * Create a new limit order operation.
+     * 
+     * @param owner
+     *            The account to create the operation for (see
+     *            {@link #setOwner(AccountName)}).
+     * @param orderId
+     *            The id of this order (see {@link #setOrderId(long)}).
+     * @param amountToSell
+     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     * @param minToReceive
+     *            The minimal amount to receive for the offered asset (see
+     *            {@link #setMinToReceive(Asset)}).
+     * @param fillOrKill
+     *            Define if this order is a fill or kill order (see
+     *            {@link #setFillOrKill(Boolean)}).
+     * @param expirationDate
+     *            Define how long this order is valid (see
+     *            {@link #setExpirationDate(TimePointSec)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreateOperation() {
+    public LimitOrderCreateOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("orderid") long orderId,
+            @JsonProperty("amount_to_sell") Asset amountToSell, @JsonProperty("min_to_receive") Asset minToReceive,
+            @JsonProperty("fill_or_kill") Boolean fillOrKill, @JsonProperty("expiration") TimePointSec expirationDate) {
         super(false);
-        // Set default values:
-        this.setOrderId(0);
-        this.setFillOrKill(false);
-        this.setExpirationDate(new TimePointSec(System.currentTimeMillis()));
+
+        this.setOwner(owner);
+        this.setOrderId(orderId);
+        this.setAmountToSell(amountToSell);
+        this.setMinToReceive(minToReceive);
+        this.setFillOrKill(fillOrKill);
+        this.setExpirationDate(expirationDate);
+    }
+
+    /**
+     * Like {@link #LimitOrderCreateOperation(AccountName, long, Asset, Asset)},
+     * but this constructor applies default values for the
+     * <code>fillOrKill</code> and the <code>expirationDate</code> parameters.
+     * The <code>fillOrKill</code> parameter is set to false and the
+     * <code>expirationDate</code> to the latest possible date, so that it will
+     * never expire.
+     * 
+     * @param owner
+     *            The account to create the operation for (see
+     *            {@link #setOwner(AccountName)}).
+     * @param orderId
+     *            The id of this order (see {@link #setOrderId(long)}).
+     * @param amountToSell
+     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     * @param minToReceive
+     *            The minimal amount to receive for the offered asset (see
+     *            {@link #setMinToReceive(Asset)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public LimitOrderCreateOperation(AccountName owner, long orderId, Asset amountToSell, Asset minToReceive) {
+        this(owner, orderId, amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
+    }
+
+    /**
+     * Like {@link #LimitOrderCreateOperation(AccountName, long, Asset, Asset)},
+     * but also sets the <code>orderId</code> to its default value (0).
+     * 
+     * @param owner
+     *            The account to create the operation for (see
+     *            {@link #setOwner(AccountName)}).
+     * @param amountToSell
+     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     * @param minToReceive
+     *            The minimal amount to receive for the offered asset (see
+     *            {@link #setMinToReceive(Asset)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public LimitOrderCreateOperation(AccountName owner, Asset amountToSell, Asset minToReceive) {
+        this(owner, 0L, amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
     }
 
     /**
@@ -64,13 +121,19 @@ public class LimitOrderCreateOperation extends Operation {
     }
 
     /**
-     * Get the account to create the order for. <b>Notice:</b> The private
+     * Set the account to create the order for. <b>Notice:</b> The private
      * active key of this account needs to be stored in the key storage.
      * 
      * @param owner
      *            The account to create the order for.
+     * @throws InvalidParameterException
+     *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
+        if (owner == null) {
+            throw new InvalidParameterException("The provided owner can't be null.");
+        }
+
         this.owner = owner;
     }
 
@@ -134,41 +197,71 @@ public class LimitOrderCreateOperation extends Operation {
     }
 
     /**
-     * Was this order a fill or kill order?
+     * Get the information if this order was a "fill or kill" order. A "fill or
+     * kill" is an option that can be added to limit order. If set to
+     * <code>true</code>, the order will be automatically removed, if the order
+     * can't be fullfilled immediatly.
      * 
-     * @return true if this order was a fill or kill order.
+     * @return <code>true</code> if this order was a fill or kill order,
+     *         otherwise <code>false</code>.
      */
     public Boolean getFillOrKill() {
         return fillOrKill;
     }
 
     /**
-     * Define if this order is a fill or kill order.
+     * Define if this order was a "fill or kill" order. A "fill or kill" is an
+     * option that can be added to limit order. If set to <code>true</code>, the
+     * order will be automatically removed, if the order can't be fullfilled
+     * immediatly.
      * 
      * @param fillOrKill
-     *            True if this order is a fill or kill order.
+     *            <code>true</code> if this order is a fill or kill order,
+     *            otherwise <code>false</code>.
      */
     public void setFillOrKill(Boolean fillOrKill) {
-        this.fillOrKill = fillOrKill;
+        if (fillOrKill == null) {
+            this.fillOrKill = false;
+        } else {
+            this.fillOrKill = fillOrKill;
+        }
     }
 
     /**
-     * TODO:
+     * Get the expiration date for this order.
      * 
-     * @return the expirationDate
+     * @return The expiration date of this order.
      */
     public TimePointSec getExpirationDate() {
         return expirationDate;
     }
 
     /**
-     * TODO:
+     * Set the expiration date for this order.
      * 
      * @param expirationDate
-     *            the expirationDate to set
+     *            The expiration date to set.
      */
     public void setExpirationDate(TimePointSec expirationDate) {
-        this.expirationDate = expirationDate;
+        if (expirationDate == null) {
+            this.expirationDate = new TimePointSec(Long.MAX_VALUE);
+        } else {
+            this.expirationDate = expirationDate;
+        }
+    }
+
+    /**
+     * TODO: Validate all parameter of this Operation type.
+     */
+    public void validate() {
+        /*
+         * FC_ASSERT( (is_asset_type(amount_to_sell, STEEM_SYMBOL) &&
+         * is_asset_type(min_to_receive, SBD_SYMBOL)) ||
+         * (is_asset_type(amount_to_sell, SBD_SYMBOL) &&
+         * is_asset_type(min_to_receive, STEEM_SYMBOL)),
+         * "Limit order must be for the STEEM:SBD market"); (amount_to_sell /
+         * min_to_receive).validate();
+         */
     }
 
     @Override
@@ -193,11 +286,5 @@ public class LimitOrderCreateOperation extends Operation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-    
-    @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }

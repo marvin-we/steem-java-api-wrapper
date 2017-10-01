@@ -9,10 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCreate2OperationIT extends BaseIntegrationTest {
+public class LimitOrderCreate2OperationIT extends BaseTransactionalIntegrationTest {
     // private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681456;
     // private static final int TRANSACTION_INDEX = 0;
     // private static final int OPERATION_INDEX = 0;
@@ -44,9 +44,7 @@ public class LimitOrderCreate2OperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
-
-        LimitOrderCreate2Operation limitOrderCreate2Operation = new LimitOrderCreate2Operation();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         Asset base = new Asset();
         base.setAmount(1L);
@@ -56,27 +54,26 @@ public class LimitOrderCreate2OperationIT extends BaseIntegrationTest {
         quote.setAmount(10L);
         quote.setSymbol(AssetSymbolType.STEEM);
 
-        Price exchangeRate = new Price();
-        exchangeRate.setBase(base);
-        exchangeRate.setQuote(quote);
-
-        limitOrderCreate2Operation.setExchangeRate(exchangeRate);
+        Price exchangeRate = new Price(base, quote);
 
         Asset amountToSell = new Asset();
         amountToSell.setAmount(1L);
         amountToSell.setSymbol(AssetSymbolType.SBD);
 
-        limitOrderCreate2Operation.setAmountToSell(amountToSell);
-        limitOrderCreate2Operation.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
-        limitOrderCreate2Operation.setFillOrKill(false);
-        limitOrderCreate2Operation.setOrderId(492991L);
-        limitOrderCreate2Operation.setOwner(new AccountName("dez1337"));
+        TimePointSec expirationDate = new TimePointSec(EXPIRATION_DATE);
+        boolean fillOrKill = false;
+        long orderId = 492991L;
+        AccountName owner = new AccountName("dez1337");
+
+        LimitOrderCreate2Operation limitOrderCreate2Operation = new LimitOrderCreate2Operation(owner, orderId,
+                amountToSell, fillOrKill, exchangeRate, expirationDate);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(limitOrderCreate2Operation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -88,12 +85,12 @@ public class LimitOrderCreate2OperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
