@@ -2,16 +2,16 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -20,6 +20,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class EscrowDisputeOperation extends AbstractEscrowOperation {
+    @JsonProperty("who")
     private AccountName who;
 
     /**
@@ -28,71 +29,60 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
      * If either the sender or receiver of an escrow payment has an issue, they
      * can raise it for dispute. Once a payment is in dispute, the agent has
      * authority over who gets what.
-     */
-    public EscrowDisputeOperation() {
-        super(false);
-        // Apply default values:
-        this.setEscrowId(30);
-    }
-
-    /**
-     * Get the account who wants to transfer the fund to the {@link #to to}
-     * account.
-     * 
-     * @return The account who wants to transfer the fund.
-     */
-    public AccountName getFrom() {
-        return from;
-    }
-
-    /**
-     * Set the account who wants to transfer the fund to the {@link #to to}
-     * account. <b>Notice:</b> The private active key of this account needs to
-     * be stored in the key storage.
      * 
      * @param from
-     *            The account who wants to transfer the fund.
-     */
-    public void setFrom(AccountName from) {
-        this.from = from;
-    }
-
-    /**
-     * Get the account who should receive the funds.
-     * 
-     * @return The account who should receive the funds.
-     */
-    public AccountName getTo() {
-        return to;
-    }
-
-    /**
-     * Set the account who should receive the funds.
-     * 
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
      * @param to
-     *            The account who should receive the funds.
-     */
-    public void setTo(AccountName to) {
-        this.to = to;
-    }
-
-    /**
-     * Get the agent account.
-     * 
-     * @return The agent account.
-     */
-    public AccountName getAgent() {
-        return agent;
-    }
-
-    /**
-     * Set the agent account.
-     * 
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
      * @param agent
-     *            The agent account.
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param escrowId
+     *            The <b>unique</b> id of the escrow operation (see
+     *            {@link #setEscrowId(long)}).
+     * @param who
+     *            The account who disputes the escrow operation (see
+     *            {@link #setWho(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the arguemnts does not fulfill the requirements.
      */
-    public void setAgent(AccountName agent) {
-        this.agent = agent;
+    @JsonCreator
+    public EscrowDisputeOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
+            @JsonProperty("agent") AccountName agent, @JsonProperty("escrow_id") long escrowId,
+            @JsonProperty("who") AccountName who) {
+        super(false);
+
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAgent(agent);
+        this.setEscrowId(escrowId);
+        this.setWho(who);
+    }
+
+    /**
+     * Like
+     * {@link #EscrowDisputeOperation(AccountName, AccountName, AccountName, long, AccountName)},
+     * but sets the <code>escrowId</code> to its default value (30).
+     * 
+     * @param from
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
+     * @param agent
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param who
+     *            The account who disputes the escrow operation (see
+     *            {@link #setWho(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the arguemnts does not fulfill the requirements.
+     */
+    public EscrowDisputeOperation(AccountName from, AccountName to, AccountName agent, AccountName who) {
+        this(from, to, agent, 30, who);
     }
 
     /**
@@ -105,33 +95,27 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
     }
 
     /**
-     * Set the account who approves this operation. This can either be the
+     * Set the account who disputes this operation. This can either be the
      * {@link #to to} account or the {@link #agent agent} account.
      * 
      * @param who
-     *            The account which approved this operation.
+     *            The account which disputes this operation.
+     * @throws InvalidParameterException
+     *             If the <code>who</code> is null.
      */
     public void setWho(AccountName who) {
+        if (who == null) {
+            throw new InvalidParameterException("The who account can't be null.");
+        }
+
         this.who = who;
     }
 
     /**
-     * Get the unique id of this escrow operation.
-     * 
-     * @return The unique id of this escrow operation.
+     * TODO: Validate all parameter of this Operation type.
      */
-    public int getEscrowId() {
-        return (int) escrowId;
-    }
-
-    /**
-     * Set the unique id of this escrow operation.
-     * 
-     * @param escrowId
-     *            The unique id of this escrow operation.
-     */
-    public void setEscrowId(long escrowId) {
-        this.escrowId = escrowId;
+    public void validate() {
+        // FC_ASSERT( who == from || who == to, "who must be from or to" );
     }
 
     @Override
@@ -155,11 +139,5 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-    
-    @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }

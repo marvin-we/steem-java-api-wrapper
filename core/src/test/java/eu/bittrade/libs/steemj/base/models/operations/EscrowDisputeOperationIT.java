@@ -10,9 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class EscrowDisputeOperationIT extends BaseIntegrationTest {
+public class EscrowDisputeOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 9543384;
     private static final int TRANSACTION_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
@@ -32,23 +32,33 @@ public class EscrowDisputeOperationIT extends BaseIntegrationTest {
             + "4657a3133333706737465656d6a0764657a313333372200000000011c2deb8ab73f8e68ad02b700291a237e8"
             + "dcd918d54b0259ba51d887de8726c653f306f27c86f76891c070a84f1979935afdba31ed2a08a896b73badfc" + "4b1050b16";
 
+    /**
+     * <b>Attention:</b> This test class requires a valid active key of the used
+     * "from" account. If no active key is provided or the active key is not valid an
+     * Exception will be thrown. The private key is passed as a -D parameter
+     * during test execution.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
-        EscrowDisputeOperation escrowDisputeOperation = new EscrowDisputeOperation();
+        AccountName agent = new AccountName("steemj");
+        AccountName from = new AccountName("dez1337");
+        AccountName to = new AccountName("dez1337");
+        AccountName who = new AccountName("dez1337");
+        int escrowId = 34;
 
-        escrowDisputeOperation.setAgent(new AccountName("steemj"));
-        escrowDisputeOperation.setFrom(new AccountName("dez1337"));
-        escrowDisputeOperation.setTo(new AccountName("dez1337"));
-        escrowDisputeOperation.setWho(new AccountName("dez1337"));
-        escrowDisputeOperation.setEscrowId(34);
+        EscrowDisputeOperation escrowDisputeOperation = new EscrowDisputeOperation(from, to, agent, escrowId, who);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(escrowDisputeOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -67,12 +77,12 @@ public class EscrowDisputeOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }

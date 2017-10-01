@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
@@ -50,8 +51,14 @@ abstract class AbstractEscrowOperation extends Operation {
      * 
      * @param from
      *            The account who wants to transfer the fund.
+     * @throws InvalidParameterException
+     *             If the <code>from</code> is null.
      */
     public void setFrom(AccountName from) {
+        if (from == null) {
+            throw new InvalidParameterException("The from account can't be null.");
+        }
+
         this.from = from;
     }
 
@@ -69,8 +76,14 @@ abstract class AbstractEscrowOperation extends Operation {
      * 
      * @param to
      *            The account who should receive the funds.
+     * @throws InvalidParameterException
+     *             If the <code>to</code> is null.
      */
     public void setTo(AccountName to) {
+        if (to == null) {
+            throw new InvalidParameterException("The to account can't be null.");
+        }
+
         this.to = to;
     }
 
@@ -88,8 +101,14 @@ abstract class AbstractEscrowOperation extends Operation {
      * 
      * @param agent
      *            The agent account.
+     * @throws InvalidParameterException
+     *             If the <code>agent</code> is null.
      */
     public void setAgent(AccountName agent) {
+        if (agent == null) {
+            throw new InvalidParameterException("The agent can't be null.");
+        }
+
         this.agent = agent;
     }
 

@@ -2,16 +2,16 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -20,7 +20,9 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class EscrowApproveOperation extends AbstractEscrowOperation {
+    @JsonProperty("who")
     private AccountName who;
+    @JsonProperty("approve")
     private Boolean approve;
 
     /**
@@ -30,72 +32,92 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      * valid on the blockchain. Once a part approves the escrow, the cannot
      * revoke their approval. Subsequent escrow approve operations, regardless
      * of the approval, will be rejected.
-     */
-    public EscrowApproveOperation() {
-        super(false);
-        // Apply default values:
-        this.setEscrowId(30);
-        this.setApprove(true);
-    }
-
-    /**
-     * Get the account who wants to transfer the fund to the {@link #to to}
-     * account.
-     * 
-     * @return The account who wants to transfer the fund.
-     */
-    public AccountName getFrom() {
-        return from;
-    }
-
-    /**
-     * Set the account who wants to transfer the fund to the {@link #to to}
-     * account. <b>Notice:</b> The private active key of this account needs to
-     * be stored in the key storage.
      * 
      * @param from
-     *            The account who wants to transfer the fund.
-     */
-    public void setFrom(AccountName from) {
-        this.from = from;
-    }
-
-    /**
-     * Get the account who should receive the funds.
-     * 
-     * @return The account who should receive the funds.
-     */
-    public AccountName getTo() {
-        return to;
-    }
-
-    /**
-     * Set the account who should receive the funds.
-     * 
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
      * @param to
-     *            The account who should receive the funds.
-     */
-    public void setTo(AccountName to) {
-        this.to = to;
-    }
-
-    /**
-     * Get the agent account.
-     * 
-     * @return The agent account.
-     */
-    public AccountName getAgent() {
-        return agent;
-    }
-
-    /**
-     * Set the agent account.
-     * 
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
      * @param agent
-     *            The agent account.
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param escrowId
+     *            The <b>unique</b> id of the escrow operation (see
+     *            {@link #setEscrowId(long)}).
+     * @param who
+     *            The account who approves the escrow operation (see
+     *            {@link #setWho(AccountName)}).
+     * @param approve
+     *            Define if the {@link #getWho()} account approves the operation
+     *            (see {@link #setApprove(Boolean)}).
+     * @throws InvalidParameterException
+     *             If one of the arguemnts does not fulfill the requirements.
      */
-    public void setAgent(AccountName agent) {
-        this.agent = agent;
+    @JsonCreator
+    public EscrowApproveOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
+            @JsonProperty("agent") AccountName agent, @JsonProperty("escrow_id") long escrowId,
+            @JsonProperty("who") AccountName who, @JsonProperty("approve") Boolean approve) {
+        super(false);
+
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAgent(agent);
+        this.setEscrowId(escrowId);
+        this.setWho(who);
+        this.setApprove(approve);
+    }
+
+    /**
+     * Like
+     * {@link #EscrowApproveOperation(AccountName, AccountName, AccountName, long, AccountName, Boolean)},
+     * will automatically approve the operation.
+     * 
+     * @param from
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
+     * @param agent
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param escrowId
+     *            The <b>unique</b> id of the escrow operation (see
+     *            {@link #setEscrowId(long)}).
+     * @param who
+     *            The account who approves the escrow operation (see
+     *            {@link #setWho(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the arguemnts does not fulfill the requirements.
+     */
+    public EscrowApproveOperation(AccountName from, AccountName to, AccountName agent, long escrowId, AccountName who) {
+        this(from, to, agent, escrowId, who, true);
+    }
+
+    /**
+     * Like
+     * {@link #EscrowApproveOperation(AccountName, AccountName, AccountName, long, AccountName, Boolean)},
+     * but sets the <code>escrowId</code> to its default value (30) and will
+     * automatically approve the operation.
+     * 
+     * @param from
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
+     * @param agent
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param who
+     *            The account who approves the escrow operation (see
+     *            {@link #setWho(AccountName)}).
+     * @throws InvalidParameterException
+     *             If one of the arguemnts does not fulfill the requirements.
+     */
+    public EscrowApproveOperation(AccountName from, AccountName to, AccountName agent, AccountName who) {
+        this(from, to, agent, 30, who, true);
     }
 
     /**
@@ -113,28 +135,15 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      * 
      * @param who
      *            The account which approved this operation.
+     * @throws InvalidParameterException
+     *             If the <code>who</code> is null.
      */
     public void setWho(AccountName who) {
+        if (who == null) {
+            throw new InvalidParameterException("The who account can't be null.");
+        }
+
         this.who = who;
-    }
-
-    /**
-     * Get the unique id of this escrow operation.
-     * 
-     * @return The unique id of this escrow operation.
-     */
-    public int getEscrowId() {
-        return (int) escrowId;
-    }
-
-    /**
-     * Set the unique id of this escrow operation.
-     * 
-     * @param escrowId
-     *            The unique id of this escrow operation.
-     */
-    public void setEscrowId(long escrowId) {
-        this.escrowId = escrowId;
     }
 
     /**
@@ -155,6 +164,13 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      */
     public void setApprove(Boolean approve) {
         this.approve = approve;
+    }
+
+    /**
+     * TODO: Validate all parameter of this Operation type.
+     */
+    public void validate() {
+        // FC_ASSERT( who == from || who == to, "who must be from or to" );
     }
 
     @Override
@@ -179,11 +195,5 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-    
-    @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }
