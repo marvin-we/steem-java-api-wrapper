@@ -9,9 +9,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import eu.bittrade.libs.steemj.base.models.serializer.TimePointSecSerializer;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -23,8 +22,8 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
-@JsonSerialize(using = TimePointSecSerializer.class)
 public class TimePointSec implements ByteTransformable {
+    @JsonIgnore
     private long dateTime;
 
     /**
@@ -65,6 +64,7 @@ public class TimePointSec implements ByteTransformable {
      * 
      * @return The date as String.
      */
+    @JsonValue
     public String getDateTime() {
         return SteemJUtils.transformDateToString(this.getDateTimeAsDate());
     }
