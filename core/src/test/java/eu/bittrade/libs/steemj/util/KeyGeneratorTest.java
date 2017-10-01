@@ -15,6 +15,13 @@ import org.junit.Test;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class KeyGeneratorTest {
+    /**
+     * Generate different key sets based on different brain keys and verify the
+     * results.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testKeyGeneration() throws Exception {
         KeyGenerator keyGeneratorOne = new KeyGenerator(
@@ -55,6 +62,13 @@ public class KeyGeneratorTest {
                 equalTo("5HqSHfckRKmZLqqWW7p2iU18BYvyjxQs2sksRWhXMWXsNEtxPZU"));
     }
 
+    /**
+     * Generate a sequence of key sets based on the same brain key and verify
+     * the results.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Test
     public void testKeyGenerationSequence() throws Exception {
         final ArrayList<String> EXPECTED_KEYS = new ArrayList<>();

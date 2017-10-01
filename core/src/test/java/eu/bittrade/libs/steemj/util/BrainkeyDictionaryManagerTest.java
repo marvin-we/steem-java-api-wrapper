@@ -14,6 +14,9 @@ import org.junit.Test;
 public class BrainkeyDictionaryManagerTest {
     private static final int NUMBER_OF_WORDS = 49744;
 
+    /**
+     * Verify that the brain key dictonary has the correct amount of words.
+     */
     @Test
     public void testBrainkeyDictionaryManager() {
         assertThat(BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary().length, equalTo(NUMBER_OF_WORDS));

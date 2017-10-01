@@ -352,7 +352,7 @@ public class SteemJIT extends BaseIntegrationTest {
         assertEquals("expect that 8 results are returned", repliesByLastUpdate.size(), 8);
         assertEquals("expect " + ACCOUNT + " to be the first returned author", repliesByLastUpdate.get(0).getAuthor(),
                 ACCOUNT);
-        assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK.getLink(),
+        assertEquals("expect " + PERMLINK + " to be the first returned permlink", PERMLINK,
                 repliesByLastUpdate.get(0).getPermlink());
     }
 
@@ -394,8 +394,8 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetWitnessByAccount() throws Exception {
         final Witness activeWitnessesByVote = steemJ.getWitnessByAccount(WITNESS_ACCOUNT);
 
-        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account",
-                WITNESS_ACCOUNT.getName(), activeWitnessesByVote.getOwner());
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the owner of the returned witness account", WITNESS_ACCOUNT,
+                activeWitnessesByVote.getOwner());
     }
 
     @Category({ IntegrationTest.class })
@@ -404,7 +404,7 @@ public class SteemJIT extends BaseIntegrationTest {
         final List<Witness> activeWitnessesByVote = steemJ.getWitnessByVote(WITNESS_ACCOUNT, 10);
 
         assertEquals("expect that 10 results are returned", activeWitnessesByVote.size(), 10);
-        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned witness", WITNESS_ACCOUNT.getName(),
+        assertEquals("expect " + WITNESS_ACCOUNT + " to be the first returned witness", WITNESS_ACCOUNT,
                 activeWitnessesByVote.get(0).getOwner());
     }
 
@@ -560,5 +560,4 @@ public class SteemJIT extends BaseIntegrationTest {
         // TODO: Implement
         steemJ.getConversionRequests(new AccountName("dez1337"));
     }
-
 }
