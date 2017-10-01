@@ -2,15 +2,16 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
@@ -55,20 +56,139 @@ public class CommentOptionsOperation extends Operation {
      *
      * The max_accepted_payout may be decreased, but never increased. The
      * percent_steem_dollars may be decreased, but never increased
-     *
+     * 
+     * @param author
+     *            The author of the post this operation should apply to (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            The permlink of the post this operation should apply to (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param maxAcceptedPayout
+     *            The maximal excepted payout (see
+     *            {@link #setMaxAcceptedPayout(Asset)}).
+     * @param percentSteemDollars
+     *            The percent of Steem dollars the reward should be paid in (see
+     *            {@link #setPercentSteemDollars(Short)}).
+     * @param allowVotes
+     *            Define if votes are allowed (see
+     *            {@link #setAllowVotes(Boolean)}).
+     * @param allowCurationRewards
+     *            Define if a curation reward should be paid (see
+     *            {@link #setAllowCurationRewards(Boolean)}).
+     * @param extensions
+     *            Additional extensions to set (see
+     *            {@link #setExtensions(List)}.
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
      */
-    public CommentOptionsOperation() {
-        // Define the required key type for this operation.
+    @JsonCreator
+    public CommentOptionsOperation(@JsonProperty("author") AccountName author,
+            @JsonProperty("permlink") Permlink permlink, @JsonProperty("max_accepted_payout") Asset maxAcceptedPayout,
+            @JsonProperty("percent_steem_dollars") Short percentSteemDollars,
+            @JsonProperty("allow_votes") Boolean allowVotes,
+            @JsonProperty("allow_curation_rewards") Boolean allowCurationRewards,
+            @JsonProperty("extensions") List<CommentOptionsExtension> extensions) {
         super(false);
-        // Set default values:
-        Asset localMaxAcceptedPayout = new Asset();
-        localMaxAcceptedPayout.setAmount(1000000000);
-        localMaxAcceptedPayout.setSymbol(AssetSymbolType.SBD);
 
-        this.setMaxAcceptedPayout(localMaxAcceptedPayout);
-        this.setPercentSteemDollars((short) 10000);
-        this.setAllowVotes(true);
-        this.setAllowCurationRewards(true);
+        this.setAuthor(author);
+        this.setPermlink(permlink);
+        this.setMaxAcceptedPayout(maxAcceptedPayout);
+        this.setPercentSteemDollars(percentSteemDollars);
+        this.setAllowVotes(allowVotes);
+        this.setAllowCurationRewards(allowCurationRewards);
+        this.setExtensions(extensions);
+
+    }
+
+    /**
+     * Like
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
+     * but sets the maximum payout to the highest possible value, allows votes
+     * and curation rewards.
+     * 
+     * @param author
+     *            The author of the post this operation should apply to (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            The permlink of the post this operation should apply to (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param percentSteemDollars
+     *            The percent of Steem dollars the reward should be paid in (see
+     *            {@link #setPercentSteemDollars(Short)}).
+     * @param extensions
+     *            Additional extensions to set (see
+     *            {@link #setExtensions(List)}.
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public CommentOptionsOperation(AccountName author, Permlink permlink, Short percentSteemDollars,
+            List<CommentOptionsExtension> extensions) {
+        this(author, permlink, new Asset(1000000000, AssetSymbolType.SBD), percentSteemDollars, true, true, extensions);
+    }
+
+    /**
+     * Like
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Short, List)}, but
+     * does not require extensions.
+     * 
+     * @param author
+     *            The author of the post this operation should apply to (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            The permlink of the post this operation should apply to (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param percentSteemDollars
+     *            The percent of Steem dollars the reward should be paid in (see
+     *            {@link #setPercentSteemDollars(Short)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public CommentOptionsOperation(AccountName author, Permlink permlink, Short percentSteemDollars) {
+        this(author, permlink, percentSteemDollars, new ArrayList<>());
+    }
+
+    /**
+     * Like
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
+     * but sets the maximum payout to the highest possible value, allows votes,
+     * allows curation rewards and sets the <code>percentSteemDollars</code> to
+     * 100.0%.
+     * 
+     * @param author
+     *            The author of the post this operation should apply to (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            The permlink of the post this operation should apply to (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param extensions
+     *            Additional extensions to set (see
+     *            {@link #setExtensions(List)}.
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public CommentOptionsOperation(AccountName author, Permlink permlink, List<CommentOptionsExtension> extensions) {
+        this(author, permlink, (short) 10000, extensions);
+    }
+
+    /**
+     * Like {@link #CommentOptionsOperation(AccountName, Permlink, List)}, but
+     * does not require extensions.
+     * 
+     * @param author
+     *            The author of the post this operation should apply to (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            The permlink of the post this operation should apply to (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param commentOptionsExtensions 
+     * @param allowCurationRewards2 
+     * @param percentSteemDollars2 
+     * @param object 
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    public CommentOptionsOperation(AccountName author, Permlink permlink, Object object, short percentSteemDollars2, boolean allowCurationRewards2, ArrayList<CommentOptionsExtension> commentOptionsExtensions) {
+        this(author, permlink, new ArrayList<>());
     }
 
     /**
@@ -86,8 +206,14 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @param author
      *            The account name of the author.
+     * @throws InvalidParameterException
+     *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
+        if (author == null) {
+            throw new InvalidParameterException("The author can't be null.");
+        }
+
         this.author = author;
     }
 
@@ -105,8 +231,14 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @param permlink
      *            The permanent link.
+     * @throws InvalidParameterException
+     *             If the <code>permlink</code> is null.
      */
-    public void setPermlink(String permlink) {
+    public void setPermlink(Permlink permlink) {
+        if (permlink == null) {
+            throw new InvalidParameterException("The permanent link can't be null.");
+        }
+
         this.permlink = permlink;
     }
 
@@ -124,8 +256,19 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @param maxAcceptedPayout
      *            The SBD value of the maximum payout this post will receive.
+     * @throws InvalidParameterException
+     *             If the <code>maxAcceptedPayout</code> is null, has a
+     *             different symbol than SBD or the amount is less than 0.
      */
     public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
+        if (maxAcceptedPayout == null) {
+            throw new InvalidParameterException("The maximal accepted payout can't be null.");
+        } else if (!maxAcceptedPayout.getSymbol().equals(AssetSymbolType.SBD)) {
+            throw new InvalidParameterException("The maximal accepted payout must be in SBD.");
+        } else if (maxAcceptedPayout.getAmount() < 0) {
+            throw new InvalidParameterException("Cannot accept less than 0 payout.");
+        }
+
         this.maxAcceptedPayout = maxAcceptedPayout;
     }
 
@@ -179,11 +322,18 @@ public class CommentOptionsOperation extends Operation {
     }
 
     /**
-     * 
      * @param percentSteemDollars
      *            The percent of Steem Dollars.
+     * @throws InvalidParameterException
+     *             If the <code>percentSteemDollars</code> is higher than 10000
+     *             which is equal to 100.00%.
      */
     public void setPercentSteemDollars(Short percentSteemDollars) {
+        if (percentSteemDollars > 10000) {
+            throw new InvalidParameterException(
+                    "The percent of steem dollars can't be higher than 10000 which is equivalent to 100%.");
+        }
+
         this.percentSteemDollars = percentSteemDollars;
     }
 
@@ -246,6 +396,6 @@ public class CommentOptionsOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAuthor(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAuthor(), PrivateKeyType.POSTING);
     }
 }

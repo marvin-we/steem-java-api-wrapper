@@ -10,12 +10,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -26,7 +27,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommentOptionsOperationExtensionIT extends BaseIntegrationTest {
+public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION_WITH_EXTENSION = 12615224;
     private static final int TRANSACTION_INDEX_WITH_EXTENSION = 9;
     private static final int OPERATION_INDEX_WITH_EXTENSION = 1;
@@ -52,22 +53,21 @@ public class CommentOptionsOperationExtensionIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         // If the default expiration date for all integration tests
         // (2016-04-06T08:29:27UTC) is used, the transaction can't be verified.
         // As a workaround new date is set that is not that far in the past.
-        transaction.setExpirationDate(new TimePointSec("2017-08-06T08:29:27UTC"));
+        signedTransaction.setExpirationDate(new TimePointSec("2017-08-06T08:29:27UTC"));
 
-        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation();
-        commentOptionsOperation.setAuthor(new AccountName("dez1337"));
-        commentOptionsOperation.setPermlink("steemj-v0-2-4-has-been-released-update-9");
-        commentOptionsOperation.setAllowVotes(true);
-        commentOptionsOperation.setAllowCurationRewards(true);
-        commentOptionsOperation.setPercentSteemDollars((short) 10000);
+        AccountName author = new AccountName("dez1337");
+        Permlink permlink = new Permlink("steemj-v0-2-4-has-been-released-update-9");
+        boolean allowVotes = true;
+        boolean allowCurationRewards = true;
+        short percentSteemDollars = (short) 10000;
 
         BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
-        beneficiaryRouteType.setAccount(new AccountName("SteemJ"));
+        beneficiaryRouteType.setAccount(new AccountName("steemJ"));
         beneficiaryRouteType.setWeight((short) 500);
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
@@ -81,13 +81,15 @@ public class CommentOptionsOperationExtensionIT extends BaseIntegrationTest {
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
         commentOptionsExtensions.add(commentOptionsExtension);
 
-        commentOptionsOperation.setExtensions(commentOptionsExtensions);
+        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink, null,
+                percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOptionsOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -121,12 +123,12 @@ public class CommentOptionsOperationExtensionIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
