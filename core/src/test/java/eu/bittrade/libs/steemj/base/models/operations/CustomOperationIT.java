@@ -10,9 +10,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -23,7 +23,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CustomOperationIT extends BaseIntegrationTest {
+public class CustomOperationIT extends BaseTransactionalIntegrationTest {
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 12123047;
     private static final int TRANSACTION_INDEX = 7;
     private static final int OPERATION_INDEX = 1;
@@ -45,28 +45,27 @@ public class CustomOperationIT extends BaseIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         // If the default expiration date for all integration tests
         // (2016-04-06T08:29:27UTC) is used, the transaction can't be verified.
         // As a workaround new date is set that is not that far in the past.
-        transaction.setExpirationDate(new TimePointSec("2017-04-06T08:29:27UTC"));
-
-        CustomOperation customOperation = new CustomOperation();
-
-        customOperation.setId(4312);
-        customOperation.setData("54657374466f72537465656d4a31323321");
+        signedTransaction.setExpirationDate(new TimePointSec("2017-04-06T08:29:27UTC"));
 
         ArrayList<AccountName> requiredAuths = new ArrayList<>();
         requiredAuths.add(new AccountName("dez1337"));
 
-        customOperation.setRequiredAuths(requiredAuths);
+        short id = 4312;
+        String data = "54657374466f72537465656d4a31323321";
+
+        CustomOperation customOperation = new CustomOperation(requiredAuths, id, data);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customOperation);
 
-        transaction.setOperations(operations);
-        transaction.sign();
+        signedTransaction.setOperations(operations);
+
+        sign();
     }
 
     @Category({ IntegrationTest.class })
@@ -87,12 +86,12 @@ public class CustomOperationIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void verifyTransaction() throws Exception {
-        assertThat(steemJ.verifyAuthority(transaction), equalTo(true));
+        assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(transaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }
 }
