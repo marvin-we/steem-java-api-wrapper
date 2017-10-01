@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -19,7 +18,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 public class AccountAuthHashMapDeserializer extends JsonDeserializer<Map<String, Integer>> {
     @Override
     public Map<String, Integer> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-            throws IOException, JsonProcessingException {
+            throws IOException {
 
         HashMap<String, Integer> result = new HashMap<>();
 

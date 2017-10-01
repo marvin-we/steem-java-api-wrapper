@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -21,7 +20,7 @@ import eu.bittrade.libs.steemj.base.models.PublicKey;
 public class PublicKeyHashMapDeserializer extends JsonDeserializer<Map<PublicKey, Integer>> {
     @Override
     public Map<PublicKey, Integer> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-            throws IOException, JsonProcessingException {
+            throws IOException {
 
         HashMap<PublicKey, Integer> result = new HashMap<>();
 
