@@ -2,15 +2,16 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bitcoinj.core.Utils;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -36,11 +37,39 @@ public class CustomOperation extends Operation {
 
     /**
      * Create a new custom operation.
+     * 
+     * @param requiredAuths
+     *            A list of account names whose private active keys are required
+     *            to sign the transaction (see {@link #setRequiredAuths(List)}).
+     * @param id
+     *            The id of this operation (see {@link #setId(int)}).
+     * @param data
+     *            The data (see {@link #setData(String)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public CustomOperation() {
+    @JsonCreator
+    public CustomOperation(@JsonProperty("required_auths") List<AccountName> requiredAuths,
+            @JsonProperty("id") short id, @JsonProperty("data") String data) {
         super(false);
-        // Set default values:
-        this.setId(0);
+
+        this.setRequiredAuths(requiredAuths);
+        this.setId(id);
+        this.setData(data);
+    }
+
+    /**
+     * Like {@link #CustomOperation(List, short, String)}, but sets the
+     * <code>id</code> to its default value (0).
+     * 
+     * @param requiredAuths
+     *            A list of account names whose private active keys are required
+     *            to sign the transaction (see {@link #setRequiredAuths(List)}).
+     * @param data
+     *            The data (see {@link #setData(String)}).
+     */
+    public CustomOperation(List<AccountName> requiredAuths, String data) {
+        this(requiredAuths, (short) 0, data);
     }
 
     /**
@@ -59,8 +88,14 @@ public class CustomOperation extends Operation {
      * 
      * @param requiredAuths
      *            The account names whose private active keys are required.
+     * @throws InvalidParameterException
+     *             If less than 1 account name has been provided.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
+        if (requiredAuths == null || requiredAuths.isEmpty()) {
+            throw new InvalidParameterException("At least on account must be specified.");
+        }
+
         this.requiredAuths = requiredAuths;
     }
 
@@ -133,7 +168,7 @@ public class CustomOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {

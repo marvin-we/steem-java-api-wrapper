@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,6 @@ import org.bitcoinj.core.Utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.annotations.AuthorityRequired;
-import eu.bittrade.libs.steemj.annotations.SignatureRequired;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -28,40 +27,58 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class CustomBinaryOperation extends Operation {
     // Original type is flat_set< account_name_type >.
-    @SignatureRequired(type = PrivateKeyType.OWNER)
     @JsonProperty("required_owner_auths")
     private List<AccountName> requiredOwnerAuths;
     // Original type is flat_set< account_name_type >.
-    @SignatureRequired(type = PrivateKeyType.ACTIVE)
     @JsonProperty("required_active_auths")
     private List<AccountName> requiredActiveAuths;
     // Original type is flat_set< account_name_type >.
-    @SignatureRequired(type = PrivateKeyType.POSTING)
     @JsonProperty("required_posting_auths")
     private List<AccountName> requiredPostingAuths;
     // Original type is vector< authority >.
-    @AuthorityRequired
     @JsonProperty("required_auths")
     private List<Authority> requiredAuths;
+    @JsonProperty("id")
     private String id;
+    @JsonProperty("data")
     private String data;
 
-    /// required auth accounts are the ones whose bandwidth is consumed
-    FC_ASSERT( (required_owner_auths.size() + required_active_auths.size() + required_posting_auths.size()) > 0, "at least on account must be specified" );
-    FC_ASSERT( id.size() <= 32, "id is too long" );
-    for( const auto& a : required_auths ) a.validate();
-    
     /**
      * Create a new custom binary operation.
+     * 
+     * @param requiredOwnerAuths
+     *            The owner authorities that need to sign this operation (see
+     *            {@link #setRequiredOwnerAuths(List)}).
+     * @param requiredActiveAuths
+     *            The active authorities that need to sign this operation (see
+     *            {@link #setRequiredActiveAuths(List)}).
+     * @param requiredPostingAuths
+     *            The posting authorities that need to sign this operation (see
+     *            {@link #setRequiredPostingAuths(List)}).
+     * @param requiredAuths
+     *            The required authorities that need to sign this operation (see
+     *            {@link #setRequiredAuths(List)}).
+     * @param id
+     *            The id of this operation (see {@link #setId(String)}).
+     * @param data
+     *            The data to set (see {@link #setData(String)}).
+     * @throws InvalidParameterException
+     *             If a parameter does not fulfill the requirements.
      */
-    public CustomBinaryOperation() {
+    public CustomBinaryOperation(@JsonProperty("required_owner_auths") List<AccountName> requiredOwnerAuths,
+            @JsonProperty("required_active_auths") List<AccountName> requiredActiveAuths,
+            @JsonProperty("required_posting_auths") List<AccountName> requiredPostingAuths,
+            @JsonProperty("required_auths") List<Authority> requiredAuths, @JsonProperty("id") String id,
+            @JsonProperty("data") String data) {
         // Define the required key type for this operation.
         super(false);
-        // Set default values.
-        this.requiredActiveAuths = new ArrayList<>();
-        this.requiredAuths = new ArrayList<>();
-        this.requiredOwnerAuths = new ArrayList<>();
-        this.requiredPostingAuths = new ArrayList<>();
+
+        this.setRequiredOwnerAuths(requiredOwnerAuths);
+        this.setRequiredActiveAuths(requiredActiveAuths);
+        this.setRequiredPostingAuths(requiredPostingAuths);
+        this.setRequiredAuths(requiredAuths);
+        this.setId(id);
+        this.setData(data);
     }
 
     /**
@@ -82,7 +99,11 @@ public class CustomBinaryOperation extends Operation {
      *            The account names whose private owner keys are required.
      */
     public void setRequiredOwnerAuths(List<AccountName> requiredOwnerAuths) {
-        this.requiredOwnerAuths = requiredOwnerAuths;
+        if (requiredOwnerAuths == null) {
+            this.requiredOwnerAuths = new ArrayList<>();
+        } else {
+            this.requiredOwnerAuths = requiredOwnerAuths;
+        }
     }
 
     /**
@@ -104,7 +125,11 @@ public class CustomBinaryOperation extends Operation {
      *            The account names whose private active keys are required.
      */
     public void setRequiredActiveAuths(List<AccountName> requiredActiveAuths) {
-        this.requiredActiveAuths = requiredActiveAuths;
+        if (requiredActiveAuths == null) {
+            this.requiredActiveAuths = new ArrayList<>();
+        } else {
+            this.requiredActiveAuths = requiredActiveAuths;
+        }
     }
 
     /**
@@ -126,7 +151,11 @@ public class CustomBinaryOperation extends Operation {
      *            The account names whose private posting keys are required.
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
-        this.requiredPostingAuths = requiredPostingAuths;
+        if (requiredPostingAuths == null) {
+            this.requiredPostingAuths = new ArrayList<>();
+        } else {
+            this.requiredPostingAuths = requiredPostingAuths;
+        }
     }
 
     /**
@@ -147,24 +176,29 @@ public class CustomBinaryOperation extends Operation {
      *            The account names whose private keys are required.
      */
     public void setRequiredAuths(List<Authority> requiredAuths) {
-        this.requiredAuths = requiredAuths;
+        if (requiredAuths == null) {
+            this.requiredAuths = new ArrayList<>();
+        } else {
+            this.requiredAuths = requiredAuths;
+        }
     }
 
     /**
-     * @return the id
+     * @return the id.
      */
     public String getId() {
         return id;
     }
 
     /**
-     * 
-     * TODO The id must be less than 32 characters long.
-     * 
      * @param id
-     *            the id to set
+     *            The id to set.
      */
     public void setId(String id) {
+        if (id.length() > 32) {
+            throw new InvalidParameterException("The id must be less than 32 characters long.");
+        }
+
         this.id = id;
     }
 
@@ -187,6 +221,16 @@ public class CustomBinaryOperation extends Operation {
      */
     public void setData(String data) {
         this.data = data;
+    }
+
+    /**
+     * TODO: Validate all parameter of this Operation type.
+     */
+    public void validate() {
+        // FC_ASSERT( (required_owner_auths.size() +
+        // required_active_auths.size() + required_posting_auths.size()) > 0,
+        // "at least on account must be specified" );
+        // for( const auto& a : required_auths ) a.validate();
     }
 
     @Override
@@ -240,10 +284,23 @@ public class CustomBinaryOperation extends Operation {
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
-    
+
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
+        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
+
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRequiredActiveAuths(),
+                PrivateKeyType.OWNER);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRequiredActiveAuths(),
+                PrivateKeyType.ACTIVE);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRequiredPostingAuths(),
+                PrivateKeyType.POSTING);
+        // TODO: Support authorities
+        // requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities,
+        // this.getRequiredAuths(),
+        // PrivateKeyType.OTHER);
+
+        return requiredAuthorities;
     }
 }
