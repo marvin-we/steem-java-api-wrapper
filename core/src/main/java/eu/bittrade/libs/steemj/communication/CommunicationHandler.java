@@ -51,7 +51,8 @@ import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
  */
 public class CommunicationHandler extends Endpoint implements MessageHandler.Whole<String> {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private static ObjectMapper mapper = getObjectMapper();
 
     private CountDownLatch responseCountDownLatch = new CountDownLatch(1);
     private ClientManager client;
@@ -78,19 +79,6 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
-
-        MAPPER.setDateFormat(simpleDateFormat);
-        MAPPER.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
-        MAPPER.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
-
-        SimpleModule simpleModule = new SimpleModule("BooleanAsString", new Version(1, 0, 0, null, null, null));
-        simpleModule.addSerializer(Boolean.class, new BooleanSerializer());
-        simpleModule.addSerializer(boolean.class, new BooleanSerializer());
-
-        MAPPER.registerModule(simpleModule);
 
         reconnect();
     }
@@ -144,7 +132,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             sendMessageSynchronously(requestObject);
 
             @SuppressWarnings("unchecked")
-            ResponseWrapperDTO<T> response = MAPPER.readValue(rawJsonResponse, ResponseWrapperDTO.class);
+            ResponseWrapperDTO<T> response = this.getObjectMapper().readValue(rawJsonResponse,
+                    ResponseWrapperDTO.class);
 
             if (response == null || "".equals(response.toString()) || response.getResult() == null
                     || "".equals(response.getResult().toString())) {
@@ -160,15 +149,15 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             }
 
             // Make sure that the inner result object has the correct type.
-            JavaType type = MAPPER.getTypeFactory().constructCollectionType(List.class, targetClass);
+            JavaType type = this.getObjectMapper().getTypeFactory().constructCollectionType(List.class, targetClass);
 
-            return MAPPER.convertValue(response.getResult(), type);
+            return this.getObjectMapper().convertValue(response.getResult(), type);
         } catch (JsonParseException | JsonMappingException e) {
             LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
 
             try {
                 // TODO: Find a better solution for errors in general.
-                throw new SteemResponseError(MAPPER.readValue(rawJsonResponse, SteemError.class));
+                throw new SteemResponseError(this.getObjectMapper().readValue(rawJsonResponse, SteemError.class));
             } catch (IOException ex) {
                 throw new SteemTransformationException("Could not transform the response into an object.", ex);
             }
@@ -237,12 +226,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             LOGGER.debug("Received callback: {}", message);
 
             try {
-                NotificationDTO response = MAPPER.readValue(message, NotificationDTO.class);
+                NotificationDTO response = this.getObjectMapper().readValue(message, NotificationDTO.class);
 
                 // Make sure that the inner result object is a BlockHeader.
                 CallbackHub.getInstance().getCallbackByUuid(Integer.valueOf(response.getParams()[0].toString()))
-                        .onNewBlock(MAPPER.convertValue(((ArrayList<Object>) (response.getParams()[1])).get(0),
-                                SignedBlockHeader.class));
+                        .onNewBlock(this.getObjectMapper().convertValue(
+                                ((ArrayList<Object>) (response.getParams()[1])).get(0), SignedBlockHeader.class));
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 LOGGER.error("Could not parse callback {}.", e);
@@ -250,8 +239,29 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
         }
     }
 
-    // TODO: Find a way to remove this.
-    public ObjectMapper getObjectMapper() {
-        return MAPPER;
+    /**
+     * Get a preconfigured jackson Object Mapper instance.
+     * 
+     * @return The object mapper.
+     */
+    public static ObjectMapper getObjectMapper() {
+        if (mapper == null) {
+            mapper = new ObjectMapper();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
+            simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
+
+            mapper.setDateFormat(simpleDateFormat);
+            mapper.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
+            SimpleModule simpleModule = new SimpleModule("BooleanAsString", new Version(1, 0, 0, null, null, null));
+            simpleModule.addSerializer(Boolean.class, new BooleanSerializer());
+            simpleModule.addSerializer(boolean.class, new BooleanSerializer());
+
+            mapper.registerModule(simpleModule);
+        }
+
+        return mapper;
     }
 }
