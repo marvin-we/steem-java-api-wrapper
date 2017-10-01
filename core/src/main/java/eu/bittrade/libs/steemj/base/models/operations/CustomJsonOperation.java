@@ -207,7 +207,7 @@ public class CustomJsonOperation extends Operation {
      *             If the given <code>json</code> is not valid.
      */
     public void setJson(String json) {
-        if (!SteemJUtils.verifyJsonString(json)) {
+        if (!json.isEmpty() && !SteemJUtils.verifyJsonString(json)) {
             throw new InvalidParameterException("The given String is no valid JSON");
         }
 
