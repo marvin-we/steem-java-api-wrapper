@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 
 /**
@@ -37,6 +39,7 @@ public class HardforkVersion extends Version implements ByteTransformable {
      * @param hardforkVersion
      *            The hardfork version to set.
      */
+    @JsonCreator
     public HardforkVersion(String hardforkVersion) {
         super(hardforkVersion);
     }

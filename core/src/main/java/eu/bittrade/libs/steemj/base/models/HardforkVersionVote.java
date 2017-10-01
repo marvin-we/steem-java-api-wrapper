@@ -5,7 +5,10 @@ import java.io.IOException;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -15,6 +18,8 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonDeserialize
+@JsonSerialize
 public class HardforkVersionVote extends BlockHeaderExtensions {
     @JsonProperty("hf_version")
     protected HardforkVersion hfVersion;
@@ -22,10 +27,18 @@ public class HardforkVersionVote extends BlockHeaderExtensions {
     protected TimePointSec hfTime;
 
     /**
-     * This object is only used to wrap the JSON response in a POJO, so
-     * therefore this class should not be instantiated.
+     * Create a new hardfork version vote object.
+     * 
+     * @param hfVersion
+     *            The hardfork version to set.
+     * @param hfTime
+     *            The hardfork time to set.
      */
-    private HardforkVersionVote() {
+    @JsonCreator
+    public HardforkVersionVote(@JsonProperty("hf_version") HardforkVersion hfVersion,
+            @JsonProperty("hf_time") TimePointSec hfTime) {
+        this.setHfTime(hfTime);
+        this.setHfVersion(hfVersion);
     }
 
     /**
