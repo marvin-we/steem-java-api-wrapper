@@ -85,6 +85,36 @@ public class Price implements ByteTransformable {
         this.quote = quote;
     }
 
+    /**
+     * Multiply this price instance with an <code>Asset</code> instance.
+     * 
+     * @param asset
+     *            The asset to multiply.
+     * @return The <code>asset</code> multiplied with this price.
+     */
+    public Asset multiply(Asset asset) {
+        if (asset == null) {
+            throw new InvalidParameterException("The asset can't be null");
+        } else if (asset.getSymbol().equals(this.getBase().getSymbol())) {
+            if (this.getBase().getAmount() == 0) {
+                throw new InvalidParameterException("Can't multiply as the price base is 0.");
+            }
+
+            return new Asset((long) ((asset.getAmount() * this.getQuote().getAmount()) / this.getBase().getAmount()),
+                    this.getQuote().getSymbol());
+        } else if (asset.getSymbol().equals(this.getQuote().getSymbol())) {
+            if (this.getQuote().getAmount() == 0) {
+                throw new InvalidParameterException("Can't multiply as the price quote is 0.");
+            }
+
+            return new Asset((long) ((asset.getAmount() * this.getBase().getAmount()) / this.getQuote().getAmount()),
+                    this.getBase().getSymbol());
+        } else {
+            throw new InvalidParameterException(
+                    "The provided asset does not fulfill the requirements to perform the multiply operation.");
+        }
+    }
+
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedPriceObject = new ByteArrayOutputStream()) {
