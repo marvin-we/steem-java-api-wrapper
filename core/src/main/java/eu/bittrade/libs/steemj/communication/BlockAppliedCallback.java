@@ -7,8 +7,7 @@ import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
 /**
  * This abstract class is used as a standard wrapper for a block applied
  * callback. It is needed to handle callbacks of the
- * {@link eu.bittrade.libs.steemj.Steemj#setBlockAppliedCallback(BlockAppliedCallback)
- * setBlockAppliedCallback(BlockAppliedCallback)}.
+ * {@link eu.bittrade.libs.steemj.SteemJ#setBlockAppliedCallback(BlockAppliedCallback)}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

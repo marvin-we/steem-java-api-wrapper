@@ -40,7 +40,7 @@ public class VoteOperation extends Operation {
      *            {@link #setAuthor(AccountName)}.
      * @param permlink
      *            Set the permanent link of the post/comment to vote for.
-     *            {@link #setPermlink(String)}.
+     *            {@link #setPermlink(Permlink)}.
      * @param weight
      *            Set the voting weight. {@link #setWeight(short)}.
      * @throws InvalidParameterException
@@ -58,9 +58,8 @@ public class VoteOperation extends Operation {
     }
 
     /**
-     * Like {@link #VoteOperation(AccountName, AccountName, String, short)
-     * VoteOperation(AccountName, AccountName, String, short)}, but will use a
-     * default weight of '0'.
+     * Like {@link #VoteOperation(AccountName, AccountName, Permlink, short)},
+     * but will use a default weight of '0'.
      * 
      * @param voter
      *            Set the account that votes. {@link #setVoter(AccountName)}.

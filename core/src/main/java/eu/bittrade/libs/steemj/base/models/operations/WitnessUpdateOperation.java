@@ -70,7 +70,7 @@ public class WitnessUpdateOperation extends Operation {
      *            {@link #setBlockSigningKey(PublicKey)}).
      * @param properties
      *            The chain properties the witness is voting for (see
-     *            {@link #setChainProperties}).
+     *            {@link #setProperties(ChainProperties)}).
      * @param fee
      *            The fee to pay for this update (see {@link #setFee(Asset)}).
      */
