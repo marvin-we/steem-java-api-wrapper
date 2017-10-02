@@ -27,6 +27,7 @@ import eu.bittrade.libs.steemj.base.models.operations.virtual.FillVestingWithdra
 import eu.bittrade.libs.steemj.base.models.operations.virtual.HardforkOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.InterestOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.LiquidityRewardOperation;
+import eu.bittrade.libs.steemj.base.models.operations.virtual.ProducerRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.ReturnVestingDelegationOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.ShutdownWitnessOpeartion;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -96,6 +97,7 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
         @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
         @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
         @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
+        @Type(value = ProducerRewardOperation.class, name = "producer_reward_operation"),
         // Follow Plugin Operations
         @Type(value = ReblogOperation.class, name = "reblog_operation"),
         @Type(value = FollowOperation.class, name = "follow_operation") })
