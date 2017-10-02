@@ -254,6 +254,13 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
         for (Entry<SignatureObject, List<PrivateKeyType>> requiredAuthority : requiredAuthorities.entrySet()) {
             if (requiredAuthority.getKey() instanceof AccountName) {
                 for (PrivateKeyType requiredKeyType : requiredAuthority.getValue()) {
+                    /*
+                     * TODO: Minimize the required signatures. If the
+                     * transaction requires the owner and the active key the
+                     * Steem Node only allows the owner key signature. Therefore
+                     * the following code replaces 'lower' keys if a higher key
+                     * is required too.
+                     */
                     requiredSignatures = getRequiredSignatureKeyForAccount(requiredSignatures,
                             (AccountName) requiredAuthority.getKey(), requiredKeyType);
                 }
