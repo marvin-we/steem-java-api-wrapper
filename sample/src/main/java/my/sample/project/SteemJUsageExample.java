@@ -46,7 +46,7 @@ public class SteemJUsageExample {
         SteemJConfig myConfig = SteemJConfig.getInstance();
         myConfig.setTimeout(100000L);
         try {
-            myConfig.setWebSocketEndpointURI(new URI("wss://this.piston.rocks"), true);
+            myConfig.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"), false);
         } catch (URISyntaxException e) {
             throw new RuntimeException("The given URI is not valid.", e);
         }
