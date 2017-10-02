@@ -2,11 +2,11 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
@@ -14,9 +14,7 @@ import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -29,6 +27,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     private Asset sbdAmount;
     @JsonProperty("steem_amount")
     private Asset steemAmount;
+    @JsonProperty("fee")
     private Asset fee;
     @JsonProperty("ratification_deadline")
     private TimePointSec ratificationDeadlineDate;
@@ -60,52 +59,168 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *
      * Escrow transactions are uniquely identified by 'from' and 'escrow_id',
      * the 'escrow_id' is defined by the sender.
-     */
-    public EscrowTransferOperation() {
-        super(false);
-        // Apply default values:
-        this.setEscrowId(30);
-
-        Asset initialSbdAmount = new Asset();
-        initialSbdAmount.setAmount(0);
-        initialSbdAmount.setSymbol(AssetSymbolType.SBD);
-        this.setSbdAmount(initialSbdAmount);
-
-        Asset initialSteemAmount = new Asset();
-        initialSteemAmount.setAmount(0);
-        initialSteemAmount.setSymbol(AssetSymbolType.STEEM);
-        this.setSbdAmount(initialSteemAmount);
-    }
-
-    /**
-     * Get the account who wants to transfer the fund to the {@link #to to}
-     * account.
      * 
-     * @return The account who wants to transfer the fund.
+     * @param from
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
+     * @param agent
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param escrowId
+     *            Set the unique id of this escrow operation (see
+     *            {@link #setEscrowId(long)}).
+     * @param sbdAmount
+     *            Set the SDB amount that should be transfered (see
+     *            {@link #setSbdAmount(Asset)}).
+     * @param steemAmount
+     *            Set the STEEM amount that has been transfered (see
+     *            {@link #setSteemAmount(Asset)}).
+     * @param fee
+     *            Set the fee that will be paid to the agent (see
+     *            {@link #setFee(Asset)}).
+     * @param ratificationDeadlineDate
+     *            Define until when the escrow opperation needs to be approved
+     *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
+     * @param escrowExpirationDate
+     *            Define when this escrow operation expires (see
+     *            {@link #setEscrowExpirationDate(TimePointSec)}).
+     * @param jsonMeta
+     *            Additional meta data to set (see
+     *            {@link #setJsonMeta(String)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public AccountName getFrom() {
-        return from;
+    @JsonCreator
+    public EscrowTransferOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
+            @JsonProperty("agent") AccountName agent, @JsonProperty("escrow_id") long escrowId,
+            @JsonProperty("sbd_amount") Asset sbdAmount, @JsonProperty("steem_amount") Asset steemAmount,
+            @JsonProperty("fee") Asset fee,
+            @JsonProperty("ratification_deadline") TimePointSec ratificationDeadlineDate,
+            @JsonProperty("escrow_expiration") TimePointSec escrowExpirationDate,
+            @JsonProperty("json_meta") String jsonMeta) {
+        super(false);
+
+        if (from == null || to == null || agent == null || from.equals(agent) || to.equals(agent)) {
+            throw new InvalidParameterException("The agent account must be a third party.");
+        }
+
+        if (sbdAmount == null || steemAmount == null || (sbdAmount.getAmount() + steemAmount.getAmount() <= 0)) {
+            throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
+        }
+
+        if (ratificationDeadlineDate == null || escrowExpirationDate == null
+                || ratificationDeadlineDate.getDateTimeAsTimestamp() < escrowExpirationDate.getDateTimeAsTimestamp()) {
+            throw new InvalidParameterException("The ratification deadline must be before escrow expiration");
+        }
+
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAgent(agent);
+        this.setEscrowId(escrowId);
+        this.setSbdAmount(sbdAmount);
+        this.setSteemAmount(steemAmount);
+        this.setFee(fee);
+        this.setRatificationDeadlineDate(ratificationDeadlineDate);
+        this.setEscrowExpirationDate(escrowExpirationDate);
+        this.setJsonMeta(jsonMeta);
     }
 
     /**
-     * Set the account who wants to transfer the fund to the {@link #to to}
+     * Like
+     * {@link #EscrowTransferOperation(AccountName, AccountName, AccountName, long, Asset, Asset, Asset, TimePointSec, TimePointSec, String)},
+     * but sets the <code>sbdAmount</code> and the <code>steemAmount</code> to
+     * their default values (0).
+     * 
+     * @param from
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
+     * @param agent
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param escrowId
+     *            Set the unique id of this escrow operation (see
+     *            {@link #setEscrowId(long)}).
+     * @param fee
+     *            Set the fee that will be paid to the agent (see
+     *            {@link #setFee(Asset)}).
+     * @param ratificationDeadlineDate
+     *            Define until when the escrow opperation needs to be approved
+     *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
+     * @param escrowExpirationDate
+     *            Define when this escrow operation expires (see
+     *            {@link #setEscrowExpirationDate(TimePointSec)}).
+     * @param jsonMeta
+     *            Additional meta data to set (see
+     *            {@link #setJsonMeta(String)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, long escrowId, Asset fee,
+            TimePointSec ratificationDeadlineDate, TimePointSec escrowExpirationDate, String jsonMeta) {
+        this(from, to, agent, escrowId, new Asset(0, AssetSymbolType.SBD), new Asset(0, AssetSymbolType.STEEM), fee,
+                ratificationDeadlineDate, escrowExpirationDate, jsonMeta);
+    }
+
+    /**
+     * Like
+     * {@link #EscrowTransferOperation(AccountName, AccountName, AccountName, Asset, TimePointSec, TimePointSec, String)},
+     * but also sets the <code>escrowId</code> to its default value (30).
+     * 
+     * @param from
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
+     * @param agent
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param fee
+     *            Set the fee that will be paid to the agent (see
+     *            {@link #setFee(Asset)}).
+     * @param ratificationDeadlineDate
+     *            Define until when the escrow opperation needs to be approved
+     *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
+     * @param escrowExpirationDate
+     *            Define when this escrow operation expires (see
+     *            {@link #setEscrowExpirationDate(TimePointSec)}).
+     * @param jsonMeta
+     *            Additional meta data to set (see
+     *            {@link #setJsonMeta(String)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, Asset fee,
+            TimePointSec ratificationDeadlineDate, TimePointSec escrowExpirationDate, String jsonMeta) {
+        this(from, to, agent, 30, fee, ratificationDeadlineDate, escrowExpirationDate, jsonMeta);
+    }
+
+    /**
+     * Set the account who wants to transfer the fund to the {@link #getTo() to}
      * account. <b>Notice:</b> The private active key of this account needs to
      * be stored in the key storage.
      * 
      * @param from
      *            The account who wants to transfer the fund.
+     * @throws InvalidParameterException
+     *             If the <code>from</code> is null or is equal to the
+     *             <code>agent</code> or <code>to</code> account.
      */
+    @Override
     public void setFrom(AccountName from) {
-        this.from = from;
-    }
+        if (from == null) {
+            throw new InvalidParameterException("The from account can't be null.");
+        } else if (from.equals(this.getAgent())) {
+            throw new InvalidParameterException("The agent account must be a third party.");
+        }
 
-    /**
-     * Get the account who should receive the funds.
-     * 
-     * @return The account who should receive the funds.
-     */
-    public AccountName getTo() {
-        return to;
+        this.from = from;
     }
 
     /**
@@ -113,18 +228,19 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @param to
      *            The account who should receive the funds.
+     * @throws InvalidParameterException
+     *             If the <code>to</code> is null or is equal to the
+     *             <code>agent</code> or <code>from</code> account.
      */
+    @Override
     public void setTo(AccountName to) {
-        this.to = to;
-    }
+        if (to == null) {
+            throw new InvalidParameterException("The to account can't be null.");
+        } else if (to.equals(this.getAgent())) {
+            throw new InvalidParameterException("The agent account must be a third party.");
+        }
 
-    /**
-     * Get the agent account.
-     * 
-     * @return The agent account.
-     */
-    public AccountName getAgent() {
-        return agent;
+        this.to = to;
     }
 
     /**
@@ -132,28 +248,19 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @param agent
      *            The agent account.
+     * @throws InvalidParameterException
+     *             If the <code>agent</code> is null or is equal to the
+     *             <code>from</code> or <code>to</code> account.
      */
+    @Override
     public void setAgent(AccountName agent) {
+        if (agent == null) {
+            throw new InvalidParameterException("The agent can't be null.");
+        } else if (agent.equals(this.getFrom()) || agent.equals(this.getTo())) {
+            throw new InvalidParameterException("The agent account must be a third party.");
+        }
+
         this.agent = agent;
-    }
-
-    /**
-     * Get the unique id of this escrow operation.
-     * 
-     * @return The unique id of this escrow operation.
-     */
-    public int getEscrowId() {
-        return (int) escrowId;
-    }
-
-    /**
-     * Set the unique id of this escrow operation.
-     * 
-     * @param escrowId
-     *            The unique id of this escrow operation.
-     */
-    public void setEscrowId(long escrowId) {
-        this.escrowId = escrowId;
     }
 
     /**
@@ -170,8 +277,23 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @param sbdAmount
      *            The SDB amount that has been transfered.
+     * @throws InvalidParameterException
+     *             If the <code>sbdAmount</code> is null, has a negative amount,
+     *             has a different symbol type than SBD or if the
+     *             <code>sbdAmount</code> <b>and</b> {@link #getSteemAmount()}
+     *             both have an amount of 0.
      */
     public void setSbdAmount(Asset sbdAmount) {
+        if (sbdAmount == null) {
+            throw new InvalidParameterException("The sbd amount can't be null.");
+        } else if (sbdAmount.getAmount() < 0) {
+            throw new InvalidParameterException("The sbd amount cannot be negative.");
+        } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+            throw new InvalidParameterException("The sbd amount must contain SBD.");
+        } else if (sbdAmount.getAmount() + this.getSteemAmount().getAmount() < 0) {
+            throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
+        }
+
         this.sbdAmount = sbdAmount;
     }
 
@@ -189,8 +311,23 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @param steemAmount
      *            The STEEM amount that has been transfered.
+     * @throws InvalidParameterException
+     *             If the <code>steemAmount</code> is null, has a negative
+     *             amount, has a different symbol type than STEEM or if the
+     *             <code>steemAmount</code> <b>and</b> {@link #getSbdAmount()}
+     *             both have an amount of 0.
      */
     public void setSteemAmount(Asset steemAmount) {
+        if (steemAmount == null) {
+            throw new InvalidParameterException("The steem amount can't be null.");
+        } else if (steemAmount.getAmount() < 0) {
+            throw new InvalidParameterException("The steem amount cannot be negative.");
+        } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+            throw new InvalidParameterException("The steem amount must contain STEEM.");
+        } else if (steemAmount.getAmount() + this.getSbdAmount().getAmount() < 0) {
+            throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
+        }
+
         this.steemAmount = steemAmount;
     }
 
@@ -208,46 +345,76 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @param fee
      *            The fee that will be paid to the agent.
+     * @throws InvalidParameterException
+     *             If the <code>fee</code> is null, has a negative amount or a
+     *             different symbol than STEEM or SBD.
      */
     public void setFee(Asset fee) {
+        if (fee == null) {
+            throw new InvalidParameterException("The fee can't be null.");
+        } else if (fee.getAmount() < 0) {
+            throw new InvalidParameterException("The fee cannot be negative.");
+        } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM) || !fee.getSymbol().equals(AssetSymbolType.SBD)) {
+            throw new InvalidParameterException("The fee must be STEEM or SBD.");
+        }
+
         this.fee = fee;
     }
 
     /**
-     * TODO:
+     * Get the information until when the escrow opperation needs to be
+     * approved.
      * 
-     * @return the ratificationDeadlineDate
+     * @return The ratification deadline.
      */
     public TimePointSec getRatificationDeadlineDate() {
         return ratificationDeadlineDate;
     }
 
     /**
-     * TODO:
+     * Define until when the escrow opperation needs to be approved.
      * 
      * @param ratificationDeadlineDate
-     *            the ratificationDeadlineDate to set
+     *            The ratification deadline. to set.
+     * @throws InvalidParameterException
+     *             If the <code>ratificationDeadlineDate</code> is null or if
+     *             the <code>ratificationDeadlineDate</code> is <b>not</b>
+     *             before the {@link #getEscrowExpirationDate()}.
      */
     public void setRatificationDeadlineDate(TimePointSec ratificationDeadlineDate) {
+        if (ratificationDeadlineDate == null) {
+            throw new InvalidParameterException("The ratification deadline date can't be null.");
+        } else if (ratificationDeadlineDate.getDateTimeAsTimestamp() >= this.getEscrowExpirationDate()
+                .getDateTimeAsTimestamp()) {
+            throw new InvalidParameterException("The ratification deadline must be before escrow expiration.");
+        }
+
         this.ratificationDeadlineDate = ratificationDeadlineDate;
     }
 
     /**
-     * TODO:
+     * Get the expration date for this escrow operation.
      * 
-     * @return the escrowExpirationDate
+     * @return The escrow expiration date.
      */
     public TimePointSec getEscrowExpirationDate() {
         return escrowExpirationDate;
     }
 
     /**
-     * TODO:
+     * Define when this escrow operation expires.
      * 
      * @param escrowExpirationDate
-     *            the escrowExpirationDate to set
+     *            The escrow expiration date to set.
      */
     public void setEscrowExpirationDate(TimePointSec escrowExpirationDate) {
+        if (escrowExpirationDate == null) {
+            throw new InvalidParameterException("The escrow expiration date can't be null.");
+        } else if (escrowExpirationDate.getDateTimeAsTimestamp() < this.getRatificationDeadlineDate()
+                .getDateTimeAsTimestamp()) {
+            throw new InvalidParameterException("The ratification deadline must be before escrow expiration.");
+        }
+
         this.escrowExpirationDate = escrowExpirationDate;
     }
 
@@ -265,8 +432,14 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @param jsonMeta
      *            The json metadata that has been added to this operation.
+     * @throws InvalidParameterException
+     *             If the given <code>jsonMeta</code> is not valid.
      */
     public void setJsonMeta(String jsonMeta) {
+        if (!jsonMeta.isEmpty() && !SteemJUtils.verifyJsonString(jsonMeta)) {
+            throw new InvalidParameterException("The given String is no valid JSON");
+        }
+
         this.jsonMeta = jsonMeta;
     }
 
@@ -296,11 +469,5 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-    
-    @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }
