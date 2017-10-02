@@ -91,7 +91,7 @@ public class PrivateKeyStorage {
      * 
      * <p>
      * Example:
-     * <p>
+     * </p>
      * 
      * <p>
      * addPrivateKeyToAccount(new AccountName("dez1337"), new

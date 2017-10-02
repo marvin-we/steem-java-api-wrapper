@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
- * This class is the java implementation of the Steem "authority" object</a>.
+ * This class is the java implementation of the Steem "authority" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

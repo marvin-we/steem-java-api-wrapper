@@ -69,10 +69,10 @@ public class RequestAccountRecoveryOperation extends Operation {
      * 
      * @param recoveryAccount
      *            The recovery account to set (see
-     *            {@link #setRecoveryAccount(Account)}).
+     *            {@link #setRecoveryAccount(AccountName)}).
      * @param accountToRecover
      *            The account to recover (see
-     *            {@link #setAccountToRecover(Account)}).
+     *            {@link #setAccountToRecover(AccountName)}).
      * @param newOwnerAuthority
      *            The new owner authority (see
      *            {@link #setNewOwnerAuthority(Authority)}).

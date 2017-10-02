@@ -161,10 +161,11 @@ public class FollowApi {
     }
 
     /**
-     * This method is like the {@link #getBlogEntries(AccountName, int, short)
-     * getBlogEntries(AccountName, int, short)} method, but instead of returning
-     * blog entries, the getFeedEntries method returns the feed of the given
-     * account.
+     * This method is like the
+     * {@link #getBlogEntries(CommunicationHandler, AccountName, int, short)
+     * getBlogEntries(CommunicationHandler, AccountName, int, short)} method,
+     * but instead of returning blog entries, the getFeedEntries method returns
+     * the feed of the given account.
      * 
      * @param communicationHandler
      *            A
@@ -314,9 +315,10 @@ public class FollowApi {
     }
 
     /**
-     * Like {@link #getBlogEntries(AccountName, int, short)
-     * getBlogEntries(AccountName, int, short)}, but contains the whole content
-     * of the blog entry.
+     * Like
+     * {@link #getBlogEntries(CommunicationHandler, AccountName, int, short)
+     * getBlogEntries(CommunicationHandler, AccountName, int, short)}, but
+     * contains the whole content of the blog entry.
      * 
      * @param communicationHandler
      *            A

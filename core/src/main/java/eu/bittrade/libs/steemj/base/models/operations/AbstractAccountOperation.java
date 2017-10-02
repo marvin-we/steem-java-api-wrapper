@@ -28,6 +28,11 @@ public abstract class AbstractAccountOperation extends Operation {
 
     /**
      * Create a new Operation object by providing the operation type.
+     * 
+     * @param virtual
+     *            Define if the operation instance is a virtual
+     *            (<code>true</code>) or a market operation
+     *            (<code>false</code>).
      */
     protected AbstractAccountOperation(boolean virtual) {
         super(virtual);

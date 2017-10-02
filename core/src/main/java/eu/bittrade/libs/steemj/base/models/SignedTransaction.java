@@ -62,7 +62,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *            The reference block number (see {@link #setRefBlockNum(int)}).
      * @param refBlockPrefix
      *            The reference block index (see
-     *            {@link #setRefBlockPrefix(int)}).
+     *            {@link #setRefBlockPrefix(long)}).
      * @param expirationDate
      *            Define until when the transaction has to be processed (see
      *            {@link #setExpirationDate(TimePointSec)}).
@@ -143,6 +143,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
      * id.
      *
+     * @param skipValidation
+     *            Define if the validation should be skipped or not.
      * @throws SteemInvalidTransactionException
      *             If the transaction can not be signed.
      */
@@ -182,6 +184,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * 
      * @param chainId
      *            The chain id that should be used during signing.
+     * @param skipValidation
+     *            Define if the validation should be skipped or not.
      * @throws SteemInvalidTransactionException
      *             If the transaction can not be signed.
      */

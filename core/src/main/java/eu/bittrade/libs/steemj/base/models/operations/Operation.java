@@ -109,6 +109,11 @@ public abstract class Operation implements ByteTransformable {
 
     /**
      * Create a new Operation object by providing the operation type.
+     * 
+     * @param virtual
+     *            Define if the operation instance is a virtual
+     *            (<code>true</code>) or a market operation
+     *            (<code>false</code>).
      */
     protected Operation(boolean virtual) {
         this.virtual = virtual;
@@ -140,13 +145,14 @@ public abstract class Operation implements ByteTransformable {
 
     /**
      * Use this helper method to merge a single <code>accountName</code> into
-     * the <code>requiredAuthoritiesBase</code.
+     * the <code>requiredAuthoritiesBase</code>.
      * 
      * @param requiredAuthoritiesBase
      *            A map to which the required authorities of this operation
      *            should be added to.
-     * @param accountName
-     *            The account name to merge into the list.
+     * @param signatureObject
+     *            The signature object (e.g. an account names) to merge into the
+     *            list.
      * @param privateKeyType
      *            The required key type.
      * @return The merged set of signature objects and required private key
@@ -179,7 +185,7 @@ public abstract class Operation implements ByteTransformable {
      *            A map to which the required authorities of this operation
      *            should be added to.
      * @param signatureObjects
-     *            The signature object (e.g. a list of account names) to merge
+     *            The signature objects (e.g. a list of account names) to merge
      *            into the list.
      * @param privateKeyType
      *            The required key type.

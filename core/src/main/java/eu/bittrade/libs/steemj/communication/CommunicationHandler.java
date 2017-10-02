@@ -132,13 +132,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             sendMessageSynchronously(requestObject);
 
             @SuppressWarnings("unchecked")
-            ResponseWrapperDTO<T> response = this.getObjectMapper().readValue(rawJsonResponse,
-                    ResponseWrapperDTO.class);
+            ResponseWrapperDTO<T> response = mapper.readValue(rawJsonResponse, ResponseWrapperDTO.class);
 
             if (response == null || "".equals(response.toString()) || response.getResult() == null
                     || "".equals(response.getResult().toString())) {
                 LOGGER.debug("The response was empty. The requested node may not provid the method {}.",
-                        requestObject.getApiMethod().toString());
+                        requestObject.getApiMethod());
                 List<T> emptyResult = new ArrayList<>();
                 emptyResult.add(null);
                 return emptyResult;
@@ -149,15 +148,15 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             }
 
             // Make sure that the inner result object has the correct type.
-            JavaType type = this.getObjectMapper().getTypeFactory().constructCollectionType(List.class, targetClass);
+            JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);
 
-            return this.getObjectMapper().convertValue(response.getResult(), type);
+            return mapper.convertValue(response.getResult(), type);
         } catch (JsonParseException | JsonMappingException e) {
             LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
 
             try {
                 // TODO: Find a better solution for errors in general.
-                throw new SteemResponseError(this.getObjectMapper().readValue(rawJsonResponse, SteemError.class));
+                throw new SteemResponseError(mapper.readValue(rawJsonResponse, SteemError.class));
             } catch (IOException ex) {
                 throw new SteemTransformationException("Could not transform the response into an object.", ex);
             }
@@ -226,12 +225,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             LOGGER.debug("Received callback: {}", message);
 
             try {
-                NotificationDTO response = this.getObjectMapper().readValue(message, NotificationDTO.class);
+                NotificationDTO response = mapper.readValue(message, NotificationDTO.class);
 
                 // Make sure that the inner result object is a BlockHeader.
                 CallbackHub.getInstance().getCallbackByUuid(Integer.valueOf(response.getParams()[0].toString()))
-                        .onNewBlock(this.getObjectMapper().convertValue(
-                                ((ArrayList<Object>) (response.getParams()[1])).get(0), SignedBlockHeader.class));
+                        .onNewBlock(mapper.convertValue(((ArrayList<Object>) (response.getParams()[1])).get(0),
+                                SignedBlockHeader.class));
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 LOGGER.error("Could not parse callback {}.", e);

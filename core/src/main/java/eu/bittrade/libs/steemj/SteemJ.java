@@ -120,7 +120,7 @@ public class SteemJ {
         // Check all known apis
         for (SteemApis steemApi : SteemApis.values()) {
             if (getApiByName(steemApi.toString().toLowerCase()) == null) {
-                LOGGER.warn("The {} is not published by the configured node.", steemApi.toString());
+                LOGGER.warn("The {} is not published by the configured node.", steemApi);
             }
         }
     }
@@ -225,7 +225,7 @@ public class SteemJ {
         Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
 
         for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
-            accountActivities.put((Integer) accountActivity[0], communicationHandler.getObjectMapper()
+            accountActivities.put((Integer) accountActivity[0], CommunicationHandler.getObjectMapper()
                     .convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
                     }));
         }
