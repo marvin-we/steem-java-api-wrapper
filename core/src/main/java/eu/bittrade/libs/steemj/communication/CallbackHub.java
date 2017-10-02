@@ -35,6 +35,13 @@ public class CallbackHub {
         return null;
     }
 
+    /**
+     * Add a <code>blockAppliedCallback</code> instance that should be called on
+     * notifications.
+     * 
+     * @param blockAppliedCallback
+     *            The instance to call.
+     */
     public void addCallback(BlockAppliedCallback blockAppliedCallback) {
         this.blockAppliedCallbacks.add(blockAppliedCallback);
     }

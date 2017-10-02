@@ -12,6 +12,7 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
@@ -19,6 +20,7 @@ import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -67,7 +69,7 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegra
         short percentSteemDollars = (short) 10000;
 
         BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
-        beneficiaryRouteType.setAccount(new AccountName("steemJ"));
+        beneficiaryRouteType.setAccount(new AccountName("steemj"));
         beneficiaryRouteType.setWeight((short) 500);
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
@@ -81,8 +83,9 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegra
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
         commentOptionsExtensions.add(commentOptionsExtension);
 
-        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink, null,
-                percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
+        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink,
+                new Asset(1000000000, AssetSymbolType.SBD), percentSteemDollars, allowVotes, allowCurationRewards,
+                commentOptionsExtensions);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOptionsOperation);
@@ -106,7 +109,7 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegra
                 equalTo(EXPECTED_AUTHOR_WITH_EXTENSION));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getAllowVotes(),
                 equalTo(EXPECTED_VOTES_ALLOWED_WITH_EXTENSION));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink(),
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink().getLink(),
                 equalTo(EXPECTED_PERMANENT_LINK_WITH_EXTENSION));
 
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0)
