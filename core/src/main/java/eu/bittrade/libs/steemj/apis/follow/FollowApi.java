@@ -206,9 +206,11 @@ public class FollowApi {
     }
 
     /**
-     * This method is like the {@link #getBlog(AccountName, int, short)
-     * getBlog(AccountName, int, short)} method, but instead of returning blog
-     * entries, the getFeed method returns the feed of the given account.
+     * This method is like the
+     * {@link #getBlog(CommunicationHandler, AccountName, int, short)
+     * getBlog(CommunicationHandler, AccountName, int, short)} method, but
+     * instead of returning blog entries, the getFeed method returns the feed of
+     * the given account.
      * 
      * @param communicationHandler
      *            A

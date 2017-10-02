@@ -179,7 +179,7 @@ public abstract class Operation implements ByteTransformable {
 
     /**
      * Use this helper method to merge a a list of account names into the
-     * <code>requiredAuthoritiesBase</code.
+     * <code>requiredAuthoritiesBase</code>.
      * 
      * @param requiredAuthoritiesBase
      *            A map to which the required authorities of this operation

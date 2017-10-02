@@ -37,7 +37,7 @@ public class ProveAuthorityOperation extends Operation {
      *            ({@link #setChallenged(AccountName)}).
      * @param requireOwner
      *            Define if the owner key or the active key should be used to
-     *            sign this operation ({@link #setRequireOwner(Boolean)}).
+     *            sign this operation ({@link #setRequireOwner(boolean)}).
      * @throws InvalidParameterException
      *             If a parameter does not fulfill the requirements.
      */

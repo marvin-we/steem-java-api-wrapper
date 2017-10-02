@@ -45,7 +45,7 @@ public class Version extends BlockHeaderExtensions {
     }
 
     /**
-     * Like {@link #Version(char, char, short)}, but this constructor allows to
+     * Like {@link #Version(byte, byte, short)}, but this constructor allows to
      * provide the version in its String representation (e.g. 0.19.2).
      * 
      * @param versionAsString

@@ -70,7 +70,7 @@ public class Transaction implements Serializable {
      *            The reference block number (see {@link #setRefBlockNum(int)}).
      * @param refBlockPrefix
      *            The reference block index (see
-     *            {@link #setRefBlockPrefix(int)}).
+     *            {@link #setRefBlockPrefix(long)}).
      * @param expirationDate
      *            Define until when the transaction has to be processed (see
      *            {@link #setExpirationDate(TimePointSec)}).
