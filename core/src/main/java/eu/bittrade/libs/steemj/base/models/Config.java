@@ -77,8 +77,18 @@ public class Config {
     private String steemitChainId;
     @JsonProperty("STEEMIT_COMMENT_REWARD_FUND_NAME")
     private String steemitCommentRewardFundName;
+    /**
+     * @deprecated Has been removed with HF 19. Depending on the version of the
+     *             used Steem Node the value of this field may be null.
+     */
+    @Deprecated
     @JsonProperty("STEEMIT_TEMP_LINEAR_REWARD_FUND_NAME")
     private String steemitTempLinearRewardFundName;
+    /**
+     * @deprecated Has been removed with HF 19. Depending on the version of the
+     *             used Steem Node the value of this field may be null.
+     */
+    @Deprecated
     @JsonProperty("STEEMIT_TEMP_LINEAR_REWARD_FUND_ID")
     private int steemitTempLinearRewardFundId;
     @JsonProperty("STEEMIT_CONTENT_APR_PERCENT")
@@ -235,6 +245,8 @@ public class Config {
     private int steemitMinAccountCreationFee;
     @JsonProperty("STEEMIT_MIN_ACCOUNT_NAME_LENGTH")
     private int steemitMinAccountNameLength;
+    @JsonProperty("STEEMIT_MIN_BLOCK_SIZE")
+    private int steemitMinBlockSize;
     @JsonProperty("STEEMIT_MIN_BLOCK_SIZE_LIMIT")
     private int steemitMinBlockSizeLimit;
     @JsonProperty("STEEMIT_MIN_CONTENT_REWARD")
@@ -389,674 +401,1185 @@ public class Config {
     private Config() {
     }
 
+    /**
+     * @return the isTestNet
+     */
     public Boolean getIsTestNet() {
         return isTestNet;
     }
 
+    /**
+     * @return the grapheneCurrentDbVersion
+     */
     public String getGrapheneCurrentDbVersion() {
         return grapheneCurrentDbVersion;
     }
 
+    /**
+     * @return the sdbSymbol
+     */
     public long getSdbSymbol() {
         return sdbSymbol;
     }
 
+    /**
+     * @return the steemit100Percent
+     */
     public short getSteemit100Percent() {
         return steemit100Percent;
     }
 
+    /**
+     * @return the steemit1Percent
+     */
     public short getSteemit1Percent() {
         return steemit1Percent;
     }
 
+    /**
+     * @return the steemit1TenthPercent
+     */
     public short getSteemit1TenthPercent() {
         return steemit1TenthPercent;
     }
 
+    /**
+     * @return the steemitAccountRecoveryRequestExpirationPeriod
+     */
     public String getSteemitAccountRecoveryRequestExpirationPeriod() {
         return steemitAccountRecoveryRequestExpirationPeriod;
     }
 
+    /**
+     * @return the steemitActiveChallengeCooldown
+     */
     public String getSteemitActiveChallengeCooldown() {
         return steemitActiveChallengeCooldown;
     }
 
+    /**
+     * @return the steemitActiveChallengeFee
+     */
     public Asset getSteemitActiveChallengeFee() {
         return steemitActiveChallengeFee;
     }
 
+    /**
+     * @return the steemitAddressPrefix
+     */
     public String getSteemitAddressPrefix() {
         return steemitAddressPrefix;
     }
 
+    /**
+     * @return the steemitAprPercentMultiplyPerBlock
+     */
     public String getSteemitAprPercentMultiplyPerBlock() {
         return steemitAprPercentMultiplyPerBlock;
     }
 
+    /**
+     * @return the steemitAprPercentMultiplyPerHour
+     */
     public String getSteemitAprPercentMultiplyPerHour() {
         return steemitAprPercentMultiplyPerHour;
     }
 
+    /**
+     * @return the steemitAprPercentMultiplyPerRound
+     */
     public String getSteemitAprPercentMultiplyPerRound() {
         return steemitAprPercentMultiplyPerRound;
     }
 
+    /**
+     * @return the steemitAprPercentShiftPerBlock
+     */
     public int getSteemitAprPercentShiftPerBlock() {
         return steemitAprPercentShiftPerBlock;
     }
 
+    /**
+     * @return the steemitAprPercentShiftPerHour
+     */
     public int getSteemitAprPercentShiftPerHour() {
         return steemitAprPercentShiftPerHour;
     }
 
+    /**
+     * @return the steemitAprPercentShiftPerRound
+     */
     public int getSteemitAprPercentShiftPerRound() {
         return steemitAprPercentShiftPerRound;
     }
 
+    /**
+     * @return the steemitBrandwithAvarageWindowSeconds
+     */
     public int getSteemitBrandwithAvarageWindowSeconds() {
         return steemitBrandwithAvarageWindowSeconds;
     }
 
+    /**
+     * @return the steemitBrandwithPrecision
+     */
     public int getSteemitBrandwithPrecision() {
         return steemitBrandwithPrecision;
     }
 
+    /**
+     * @return the steemitBlockchainPrecision
+     */
     public int getSteemitBlockchainPrecision() {
         return steemitBlockchainPrecision;
     }
 
+    /**
+     * @return the steemitBlockchainPrecisionDigits
+     */
     public int getSteemitBlockchainPrecisionDigits() {
         return steemitBlockchainPrecisionDigits;
     }
 
+    /**
+     * @return the steemitBlockchainHardforkVersion
+     */
     public String getSteemitBlockchainHardforkVersion() {
         return steemitBlockchainHardforkVersion;
     }
 
+    /**
+     * @return the steemitBlockchainVersion
+     */
     public String getSteemitBlockchainVersion() {
         return steemitBlockchainVersion;
     }
 
+    /**
+     * @return the steemitBlockInterval
+     */
     public int getSteemitBlockInterval() {
         return steemitBlockInterval;
     }
 
+    /**
+     * @return the steemitBlocksPerDay
+     */
     public int getSteemitBlocksPerDay() {
         return steemitBlocksPerDay;
     }
 
+    /**
+     * @return the steemitBlocksPerHour
+     */
     public int getSteemitBlocksPerHour() {
         return steemitBlocksPerHour;
     }
 
+    /**
+     * @return the steemitBlocksPerYear
+     */
     public long getSteemitBlocksPerYear() {
         return steemitBlocksPerYear;
     }
 
+    /**
+     * @return the steemitCashoutWindowSeconds
+     */
     public int getSteemitCashoutWindowSeconds() {
         return steemitCashoutWindowSeconds;
     }
 
+    /**
+     * @return the steemitCashoutWindowSecondsPreHf12
+     */
     public int getSteemitCashoutWindowSecondsPreHf12() {
         return steemitCashoutWindowSecondsPreHf12;
     }
 
+    /**
+     * @return the steemitCashoutWindowSecondsPreHf17
+     */
     public int getSteemitCashoutWindowSecondsPreHf17() {
         return steemitCashoutWindowSecondsPreHf17;
     }
 
+    /**
+     * @return the steemitChainId
+     */
     public String getSteemitChainId() {
         return steemitChainId;
     }
 
+    /**
+     * @return the steemitCommentRewardFundName
+     */
     public String getSteemitCommentRewardFundName() {
         return steemitCommentRewardFundName;
     }
 
+    /**
+     * @return the steemitTempLinearRewardFundName
+     */
     public String getSteemitTempLinearRewardFundName() {
         return steemitTempLinearRewardFundName;
     }
 
+    /**
+     * @return the steemitTempLinearRewardFundId
+     */
     public int getSteemitTempLinearRewardFundId() {
         return steemitTempLinearRewardFundId;
     }
 
+    /**
+     * @return the steemitContentAprPercent
+     */
     public int getSteemitContentAprPercent() {
         return steemitContentAprPercent;
     }
 
+    /**
+     * @return the steemitContentConstantHf0
+     */
     public String getSteemitContentConstantHf0() {
         return steemitContentConstantHf0;
     }
 
+    /**
+     * @return the steemitContentRewardPercent
+     */
     public short getSteemitContentRewardPercent() {
         return steemitContentRewardPercent;
     }
 
+    /**
+     * @return the steemitConversionDelay
+     */
     public long getSteemitConversionDelay() {
         return steemitConversionDelay;
     }
 
+    /**
+     * @return the steemitConversionDelayPreHf16
+     */
     public long getSteemitConversionDelayPreHf16() {
         return steemitConversionDelayPreHf16;
     }
 
+    /**
+     * @return the steemitCreateAccountDelegationRatio
+     */
     public int getSteemitCreateAccountDelegationRatio() {
         return steemitCreateAccountDelegationRatio;
     }
 
+    /**
+     * @return the steemitCreateAccountDelegationTime
+     */
     public long getSteemitCreateAccountDelegationTime() {
         return steemitCreateAccountDelegationTime;
     }
 
+    /**
+     * @return the steemitCreateAccountWithSteemModifier
+     */
     public boolean isSteemitCreateAccountWithSteemModifier() {
         return steemitCreateAccountWithSteemModifier;
     }
 
+    /**
+     * @return the steemitCurateAprPercent
+     */
     public int getSteemitCurateAprPercent() {
         return steemitCurateAprPercent;
     }
 
+    /**
+     * @return the steemitDefaultSbdInterestRate
+     */
     public int getSteemitDefaultSbdInterestRate() {
         return steemitDefaultSbdInterestRate;
     }
 
+    /**
+     * @return the steemitEquihashK
+     */
     public String getSteemitEquihashK() {
         return steemitEquihashK;
     }
 
+    /**
+     * @return the steemitEquihashN
+     */
     public String getSteemitEquihashN() {
         return steemitEquihashN;
     }
 
+    /**
+     * @return the steemitFeedHistoryWindow
+     */
     public int getSteemitFeedHistoryWindow() {
         return steemitFeedHistoryWindow;
     }
 
+    /**
+     * @return the steemitFeedHistoryWindowPreHf16
+     */
     public String getSteemitFeedHistoryWindowPreHf16() {
         return steemitFeedHistoryWindowPreHf16;
     }
 
+    /**
+     * @return the steemitFeedIntervalBlocks
+     */
     public int getSteemitFeedIntervalBlocks() {
         return steemitFeedIntervalBlocks;
     }
 
+    /**
+     * @return the steemitFreeTransactionsWithNewAccount
+     */
     public int getSteemitFreeTransactionsWithNewAccount() {
         return steemitFreeTransactionsWithNewAccount;
     }
 
+    /**
+     * @return the steemitGenesisTime
+     */
     public String getSteemitGenesisTime() {
         return steemitGenesisTime;
     }
 
+    /**
+     * @return the steemitHardforkRequiredWitness
+     */
     public int getSteemitHardforkRequiredWitness() {
         return steemitHardforkRequiredWitness;
     }
 
+    /**
+     * @return the steemitInflationNarrowingPeriod
+     */
     public String getSteemitInflationNarrowingPeriod() {
         return steemitInflationNarrowingPeriod;
     }
 
+    /**
+     * @return the steemitInflationRateStartPercent
+     */
     public short getSteemitInflationRateStartPercent() {
         return steemitInflationRateStartPercent;
     }
 
+    /**
+     * @return the steemitInflationRateStopPercent
+     */
     public short getSteemitInflationRateStopPercent() {
         return steemitInflationRateStopPercent;
     }
 
+    /**
+     * @return the steemitInitMinerName
+     */
     public String getSteemitInitMinerName() {
         return steemitInitMinerName;
     }
 
+    /**
+     * @return the steemitInitPublicKeyStr
+     */
     public String getSteemitInitPublicKeyStr() {
         return steemitInitPublicKeyStr;
     }
 
+    /**
+     * @return the steemitInitSupply
+     */
     public int getSteemitInitSupply() {
         return steemitInitSupply;
     }
 
+    /**
+     * @return the steemitInitTime
+     */
     public TimePointSec getSteemitInitTime() {
         return steemitInitTime;
     }
 
+    /**
+     * @return the steemitIrreversibleThreshold
+     */
     public int getSteemitIrreversibleThreshold() {
         return steemitIrreversibleThreshold;
     }
 
+    /**
+     * @return the steemitLiquidityAprPercent
+     */
     public int getSteemitLiquidityAprPercent() {
         return steemitLiquidityAprPercent;
     }
 
+    /**
+     * @return the steemitLiquidityRewardBlocks
+     */
     public int getSteemitLiquidityRewardBlocks() {
         return steemitLiquidityRewardBlocks;
     }
 
+    /**
+     * @return the steemitLiquidityRewardPeriodSec
+     */
     public long getSteemitLiquidityRewardPeriodSec() {
         return steemitLiquidityRewardPeriodSec;
     }
 
+    /**
+     * @return the steemitLiquidityTimeoutSec
+     */
     public String getSteemitLiquidityTimeoutSec() {
         return steemitLiquidityTimeoutSec;
     }
 
+    /**
+     * @return the steemitMaxAccountNameLength
+     */
     public int getSteemitMaxAccountNameLength() {
         return steemitMaxAccountNameLength;
     }
 
+    /**
+     * @return the steemitMaxAccountWitnessVotes
+     */
     public int getSteemitMaxAccountWitnessVotes() {
         return steemitMaxAccountWitnessVotes;
     }
 
+    /**
+     * @return the steemitMaxAssetWhitelistAuthorities
+     */
     public int getSteemitMaxAssetWhitelistAuthorities() {
         return steemitMaxAssetWhitelistAuthorities;
     }
 
+    /**
+     * @return the steemitMaxAuthorityMembership
+     */
     public int getSteemitMaxAuthorityMembership() {
         return steemitMaxAuthorityMembership;
     }
 
+    /**
+     * @return the steemitMaxBlockSize
+     */
     public long getSteemitMaxBlockSize() {
         return steemitMaxBlockSize;
     }
 
+    /**
+     * @return the steemitMaxCashoutWindowSeconds
+     */
     public long getSteemitMaxCashoutWindowSeconds() {
         return steemitMaxCashoutWindowSeconds;
     }
 
+    /**
+     * @return the steemitMaxCommentDepth
+     */
     public int getSteemitMaxCommentDepth() {
         return steemitMaxCommentDepth;
     }
 
+    /**
+     * @return the steemitMaxCommentDepthPreHf17
+     */
     public int getSteemitMaxCommentDepthPreHf17() {
         return steemitMaxCommentDepthPreHf17;
     }
 
+    /**
+     * @return the steemitMaxFeedAgeSeconds
+     */
     public long getSteemitMaxFeedAgeSeconds() {
         return steemitMaxFeedAgeSeconds;
     }
 
+    /**
+     * @return the steemitMaxFeedAge
+     */
     public String getSteemitMaxFeedAge() {
         return steemitMaxFeedAge;
     }
 
+    /**
+     * @return the steemitMaxInstanceId
+     */
     public String getSteemitMaxInstanceId() {
         return steemitMaxInstanceId;
     }
 
+    /**
+     * @return the steemitMaxMemoSize
+     */
     public int getSteemitMaxMemoSize() {
         return steemitMaxMemoSize;
     }
 
+    /**
+     * @return the steemitMaxWitnesses
+     */
     public int getSteemitMaxWitnesses() {
         return steemitMaxWitnesses;
     }
 
+    /**
+     * @return the steemitMaxMinerWitnesses
+     */
     public int getSteemitMaxMinerWitnesses() {
         return steemitMaxMinerWitnesses;
     }
 
+    /**
+     * @return the steemitMaxMinerWitnessesHf0
+     */
     public int getSteemitMaxMinerWitnessesHf0() {
         return steemitMaxMinerWitnessesHf0;
     }
 
+    /**
+     * @return the steemitMaxMinerWitnessesHf17
+     */
     public int getSteemitMaxMinerWitnessesHf17() {
         return steemitMaxMinerWitnessesHf17;
     }
 
+    /**
+     * @return the steemitMaxPermlinkLength
+     */
     public int getSteemitMaxPermlinkLength() {
         return steemitMaxPermlinkLength;
     }
 
+    /**
+     * @return the steemitMaxProxyRecursionDepth
+     */
     public int getSteemitMaxProxyRecursionDepth() {
         return steemitMaxProxyRecursionDepth;
     }
 
+    /**
+     * @return the steemitMaxRationDecayRate
+     */
     public long getSteemitMaxRationDecayRate() {
         return steemitMaxRationDecayRate;
     }
 
+    /**
+     * @return the steemitMaxReserveRatio
+     */
     public int getSteemitMaxReserveRatio() {
         return steemitMaxReserveRatio;
     }
 
+    /**
+     * @return the steemitMaxRunnerWitnesses
+     */
     public int getSteemitMaxRunnerWitnesses() {
         return steemitMaxRunnerWitnesses;
     }
 
+    /**
+     * @return the steemitMaxRunnerWitnessesHf0
+     */
     public int getSteemitMaxRunnerWitnessesHf0() {
         return steemitMaxRunnerWitnessesHf0;
     }
 
+    /**
+     * @return the steemitMaxRunnerWitnessesHf17
+     */
     public int getSteemitMaxRunnerWitnessesHf17() {
         return steemitMaxRunnerWitnessesHf17;
     }
 
+    /**
+     * @return the steemitMAxShareSupply
+     */
     public String getSteemitMAxShareSupply() {
         return steemitMAxShareSupply;
     }
 
+    /**
+     * @return the steemitMaxSigCheckDepth
+     */
     public int getSteemitMaxSigCheckDepth() {
         return steemitMaxSigCheckDepth;
     }
 
+    /**
+     * @return the steemitMaxTimeUntilExpiration
+     */
     public int getSteemitMaxTimeUntilExpiration() {
         return steemitMaxTimeUntilExpiration;
     }
 
+    /**
+     * @return the steemitMaxTransactionSize
+     */
     public long getSteemitMaxTransactionSize() {
         return steemitMaxTransactionSize;
     }
 
+    /**
+     * @return the steemitMaxUndoHistory
+     */
     public int getSteemitMaxUndoHistory() {
         return steemitMaxUndoHistory;
     }
 
+    /**
+     * @return the steemitMaxUrlLength
+     */
     public int getSteemitMaxUrlLength() {
         return steemitMaxUrlLength;
     }
 
+    /**
+     * @return the steemitMaxVoteChanges
+     */
     public int getSteemitMaxVoteChanges() {
         return steemitMaxVoteChanges;
     }
 
+    /**
+     * @return the steemitMaxVotedWitnesses
+     */
     public int getSteemitMaxVotedWitnesses() {
         return steemitMaxVotedWitnesses;
     }
 
+    /**
+     * @return the steemitMaxVotedWitnessesHf0
+     */
     public int getSteemitMaxVotedWitnessesHf0() {
         return steemitMaxVotedWitnessesHf0;
     }
 
+    /**
+     * @return the steemitMaxVotedWitnessesHf17
+     */
     public int getSteemitMaxVotedWitnessesHf17() {
         return steemitMaxVotedWitnessesHf17;
     }
 
+    /**
+     * @return the steemitMaxWithdrawRoutes
+     */
     public int getSteemitMaxWithdrawRoutes() {
         return steemitMaxWithdrawRoutes;
     }
 
+    /**
+     * @return the steemitMaxWitnessUrlLength
+     */
     public int getSteemitMaxWitnessUrlLength() {
         return steemitMaxWitnessUrlLength;
     }
 
+    /**
+     * @return the steemitMinAccountCreationFee
+     */
     public int getSteemitMinAccountCreationFee() {
         return steemitMinAccountCreationFee;
     }
 
+    /**
+     * @return the steemitMinAccountNameLength
+     */
     public int getSteemitMinAccountNameLength() {
         return steemitMinAccountNameLength;
     }
 
+    /**
+     * @return the steemitMinBlockSize
+     */
+    public int getSteemitMinBlockSize() {
+        return steemitMinBlockSize;
+    }
+
+    /**
+     * @return the steemitMinBlockSizeLimit
+     */
     public int getSteemitMinBlockSizeLimit() {
         return steemitMinBlockSizeLimit;
     }
 
+    /**
+     * @return the steemitMinContentReward
+     */
     public String getSteemitMinContentReward() {
         return steemitMinContentReward;
     }
 
+    /**
+     * @return the steemitMinCurateReward
+     */
     public String getSteemitMinCurateReward() {
         return steemitMinCurateReward;
     }
 
+    /**
+     * @return the steemitMinPermlinkLength
+     */
     public int getSteemitMinPermlinkLength() {
         return steemitMinPermlinkLength;
     }
 
+    /**
+     * @return the steemitMinReplyInterval
+     */
     public int getSteemitMinReplyInterval() {
         return steemitMinReplyInterval;
     }
 
+    /**
+     * @return the steemitMinRootCommentInterval
+     */
     public int getSteemitMinRootCommentInterval() {
         return steemitMinRootCommentInterval;
     }
 
+    /**
+     * @return the steemitMinVoteIntervalSec
+     */
     public long getSteemitMinVoteIntervalSec() {
         return steemitMinVoteIntervalSec;
     }
 
+    /**
+     * @return the steemitMinerAccount
+     */
     public String getSteemitMinerAccount() {
         return steemitMinerAccount;
     }
 
+    /**
+     * @return the steemitMinerPayPercent
+     */
     public int getSteemitMinerPayPercent() {
         return steemitMinerPayPercent;
     }
 
+    /**
+     * @return the steemitMinFeeds
+     */
     public int getSteemitMinFeeds() {
         return steemitMinFeeds;
     }
 
+    /**
+     * @return the steemitMiningReward
+     */
     public String getSteemitMiningReward() {
         return steemitMiningReward;
     }
 
+    /**
+     * @return the steemitMiningTime
+     */
     public String getSteemitMiningTime() {
         return steemitMiningTime;
     }
 
+    /**
+     * @return the steemitMinLiquidityReward
+     */
     public String getSteemitMinLiquidityReward() {
         return steemitMinLiquidityReward;
     }
 
+    /**
+     * @return the steemitMinLiquidityRewardPeriodSec
+     */
     public long getSteemitMinLiquidityRewardPeriodSec() {
         return steemitMinLiquidityRewardPeriodSec;
     }
 
+    /**
+     * @return the steemitMinPayoutSdb
+     */
     public String getSteemitMinPayoutSdb() {
         return steemitMinPayoutSdb;
     }
 
+    /**
+     * @return the steemitMinPowReward
+     */
     public String getSteemitMinPowReward() {
         return steemitMinPowReward;
     }
 
+    /**
+     * @return the steemitMinProducterReward
+     */
     public String getSteemitMinProducterReward() {
         return steemitMinProducterReward;
     }
 
+    /**
+     * @return the steemitMinRation
+     */
     public long getSteemitMinRation() {
         return steemitMinRation;
     }
 
+    /**
+     * @return the steemitMinTransactionExpirationLimit
+     */
     public int getSteemitMinTransactionExpirationLimit() {
         return steemitMinTransactionExpirationLimit;
     }
 
+    /**
+     * @return the steemitMinTransactionSizeLimit
+     */
     public int getSteemitMinTransactionSizeLimit() {
         return steemitMinTransactionSizeLimit;
     }
 
+    /**
+     * @return the steemitMinUndoHistory
+     */
     public int getSteemitMinUndoHistory() {
         return steemitMinUndoHistory;
     }
 
+    /**
+     * @return the steemitNullAccount
+     */
     public String getSteemitNullAccount() {
         return steemitNullAccount;
     }
 
+    /**
+     * @return the steemitNumInitMiners
+     */
     public int getSteemitNumInitMiners() {
         return steemitNumInitMiners;
     }
 
+    /**
+     * @return the steemitOriginalMinAccountCreationFee
+     */
     public long getSteemitOriginalMinAccountCreationFee() {
         return steemitOriginalMinAccountCreationFee;
     }
 
+    /**
+     * @return the steemitOwnerAuthHistoryTrackingStartBlockNum
+     */
     public long getSteemitOwnerAuthHistoryTrackingStartBlockNum() {
         return steemitOwnerAuthHistoryTrackingStartBlockNum;
     }
 
+    /**
+     * @return the steemitOwnerAuthRecoveryPeriod
+     */
     public long getSteemitOwnerAuthRecoveryPeriod() {
         return steemitOwnerAuthRecoveryPeriod;
     }
 
+    /**
+     * @return the steemitOwnerChallengeCooldown
+     */
     public long getSteemitOwnerChallengeCooldown() {
         return steemitOwnerChallengeCooldown;
     }
 
+    /**
+     * @return the steemitOwnerChallengeFee
+     */
     public Asset getSteemitOwnerChallengeFee() {
         return steemitOwnerChallengeFee;
     }
 
+    /**
+     * @return the steemitOwnerUpdateLimit
+     */
     public int getSteemitOwnerUpdateLimit() {
         return steemitOwnerUpdateLimit;
     }
 
+    /**
+     * @return the steemitPostAvarageWindow
+     */
     public int getSteemitPostAvarageWindow() {
         return steemitPostAvarageWindow;
     }
 
+    /**
+     * @return the steemitPostMaxBandwidth
+     */
     public long getSteemitPostMaxBandwidth() {
         return steemitPostMaxBandwidth;
     }
 
+    /**
+     * @return the steemitPostRewardFundName
+     */
     public String getSteemitPostRewardFundName() {
         return steemitPostRewardFundName;
     }
 
+    /**
+     * @return the steemitPostWeightConstant
+     */
     public int getSteemitPostWeightConstant() {
         return steemitPostWeightConstant;
     }
 
+    /**
+     * @return the steemitPowAprPercent
+     */
     public int getSteemitPowAprPercent() {
         return steemitPowAprPercent;
     }
 
+    /**
+     * @return the steemitProducerAprPercent
+     */
     public int getSteemitProducerAprPercent() {
         return steemitProducerAprPercent;
     }
 
+    /**
+     * @return the steemitProxyToSelfAccount
+     */
     public String getSteemitProxyToSelfAccount() {
         return steemitProxyToSelfAccount;
     }
 
+    /**
+     * @return the steemitSDBInterestCompoundIntervalSec
+     */
     public long getSteemitSDBInterestCompoundIntervalSec() {
         return steemitSDBInterestCompoundIntervalSec;
     }
 
+    /**
+     * @return the steemitSecondsPerYear
+     */
     public long getSteemitSecondsPerYear() {
         return steemitSecondsPerYear;
     }
 
+    /**
+     * @return the steemitRecentRSharesDecayRate
+     */
     public long getSteemitRecentRSharesDecayRate() {
         return steemitRecentRSharesDecayRate;
     }
 
+    /**
+     * @return the steemitRecentRSharesDecayRateHf19
+     */
     public long getSteemitRecentRSharesDecayRateHf19() {
         return steemitRecentRSharesDecayRateHf19;
     }
 
+    /**
+     * @return the steemitRecentRSharesDecayRateHf17
+     */
     public long getSteemitRecentRSharesDecayRateHf17() {
         return steemitRecentRSharesDecayRateHf17;
     }
 
+    /**
+     * @return the steemitReverseAuctionWindowSeconds
+     */
     public int getSteemitReverseAuctionWindowSeconds() {
         return steemitReverseAuctionWindowSeconds;
     }
 
+    /**
+     * @return the steemitRootPostParent
+     */
     public String getSteemitRootPostParent() {
         return steemitRootPostParent;
     }
 
+    /**
+     * @return the steemitSavingsWithdrawRequestLimit
+     */
     public long getSteemitSavingsWithdrawRequestLimit() {
         return steemitSavingsWithdrawRequestLimit;
     }
 
+    /**
+     * @return the steemitSavingsWithdrawTime
+     */
     public long getSteemitSavingsWithdrawTime() {
         return steemitSavingsWithdrawTime;
     }
 
+    /**
+     * @return the steemitSbdStartPercent
+     */
     public short getSteemitSbdStartPercent() {
         return steemitSbdStartPercent;
     }
 
+    /**
+     * @return the steemitSbdStopPercent
+     */
     public short getSteemitSbdStopPercent() {
         return steemitSbdStopPercent;
     }
 
+    /**
+     * @return the steemitSecondCashcoutWindow
+     */
     public long getSteemitSecondCashcoutWindow() {
         return steemitSecondCashcoutWindow;
     }
 
+    /**
+     * @return the steemitSoftMaxCommentDepth
+     */
     public int getSteemitSoftMaxCommentDepth() {
         return steemitSoftMaxCommentDepth;
     }
 
+    /**
+     * @return the steemitStartMinerVotingBlock
+     */
     public long getSteemitStartMinerVotingBlock() {
         return steemitStartMinerVotingBlock;
     }
 
+    /**
+     * @return the steemitStartVestingBlock
+     */
     public int getSteemitStartVestingBlock() {
         return steemitStartVestingBlock;
     }
 
+    /**
+     * @return the steemitSymbol
+     */
     public String getSteemitSymbol() {
         return steemitSymbol;
     }
 
+    /**
+     * @return the steemitTempAccount
+     */
     public String getSteemitTempAccount() {
         return steemitTempAccount;
     }
 
+    /**
+     * @return the steemitUpvoteLockout
+     */
     public long getSteemitUpvoteLockout() {
         return steemitUpvoteLockout;
     }
 
+    /**
+     * @return the steemitUpvoteLockoutHf7
+     */
     public long getSteemitUpvoteLockoutHf7() {
         return steemitUpvoteLockoutHf7;
     }
 
+    /**
+     * @return the steemitUpvoteLockoutHf17
+     */
     public long getSteemitUpvoteLockoutHf17() {
         return steemitUpvoteLockoutHf17;
     }
 
+    /**
+     * @return the steemitVestingFundPercent
+     */
     public short getSteemitVestingFundPercent() {
         return steemitVestingFundPercent;
     }
 
+    /**
+     * @return the steemitVestingWithdrawIntervals
+     */
     public int getSteemitVestingWithdrawIntervals() {
         return steemitVestingWithdrawIntervals;
     }
 
+    /**
+     * @return the steemitVestingWithdrawIntervalsPreHf16
+     */
     public int getSteemitVestingWithdrawIntervalsPreHf16() {
         return steemitVestingWithdrawIntervalsPreHf16;
     }
 
+    /**
+     * @return the steemitVestingWithdrawIntervalSeconds
+     */
     public int getSteemitVestingWithdrawIntervalSeconds() {
         return steemitVestingWithdrawIntervalSeconds;
     }
 
+    /**
+     * @return the steemitVoteChangeLockoutPeriod
+     */
     public int getSteemitVoteChangeLockoutPeriod() {
         return steemitVoteChangeLockoutPeriod;
     }
 
+    /**
+     * @return the steemitVoteDustThreshold
+     */
     public int getSteemitVoteDustThreshold() {
         return steemitVoteDustThreshold;
     }
 
+    /**
+     * @return the steemitVoteRegenerationSeconds
+     */
     public int getSteemitVoteRegenerationSeconds() {
         return steemitVoteRegenerationSeconds;
     }
 
+    /**
+     * @return the steemSymbol
+     */
     public long getSteemSymbol() {
         return steemSymbol;
     }
 
+    /**
+     * @return the stmdSymbol
+     */
     public long getStmdSymbol() {
         return stmdSymbol;
     }
 
+    /**
+     * @return the vestsSymbol
+     */
     public long getVestsSymbol() {
         return vestsSymbol;
     }
 
+    /**
+     * @return the virtualScheduleLapLength
+     */
     public BigInteger getVirtualScheduleLapLength() {
         return virtualScheduleLapLength;
     }
 
+    /**
+     * @return the virtualScheduleLapLength2
+     */
     public BigInteger getVirtualScheduleLapLength2() {
         return virtualScheduleLapLength2;
     }
