@@ -21,9 +21,9 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ChangeRecoveryAccountOperationIT extends BaseTransactionalIntegrationTest {
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcf3c80457011a06737465656d6a07646"
-            + "57a313333370000011c5f10b6238b7783f0e99fc6a610a5b7188a66afa72ccc633a460c9683285df7371bbad"
-            + "cad04ae7407f87fb0ff24bd3cc787fec0a85037ec88c76579deef009b7c";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcebc80457011a0764657a3133333706737465656"
+            + "d6a0000011b6a2574daa46d4e964d37a2b129fbfff8db4e4e49eaf12f7c072e940833a6181c5c961d46ddc3eaaaf6e25"
+            + "00c7f954b06386f888e1f22d2ec5554a3cd9629770a";
 
     /**
      * <b>Attention:</b> This test class requires a valid owner key of the used
@@ -38,8 +38,8 @@ public class ChangeRecoveryAccountOperationIT extends BaseTransactionalIntegrati
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironmentForTransactionalTests();
 
-        AccountName accountToRecover = new AccountName("steemj");
-        AccountName newRecoveryAccount = new AccountName("dez1337");
+        AccountName accountToRecover = new AccountName("dez1337");
+        AccountName newRecoveryAccount = new AccountName("steemj");
 
         ChangeRecoveryAccountOperation changeRecoveryAccountOperation = new ChangeRecoveryAccountOperation(
                 accountToRecover, newRecoveryAccount);

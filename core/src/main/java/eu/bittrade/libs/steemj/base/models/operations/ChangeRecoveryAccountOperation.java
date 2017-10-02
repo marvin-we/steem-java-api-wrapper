@@ -201,6 +201,6 @@ public class ChangeRecoveryAccountOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getNewRecoveryAccount(), PrivateKeyType.OWNER);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccountToRecover(), PrivateKeyType.OWNER);
     }
 }

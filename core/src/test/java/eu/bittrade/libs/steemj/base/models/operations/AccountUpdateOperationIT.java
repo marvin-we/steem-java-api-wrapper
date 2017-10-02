@@ -77,7 +77,7 @@ public class AccountUpdateOperationIT extends BaseTransactionalIntegrationTest {
         owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 
-        String jsonMetadata = "";
+        String jsonMetadata = "{}";
 
         AccountUpdateOperation accountUpdateOperation = new AccountUpdateOperation(account, owner, active, posting,
                 memoKey, jsonMetadata);
@@ -101,8 +101,6 @@ public class AccountUpdateOperationIT extends BaseTransactionalIntegrationTest {
         assertThat(accountUpdateOperation, instanceOf(AccountUpdateOperation.class));
         assertThat(((AccountUpdateOperation) accountUpdateOperation).getAccount().getName().toString(),
                 equalTo(EXPECTED_ACCOUNT));
-        System.out.println(((PublicKey) (((AccountUpdateOperation) accountUpdateOperation).getActive().getKeyAuths()
-                .keySet().toArray())[0]).getAddressFromPublicKey());
         assertThat(((AccountUpdateOperation) accountUpdateOperation).getActive().getKeyAuths().get(EXPECTED_PUBLIC_KEY),
                 equalTo(EXPECTED_WEIGHT_THRESHOLD));
     }

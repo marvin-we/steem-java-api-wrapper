@@ -45,8 +45,9 @@ public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest 
         ProveAuthorityOperation proveAuthorityOperationWithActiveKey = new ProveAuthorityOperation(challengedAccount);
 
         ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(proveAuthorityOperationWithOwnerKey);
+
         operations.add(proveAuthorityOperationWithActiveKey);
+        operations.add(proveAuthorityOperationWithOwnerKey);
 
         signedTransaction.setOperations(operations);
 
