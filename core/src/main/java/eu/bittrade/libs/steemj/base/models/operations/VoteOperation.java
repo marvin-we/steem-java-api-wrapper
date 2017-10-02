@@ -43,6 +43,8 @@ public class VoteOperation extends Operation {
      *            {@link #setPermlink(String)}.
      * @param weight
      *            Set the voting weight. {@link #setWeight(short)}.
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
     public VoteOperation(@JsonProperty("voter") AccountName voter, @JsonProperty("author") AccountName author,
@@ -67,7 +69,9 @@ public class VoteOperation extends Operation {
      *            {@link #setAuthor(AccountName)}.
      * @param permlink
      *            Set the permanent link of the post/comment to vote for.
-     *            {@link #setPermlink(String)}.
+     *            {@link #setPermlink(Permlink)}.
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
     public VoteOperation(AccountName voter, AccountName author, Permlink permlink) {
         super(false);

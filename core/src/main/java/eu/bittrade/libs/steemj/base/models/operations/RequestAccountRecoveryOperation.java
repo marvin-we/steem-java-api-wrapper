@@ -101,10 +101,10 @@ public class RequestAccountRecoveryOperation extends Operation {
      * 
      * @param recoveryAccount
      *            The recovery account to set (see
-     *            {@link #setRecoveryAccount(Account)}).
+     *            {@link #setRecoveryAccount(AccountName)}).
      * @param accountToRecover
      *            The account to recover (see
-     *            {@link #setAccountToRecover(Account)}).
+     *            {@link #setAccountToRecover(AccountName)}).
      * @param newOwnerAuthority
      *            The new owner authority (see
      *            {@link #setNewOwnerAuthority(Authority)}).
@@ -130,7 +130,7 @@ public class RequestAccountRecoveryOperation extends Operation {
      * {@link eu.bittrade.libs.steemj.base.models.Account#getRecoveryAccount()
      * getRecoveryAccount()} on the account to recover. You can receive this
      * account by using the
-     * {@link eu.bittrade.libs.steemj.steemJ#getAccounts(List)
+     * {@link eu.bittrade.libs.steemj.SteemJ#getAccounts(List)
      * getAccounts(List)} method when passing the {@link #accountToRecover
      * accountToRecover}. <b>Notice:</b> The private active key of this account
      * needs to be stored in the key storage.
