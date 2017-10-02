@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Locale;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
@@ -17,7 +16,7 @@ public class AssetSerializer extends JsonSerializer<Asset> {
 
     @Override
     public void serialize(Asset asset, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-            throws IOException, JsonProcessingException {
+            throws IOException {
         String amountFormat = "%." + (int) asset.getPrecision() + "f";
         jsonGenerator.writeString(String.format(Locale.US, amountFormat, asset.getAmount()) + " "
                 + asset.getSymbol().toString().toUpperCase());

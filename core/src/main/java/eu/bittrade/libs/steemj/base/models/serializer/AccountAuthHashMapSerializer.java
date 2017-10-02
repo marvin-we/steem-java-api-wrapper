@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
@@ -16,7 +15,7 @@ public class AccountAuthHashMapSerializer extends JsonSerializer<Map<String, Int
 
     @Override
     public void serialize(Map<String, Integer> accountAuthMap, JsonGenerator jsonGenerator,
-            SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartArray();
         for (Entry<String, Integer> accountAuth : accountAuthMap.entrySet()) {
             jsonGenerator.writeStartArray();
