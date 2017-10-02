@@ -30,7 +30,7 @@ public class WitnessUpdateOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION = "0b0764657a313333371c68747470733a2f2f737465656d69742e636f6d2f4"
             + "064657a3133333702e5127bd7d41f01d9981a5a2c2524a60706040bbec8838a39719550ea2507100088130000000000"
             + "0003535445454d0000000001000000010000000000000003535445454d0000";
-    final String EXPECTED_TRANSACTION_HASH = "5d01935dc58925f39d156fd26160049d81a4a4d669d29183150719086a296b0a";
+    final String EXPECTED_TRANSACTION_HASH = "32072376b387b4b22b9bd23ca487be12341a48646a8c6d68812b2a25140c524b";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000000"
             + "000000000f68585abf4dceac80457010b0764657a313333371c68747470733a2f2f737465656d69742e636f6d2f4064"
             + "657a3133333702e5127bd7d41f01d9981a5a2c2524a60706040bbec8838a39719550ea2507100088130000000000000"
@@ -77,8 +77,7 @@ public class WitnessUpdateOperationTest extends BaseTransactionalUnitTest {
 
     @Override
     @Test
-    public void testOperationToByteArray()
-            throws UnsupportedEncodingException, SteemInvalidTransactionException {
+    public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
                 Utils.HEX.encode(witnessUpdateOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }

@@ -57,8 +57,9 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
         boolean allowVotes = true;
         boolean allowCurationRewards = true;
         short percentSteemDollars = (short) 10000;
-
-        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink, null,
+        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
+        
+        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink, maxAcceptedPayout,
                 percentSteemDollars, allowVotes, allowCurationRewards, null);
 
         ArrayList<Operation> operations = new ArrayList<>();

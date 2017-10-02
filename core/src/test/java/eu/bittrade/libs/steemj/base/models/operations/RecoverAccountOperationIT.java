@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -56,7 +55,7 @@ public class RecoverAccountOperationIT extends BaseTransactionalIntegrationTest 
         Authority recentOwnerAuthority = new Authority();
         recentOwnerAuthority.setAccountAuths(new HashMap<>());
         Map<PublicKey, Integer> ownerKeyAuth2 = new HashMap<>();
-        ownerKeyAuth.put(new PublicKey("STM688NyXXSjXmXCy4FSaPH5L2FitugsKU9PbLn5ZiUQr3GaztmCL"), 1);
+        ownerKeyAuth2.put(new PublicKey("STM688NyXXSjXmXCy4FSaPH5L2FitugsKU9PbLn5ZiUQr3GaztmCL"), 1);
         recentOwnerAuthority.setKeyAuths(ownerKeyAuth2);
         recentOwnerAuthority.setWeightThreshold(1);
 
@@ -79,14 +78,12 @@ public class RecoverAccountOperationIT extends BaseTransactionalIntegrationTest 
 
     @Category({ IntegrationTest.class })
     @Test
-    @Ignore
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
 
     @Category({ IntegrationTest.class })
     @Test
-    @Ignore
     public void getTransactionHex() throws Exception {
         assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
     }

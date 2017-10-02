@@ -42,7 +42,7 @@ public class DeleteCommentOperationTest extends BaseTransactionalUnitTest {
         AccountName author = new AccountName("foobarc");
         Permlink permlink = new Permlink("re-foobard");
 
-        DeleteCommentOperation deleteCommentOperation = new DeleteCommentOperation(author, permlink);
+        deleteCommentOperation = new DeleteCommentOperation(author, permlink);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(deleteCommentOperation);

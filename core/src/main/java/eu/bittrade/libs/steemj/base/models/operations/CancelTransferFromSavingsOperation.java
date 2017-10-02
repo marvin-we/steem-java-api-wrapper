@@ -51,6 +51,8 @@ public class CancelTransferFromSavingsOperation extends Operation {
             @JsonProperty("request_id") long requestId) {
         super(false);
 
+        this.setFrom(from);
+        this.setRequestId(requestId);
     }
 
     /**
@@ -148,6 +150,6 @@ public class CancelTransferFromSavingsOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getFrom(), PrivateKeyType.POSTING);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getFrom(), PrivateKeyType.ACTIVE);
     }
 }

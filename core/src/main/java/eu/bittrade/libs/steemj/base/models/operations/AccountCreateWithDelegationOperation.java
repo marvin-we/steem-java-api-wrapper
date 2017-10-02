@@ -117,7 +117,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
     public void setDelegation(Asset delegation) {
         if (delegation == null) {
             throw new InvalidParameterException("The delegation can't be null.");
-        } else if (delegation.getSymbol().equals(AssetSymbolType.VESTS)) {
+        } else if (!delegation.getSymbol().equals(AssetSymbolType.VESTS)) {
             throw new InvalidParameterException("The delegation must have the symbol type VESTS.");
         } else if (delegation.getAmount() < 0) {
             throw new InvalidParameterException("The delegation must be a postive amount.");

@@ -39,7 +39,7 @@ public class TransferToSavingsOperationIT extends BaseTransactionalIntegrationTe
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         AccountName from = new AccountName("dez1337");
         AccountName to = new AccountName("steemj");

@@ -12,8 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -38,16 +40,17 @@ public class CommentOptionsOperationTest extends BaseTransactionalUnitTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupUnitTestEnvironment();
+        setupUnitTestEnvironmentForTransactionalTests();
 
         AccountName author = new AccountName("foo");
         Permlink permlink = new Permlink("re-foobardoobar");
         boolean allowVotes = false;
         boolean allowCurationRewards = true;
         short percentSteemDollars = (short) 2471;
+        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
-        commentOptionsOperation = new CommentOptionsOperation(author, permlink, null, percentSteemDollars, allowVotes,
-                allowCurationRewards, null);
+        commentOptionsOperation = new CommentOptionsOperation(author, permlink, maxAcceptedPayout, percentSteemDollars,
+                allowVotes, allowCurationRewards, null);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOptionsOperation);

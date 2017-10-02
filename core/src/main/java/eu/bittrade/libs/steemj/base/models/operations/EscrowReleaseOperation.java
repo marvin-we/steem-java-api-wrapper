@@ -73,17 +73,20 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
                     "The who account must be the from account or the to account or the agent account.");
         }
 
+        this.from = from;
+        this.to = to;
+        this.agent = agent;
+
         if (sbdAmount == null || steemAmount == null || (sbdAmount.getAmount() + steemAmount.getAmount() <= 0)) {
             throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
         }
 
-        this.setFrom(from);
-        this.setTo(to);
-        this.setAgent(agent);
+        this.sbdAmount = sbdAmount;
+        this.steemAmount = steemAmount;
+
+        this.setReceiver(receiver);
         this.setEscrowId(escrowId);
         this.setWho(who);
-        this.setSbdAmount(sbdAmount);
-        this.setSteemAmount(steemAmount);
     }
 
     /**

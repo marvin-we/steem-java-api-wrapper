@@ -43,7 +43,7 @@ public class AccountWitnessVoteOperationIT extends BaseTransactionalIntegrationT
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
 
         AccountName account = new AccountName("dez1337");
         AccountName witness = new AccountName("good-karma");

@@ -47,6 +47,9 @@ public class DeleteCommentOperation extends Operation {
     public DeleteCommentOperation(@JsonProperty("author") AccountName author,
             @JsonProperty("permlink") Permlink permlink) {
         super(false);
+
+        this.setAuthor(author);
+        this.setPermlink(permlink);
     }
 
     /**

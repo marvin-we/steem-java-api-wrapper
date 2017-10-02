@@ -43,7 +43,7 @@ public class ClaimRewardBalanceOperationTest extends BaseTransactionalUnitTest {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        AccountName account = new AccountName("steemJ");
+        AccountName account = new AccountName("steemj");
 
         Asset sbdReward = new Asset();
         sbdReward.setAmount(1L);

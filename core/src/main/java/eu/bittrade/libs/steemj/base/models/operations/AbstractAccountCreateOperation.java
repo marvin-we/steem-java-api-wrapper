@@ -58,7 +58,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     public void setFee(Asset fee) {
         if (fee == null) {
             throw new InvalidParameterException("The fee can't be null.");
-        } else if (fee.getSymbol().equals(AssetSymbolType.STEEM)) {
+        } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM)) {
             throw new InvalidParameterException("The fee must be paid in STEEM.");
         } else if (fee.getAmount() < 0) {
             throw new InvalidParameterException("The fee must be a postive amount.");

@@ -50,9 +50,9 @@ public class EscrowTransferOperationIT extends BaseTransactionalIntegrationTest 
         AccountName agent = new AccountName("steemj");
         AccountName from = new AccountName("dez1337");
         AccountName to = new AccountName("dez1337");
-        TimePointSec escrowExpirationDate = new TimePointSec(1490215341);
+        TimePointSec escrowExpirationDate = new TimePointSec(1506967066);
         long escrowId = 34;
-        TimePointSec ratificationDeadlineDate = new TimePointSec(1490215340);
+        TimePointSec ratificationDeadlineDate = new TimePointSec(1506966866);
         String jsonMeta = "";
 
         Asset sbdAmount = new Asset();

@@ -107,24 +107,27 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
             throw new InvalidParameterException("The agent account must be a third party.");
         }
 
+        this.from = from;
+        this.to = to;
+        this.agent = agent;
+
         if (sbdAmount == null || steemAmount == null || (sbdAmount.getAmount() + steemAmount.getAmount() <= 0)) {
             throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
         }
 
+        this.sbdAmount = sbdAmount;
+        this.steemAmount = steemAmount;
+
         if (ratificationDeadlineDate == null || escrowExpirationDate == null
-                || ratificationDeadlineDate.getDateTimeAsTimestamp() < escrowExpirationDate.getDateTimeAsTimestamp()) {
+                || ratificationDeadlineDate.getDateTimeAsTimestamp() >= escrowExpirationDate.getDateTimeAsTimestamp()) {
             throw new InvalidParameterException("The ratification deadline must be before escrow expiration");
         }
 
-        this.setFrom(from);
-        this.setTo(to);
-        this.setAgent(agent);
+        this.ratificationDeadlineDate = ratificationDeadlineDate;
+        this.escrowExpirationDate = escrowExpirationDate;
+
         this.setEscrowId(escrowId);
-        this.setSbdAmount(sbdAmount);
-        this.setSteemAmount(steemAmount);
         this.setFee(fee);
-        this.setRatificationDeadlineDate(ratificationDeadlineDate);
-        this.setEscrowExpirationDate(escrowExpirationDate);
         this.setJsonMeta(jsonMeta);
     }
 
@@ -354,7 +357,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
             throw new InvalidParameterException("The fee can't be null.");
         } else if (fee.getAmount() < 0) {
             throw new InvalidParameterException("The fee cannot be negative.");
-        } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM) || !fee.getSymbol().equals(AssetSymbolType.SBD)) {
+        } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM) && !fee.getSymbol().equals(AssetSymbolType.SBD)) {
             throw new InvalidParameterException("The fee must be STEEM or SBD.");
         }
 

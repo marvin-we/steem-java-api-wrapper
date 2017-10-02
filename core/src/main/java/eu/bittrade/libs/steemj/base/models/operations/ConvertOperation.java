@@ -54,8 +54,10 @@ public class ConvertOperation extends Operation {
     public ConvertOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("requestid") long requestId,
             @JsonProperty("amount") Asset amount) {
         super(false);
-        // Set default values.
-        this.setRequestId(0);
+
+        this.setOwner(owner);
+        this.setRequestId(requestId);
+        this.setAmount(amount);
     }
 
     /**

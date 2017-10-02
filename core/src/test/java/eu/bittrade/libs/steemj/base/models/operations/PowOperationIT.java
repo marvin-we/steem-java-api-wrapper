@@ -42,7 +42,7 @@ public class PowOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironment();
+        setupIntegrationTestEnvironmentForTransactionalTests();
     }
 
     @Category({ IntegrationTest.class })
