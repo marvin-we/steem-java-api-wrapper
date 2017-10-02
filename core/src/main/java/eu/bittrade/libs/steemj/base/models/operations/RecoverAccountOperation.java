@@ -277,6 +277,13 @@ public class RecoverAccountOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccountToRecover(), PrivateKeyType.OWNER);
+        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
+
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getNewOwnerAuthority(),
+                PrivateKeyType.OTHER);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRecentOwnerAuthority(),
+                PrivateKeyType.OTHER);
+
+        return requiredAuthorities;
     }
 }

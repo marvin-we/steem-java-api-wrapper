@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
@@ -154,18 +153,19 @@ public abstract class Operation implements ByteTransformable {
      *         types.
      */
     protected Map<SignatureObject, List<PrivateKeyType>> mergeRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase, AccountName accountName,
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase, SignatureObject signatureObject,
             PrivateKeyType privateKeyType) {
         Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
         if (requiredAuthorities == null) {
             requiredAuthorities = new HashMap<>();
-        } else if (requiredAuthorities.containsKey(accountName) && requiredAuthorities.get(accountName) != null) {
-            requiredAuthorities.get(accountName).add(privateKeyType);
+        } else if (requiredAuthorities.containsKey(signatureObject)
+                && requiredAuthorities.get(signatureObject) != null) {
+            requiredAuthorities.get(signatureObject).add(privateKeyType);
         } else {
             ArrayList<PrivateKeyType> requiredKeyType = new ArrayList<>();
             requiredKeyType.add(privateKeyType);
 
-            requiredAuthorities.put(accountName, requiredKeyType);
+            requiredAuthorities.put(signatureObject, requiredKeyType);
         }
 
         return requiredAuthorities;
@@ -178,20 +178,21 @@ public abstract class Operation implements ByteTransformable {
      * @param requiredAuthoritiesBase
      *            A map to which the required authorities of this operation
      *            should be added to.
-     * @param accountName
-     *            The account names to merge into the list.
+     * @param signatureObjects
+     *            The signature object (e.g. a list of account names) to merge
+     *            into the list.
      * @param privateKeyType
      *            The required key type.
      * @return The merged set of signature objects and required private key
      *         types.
      */
     protected Map<SignatureObject, List<PrivateKeyType>> mergeRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase, List<AccountName> accountName,
-            PrivateKeyType privateKeyType) {
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase,
+            List<? extends SignatureObject> signatureObjects, PrivateKeyType privateKeyType) {
         Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
 
-        for (AccountName account : accountName) {
-            requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, account, privateKeyType);
+        for (SignatureObject signatureObject : signatureObjects) {
+            requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, signatureObject, privateKeyType);
         }
 
         return requiredAuthorities;

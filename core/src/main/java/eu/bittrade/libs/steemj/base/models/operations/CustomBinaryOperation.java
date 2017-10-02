@@ -296,10 +296,8 @@ public class CustomBinaryOperation extends Operation {
                 PrivateKeyType.ACTIVE);
         requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRequiredPostingAuths(),
                 PrivateKeyType.POSTING);
-        // TODO: Support authorities
-        // requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities,
-        // this.getRequiredAuths(),
-        // PrivateKeyType.OTHER);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getRequiredAuths(),
+                PrivateKeyType.OTHER);
 
         return requiredAuthorities;
     }
