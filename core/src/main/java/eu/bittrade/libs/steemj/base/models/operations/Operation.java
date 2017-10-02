@@ -97,7 +97,7 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
         @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
         @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
         @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
-        @Type(value = ProducerRewardOperation.class, name = "producer_reward_operation"),
+        @Type(value = ProducerRewardOperation.class, name = "producer_reward"),
         // Follow Plugin Operations
         @Type(value = ReblogOperation.class, name = "reblog_operation"),
         @Type(value = FollowOperation.class, name = "follow_operation") })

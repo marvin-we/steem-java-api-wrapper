@@ -62,7 +62,7 @@ import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegationOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
+import eu.bittrade.libs.steemj.base.models.operations.virtual.ProducerRewardOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
@@ -127,15 +127,15 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetOpsInBlock() throws Exception {
         final List<AppliedOperation> appliedOperationsOnlyVirtual = steemJ.getOpsInBlock(13138393, true);
 
-        assertThat(appliedOperationsOnlyVirtual.size(), equalTo(5));
+        assertThat(appliedOperationsOnlyVirtual.size(), equalTo(6));
         assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx(), equalTo(1));
         assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), equalTo(41));
         assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), equalTo(0L));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(AuthorRewardOperation.class));
+        assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(ProducerRewardOperation.class));
 
         final List<AppliedOperation> appliedOperations = steemJ.getOpsInBlock(13138393, false);
 
-        assertThat(appliedOperations.size(), equalTo(50));
+        assertThat(appliedOperations.size(), equalTo(51));
         assertThat(appliedOperations.get(1).getOpInTrx(), equalTo(0));
         assertThat(appliedOperations.get(1).getTrxInBlock(), equalTo(1));
         assertThat(appliedOperations.get(1).getVirtualOp(), equalTo(0L));
