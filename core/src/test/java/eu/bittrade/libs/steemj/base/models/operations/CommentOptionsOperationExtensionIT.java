@@ -78,10 +78,8 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegra
         CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
         commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
-        CommentOptionsExtension commentOptionsExtension = new CommentOptionsExtension(commentPayoutBeneficiaries);
-
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentOptionsExtension);
+        commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink,
                 new Asset(1000000000, AssetSymbolType.SBD), percentSteemDollars, allowVotes, allowCurationRewards,
@@ -112,14 +110,17 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegra
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink().getLink(),
                 equalTo(EXPECTED_PERMANENT_LINK_WITH_EXTENSION));
 
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0)
-                .getCommentPayoutBeneficiaries().getBeneficiaries().size(), equalTo(1));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0)
-                .getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getAccount().getName(),
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0),
+                instanceOf(CommentPayoutBeneficiaries.class));
+        assertThat(((CommentPayoutBeneficiaries) ((CommentOptionsOperation) commentOptionsOperation).getExtensions()
+                .get(0)).getBeneficiaries().size(), equalTo(1));
+        assertThat(
+                ((CommentPayoutBeneficiaries) ((CommentOptionsOperation) commentOptionsOperation).getExtensions()
+                        .get(0)).getBeneficiaries().get(BENEFICIARIES_ID).getAccount().getName(),
                 equalTo(EXPECTED_BENEFICIARY_ACCOUNT));
         assertThat(
-                ((CommentOptionsOperation) commentOptionsOperation).getExtensions().get(0)
-                        .getCommentPayoutBeneficiaries().getBeneficiaries().get(BENEFICIARIES_ID).getWeight(),
+                ((CommentPayoutBeneficiaries) ((CommentOptionsOperation) commentOptionsOperation).getExtensions()
+                        .get(0)).getBeneficiaries().get(BENEFICIARIES_ID).getWeight(),
                 equalTo(EXPECTED_BENEFICIARY_WEIGHT));
     }
 

@@ -6,8 +6,11 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import eu.bittrade.libs.steemj.enums.CommentOptionsExtensionsType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -15,11 +18,13 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommentPayoutBeneficiaries implements ByteTransformable {
+@JsonDeserialize
+public class CommentPayoutBeneficiaries extends CommentOptionsExtension {
+    @JsonProperty("beneficiaries")
     private List<BeneficiaryRouteType> beneficiaries;
 
     /**
-     * @return the beneficiaries
+     * @return The beneficiaries.
      */
     public List<BeneficiaryRouteType> getBeneficiaries() {
         return beneficiaries;
@@ -27,7 +32,7 @@ public class CommentPayoutBeneficiaries implements ByteTransformable {
 
     /**
      * @param beneficiaries
-     *            the beneficiaries to set
+     *            The beneficiaries to set.
      */
     public void setBeneficiaries(List<BeneficiaryRouteType> beneficiaries) {
         this.beneficiaries = beneficiaries;
@@ -36,6 +41,9 @@ public class CommentPayoutBeneficiaries implements ByteTransformable {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentPayoutBeneficiaries = new ByteArrayOutputStream()) {
+            serializedCommentPayoutBeneficiaries.write(SteemJUtils.transformIntToVarIntByteArray(
+                    CommentOptionsExtensionsType.COMMENT_PAYOUT_BENEFICIARIES.ordinal()));
+
             serializedCommentPayoutBeneficiaries
                     .write(SteemJUtils.transformLongToVarIntByteArray(this.getBeneficiaries().size()));
 
