@@ -54,8 +54,9 @@ public class CommentOptionsOperation extends Operation {
      * a post. This operation allows authors to update properties associated
      * with their post.
      *
-     * The max_accepted_payout may be decreased, but never increased. The
-     * percent_steem_dollars may be decreased, but never increased
+     * The <code>maxAcceptedPayout</code> may be decreased, but never increased.
+     * The <code>percentSteemDollars</code> may be decreased, but never
+     * increased
      * 
      * @param author
      *            The author of the post this operation should apply to (see
@@ -180,14 +181,10 @@ public class CommentOptionsOperation extends Operation {
      * @param permlink
      *            The permlink of the post this operation should apply to (see
      *            {@link #setPermlink(Permlink)}).
-     * @param commentOptionsExtensions 
-     * @param allowCurationRewards2 
-     * @param percentSteemDollars2 
-     * @param object 
      * @throws InvalidParameterException
      *             If one of the parameters does not fulfill the requirements.
      */
-    public CommentOptionsOperation(AccountName author, Permlink permlink, Object object, short percentSteemDollars2, boolean allowCurationRewards2, ArrayList<CommentOptionsExtension> commentOptionsExtensions) {
+    public CommentOptionsOperation(AccountName author, Permlink permlink) {
         this(author, permlink, new ArrayList<>());
     }
 

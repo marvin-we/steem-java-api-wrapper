@@ -34,9 +34,10 @@ public class ResetAccountOperation extends Operation {
 
     /**
      * Create a new reset account operation. This operation allows the
-     * {@link #resetAccount resetAccount} to change the owner authority of the
-     * {@link #accountToReset accountToReset} to the {@link #newOwnerAuthority
-     * newOwnerAuthority} after 60 days of inactivity.
+     * {@link #getResetAccount() resetAccount} to change the owner authority of
+     * the {@link #getAccountToReset() accountToReset} to the
+     * {@link #getNewOwnerAuthority() newOwnerAuthority} after 60 days of
+     * inactivity.
      * 
      * @param resetAccount
      *            Set the account to perform the reset account operation with

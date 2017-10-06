@@ -54,6 +54,25 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
     }
 
     /**
+     * Like
+     * {@link #TransferToVestingOperation(AccountName, AccountName, Asset)}, but
+     * will transform the <code>asset</code> from the <code>from</code> account
+     * to the <code>from</code> account.
+     * 
+     * @param from
+     *            The account to transfer the vestings from (see
+     *            {@link #setFrom(AccountName)}).
+     * @param amount
+     *            The amount of vests to transfer (see
+     *            {@link #setAmount(Asset)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
+     */
+    public TransferToVestingOperation(AccountName from, Asset amount) {
+        this(from, from, amount);
+    }
+
+    /**
      * Set the account name of the user who will received the
      * <code>amount</code>.
      * 

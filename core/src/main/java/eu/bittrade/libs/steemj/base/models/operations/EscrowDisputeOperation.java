@@ -96,7 +96,7 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
 
     /**
      * Set the account who disputes this operation. This can either be the
-     * {@link #to to} account or the {@link #agent agent} account.
+     * {@link #getTo() to} account or the {@link #getAgent() agent} account.
      * 
      * @param who
      *            The account which disputes this operation.

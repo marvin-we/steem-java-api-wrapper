@@ -76,10 +76,10 @@ public class DeclineVotingRightsOperation extends Operation {
     }
 
     /**
-     * Get the information if the {@link #account account} decline its voting
-     * rights or not.
+     * Get the information if the {@link #getAccount() account} decline its
+     * voting rights or not.
      * 
-     * @return The information if the {@link #account account} decline its
+     * @return The information if the {@link #getAccount() account} decline its
      *         voting rights or not.
      */
     public Boolean getDecline() {
@@ -87,11 +87,12 @@ public class DeclineVotingRightsOperation extends Operation {
     }
 
     /**
-     * Define if the {@link #account account} decline its voting rights or not.
+     * Define if the {@link #getAccount() account} decline its voting rights or
+     * not.
      * 
      * @param decline
-     *            The information if the {@link #account account} decline its
-     *            voting rights or not.
+     *            The information if the {@link #getAccount() account} decline
+     *            its voting rights or not.
      */
     public void setDecline(Boolean decline) {
         if (decline == null) {

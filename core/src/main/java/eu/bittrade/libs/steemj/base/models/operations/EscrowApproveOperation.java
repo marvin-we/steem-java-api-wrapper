@@ -131,7 +131,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
 
     /**
      * Set the account who approves this operation. This can either be the
-     * {@link #to to} account or the {@link #agent agent} account.
+     * {@link #getTo() to} account or the {@link #getAgent() agent} account.
      * 
      * @param who
      *            The account which approved this operation.
@@ -147,7 +147,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     }
 
     /**
-     * Get the information if the {@link #who who} account has approved the
+     * Get the information if the {@link #getWho() who} account has approved the
      * operation or not.
      * 
      * @return True if the operation has been approved or false if not.
@@ -157,7 +157,8 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     }
 
     /**
-     * Define if the {@link #who who} account approves the operation or not.
+     * Define if the {@link #getWho() who} account approves the operation or
+     * not.
      * 
      * @param approve
      *            True if the operation has been approved or false if not.

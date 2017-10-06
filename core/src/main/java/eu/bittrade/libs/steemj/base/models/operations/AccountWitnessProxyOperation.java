@@ -30,7 +30,8 @@ public class AccountWitnessProxyOperation extends Operation {
 
     /**
      * Create a new create account witness proxy operation. Use this operation
-     * to allow {@link #account account} to vote for a witness on your behalf.
+     * to allow {@link #getAccount() account} to vote for a witness on your
+     * behalf.
      * 
      * @param account
      *            Define the account to set the proxy for (see

@@ -122,7 +122,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
 
     /**
      * Get the recovery account which is the account that is allowed to create a
-     * recovery request for the {@link #accountToRecover accountToRecover}.
+     * recovery request for the {@link #getAccountToRecover() accountToRecover}.
      * 
      * @return The account that creates the recover request.
      */
@@ -132,7 +132,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
 
     /**
      * Set the recovery account which is the account that is allowed to create a
-     * recovery request for the {@link #accountToRecover accountToRecover}.
+     * recovery request for the {@link #getAccountToRecover() accountToRecover}.
      * <b>Notice:</b> The private owner key of this account needs to be stored
      * in the key storage.
      * 

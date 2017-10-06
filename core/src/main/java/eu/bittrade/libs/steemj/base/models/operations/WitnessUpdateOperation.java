@@ -43,22 +43,18 @@ public class WitnessUpdateOperation extends Operation {
     /**
      * Create a new witness update operation.
      * 
-     * Users who wish to become a witness must pay a
-     * {@link eu.bittrade.libs.steemj.base.models.operations.WitnessUpdateOperation#fee
-     * fee} acceptable to the current witnesses to apply for the position and
-     * allow voting to begin.
+     * Users who wish to become a witness must pay a {@link #getFee() fee}
+     * acceptable to the current witnesses to apply for the position and allow
+     * voting to begin.
      *
-     * If the
-     * {@link eu.bittrade.libs.steemj.base.models.operations.WitnessUpdateOperation#owner
-     * owner} isn't a witness they will become a witness. Witnesses are charged
-     * a fee equal to 1 weeks worth of witness pay which in turn is derived from
-     * the current share supply. The fee is only applied if the owner is not
-     * already a witness.
+     * If the {@link #getOwner() owner} isn't a witness they will become a
+     * witness. Witnesses are charged a fee equal to 1 weeks worth of witness
+     * pay which in turn is derived from the current share supply. The fee is
+     * only applied if the owner is not already a witness.
      *
-     * If the
-     * {@link eu.bittrade.libs.steemj.base.models.operations.WitnessUpdateOperation#blockSigningKey
-     * blockSigningKey} is null then the witness is removed from contention. The
-     * network will pick the top 21 witnesses for producing blocks.
+     * If the {@link #getBlockSigningKey() blockSigningKey} is null then the
+     * witness is removed from contention. The network will pick the top 21
+     * witnesses for producing blocks.
      * 
      * @param owner
      *            The Witness account name to set (see
@@ -238,7 +234,9 @@ public class WitnessUpdateOperation extends Operation {
     }
 
     /**
-     * Set the fee that should be paid for this witness update.
+     * Set the fee that should be paid for this witness update. The
+     * <code>fee</code> paid to register a new witness, should be 10x current
+     * block production pay.
      * 
      * @param fee
      *            The fee that should be paid for this witness update.

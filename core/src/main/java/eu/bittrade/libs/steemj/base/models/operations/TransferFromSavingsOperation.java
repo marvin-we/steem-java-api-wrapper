@@ -30,8 +30,8 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
 
     /**
      * Create a new transfer from savings operation. Use this operation to
-     * transfer an {@link #amount amount} from the savings of the {@link #from
-     * from} account to the {@link #to to} account.
+     * transfer an {@link #getAmount() amount} from the savings of the
+     * {@link #getFrom() from} account to the {@link #getTo() to} account.
      * 
      * @param from
      *            The account to transfer the vestings from (see

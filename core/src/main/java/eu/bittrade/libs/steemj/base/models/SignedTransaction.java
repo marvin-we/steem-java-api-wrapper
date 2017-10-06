@@ -316,9 +316,13 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     }
 
     /**
-     * Like {@link #toByteArray(String) toByteArray(String)}, but uses the
-     * default Steem chain id.
+     * This method creates a byte array based on a transaction object under the
+     * use of a guide written by <a href="https://Steemit.com/Steem/@xeroc/">
+     * Xeroc</a>. This method should only be used internally.
      * 
+     * If a chainId is provided it will be added in front of the byte array.
+     * 
+     * @return The serialized transaction object.
      * @throws SteemInvalidTransactionException
      *             If the transaction can not be signed.
      */
@@ -328,16 +332,13 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     }
 
     /**
-     * This method creates a byte array based on a transaction object under the
-     * use of a guide written by <a href="https://Steemit.com/Steem/@xeroc/">
-     * Xeroc</a>. This method should only be used internally.
+     * Like {@link #toByteArray() toByteArray()}, but allows to define a Steem
+     * chain id.
      * 
-     * If a chainId is provided it will be added in front of the byte array.
-     * 
-     * @return The serialized transaction object.
      * @param chainId
      *            The HEX representation of the chain Id you want to use for
      *            this transaction.
+     * @return The serialized transaction object.
      * @throws SteemInvalidTransactionException
      *             If the transaction can not be signed.
      */

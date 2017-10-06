@@ -34,9 +34,9 @@ public class SetResetAccountOperation extends Operation {
     /**
      * Create a new set reset account operation.
      * 
-     * This operation allows the {@link #account account} owner to control which
-     * account has the power to execute the 'reset_account_operation' after 60
-     * days.
+     * This operation allows the {@link #getAccount() account} owner to control
+     * which account has the power to execute the 'reset_account_operation'
+     * after 60 days.
      * 
      * @param account
      *            The account to set the reset account for (see
@@ -92,22 +92,24 @@ public class SetResetAccountOperation extends Operation {
     }
 
     /**
-     * Get the current reset account of the {@link #account account}. For newly
-     * created accounts this is <i> new AccountName("null") </i> in most cases.
+     * Get the current reset account of the {@link #getAccount() account}. For
+     * newly created accounts this is <i> new AccountName("null") </i> in most
+     * cases.
      * 
-     * @return The current reset account for the {@link #account account}.
+     * @return The current reset account for the {@link #getAccount() account}.
      */
     public AccountName getCurrentResetAccount() {
         return currentResetAccount;
     }
 
     /**
-     * Set the current reset account of the {@link #account account}. For
+     * Set the current reset account of the {@link #getAccount() account}. For
      * accounts created by Steemit.com the current reset account is
      * <code>new AccountName("")</code>.
      * 
      * @param currentResetAccount
-     *            The current reset account for the {@link #account account}. I
+     *            The current reset account for the {@link #getAccount()
+     *            account}. I
      */
     public void setCurrentResetAccount(AccountName currentResetAccount) {
         if (currentResetAccount.equals(this.getResetAccount())) {
@@ -127,14 +129,14 @@ public class SetResetAccountOperation extends Operation {
     }
 
     /**
-     * Set the new reset account for the {@link #account account}.
+     * Set the new reset account for the {@link #getAccount() account}.
      * 
      * @param resetAccount
      *            The new reset account which has been set with this operation.
      * @throws InvalidParameterException
      *             If no reset account has been provided or if the
      *             <code>resetAccount</code> is set to the same value than the
-     *             {@link #currentResetAccount}.
+     *             {@link #getCurrentResetAccount()}.
      */
     public void setResetAccount(AccountName resetAccount) {
         if (resetAccount == null) {

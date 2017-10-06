@@ -2724,6 +2724,10 @@ public class SteemJ {
     public void updateCommentOrPost(AccountName authorOfThePostOrCommentToUpdate,
             Permlink permlinkOfThePostOrCommentToUpdate, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (tags == null || tags.length < 1 || tags.length > 5) {
+            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+        }
+
         ArrayList<Operation> operations = new ArrayList<>();
 
         // Generate the permanent link by adding the current timestamp and a
@@ -2780,11 +2784,13 @@ public class SteemJ {
         }
         jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
 
-        //CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
-        //        permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content,
-        //        jsonMetadataBuilder.toString());
+        // CommentOperation commentOperation = new
+        // CommentOperation(authorOfThePostOrCommentToReplyTo,
+        // permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment,
+        // permlink, "", content,
+        // jsonMetadataBuilder.toString());
 
-        //operations.add(commentOptionsOperation);
+        // operations.add(commentOptionsOperation);
 
         GlobalProperties globalProperties = this.getDynamicGlobalProperties();
 

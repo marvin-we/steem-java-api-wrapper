@@ -40,8 +40,7 @@ abstract class AbstractEscrowOperation extends Operation {
     }
 
     /**
-     * Get the account who wants to transfer the fund to the {@link #getTo() to}
-     * account.
+     * Get the account who wants to transfer the fund to the to account.
      * 
      * @return The account who wants to transfer the fund.
      */
@@ -50,9 +49,9 @@ abstract class AbstractEscrowOperation extends Operation {
     }
 
     /**
-     * Set the account who wants to transfer the fund to the {@link #getTo() to}
-     * account. <b>Notice:</b> The private active key of this account needs to
-     * be stored in the key storage.
+     * Set the account who wants to transfer the fund to the to account.
+     * <b>Notice:</b> The private active key of this account needs to be stored
+     * in the key storage.
      * 
      * @param from
      *            The account who wants to transfer the fund.

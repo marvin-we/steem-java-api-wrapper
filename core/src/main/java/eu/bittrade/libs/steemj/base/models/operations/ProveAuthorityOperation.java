@@ -52,8 +52,8 @@ public class ProveAuthorityOperation extends Operation {
 
     /**
      * Create a new prove authority operation. Like
-     * {@link ProveAuthorityOperation}, but sets the {@link #requireOwner} to
-     * <code>false</code> by default.
+     * {@link ProveAuthorityOperation}, but sets the {@link #getRequireOwner()}
+     * to <code>false</code> by default.
      * 
      * @param challenged
      *            The account name of the account which has been challenged

@@ -26,9 +26,9 @@ public class TransferToSavingsOperation extends AbstractTransferOperation {
     private String memo;
 
     /**
-     * Create a new transfer to savings operation to transfer an {@link #amount
-     * amount} from the {@link #from from} account into the savings wallet of
-     * the {@link #to to} account.
+     * Create a new transfer to savings operation to transfer an
+     * {@link #getAmount() amount} from the {@link #getFrom() from} account into
+     * the savings wallet of the {@link #getTo() to} account.
      * 
      * @param from
      *            The account to transfer the vestings from (see

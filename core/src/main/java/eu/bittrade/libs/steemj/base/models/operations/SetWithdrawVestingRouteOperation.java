@@ -91,8 +91,8 @@ public class SetWithdrawVestingRouteOperation extends Operation {
     }
 
     /**
-     * Get the account whose funds will be transfered to the {@link #toAccount
-     * toAccount}.
+     * Get the account whose funds will be transfered to the
+     * {@link #getToAccount() toAccount}.
      * 
      * @return The account whose funds will be transfered.
      */
@@ -101,9 +101,9 @@ public class SetWithdrawVestingRouteOperation extends Operation {
     }
 
     /**
-     * Set the account whose funds will be transfered to the {@link #toAccount
-     * toAccount}. <b>Notice:</b> The private active key of this account needs
-     * to be stored in the key storage.
+     * Set the account whose funds will be transfered to the
+     * {@link #getToAccount() toAccount}. <b>Notice:</b> The private active key
+     * of this account needs to be stored in the key storage.
      * 
      * @param fromAccount
      *            The account whose funds will be transfered.
@@ -145,7 +145,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
 
     /**
      * Get the information which percentage of the reward has been transfered to
-     * the {@link #toAccount toAccount}.
+     * the {@link #getToAccount() toAccount}.
      * 
      * @return The redirected percentage.
      */
@@ -155,7 +155,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
 
     /**
      * Define which percentage of the reward should be transfered to the
-     * {@link #toAccount toAccount}.
+     * {@link #getToAccount() toAccount}.
      * 
      * @param percent
      *            The percentage to redirect.

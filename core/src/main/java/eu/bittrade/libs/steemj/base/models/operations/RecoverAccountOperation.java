@@ -157,7 +157,7 @@ public class RecoverAccountOperation extends Operation {
     }
 
     /**
-     * Get the new owner authority of the {@link #accountToRecover
+     * Get the new owner authority of the {@link #getAccountToRecover()
      * accountToRecover}.
      * 
      * @return The new owner authority.
@@ -167,7 +167,7 @@ public class RecoverAccountOperation extends Operation {
     }
 
     /**
-     * Set the new owner authority of the {@link #accountToRecover
+     * Set the new owner authority of the {@link #getAccountToRecover()
      * accountToRecover}.
      * 
      * The new owner authority has to be the same that has been defined in a
@@ -193,7 +193,7 @@ public class RecoverAccountOperation extends Operation {
     }
 
     /**
-     * Get the previous owner authority of the {@link #accountToRecover
+     * Get the previous owner authority of the {@link #getAccountToRecover()
      * accountToRecover}.
      * 
      * @return The previous owner authority.
@@ -203,7 +203,7 @@ public class RecoverAccountOperation extends Operation {
     }
 
     /**
-     * Set the previous owner authority that the {@link #accountToRecover
+     * Set the previous owner authority that the {@link #getAccountToRecover()
      * accountToRecover} holder will use to prove past ownership of the account
      * to be recovered.
      * 

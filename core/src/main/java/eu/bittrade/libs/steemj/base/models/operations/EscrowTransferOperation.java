@@ -40,19 +40,19 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * Create a new escrow transfer operation.
      * 
      * The purpose of this operation is to enable someone to send money
-     * contingently to another individual. The funds leave the {@link #from
+     * contingently to another individual. The funds leave the {@link #getFrom()
      * from} account and go into a temporary balance where they are held until
-     * {@link #from from} releases it to {@link #to to} or {@link #to to}
-     * refunds it to {@link #from from}.
+     * {@link #getFrom() from} releases it to {@link #getTo() to} or
+     * {@link #getTo() to} refunds it to {@link #getFrom() from} account.
      *
-     * In the event of a dispute the {@link #agent agent} can divide the funds
-     * between the to/from account. Disputes can be raised any time before or on
-     * the dispute deadline time, after the escrow has been approved by all
-     * parties.
+     * In the event of a dispute the {@link #getAgent() agent} can divide the
+     * funds between the to/from account. Disputes can be raised any time before
+     * or on the dispute deadline time, after the escrow has been approved by
+     * all parties.
      *
      * This operation only creates a proposed escrow transfer. Both the
-     * {@link #agent agent} and {@link #to to} must agree to the terms of the
-     * arrangement by approving the escrow.
+     * {@link #getAgent() agent} and {@link #getTo() to} must agree to the terms
+     * of the arrangement by approving the escrow.
      *
      * The escrow agent is paid the fee on approval of all parties. It is up to
      * the escrow agent to determine the fee.

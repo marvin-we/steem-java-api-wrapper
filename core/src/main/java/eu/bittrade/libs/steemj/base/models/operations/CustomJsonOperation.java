@@ -114,7 +114,7 @@ public class CustomJsonOperation extends Operation {
      *            The account names whose private active keys are required.
      * @throws InvalidParameterException
      *             If the provided <code>requiredAuths</code> is empty and in
-     *             addition no {@link #requiredPostingAuths} are provided.
+     *             addition no {@link #getRequiredPostingAuths()} are provided.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
         if ((requiredAuths == null || requiredAuths.isEmpty())
@@ -149,7 +149,7 @@ public class CustomJsonOperation extends Operation {
      *            The account names whose private posting keys are required.
      * @throws InvalidParameterException
      *             If the provided <code>requiredPostingAuths</code> is empty
-     *             and in addition no {@link #requiredAuths} are provided.
+     *             and in addition no {@link #getRequiredAuths()} are provided.
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
         if ((requiredPostingAuths == null || requiredPostingAuths.isEmpty())
