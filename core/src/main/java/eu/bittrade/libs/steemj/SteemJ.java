@@ -1400,9 +1400,9 @@ public class SteemJ {
      * transaction.
      * 
      * @param signedTransaction
-     *            A whole and signed transaction object.
+     *            A {@link SignedTransaction} transaction which has been signed.
      * @return <code>true</code> if the given transaction has been signed
-     *         correctly or <code>false</code> if not.
+     *         correctly, otherwise an Exception will be thrown.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1424,12 +1424,7 @@ public class SteemJ {
         requestObject.setAdditionalParameters(parameters);
         // The method does not simply return false, it throws an error
         // describing the problem.
-        try {
-            return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
-        } catch (SteemResponseError | SteemTransformationException e) {
-            LOGGER.debug("The authority has not been accepted for the following reason: ", e);
-            return false;
-        }
+        return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
     }
 
     /**

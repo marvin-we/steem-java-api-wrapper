@@ -72,6 +72,7 @@ import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 
 /**
  * @author Anthony Martin
@@ -577,7 +578,7 @@ public class SteemJIT extends BaseIntegrationTest {
      *             If something went wrong.
      */
     @Category({ IntegrationTest.class })
-    @Test
+    @Test(expected = SteemTransformationException.class)
     public void testVerifyAuthority() throws Exception {
         List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
 
