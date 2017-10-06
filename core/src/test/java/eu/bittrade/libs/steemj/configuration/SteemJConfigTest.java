@@ -22,6 +22,9 @@ public class SteemJConfigTest {
     private static final String STEEMJ_KEY_OWNER = "5JhxZZ6oGwFm2egPWyy21DWvroSoUur33sEHBamobDdSmhPN9U4";
     private static final String STEEMJ_KEY_MEMO = "5Hw3qRsC3f9yLtVazZpA8LyCUozBJq5aQv9tNNnz8fcg8BqoAWw";
 
+    /**
+     * Setup the required system properties.
+     */
     @BeforeClass
     public static void setUp() {
         System.setProperty("steemj.api.username", STEEMJ_API_USERNAME);
@@ -37,6 +40,9 @@ public class SteemJConfigTest {
         SteemJConfig.getNewInstance();
     }
 
+    /**
+     * Test if the system properties have been parsed correctly by SteemJ.
+     */
     @Test
     public void testSettingsThroughSystemProperties() {
         assertThat(SteemJConfig.getInstance().getApiUsername(), equalTo(new AccountName(STEEMJ_API_USERNAME)));
