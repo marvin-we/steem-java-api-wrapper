@@ -9,9 +9,13 @@ import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
@@ -260,5 +264,45 @@ public class SteemJUtils {
         }
         return currentPrivateKey.getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET))
                 .toBase58();
+    }
+
+    /**
+     * Get a list of links that the given <code>content</code> contains.
+     * 
+     * @param content
+     *            The content to extract the links from.
+     * @return A list of links.
+     */
+    public static List<String> extractLinksFromContent(String content) {
+        List<String> containedUrls = new ArrayList<>();
+        Pattern pattern = Pattern.compile(
+                "\\b((https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])",
+                Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(content);
+
+        while (urlMatcher.find()) {
+            containedUrls.add(content.substring(urlMatcher.start(0), urlMatcher.end(0)));
+        }
+
+        return containedUrls;
+    }
+
+    /**
+     * Get a list of user names that the given <code>content</code> contains.
+     * 
+     * @param content
+     *            The content to extract the user names from.
+     * @return A list of user names.
+     */
+    public static List<String> extractUsersFromContent(String content) {
+        List<String> containedUrls = new ArrayList<>();
+        Pattern pattern = Pattern.compile("(@{1})([a-z0-9\\.-]{3,16})", Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(content);
+
+        while (urlMatcher.find()) {
+            containedUrls.add(content.substring(urlMatcher.start(2), urlMatcher.end(2)));
+        }
+
+        return containedUrls;
     }
 }

@@ -35,8 +35,12 @@ import eu.bittrade.libs.steemj.apis.market.history.model.MarketTrade;
 import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
+import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.Config;
 import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
@@ -60,6 +64,10 @@ import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.base.models.operations.DeleteCommentOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
@@ -67,6 +75,7 @@ import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
@@ -2127,7 +2136,8 @@ public class SteemJ {
     public void vote(AccountName voter, AccountName postOrCommentAuthor, Permlink postOrCommentPermlink,
             short percentage) throws SteemCommunicationException, SteemInvalidTransactionException {
         if (percentage < -100 || percentage > 100 || percentage == 0) {
-            throw new InvalidParameterException("Please provide a percentagebetween -100 and 100 which is also not 0.");
+            throw new InvalidParameterException(
+                    "Please provide a percentage between -100 and 100 which is also not 0.");
         }
 
         VoteOperation voteOperation = new VoteOperation(voter, postOrCommentAuthor, postOrCommentPermlink,
@@ -2147,42 +2157,85 @@ public class SteemJ {
     }
 
     /**
+     * Use this method to cancel a previous vote for a post or a comment.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * voting operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the voter - If
+     * no default account has been provided, this method will throw an error. If
+     * you do not want to configure the voter as a default account, please use
+     * the {@link #vote(AccountName, AccountName, Permlink, short)} method and
+     * provide the voter account separately.</li>
+     * </ul>
      * 
      * @param postOrCommentAuthor
+     *            The author of the post or the comment to cancel the vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new AccountName("dez1337")</code>
+     *            </p>
      * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to cancel the
+     *            vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public void cancelVote(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(
-                    "Using the upVote method without providing an account requires to have a default account configured.");
+                    "Using the cancelVote method without providing an account requires to have a default account configured.");
         }
-
-        VoteOperation voteOperation = new VoteOperation(SteemJConfig.getInstance().getDefaultAccount(),
-                postOrCommentAuthor, postOrCommentPermlink, (short) 0);
-
-        ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(voteOperation);
-
-        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
-
-        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                null);
-
-        signedTransaction.sign();
-
-        this.broadcastTransaction(signedTransaction);
+        cancelVote(SteemJConfig.getInstance().getDefaultAccount(), postOrCommentAuthor, postOrCommentPermlink);
     }
 
     /**
+     * This method is equivalent to the
+     * {@link #cancelVote(AccountName, Permlink)} method, but lets you define
+     * the <code>voter</code> account separately instead of using the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
      * 
      * @param voter
+     *            The account that should vote for the post or the comment.
+     *            <p>
+     *            Example<br>
+     *            <code>new AccountName("steemj")</code>
+     *            </p>
      * @param postOrCommentAuthor
+     *            The author of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new AccountName("dez1337")</code>
+     *            </p>
      * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public void cancelVote(AccountName voter, AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
             throws SteemCommunicationException, SteemInvalidTransactionException {
@@ -2201,27 +2254,419 @@ public class SteemJ {
         this.broadcastTransaction(signedTransaction);
     }
 
-    public void follow() {
+    /**
+     * Use this method to follow the <code>accountToFollow</code>.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * follow operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
+     * that will follow the <code>accountToFollow</code> - If no default account
+     * has been provided, this method will throw an error. If you do not want to
+     * configure the following account as a default account, please use the
+     * {@link #follow(AccountName, AccountName)} method and provide the
+     * following account separately.</li>
+     * </ul>
+     * 
+     * @param accountToFollow
+     *            The account name of the account the
+     *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
+     *            follow.
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void follow(AccountName accountToFollow)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the follow method without providing an account requires to have a default account configured.");
+        }
+
+        follow(SteemJConfig.getInstance().getDefaultAccount(), accountToFollow);
     }
 
-    public void unfollow() {
+    /**
+     * This method is equivalent to the {@link #follow(AccountName)} method, but
+     * lets you define the <code>accountThatFollows</code> separately instead of
+     * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+     * 
+     * @param accountThatFollows
+     *            The account name of the account that will follow the
+     *            <code>accountToFollow</code>.
+     * @param accountToFollow
+     *            The account name of the account the
+     *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
+     *            follow.
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void follow(AccountName accountThatFollows, AccountName accountToFollow)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
+        requiredPostingAuths.add(accountThatFollows);
+
+        String id = "follow";
+        String json = "[\"follow\",{\"follower\":\"" + accountThatFollows.getName() + "\",\"following\":\""
+                + accountToFollow.getName() + "\",\"what\":[\"blog\"]}]";
+
+        CustomJsonOperation customJsonOperation = new CustomJsonOperation(null, requiredPostingAuths, id, json);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(customJsonOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
     }
 
-    public void createPost() {
+    /**
+     * Use this method to unfollow the <code>accountToUnfollow</code>.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * unfollow operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
+     * that will no longer follow the <code>accountToFollow</code> - If no
+     * default account has been provided, this method will throw an error. If
+     * you do not want to configure the following account as a default account,
+     * please use the {@link #follow(AccountName, AccountName)} method and
+     * provide the following account separately.</li>
+     * </ul>
+     * 
+     * @param accountToUnfollow
+     *            The account name of the account the
+     *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
+     *            no longer follow.
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void unfollow(AccountName accountToUnfollow)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the unfollow method without providing an account requires to have a default account configured.");
+        }
+
+        unfollow(SteemJConfig.getInstance().getDefaultAccount(), accountToUnfollow);
     }
 
-    public void updatePost() {
+    /**
+     * This method is equivalent to the {@link #unfollow(AccountName)} method,
+     * but lets you define the <code>accountThatUnfollows</code> account
+     * separately instead of using the {@link SteemJConfig#getDefaultAccount()
+     * DefaultAccount}.
+     * 
+     * @param accountThatUnfollows
+     *            The account name of the account that will no longer follow the
+     *            <code>accountToUnfollow</code>.
+     * @param accountToUnfollow
+     *            The account name of the account the
+     *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
+     *            no longer follow.
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void unfollow(AccountName accountThatUnfollows, AccountName accountToUnfollow)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
+        requiredPostingAuths.add(accountThatUnfollows);
+
+        String id = "follow";
+        String json = "[\"follow\",{\"follower\":\"" + accountThatUnfollows.getName() + "\",\"following\":\""
+                + accountToUnfollow.getName() + "\",\"what\":[\"\"]}]";
+
+        CustomJsonOperation customJsonOperation = new CustomJsonOperation(null, requiredPostingAuths, id, json);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(customJsonOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
     }
 
-    public void deletePost() {
+    /**
+     * 
+     * @param title
+     * @param content
+     * @param tags
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void createPost(String title, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the unfollow method without providing an account requires to have a default account configured.");
+        }
+
+        createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags);
     }
 
-    public void createComment() {
+    /**
+     * 
+     * @param authorThatPublishsThePost
+     * @param title
+     * @param content
+     * @param tags
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void createPost(AccountName authorThatPublishsThePost, String title, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        // createComment()
     }
 
-    public void updateComment() {
+    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
+            Permlink permlinkOfThePostOrCommentToReplyTo, String title, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+
     }
 
-    public void deleteComment() {
+    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
+            Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String title,
+            String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (tags == null || tags.length < 1 || tags.length > 5) {
+            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+        }
+        ArrayList<Operation> operations = new ArrayList<>();
+
+        // Generate the permanent link from the title by replacing all unallowed
+        // characters.
+        Permlink permlink = new Permlink(title.replaceAll("[^a-zA-Z0-9-]+", ""));
+        // On new posts the parentPermlink is the main tag.
+        Permlink parentPermlink = new Permlink(tags[0]);
+        // One new posts the parentAuthor is empty.
+        AccountName parentAuthor = new AccountName("");
+        // Collect all information for the meta data.
+        // 1. Gather all links from the content
+        List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
+        // 2. Gather all images from the content
+        List<String> imagesFromLinks = new ArrayList<>();
+        for (String link : linksInContent) {
+            if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
+                    || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
+                    || link.endsWith(".GIF")) {
+                linksInContent.remove(link);
+                imagesFromLinks.add(link);
+            }
+        }
+        // 3. Gather all users from the content
+        List<String> usernamesInContent = SteemJUtils.extractUsersFromContent(content);
+
+        // Now build everything together and add it as the metadata.
+        // TODO: Improve this!
+        StringBuilder jsonMetadataBuilder = new StringBuilder();
+        jsonMetadataBuilder.append("{");
+        jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
+        for (int i = 1; i <= tags.length; i++) {
+            jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
+        }
+        jsonMetadataBuilder.append("]");
+        if (!usernamesInContent.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
+            for (int i = 1; i <= usernamesInContent.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        if (!imagesFromLinks.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
+            for (int i = 1; i <= imagesFromLinks.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        if (!linksInContent.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"users\":[\"" + linksInContent.get(0) + "\"");
+            for (int i = 1; i <= linksInContent.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + linksInContent.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+
+        // CommentOperation commentOperation = new
+        // CommentOperation(parentAuthor, parentPermlink,
+        // authorThatPublishsThePost, permlink, title, content,
+        // jsonMetadataBuilder.toString());
+
+        // operations.add(commentOperation);
+
+        boolean allowVotes = true;
+        boolean allowCurationRewards = true;
+        short percentSteemDollars = (short) 10000;
+        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
+
+        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
+        beneficiaryRouteType.setAccount(new AccountName("steemj"));
+        beneficiaryRouteType.setWeight(SteemJConfig.getInstance().getSteemJWeight());
+
+        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
+        beneficiaryRouteTypes.add(beneficiaryRouteType);
+
+        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+
+        ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
+        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+
+        // CommentOptionsOperation commentOptionsOperation = new
+        // CommentOptionsOperation(authorThatPublishsThePost,
+        // permlink, maxAcceptedPayout, percentSteemDollars, allowVotes,
+        // allowCurationRewards,
+        // commentOptionsExtensions);
+
+        // operations.add(commentOptionsOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
+    }
+
+    public void updateCommentOrPost() throws SteemCommunicationException, SteemInvalidTransactionException {
+    }
+
+    public void updateCommentOrPost(AccountName author)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+
+    }
+
+    /**
+     * Use this method to remove a comment or a post.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * voting operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of
+     * the comment or post to remove - If no default account has been provided,
+     * this method will throw an error. If you do not want to configure the
+     * author as a default account, please use the
+     * {@link #deletePostOrComment(AccountName, Permlink)} method and provide
+     * the author account separately.</li>
+     * </ul>
+     * 
+     * 
+     * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to delete.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void deletePostOrComment(Permlink postOrCommentPermlink)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the upVote method without providing an account requires to have a default account configured.");
+        }
+
+        deletePostOrComment(SteemJConfig.getInstance().getDefaultAccount(), postOrCommentPermlink);
+    }
+
+    /**
+     * This method is like the {@link #deletePostOrComment(Permlink)} method,
+     * but allows you to define the author account separately instead of using
+     * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+     * 
+     * @param postOrCommentAuthor
+     *            The author of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new AccountName("dez1337")</code>
+     *            </p>
+     * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to delete.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void deletePostOrComment(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        DeleteCommentOperation deleteCommentOperation = new DeleteCommentOperation(postOrCommentAuthor,
+                postOrCommentPermlink);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(deleteCommentOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
     }
 }
