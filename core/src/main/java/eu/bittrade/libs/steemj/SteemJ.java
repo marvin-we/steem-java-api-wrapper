@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bitcoinj.core.ECKey;
@@ -2456,18 +2457,6 @@ public class SteemJ {
      */
     public void createPost(AccountName authorThatPublishsThePost, String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
-        // createComment()
-    }
-
-    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
-            Permlink permlinkOfThePostOrCommentToReplyTo, String title, String content, String[] tags)
-            throws SteemCommunicationException, SteemInvalidTransactionException {
-
-    }
-
-    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
-            Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String title,
-            String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
             throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
         }
@@ -2531,12 +2520,10 @@ public class SteemJ {
         }
         jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
 
-        // CommentOperation commentOperation = new
-        // CommentOperation(parentAuthor, parentPermlink,
-        // authorThatPublishsThePost, permlink, title, content,
-        // jsonMetadataBuilder.toString());
+        CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
+                authorThatPublishsThePost, permlink, title, content, jsonMetadataBuilder.toString());
 
-        // operations.add(commentOperation);
+        operations.add(commentOperation);
 
         boolean allowVotes = true;
         boolean allowCurationRewards = true;
@@ -2556,13 +2543,11 @@ public class SteemJ {
         ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
         commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
-        // CommentOptionsOperation commentOptionsOperation = new
-        // CommentOptionsOperation(authorThatPublishsThePost,
-        // permlink, maxAcceptedPayout, percentSteemDollars, allowVotes,
-        // allowCurationRewards,
-        // commentOptionsExtensions);
+        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost,
+                permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
+                commentOptionsExtensions);
 
-        // operations.add(commentOptionsOperation);
+        operations.add(commentOptionsOperation);
 
         GlobalProperties globalProperties = this.getDynamicGlobalProperties();
 
@@ -2574,12 +2559,241 @@ public class SteemJ {
         this.broadcastTransaction(signedTransaction);
     }
 
-    public void updateCommentOrPost() throws SteemCommunicationException, SteemInvalidTransactionException {
+    /**
+     * 
+     * @param authorOfThePostOrCommentToReplyTo
+     * @param permlinkOfThePostOrCommentToReplyTo
+     * @param content
+     * @param tags
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
+            Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the unfollow method without providing an account requires to have a default account configured.");
+        }
+
+        createComment(authorOfThePostOrCommentToReplyTo, permlinkOfThePostOrCommentToReplyTo,
+                SteemJConfig.getInstance().getDefaultAccount(), content, tags);
     }
 
-    public void updateCommentOrPost(AccountName author)
-            throws SteemCommunicationException, SteemInvalidTransactionException {
+    /**
+     * 
+     * @param authorOfThePostOrCommentToReplyTo
+     * @param permlinkOfThePostOrCommentToReplyTo
+     * @param authorThatPublishsTheComment
+     * @param content
+     * @param tags
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
+            Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String content,
+            String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (tags == null || tags.length < 1 || tags.length > 5) {
+            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+        }
+        ArrayList<Operation> operations = new ArrayList<>();
 
+        // Generate the permanent link by adding the current timestamp and a
+        // UUID.
+        Permlink permlink = new Permlink("re-" + permlinkOfThePostOrCommentToReplyTo + "-" + System.currentTimeMillis()
+                + "t" + UUID.randomUUID().toString() + "uid");
+        // Collect all information for the meta data.
+        // 1. Gather all links from the content
+        List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
+        // 2. Gather all images from the content
+        List<String> imagesFromLinks = new ArrayList<>();
+        for (String link : linksInContent) {
+            if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
+                    || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
+                    || link.endsWith(".GIF")) {
+                linksInContent.remove(link);
+                imagesFromLinks.add(link);
+            }
+        }
+        // 3. Gather all users from the content
+        List<String> usernamesInContent = SteemJUtils.extractUsersFromContent(content);
+
+        // Now build everything together and add it as the metadata.
+        // TODO: Improve this!
+        StringBuilder jsonMetadataBuilder = new StringBuilder();
+        jsonMetadataBuilder.append("{");
+        jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
+        for (int i = 1; i <= tags.length; i++) {
+            jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
+        }
+        jsonMetadataBuilder.append("]");
+        if (!usernamesInContent.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
+            for (int i = 1; i <= usernamesInContent.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        if (!imagesFromLinks.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
+            for (int i = 1; i <= imagesFromLinks.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        if (!linksInContent.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"users\":[\"" + linksInContent.get(0) + "\"");
+            for (int i = 1; i <= linksInContent.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + linksInContent.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+
+        CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
+                permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content,
+                jsonMetadataBuilder.toString());
+
+        operations.add(commentOperation);
+
+        boolean allowVotes = true;
+        boolean allowCurationRewards = true;
+        short percentSteemDollars = (short) 10000;
+        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
+
+        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
+        beneficiaryRouteType.setAccount(new AccountName("steemj"));
+        beneficiaryRouteType.setWeight(SteemJConfig.getInstance().getSteemJWeight());
+
+        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
+        beneficiaryRouteTypes.add(beneficiaryRouteType);
+
+        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+
+        ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
+        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+
+        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment,
+                permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
+                commentOptionsExtensions);
+
+        operations.add(commentOptionsOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
+    }
+
+    /**
+     * 
+     * @param permlinkOfThePostOrCommentToUpdate
+     * @param content
+     * @param tags
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void updateCommentOrPost(Permlink permlinkOfThePostOrCommentToUpdate, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the unfollow method without providing an account requires to have a default account configured.");
+        }
+
+        updateCommentOrPost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostOrCommentToUpdate, content,
+                tags);
+    }
+
+    /**
+     * 
+     * @param authorOfThePostOrCommentToUpdate
+     * @param permlinkOfThePostOrCommentToUpdate
+     * @param content
+     * @param tags
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void updateCommentOrPost(AccountName authorOfThePostOrCommentToUpdate,
+            Permlink permlinkOfThePostOrCommentToUpdate, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        ArrayList<Operation> operations = new ArrayList<>();
+
+        // Generate the permanent link by adding the current timestamp and a
+        // UUID.
+
+        // Collect all information for the meta data.
+        // 1. Gather all links from the content
+        List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
+        // 2. Gather all images from the content
+        List<String> imagesFromLinks = new ArrayList<>();
+        for (String link : linksInContent) {
+            if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
+                    || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
+                    || link.endsWith(".GIF")) {
+                linksInContent.remove(link);
+                imagesFromLinks.add(link);
+            }
+        }
+        // 3. Gather all users from the content
+        List<String> usernamesInContent = SteemJUtils.extractUsersFromContent(content);
+
+        // Now build everything together and add it as the metadata.
+        // TODO: Improve this!
+        StringBuilder jsonMetadataBuilder = new StringBuilder();
+        jsonMetadataBuilder.append("{");
+        jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
+        for (int i = 1; i <= tags.length; i++) {
+            jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
+        }
+        jsonMetadataBuilder.append("]");
+        if (!usernamesInContent.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
+            for (int i = 1; i <= usernamesInContent.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        if (!imagesFromLinks.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
+            for (int i = 1; i <= imagesFromLinks.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        if (!linksInContent.isEmpty()) {
+            jsonMetadataBuilder.append("{");
+            jsonMetadataBuilder.append("\"users\":[\"" + linksInContent.get(0) + "\"");
+            for (int i = 1; i <= linksInContent.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + linksInContent.get(i) + "\"");
+            }
+            jsonMetadataBuilder.append("]");
+        }
+        jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+
+        //CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
+        //        permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content,
+        //        jsonMetadataBuilder.toString());
+
+        //operations.add(commentOptionsOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
     }
 
     /**
