@@ -470,6 +470,16 @@ public class SteemJConfig {
     }
 
     /**
+     * Set the default account used for simplified operations.
+     * 
+     * @param defaultAccount
+     *            The account to set.
+     */
+    public void setDefaultAccount(AccountName defaultAccount) {
+        this.defaultAccount = defaultAccount;
+    }
+
+    /**
      * Set the currently configured beneficiary weight.
      * 
      * @param steemJWeight
