@@ -65,12 +65,11 @@ public class SteemJConfig {
     private String timeZoneId;
     private AccountName apiUsername;
     private char[] apiPassword;
+    private AccountName defaultAccount;
     private boolean sslVerificationDisabled;
     private PrivateKeyStorage privateKeyStorage;
     private Charset encodingCharset;
-
     private SteemitAddressPrefix steemitAddressPrefix;
-
     private String chainId;
 
     /**
@@ -97,14 +96,15 @@ public class SteemJConfig {
         this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
 
         // Fill the key store with the provided accountName and private keys.
-        AccountName primaryAccountName = new AccountName(System.getProperty("steemj.key.accountName", ""));
-        if (!primaryAccountName.isEmpty()) {
-            privateKeyStorage.addAccount(primaryAccountName);
+        this.defaultAccount = new AccountName(System.getProperty("steemj.default.account", ""));
+        if (!this.defaultAccount.isEmpty()) {
+            privateKeyStorage.addAccount(this.defaultAccount);
             for (PrivateKeyType privateKeyType : PrivateKeyType.values()) {
-                String wifPrivateKey = System.getProperty("steemj.key." + privateKeyType.name().toLowerCase());
+                String wifPrivateKey = System
+                        .getProperty("steemj.default.account." + privateKeyType.name().toLowerCase() + ".key");
                 // Only add keys if they are present.
                 if (wifPrivateKey != null && !wifPrivateKey.isEmpty()) {
-                    privateKeyStorage.addPrivateKeyToAccount(primaryAccountName,
+                    privateKeyStorage.addPrivateKeyToAccount(this.defaultAccount,
                             new ImmutablePair<PrivateKeyType, String>(privateKeyType, wifPrivateKey));
                 }
             }
@@ -112,21 +112,33 @@ public class SteemJConfig {
     }
 
     /**
-     * Get the currently configured password.
+     * Get the currently configured password used to login at a Steem Node to
+     * access protected APIs.
      * 
-     * @return The currently configured password.
+     * @return The currently configured password for the API access.
      */
     public char[] getApiPassword() {
         return apiPassword;
     }
 
     /**
-     * Get the currently configured account name.
+     * Get the currently configured account name used to login at a Steem Node
+     * to access protected APIs.
      * 
-     * @return The currently configured account name.
+     * @return The currently configured account name for the API access.
      */
     public AccountName getApiUsername() {
         return apiUsername;
+    }
+
+    /**
+     * Get the currently configured default account name. The default account
+     * name is used for operations, if no other account has been provided.
+     * 
+     * @return The configured default account.
+     */
+    public AccountName getDefaultAccount() {
+        return defaultAccount;
     }
 
     /**

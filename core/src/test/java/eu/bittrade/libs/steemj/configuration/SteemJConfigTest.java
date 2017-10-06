@@ -26,11 +26,11 @@ public class SteemJConfigTest {
     public static void setUp() {
         System.setProperty("steemj.api.username", STEEMJ_API_USERNAME);
         System.setProperty("steemj.api.password", STEEMJ_API_PASSWORD);
-        System.setProperty("steemj.key.accountName", STEEMJ_KEY_ACCOUNTNAME);
-        System.setProperty("steemj.key.posting", STEEMJ_KEY_POSTING);
-        System.setProperty("steemj.key.active", STEEMJ_KEY_ACTIVE);
-        System.setProperty("steemj.key.owner", STEEMJ_KEY_OWNER);
-        System.setProperty("steemj.key.memo", STEEMJ_KEY_MEMO);
+        System.setProperty("steemj.default.account", STEEMJ_KEY_ACCOUNTNAME);
+        System.setProperty("steemj.default.account.posting.key", STEEMJ_KEY_POSTING);
+        System.setProperty("steemj.default.account.active.key", STEEMJ_KEY_ACTIVE);
+        System.setProperty("steemj.default.account.owner.key", STEEMJ_KEY_OWNER);
+        System.setProperty("steemj.default.account.memo.key", STEEMJ_KEY_MEMO);
 
         // As there may have been other tests earlier we need to create a new
         // SteemJConfig instance so the parameter above will take effect.
