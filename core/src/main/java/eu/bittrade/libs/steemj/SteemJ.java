@@ -3,6 +3,7 @@ package eu.bittrade.libs.steemj;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,8 @@ import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -70,12 +73,13 @@ import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
- * This class is a wrapper for the Steem web socket API.
+ * This class is a wrapper for the Steem web socket API and provides all
+ * features known from the Steem CLI Wallet.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -126,6 +130,10 @@ public class SteemJ {
         }
     }
 
+    // #########################################################################
+    // ## NETWORK BROADCAST API ################################################
+    // #########################################################################
+
     /**
      * Broadcast a transaction on the Steem blockchain.
      * 
@@ -165,6 +173,10 @@ public class SteemJ {
 
         return null;
     }
+
+    // #########################################################################
+    // ## DATABASE API #########################################################
+    // #########################################################################
 
     /**
      * Get the current number of registered Steem accounts.
@@ -2010,13 +2022,183 @@ public class SteemJ {
     // ## SIMPLIFIED OPERATIONS ################################################
     // #########################################################################
 
-    public void upVote() {
+    /**
+     * Use this method to up or down vote a post or a comment.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * voting operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the voter - If
+     * no default account has been provided, this method will throw an error. If
+     * you do not want to configure the voter as a default account, please use
+     * the {@link #vote(AccountName, AccountName, Permlink, short)} method and
+     * provide the voter account separately.</li>
+     * </ul>
+     * 
+     * @param postOrCommentAuthor
+     *            The author of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new AccountName("dez1337")</code>
+     *            </p>
+     * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
+     * @param percentage
+     *            Define how much of your voting power should be used to up or
+     *            down vote the post or the comment.
+     *            <ul>
+     *            <li>If you want to up vote the post or the comment provide a
+     *            value between 1 (1.0%) and 100 (100.0%).</li>
+     *            <li>If you want to down vote (as known as <b>flag</b>) the
+     *            post or the comment provide a value between -1 (-1.0%) and
+     *            -100 (-100.0%).</li>
+     *            </ul>
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void vote(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink, short percentage)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the upVote method without providing an account requires to have a default account configured.");
+        }
+
+        this.vote(SteemJConfig.getInstance().getDefaultAccount(), postOrCommentAuthor, postOrCommentPermlink,
+                percentage);
     }
 
-    public void downVote() {
+    /**
+     * This method is equivalent to the
+     * {@link #vote(AccountName, Permlink, short)} method, but lets you define
+     * the <code>voter</code> account separately instead of using the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+     * 
+     * @param voter
+     *            The account that should vote for the post or the comment.
+     *            <p>
+     *            Example<br>
+     *            <code>new AccountName("steemj")</code>
+     *            </p>
+     * @param postOrCommentAuthor
+     *            The author of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new AccountName("dez1337")</code>
+     *            </p>
+     * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
+     * @param percentage
+     *            Define how much of your voting power should be used to up or
+     *            down vote the post or the comment.
+     *            <ul>
+     *            <li>If you want to up vote the post or the comment provide a
+     *            value between 1 (1.0%) and 100 (100.0%).</li>
+     *            <li>If you want to down vote (as known as <b>flag</b>) the
+     *            post or the comment provide a value between -1 (-1.0%) and
+     *            -100 (-100.0%).</li>
+     *            </ul>
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void vote(AccountName voter, AccountName postOrCommentAuthor, Permlink postOrCommentPermlink,
+            short percentage) throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (percentage < -100 || percentage > 100 || percentage == 0) {
+            throw new InvalidParameterException("Please provide a percentagebetween -100 and 100 which is also not 0.");
+        }
+
+        VoteOperation voteOperation = new VoteOperation(voter, postOrCommentAuthor, postOrCommentPermlink,
+                (short) (percentage * 100));
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
     }
 
-    public void cancelVote() {
+    /**
+     * 
+     * @param postOrCommentAuthor
+     * @param postOrCommentPermlink
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void cancelVote(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(
+                    "Using the upVote method without providing an account requires to have a default account configured.");
+        }
+
+        VoteOperation voteOperation = new VoteOperation(SteemJConfig.getInstance().getDefaultAccount(),
+                postOrCommentAuthor, postOrCommentPermlink, (short) 0);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
+    }
+
+    /**
+     * 
+     * @param voter
+     * @param postOrCommentAuthor
+     * @param postOrCommentPermlink
+     * @throws SteemCommunicationException
+     * @throws SteemInvalidTransactionException
+     */
+    public void cancelVote(AccountName voter, AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        VoteOperation voteOperation = new VoteOperation(voter, postOrCommentAuthor, postOrCommentPermlink, (short) 0);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(voteOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
     }
 
     public void follow() {
