@@ -44,7 +44,8 @@ public class SteemJUsageExample {
     public static void main(String args[]) {
         // Change the default settings if needed.
         SteemJConfig myConfig = SteemJConfig.getInstance();
-        myConfig.setTimeout(100000L);
+        myConfig.setResponseTimeout(100000L);
+
         try {
             myConfig.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"), false);
         } catch (URISyntaxException e) {
