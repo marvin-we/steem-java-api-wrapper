@@ -80,16 +80,16 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
-        client.setDefaultMaxSessionIdleTimeout(1000); //SteemJConfig.getInstance().getSocketTimeout()
-        // client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new
-        // SteemJReconnectHandler());
+        client.setDefaultMaxSessionIdleTimeout(SteemJConfig.getInstance().getSocketTimeout());
+        client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new SteemJReconnectHandler());
 
         connect();
     }
 
     @Override
     public void onOpen(Session session, EndpointConfig config) {
-        // this.session = session;
+        this.session = session;
+        this.session.addMessageHandler(this);
 
         LOGGER.info("Connection has been established.");
     }
@@ -184,21 +184,27 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 session.close();
             }
 
-            session = client.connectToServer(this, SteemJConfig.getInstance().getClientEndpointConfig(),
+            client.connectToServer(this, SteemJConfig.getInstance().getClientEndpointConfig(),
                     SteemJConfig.getInstance().getWebSocketEndpointURI());
-            session.addMessageHandler(this);
         } catch (DeploymentException | IOException e) {
             throw new SteemCommunicationException("Could not connect to the server.", e);
         }
     }
 
     /**
+     * Sends a message to the Steem Node and waits for an answer.
      * 
      * @param requestObject
+     *            The object to send.
      * @throws IOException
+     *             If something went wrong.
      * @throws EncodeException
+     *             If something went wrong.
      * @throws SteemTimeoutException
+     *             If the node took to long to answer.
      * @throws InterruptedException
+     *             If something went wrong.
+     * 
      */
     private void sendMessageSynchronously(RequestWrapperDTO requestObject)
             throws IOException, EncodeException, SteemTimeoutException, InterruptedException {
