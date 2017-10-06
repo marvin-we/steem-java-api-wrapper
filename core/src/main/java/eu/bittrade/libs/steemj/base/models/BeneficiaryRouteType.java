@@ -39,8 +39,8 @@ public class BeneficiaryRouteType implements ByteTransformable {
     }
 
     /**
-     * Get the percentage the {@link #account account} will receive from the
-     * comment payout.
+     * Get the percentage the {@link #getAccount() account} will receive from
+     * the comment payout.
      * 
      * @return The percentage of the payout to relay.
      */
@@ -49,8 +49,8 @@ public class BeneficiaryRouteType implements ByteTransformable {
     }
 
     /**
-     * Set the percentage the {@link #account account} will receive from the
-     * comment payout.
+     * Set the percentage the {@link #getAccount() account} will receive from
+     * the comment payout.
      * 
      * @param weight
      *            The percentage of the payout to relay.

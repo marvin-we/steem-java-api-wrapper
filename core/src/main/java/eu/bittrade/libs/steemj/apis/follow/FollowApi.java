@@ -55,8 +55,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -102,8 +102,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -140,8 +140,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -185,8 +185,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -230,8 +230,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -295,8 +295,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -340,8 +340,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -398,8 +398,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -435,8 +435,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
@@ -473,8 +473,8 @@ public class FollowApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout})</li>
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout})</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>

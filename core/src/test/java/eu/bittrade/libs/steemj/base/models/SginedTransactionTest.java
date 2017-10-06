@@ -120,7 +120,9 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
     /**
      * Test the transaction serialization using the default chain id.
      * 
-     * @throws Exception
+     * @throws UnsupportedEncodingException
+     *             If something went wrong.
+     * @throws SteemInvalidTransactionException
      *             If something went wrong.
      */
     @Override
@@ -140,7 +142,9 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
     /**
      * Test the transaction serialization using the default chain id.
      * 
-     * @throws Exception
+     * @throws UnsupportedEncodingException
+     *             If something went wrong.
+     * @throws SteemInvalidTransactionException
      *             If something went wrong.
      */
     @Override

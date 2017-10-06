@@ -76,7 +76,7 @@ public class FollowApiIT extends BaseIntegrationTest {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.apis.follow.FollowApi#testGetFollowing(CommunicationHandler, AccountName, AccountName, FollowType, short)}
+     * {@link eu.bittrade.libs.steemj.apis.follow.FollowApi#getFollowing(CommunicationHandler, AccountName, AccountName, FollowType, short)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -181,7 +181,7 @@ public class FollowApiIT extends BaseIntegrationTest {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.apis.follow.FollowApi#getBlog(CommunicationHandler, AccountName, int)}
+     * {@link eu.bittrade.libs.steemj.apis.follow.FollowApi#getBlog(CommunicationHandler, AccountName, int, short)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -225,7 +225,7 @@ public class FollowApiIT extends BaseIntegrationTest {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.apis.follow.FollowApi#getRebloggedBy(CommunicationHandler, AccountName, String)}
+     * {@link eu.bittrade.libs.steemj.apis.follow.FollowApi#getRebloggedBy(CommunicationHandler, AccountName, Permlink)}
      * method.
      * 
      * @throws SteemCommunicationException

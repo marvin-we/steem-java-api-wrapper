@@ -80,11 +80,17 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
-        reconnect();
+        client.setDefaultMaxSessionIdleTimeout(1000); //SteemJConfig.getInstance().getSocketTimeout()
+        // client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new
+        // SteemJReconnectHandler());
+
+        connect();
     }
 
     @Override
     public void onOpen(Session session, EndpointConfig config) {
+        // this.session = session;
+
         LOGGER.info("Connection has been established.");
     }
 
@@ -112,8 +118,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
      *             time (@see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setTimeout(long)
-     *             setTimeout()})
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             setResponseTimeout()})
      * @throws SteemCommunicationException
      *             If there is a connection problem.
      * @throws SteemTransformationException
@@ -125,7 +131,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     public <T> List<T> performRequest(RequestWrapperDTO requestObject, Class<T> targetClass)
             throws SteemCommunicationException {
         if (!session.isOpen()) {
-            reconnect();
+            connect();
         }
 
         try {
@@ -172,8 +178,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      * @throws SteemCommunicationException
      *             If there is a connection problem.
      */
-    private void reconnect() throws SteemCommunicationException {
+    private void connect() throws SteemCommunicationException {
         try {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+
             session = client.connectToServer(this, SteemJConfig.getInstance().getClientEndpointConfig(),
                     SteemJConfig.getInstance().getWebSocketEndpointURI());
             session.addMessageHandler(this);
@@ -197,12 +207,12 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
         session.getBasicRemote().sendObject(requestObject);
 
         // Wait until we received a response from the Server.
-        if (SteemJConfig.getInstance().getTimeout() == 0) {
+        if (SteemJConfig.getInstance().getResponseTimeout() == 0) {
             responseCountDownLatch.await();
         } else {
-            if (!responseCountDownLatch.await(SteemJConfig.getInstance().getTimeout(), TimeUnit.MILLISECONDS)) {
+            if (!responseCountDownLatch.await(SteemJConfig.getInstance().getResponseTimeout(), TimeUnit.MILLISECONDS)) {
                 String errorMessage = "Timeout occured. The WebSocket server was not able to answer in "
-                        + SteemJConfig.getInstance().getTimeout() + " millisecond(s).";
+                        + SteemJConfig.getInstance().getResponseTimeout() + " millisecond(s).";
 
                 LOGGER.error(errorMessage);
                 throw new SteemTimeoutException(errorMessage);

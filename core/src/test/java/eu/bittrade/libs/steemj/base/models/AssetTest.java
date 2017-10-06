@@ -154,9 +154,6 @@ public class AssetTest {
     /**
      * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#equals(Object)}
      * method for the VESTS asset type.
-     * 
-     * @throws Exception
-     *             If something went wrong.
      */
     @Test
     public void testAssetEqualsMethod() {

@@ -70,9 +70,8 @@ public class AuthorityTest {
     }
 
     /**
-     * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.Authority#isEmpty(Object)
-     * isEmpty(Object)} method.
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Authority#isEmpty()}
+     * method.
      */
     @Test
     public void testAuthorityIsEmptyMethod() {
@@ -102,9 +101,8 @@ public class AuthorityTest {
     }
 
     /**
-     * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.Authority#hashCode(Object)
-     * hashCode(Object)} method.
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Authority#hashCode()}
+     * method.
      */
     @Test
     public void testAuthorityHashCodeMethod() {

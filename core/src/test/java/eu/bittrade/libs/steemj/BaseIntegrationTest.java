@@ -22,7 +22,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
             // Change the default settings if needed.
             CONFIG.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"));
             // Create a new apiWrapper with your config object.
-            CONFIG.setTimeout(0);
+            CONFIG.setResponseTimeout(0);
             CONFIG.setSslVerificationDisabled(true);
 
             steemJ = new SteemJ();

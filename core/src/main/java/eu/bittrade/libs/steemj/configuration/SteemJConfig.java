@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
+import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 
 /**
  * This class stores the configuration that is used for the communication to the
@@ -59,7 +60,8 @@ public class SteemJConfig {
 
     private ClientEndpointConfig clientEndpointConfig;
     private URI webSocketEndpointURI;
-    private long timeout;
+    private long responseTimeout;
+    private long socketTimeout;
     private String dateTimePattern;
     private long maximumExpirationDateOffset;
     private String timeZoneId;
@@ -77,6 +79,7 @@ public class SteemJConfig {
      */
     private SteemJConfig() {
         this.clientEndpointConfig = ClientEndpointConfig.Builder.create().build();
+
         try {
             this.setWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI));
         } catch (URISyntaxException e) {
@@ -84,7 +87,8 @@ public class SteemJConfig {
             LOGGER.error("The configured default URI has a Syntax error.", e);
             this.webSocketEndpointURI = null;
         }
-        this.timeout = 1000;
+        this.responseTimeout = 1000;
+        this.socketTimeout = 60000;
         this.dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
         this.apiUsername = new AccountName(System.getProperty("steemj.api.username", ""));
         this.apiPassword = System.getProperty("steemj.api.password", "").toCharArray();
@@ -220,13 +224,26 @@ public class SteemJConfig {
     }
 
     /**
-     * Get the configured, maximum time that the wrapper will wait for an answer
-     * of the websocket server.
+     * Get the configured, maximum time that SteemJ will wait for an answer of
+     * the websocket server before throwing a {@link SteemTimeoutException}
+     * exception.
      * 
      * @return Time in milliseconds
      */
-    public long getTimeout() {
-        return timeout;
+    public long getResponseTimeout() {
+        return responseTimeout;
+    }
+
+    /**
+     * Get the configured, maximum time that SteemJ will keep an unused
+     * connection open. A value that is 0 or negative indicates the sessions
+     * will never timeout due to inactivity.
+     * 
+     * @return The time in milliseconds a connection should be left intact even
+     *         when no activities are performed.
+     */
+    public long getSocketTimeout() {
+        return socketTimeout;
     }
 
     /**
@@ -376,17 +393,30 @@ public class SteemJConfig {
      * the Steem Node. If set to <code>0</code> the timeout mechanism will be
      * disabled.
      * 
-     * @param timeout
+     * @param responseTimeout
      *            Time in milliseconds.
      * @throws IllegalArgumentException
      *             If the value of timeout is negative.
      */
-    public void setTimeout(long timeout) {
-        if (timeout < 0) {
+    public void setResponseTimeout(long responseTimeout) {
+        if (responseTimeout < 0) {
             throw new IllegalArgumentException("The timeout has to be greater than 0. (0 will disable the timeout).");
         }
 
-        this.timeout = timeout;
+        this.responseTimeout = responseTimeout;
+    }
+
+    /**
+     * Override the default, maximum time that SteemJ will keep an unused
+     * connection open.A value that is 0 or negative indicates the sessions will
+     * never timeout due to inactivity.
+     *
+     * @param socketTimeout
+     *            The time in milliseconds a connection should be left intact
+     *            even when no activities are performed.
+     */
+    public void setSocketTimeout(long socketTimeout) {
+        this.socketTimeout = socketTimeout;
     }
 
     /**
