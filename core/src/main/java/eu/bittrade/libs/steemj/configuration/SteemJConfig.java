@@ -73,6 +73,7 @@ public class SteemJConfig {
     private Charset encodingCharset;
     private SteemitAddressPrefix steemitAddressPrefix;
     private String chainId;
+    private short steemJWeight;
 
     /**
      * Default constructor that will set all default values.
@@ -98,6 +99,7 @@ public class SteemJConfig {
         this.privateKeyStorage = new PrivateKeyStorage();
         this.steemitAddressPrefix = SteemitAddressPrefix.STM;
         this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
+        this.steemJWeight = 250;
 
         // Fill the key store with the provided accountName and private keys.
         this.defaultAccount = new AccountName(System.getProperty("steemj.default.account", ""));
@@ -269,6 +271,15 @@ public class SteemJConfig {
      */
     public boolean isSslVerificationDisabled() {
         return sslVerificationDisabled;
+    }
+
+    /**
+     * Get the currently configured beneficiary weight.
+     * 
+     * @return The beneficiary weight.
+     */
+    public short getSteemJWeight() {
+        return steemJWeight;
     }
 
     /**
@@ -456,5 +467,15 @@ public class SteemJConfig {
 
         this.webSocketEndpointURI = webSocketEndpointURI;
         this.sslVerificationDisabled = sslVerificationDisabled;
+    }
+
+    /**
+     * Set the currently configured beneficiary weight.
+     * 
+     * @param steemJWeight
+     *            The beneficiary weight for SteemJ.
+     */
+    public void setSteemJWeight(short steemJWeight) {
+        this.steemJWeight = steemJWeight;
     }
 }
