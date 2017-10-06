@@ -43,8 +43,8 @@ public class PostsPerAuthorPair {
     }
 
     /**
-     * Get the number of posts written by the {@link #account account} on the
-     * requested blog.
+     * Get the number of posts written by the {@link #getAccount() account} on
+     * the requested blog.
      * 
      * @return the numberOfPosts
      */

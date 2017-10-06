@@ -24,9 +24,9 @@ public class AccountReputation {
     }
 
     /**
-     * Get the reputation of the requested {@link #account}.
+     * Get the reputation of the requested {@link #getAccount()}.
      * 
-     * @return The reputation of the requested {@link #account}.
+     * @return The reputation of the requested {@link #getAccount()}.
      */
     public long getReputation() {
         return reputation;

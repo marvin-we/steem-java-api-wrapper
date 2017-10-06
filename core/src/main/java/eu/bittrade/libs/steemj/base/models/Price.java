@@ -51,7 +51,7 @@ public class Price implements ByteTransformable {
      *            The base asset to set.
      * @throws InvalidParameterException
      *             If the asset is not present or has the same property than the
-     *             {@link #quote} asset.
+     *             {@link #getQuote()} asset.
      */
     public void setBase(Asset base) {
         if (base == null || base. getAmount() <= 0
@@ -74,7 +74,7 @@ public class Price implements ByteTransformable {
      *            The quote asset to set.
      * @throws InvalidParameterException
      *             If the asset is not present or has the same property than the
-     *             {@link #quote} asset.
+     *             {@link #getQuote()} asset.
      */
     public void setQuote(Asset quote) {
         if (quote == null || quote.getAmount() <= 0

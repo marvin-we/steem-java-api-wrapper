@@ -37,7 +37,7 @@ public class FollowOperation extends Operation {
     }
 
     /**
-     * Get the account who follows the {@link #following} account.
+     * Get the account who follows the {@link #getFollowing()} account.
      * 
      * @return The account name of the follower.
      */
@@ -47,7 +47,7 @@ public class FollowOperation extends Operation {
     }
 
     /**
-     * Set the account who follows the {@link #following} account.
+     * Set the account who follows the {@link #getFollowing()} account.
      * <b>Notice:</b> The private posting key of this account needs to be stored
      * in the key storage.
      * 
