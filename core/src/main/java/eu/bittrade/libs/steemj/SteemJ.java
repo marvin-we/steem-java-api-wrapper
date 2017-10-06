@@ -70,6 +70,7 @@ import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -1400,8 +1401,8 @@ public class SteemJ {
      * 
      * @param signedTransaction
      *            A whole and signed transaction object.
-     * @return True if the given transaction has been signed correctly or false
-     *         if not.
+     * @return <code>true</code> if the given transaction has been signed
+     *         correctly or <code>false</code> if not.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1421,10 +1422,14 @@ public class SteemJ {
 
         Object[] parameters = { signedTransaction };
         requestObject.setAdditionalParameters(parameters);
-        // TODO: The method does not simply return false, it throws an error
-        // describing the problem. The reason should be logged as info and the
-        // this method should only return false.
-        return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
+        // The method does not simply return false, it throws an error
+        // describing the problem.
+        try {
+            return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
+        } catch (SteemResponseError | SteemTransformationException e) {
+            LOGGER.debug("The authority has not been accepted for the following reason: ", e);
+            return false;
+        }
     }
 
     /**

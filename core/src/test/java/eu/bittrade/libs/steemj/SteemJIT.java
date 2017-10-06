@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.exparity.hamcrest.date.DateMatchers;
@@ -50,6 +52,7 @@ import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.TrendingTag;
@@ -62,9 +65,11 @@ import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegationOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.base.models.operations.TransferOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.ProducerRewardOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
@@ -559,5 +564,42 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetConversionRequests() throws Exception {
         // TODO: Implement
         steemJ.getConversionRequests(new AccountName("dez1337"));
+    }
+
+    /**
+     * The the <code>false</code> case of the
+     * {@link SteemJ#verifyAuthority(SignedTransaction)} method by testing a
+     * transaction signed with the wrong key.
+     * 
+     * The positive case of this operation is tested by the operation tests.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testVerifyAuthority() throws Exception {
+        List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
+
+        privateKeys
+                .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"));
+
+        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
+
+        Asset steemAmount = new Asset();
+        steemAmount.setAmount(1L);
+        steemAmount.setSymbol(AssetSymbolType.STEEM);
+
+        AccountName from = new AccountName("dez1337");
+        AccountName to = new AccountName("steemj");
+        String memo = "Test SteemJ";
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(new TransferOperation(from, to, steemAmount, memo));
+
+        SignedTransaction signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX,
+                new TimePointSec(EXPIRATION_DATE), operations, null);
+
+        assertFalse(steemJ.verifyAuthority(signedTransaction));
     }
 }
