@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.api.network.broadcast;
 
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApis;
@@ -25,6 +26,8 @@ public class NetworkBroadcastApi {
     /**
      * Broadcast a transaction on the Steem blockchain.
      * 
+     * @param communicationHandler
+     * 
      * @param transaction
      *            A transaction object that has been signed.
      * @throws SteemCommunicationException
@@ -39,7 +42,8 @@ public class NetworkBroadcastApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public void broadcastTransaction(SignedTransaction transaction) throws SteemCommunicationException {
+    public void broadcastTransaction(CommunicationHandler communicationHandler, SignedTransaction transaction)
+            throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
         requestObject.setSteemApi(SteemApis.NETWORK_BROADCAST_API);
