@@ -2436,14 +2436,14 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void createPost(String title, String content, String[] tags)
+    public CommentOperation createPost(String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(
                     "Using the unfollow method without providing an account requires to have a default account configured.");
         }
 
-        createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags);
+        return createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags);
     }
 
     /**
@@ -2455,8 +2455,8 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void createPost(AccountName authorThatPublishsThePost, String title, String content, String[] tags)
-            throws SteemCommunicationException, SteemInvalidTransactionException {
+    public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
+            String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
             throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
         }
@@ -2556,6 +2556,8 @@ public class SteemJ {
         signedTransaction.sign();
 
         this.broadcastTransaction(signedTransaction);
+
+        return commentOperation;
     }
 
     /**
@@ -2567,7 +2569,7 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
+    public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
             Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
@@ -2575,7 +2577,7 @@ public class SteemJ {
                     "Using the unfollow method without providing an account requires to have a default account configured.");
         }
 
-        createComment(authorOfThePostOrCommentToReplyTo, permlinkOfThePostOrCommentToReplyTo,
+        return createComment(authorOfThePostOrCommentToReplyTo, permlinkOfThePostOrCommentToReplyTo,
                 SteemJConfig.getInstance().getDefaultAccount(), content, tags);
     }
 
@@ -2589,7 +2591,7 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void createComment(AccountName authorOfThePostOrCommentToReplyTo,
+    public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
             Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String content,
             String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
@@ -2690,6 +2692,8 @@ public class SteemJ {
         signedTransaction.sign();
 
         this.broadcastTransaction(signedTransaction);
+
+        return commentOperation;
     }
 
     /**
@@ -2701,14 +2705,15 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags)
+    public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(
                     "Using the unfollow method without providing an account requires to have a default account configured.");
         }
 
-        updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content, tags);
+        return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
+                tags);
     }
 
     /**
@@ -2721,8 +2726,9 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate, String title,
-            String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
+    public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
+            String title, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
             throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
         }
@@ -2793,6 +2799,8 @@ public class SteemJ {
         signedTransaction.sign();
 
         this.broadcastTransaction(signedTransaction);
+
+        return commentOperation;
     }
 
     /**
@@ -2805,14 +2813,15 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void updateComment(AccountName parentAuthor, Permlink parentPermlink, Permlink originalPermlinkOfYourComment,
-            String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
+    public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
+            Permlink originalPermlinkOfYourComment, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(
                     "Using the unfollow method without providing an account requires to have a default account configured.");
         }
 
-        updateComment(parentAuthor, parentPermlink, originalPermlinkOfYourComment,
+        return updateComment(parentAuthor, parentPermlink, originalPermlinkOfYourComment,
                 SteemJConfig.getInstance().getDefaultAccount(), content, tags);
     }
 
@@ -2827,7 +2836,7 @@ public class SteemJ {
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
-    public void updateComment(AccountName parentAuthor, Permlink parentPermlink,
+    public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
             Permlink originalPermlinkOfTheCommentToUpdate, AccountName originalAuthorOfTheCommentToUpdate,
             String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
@@ -2898,6 +2907,8 @@ public class SteemJ {
         signedTransaction.sign();
 
         this.broadcastTransaction(signedTransaction);
+
+        return commentOperation;
     }
 
     /**
