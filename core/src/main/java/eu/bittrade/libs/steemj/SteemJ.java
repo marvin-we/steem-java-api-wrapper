@@ -2464,7 +2464,7 @@ public class SteemJ {
 
         // Generate the permanent link from the title by replacing all unallowed
         // characters.
-        Permlink permlink = new Permlink(title.replaceAll("[^a-zA-Z0-9-]+", ""));
+        Permlink permlink = new Permlink(title.toLowerCase().replaceAll("[^a-z0-9-]+", ""));
         // On new posts the parentPermlink is the main tag.
         Permlink parentPermlink = new Permlink(tags[0]);
         // One new posts the parentAuthor is empty.
@@ -2474,12 +2474,14 @@ public class SteemJ {
         List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
         // 2. Gather all images from the content
         List<String> imagesFromLinks = new ArrayList<>();
+        List<String> linksInContentCleaned = new ArrayList<>();
         for (String link : linksInContent) {
             if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
                     || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
                     || link.endsWith(".GIF")) {
-                linksInContent.remove(link);
                 imagesFromLinks.add(link);
+            } else {
+                linksInContentCleaned.add(link);
             }
         }
         // 3. Gather all users from the content
@@ -2490,35 +2492,32 @@ public class SteemJ {
         StringBuilder jsonMetadataBuilder = new StringBuilder();
         jsonMetadataBuilder.append("{");
         jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
-        for (int i = 1; i <= tags.length; i++) {
+        for (int i = 1; i < tags.length; i++) {
             jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
         }
-        jsonMetadataBuilder.append("]");
+        jsonMetadataBuilder.append("],");
         if (!usernamesInContent.isEmpty()) {
-            jsonMetadataBuilder.append("{");
             jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
-            for (int i = 1; i <= usernamesInContent.size(); i++) {
+            for (int i = 1; i < usernamesInContent.size(); i++) {
                 jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
         if (!imagesFromLinks.isEmpty()) {
-            jsonMetadataBuilder.append("{");
             jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
-            for (int i = 1; i <= imagesFromLinks.size(); i++) {
+            for (int i = 1; i < imagesFromLinks.size(); i++) {
                 jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
-        if (!linksInContent.isEmpty()) {
-            jsonMetadataBuilder.append("{");
-            jsonMetadataBuilder.append("\"users\":[\"" + linksInContent.get(0) + "\"");
-            for (int i = 1; i <= linksInContent.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + linksInContent.get(i) + "\"");
+        if (!linksInContentCleaned.isEmpty()) {
+            jsonMetadataBuilder.append("\"links\":[\"" + linksInContentCleaned.get(0) + "\"");
+            for (int i = 1; i < linksInContentCleaned.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + linksInContentCleaned.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
-        jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 authorThatPublishsThePost, permlink, title, content, jsonMetadataBuilder.toString());
@@ -2600,19 +2599,23 @@ public class SteemJ {
 
         // Generate the permanent link by adding the current timestamp and a
         // UUID.
-        Permlink permlink = new Permlink("re-" + permlinkOfThePostOrCommentToReplyTo + "-" + System.currentTimeMillis()
-                + "t" + UUID.randomUUID().toString() + "uid");
+        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
+                + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
+                + UUID.randomUUID().toString() + "uid");
+        // Collect all information for the meta data.
         // Collect all information for the meta data.
         // 1. Gather all links from the content
         List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
         // 2. Gather all images from the content
         List<String> imagesFromLinks = new ArrayList<>();
+        List<String> linksInContentCleaned = new ArrayList<>();
         for (String link : linksInContent) {
             if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
                     || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
                     || link.endsWith(".GIF")) {
-                linksInContent.remove(link);
                 imagesFromLinks.add(link);
+            } else {
+                linksInContentCleaned.add(link);
             }
         }
         // 3. Gather all users from the content
@@ -2623,35 +2626,32 @@ public class SteemJ {
         StringBuilder jsonMetadataBuilder = new StringBuilder();
         jsonMetadataBuilder.append("{");
         jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
-        for (int i = 1; i <= tags.length; i++) {
+        for (int i = 1; i < tags.length; i++) {
             jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
         }
-        jsonMetadataBuilder.append("]");
+        jsonMetadataBuilder.append("],");
         if (!usernamesInContent.isEmpty()) {
-            jsonMetadataBuilder.append("{");
             jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
-            for (int i = 1; i <= usernamesInContent.size(); i++) {
+            for (int i = 1; i < usernamesInContent.size(); i++) {
                 jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
         if (!imagesFromLinks.isEmpty()) {
-            jsonMetadataBuilder.append("{");
             jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
-            for (int i = 1; i <= imagesFromLinks.size(); i++) {
+            for (int i = 1; i < imagesFromLinks.size(); i++) {
                 jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
-        if (!linksInContent.isEmpty()) {
-            jsonMetadataBuilder.append("{");
-            jsonMetadataBuilder.append("\"users\":[\"" + linksInContent.get(0) + "\"");
-            for (int i = 1; i <= linksInContent.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + linksInContent.get(i) + "\"");
+        if (!linksInContentCleaned.isEmpty()) {
+            jsonMetadataBuilder.append("\"links\":[\"" + linksInContentCleaned.get(0) + "\"");
+            for (int i = 1; i < linksInContentCleaned.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + linksInContentCleaned.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
-        jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
 
         CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
                 permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content,
@@ -2734,16 +2734,19 @@ public class SteemJ {
         // UUID.
 
         // Collect all information for the meta data.
+        // Collect all information for the meta data.
         // 1. Gather all links from the content
         List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
         // 2. Gather all images from the content
         List<String> imagesFromLinks = new ArrayList<>();
+        List<String> linksInContentCleaned = new ArrayList<>();
         for (String link : linksInContent) {
             if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
                     || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
                     || link.endsWith(".GIF")) {
-                linksInContent.remove(link);
                 imagesFromLinks.add(link);
+            } else {
+                linksInContentCleaned.add(link);
             }
         }
         // 3. Gather all users from the content
@@ -2754,35 +2757,32 @@ public class SteemJ {
         StringBuilder jsonMetadataBuilder = new StringBuilder();
         jsonMetadataBuilder.append("{");
         jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
-        for (int i = 1; i <= tags.length; i++) {
+        for (int i = 1; i < tags.length; i++) {
             jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
         }
-        jsonMetadataBuilder.append("]");
+        jsonMetadataBuilder.append("],");
         if (!usernamesInContent.isEmpty()) {
-            jsonMetadataBuilder.append("{");
             jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
-            for (int i = 1; i <= usernamesInContent.size(); i++) {
+            for (int i = 1; i < usernamesInContent.size(); i++) {
                 jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
         if (!imagesFromLinks.isEmpty()) {
-            jsonMetadataBuilder.append("{");
             jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
-            for (int i = 1; i <= imagesFromLinks.size(); i++) {
+            for (int i = 1; i < imagesFromLinks.size(); i++) {
                 jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
-        if (!linksInContent.isEmpty()) {
-            jsonMetadataBuilder.append("{");
-            jsonMetadataBuilder.append("\"users\":[\"" + linksInContent.get(0) + "\"");
-            for (int i = 1; i <= linksInContent.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + linksInContent.get(i) + "\"");
+        if (!linksInContentCleaned.isEmpty()) {
+            jsonMetadataBuilder.append("\"links\":[\"" + linksInContentCleaned.get(0) + "\"");
+            for (int i = 1; i < linksInContentCleaned.size(); i++) {
+                jsonMetadataBuilder.append(",\"" + linksInContentCleaned.get(i) + "\"");
             }
-            jsonMetadataBuilder.append("]");
+            jsonMetadataBuilder.append("],");
         }
-        jsonMetadataBuilder.append(",\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
 
         // CommentOperation commentOperation = new
         // CommentOperation(authorOfThePostOrCommentToReplyTo,
