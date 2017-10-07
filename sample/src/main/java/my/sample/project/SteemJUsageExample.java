@@ -13,14 +13,11 @@ import org.slf4j.LoggerFactory;
 import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
-import eu.bittrade.libs.steemj.base.models.GlobalProperties;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -45,8 +42,11 @@ public class SteemJUsageExample {
         // Change the default settings if needed.
         SteemJConfig myConfig = SteemJConfig.getInstance();
         myConfig.setResponseTimeout(100000L);
+        myConfig.setDefaultAccount(new AccountName("steemj"));
 
         try {
+            // SteemJ already comes with a configured EndPoint, but if you want 
+            // to connect to another one, you can simply configure it here:
             myConfig.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"), false);
         } catch (URISyntaxException e) {
             throw new RuntimeException("The given URI is not valid.", e);
@@ -57,10 +57,10 @@ public class SteemJUsageExample {
             SteemJ steemJ = new SteemJ();
 
             List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
-            privateKeys.add(new ImmutablePair<>(PrivateKeyType.POSTING, "YOURPRIVATEPOSTINGKEY"));
-            privateKeys.add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "YOURPRIVATEACTIVEKEY"));
+            privateKeys.add(new ImmutablePair<>(PrivateKeyType.POSTING, "YOUR-PRIVATE-POSTING-KEY"));
+            privateKeys.add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "YOUR-PRIVATE-ACTIVE-KEY"));
 
-            myConfig.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
+            myConfig.getPrivateKeyStorage().addAccount(myConfig.getDefaultAccount(), privateKeys);
 
             // Let's have a look at the account history of dez1337
             Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), 100,
@@ -71,32 +71,60 @@ public class SteemJUsageExample {
                 LOGGER.info("The account {} has been created by {}.", "dez1337", accountCreateOperation.getCreator());
             }
 
-            // Perform a transaction
-            AccountName voter = new AccountName("dez1337");
-            AccountName author = new AccountName("dez1337");
-            Permlink permlinkOfAPost = new Permlink("steem-java-api-learned-to-speak-graphene-update-5");
-            Short votingWeight = 10000;
-            VoteOperation voteOperation = new VoteOperation(voter, author, permlinkOfAPost, votingWeight);
+            /*
+             * Upvote the post
+             * "steem-java-api-learned-to-speak-graphene-update-5" written by
+             * "dez1337" using 100% of the defaultAccounts voting power.
+             */
+            steemJ.vote(new AccountName("dez1337"), new Permlink("steem-java-api-learned-to-speak-graphene-update-5"),
+                    (short) 100);
 
-            ArrayList<Operation> operations = new ArrayList<>();
-            operations.add(voteOperation);
+            /*
+             * Remove the vote made earlier.
+             */
+            steemJ.cancelVote(new AccountName("dez1337"),
+                    new Permlink("steem-java-api-learned-to-speak-graphene-update-5"));
 
-            // Get the current RefBlockNum and RefBlockPrefix from the global
-            // properties.
-            GlobalProperties globalProperties = steemJ.getDynamicGlobalProperties();
+            // Let the default account ("steemj") follow "cyriana"
+            steemJ.follow(new AccountName("cyriana"));
 
-            SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                    null);
+            // Let the default account ("steemj") unfollow "cyriana"
+            steemJ.unfollow(new AccountName("cyriana"));
 
-            try {
-                signedTransaction.sign();
-            } catch (SteemInvalidTransactionException e) {
-                LOGGER.error("A propblem occured while signing your Transaction.", e);
-            }
-            steemJ.broadcastTransaction(signedTransaction);
+            /*
+             * Write a new post.
+             * 
+             * Title = "Test of SteemJ 0.4.0" 
+             * Content = "Test using SteemJ 0. ..... "
+             * Tags = "test", "dontvote"
+             * 
+             */
+            CommentOperation myNewPost = steemJ.createPost("Test of SteemJ 0.4.0",
+                    "Test using SteemJ 0.4.0 by @dez1337 with a link to "
+                            + "https://github.com/marvin-we/steem-java-api-wrapper "
+                            + "and an image ![SteemJV2Logo](https://imgur.com/bIhZlYT.png).",
+                    new String[] { "test", "dontvote" });
+            LOGGER.info(
+                    "SteemJ has generated some additional values for my new post. One good example is the permlink {} that I may need later on.",
+                    myNewPost.getPermlink().getLink());
 
-            LOGGER.info("The HEX representation of this transaction it {}.",
-                    steemJ.getTransactionHex(signedTransaction));
+            /*
+             * Write a new comment.
+             * 
+             * Author of the post to reply to = "steemj"
+             * Permlink of the post to reply to = "testofsteemj040"
+             * Title = "Test of SteemJ 0.4.0" 
+             * Content = "Test using SteemJ 0. ..... "
+             * Tags = "test"
+             * 
+             */
+            steemJ.createComment(new AccountName("steemj"), new Permlink("testofsteemj040"),
+                    "Example comment without a link but with a @user .", new String[] { "test" });
+            
+            /*
+             * Delete the newly created post.
+             */
+            steemJ.deletePostOrComment(myNewPost.getParentPermlink());
 
             // Get the current Price
             LOGGER.info("The current price in the internal market is {}.",
@@ -128,7 +156,9 @@ public class SteemJUsageExample {
                     e.getError().getSteemErrorDetails().getData().getCode(),
                     e.getError().getSteemErrorDetails().getMessage());
         } catch (SteemCommunicationException e) {
-            LOGGER.error("Error!", e);
+            LOGGER.error("A communication error occured!", e);
+        } catch (SteemInvalidTransactionException e) {
+            LOGGER.error("There was a problem to sign a transaction.", e);
         }
     }
 
