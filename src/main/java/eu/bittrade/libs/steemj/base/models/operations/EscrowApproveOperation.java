@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -41,6 +42,49 @@ public class EscrowApproveOperation extends Operation {
         // Apply default values:
         this.setEscrowId(30);
         this.setApprove(true);
+    }
+
+    /**
+     * Create a new escrow approve operation.
+     * 
+     * The agent and to accounts must approve an escrow transaction for it to be
+     * valid on the blockchain. Once a part approves the escrow, the cannot
+     * revoke their approval. Subsequent escrow approve operations, regardless
+     * of the approval, will be rejected.
+     * 
+     * @param from
+     *            The source account of the escrow operation (see
+     *            {@link #setFrom(AccountName)}).
+     * @param to
+     *            The target account of the escrow operation (see
+     *            {@link #setTo(AccountName)}).
+     * @param agent
+     *            The agent account of the escrow operation (see
+     *            {@link #setAgent(AccountName)}).
+     * @param escrowId
+     *            The <b>unique</b> id of the escrow operation (see
+     *            {@link #setEscrowId(long)}).
+     * @param who
+     *            The account who approves the escrow operation (see
+     *            {@link #setWho(AccountName)}).
+     * @param approve
+     *            Define if the {@link #getWho()} account approves the operation
+     *            (see {@link #setApprove(Boolean)}).
+     * @throws InvalidParameterException
+     *             If one of the arguemnts does not fulfill the requirements.
+     */
+    @JsonCreator
+    public EscrowApproveOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
+            @JsonProperty("agent") AccountName agent, @JsonProperty("escrow_id") long escrowId,
+            @JsonProperty("who") AccountName who, @JsonProperty("approve") Boolean approve) {
+        super(false);
+
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAgent(agent);
+        this.setEscrowId(escrowId);
+        this.setWho(who);
+        this.setApprove(approve);
     }
 
     /**

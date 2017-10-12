@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.Sha256Hash;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,6 +40,7 @@ import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -46,6 +51,7 @@ import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApis;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.plugins.follow.enums.FollowType;
@@ -1785,4 +1791,28 @@ public class SteemApiWrapper {
         communicationHandler.performRequest(requestObject, Object.class);
     }
 
+    // #########################################################################
+    // ## UTILITY METHODS ######################################################
+    // #########################################################################
+
+    /**
+     * Get the private and public key of a given type for the given
+     * <code>account</code>
+     * 
+     * @param account
+     *            The account name to generate the passwords for.
+     * @param role
+     *            The key type that should be generated.
+     * @param steemPassword
+     *            The password of the <code>account</code> valid for the Steem
+     *            blockchain.
+     * @return The requested key pair.
+     */
+    public static ImmutablePair<PublicKey, String> getPrivateKeyFromPassword(AccountName account, PrivateKeyType role,
+            String steemPassword) {
+        String seed = account.getAccountName() + role.name().toLowerCase() + steemPassword;
+        ECKey keyPair = ECKey.fromPrivate(Sha256Hash.hash(seed.getBytes(), 0, seed.length()));
+
+        return new ImmutablePair<>(new PublicKey(keyPair), SteemJUtils.privateKeyToWIF(keyPair));
+    }
 }

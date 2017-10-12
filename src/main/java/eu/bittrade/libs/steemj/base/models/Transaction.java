@@ -18,6 +18,7 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -72,6 +73,66 @@ public class Transaction implements ByteTransformable, Serializable {
     public Transaction() {
         // Set default values to avoid null pointer exceptions.
         this.signatures = new ArrayList<>();
+    }
+
+    /**
+     * Create a new transaction object.
+     * 
+     * @param refBlockNum
+     *            The reference block number (see {@link #setRefBlockNum(int)}).
+     * @param refBlockPrefix
+     *            The reference block index (see
+     *            {@link #setRefBlockPrefix(long)}).
+     * @param expirationDate
+     *            Define until when the transaction has to be processed (see
+     *            {@link #setExpirationDate(TimePointSec)}).
+     * @param operations
+     *            A list of operations to process within this Transaction (see
+     *            {@link #setOperations(List)}).
+     * @param extensions
+     *            Extensions are currently not supported and will be ignored
+     *            (see {@link #setExtensions(List)}).
+     */
+    @JsonCreator
+    public Transaction(@JsonProperty("ref_block_num") int refBlockNum,
+            @JsonProperty("ref_block_prefix") long refBlockPrefix,
+            @JsonProperty("expiration") TimePointSec expirationDate,
+            @JsonProperty("operations") List<Operation> operations,
+            @JsonProperty("extensions") List<FutureExtensions> extensions) {
+        this.setRefBlockNum(refBlockNum);
+        this.setRefBlockPrefix(refBlockPrefix);
+        this.setExpirationDate(expirationDate);
+        this.setOperations(operations);
+        this.setExtensions(extensions);
+	this.signatures = new ArrayList<>();
+    }
+
+    /**
+     * Like {@link #Transaction(int, long, TimePointSec, List, List)}, but
+     * allows you to provide a
+     * reference block index as a string and will also set the <code>expirationDate</code> to the
+     * latest possible time.
+     * 
+     * @param refBlockNum
+     *            The reference block number (see {@link #setRefBlockNum(int)}).
+     * @param refBlockPrefix
+     *            The reference block index (see
+     *            {@link #setRefBlockPrefix(String)}) in the String form.
+     * @param operations
+     *            A list of operations to process within this Transaction (see
+     *            {@link #setOperations(List)}).
+     * @param extensions
+     *            Extensions are currently not supported and will be ignored
+     *            (see {@link #setExtensions(List)}).
+     */
+    public Transaction(int refBlockNum, String refBlockPrefix, List<Operation> operations, List<FutureExtensions> extensions) {
+        this.setRefBlockNum(refBlockNum);
+        this.setRefBlockPrefix(refBlockPrefix);
+        this.setExpirationDate(new TimePointSec(
+                System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
+        this.setOperations(operations);
+        this.setExtensions(extensions);
+	this.signatures = new ArrayList<>();
     }
 
     /**

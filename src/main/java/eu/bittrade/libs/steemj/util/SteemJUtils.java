@@ -21,6 +21,10 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.VarInt;
+
 /**
  * This class contains some utility methods used by the steem api wrapper.
  * 
@@ -83,6 +87,7 @@ public class SteemJUtils {
     public static byte[] transformShortToByteArray(int shortValue) {
         return ByteBuffer.allocate(2).order(ByteOrder.LITTLE_ENDIAN).putShort((short) shortValue).array();
     }
+
 
     /**
      * Transform a long variable into a byte array.
@@ -260,5 +265,23 @@ public class SteemJUtils {
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
         calendar.setTime(simpleDateFormat.parse(dateTime + SteemJConfig.getInstance().getTimeZoneId()));
         return calendar.getTimeInMillis();
+    }
+
+    /**
+     * Get the WIF representation of a private key.
+     * 
+     * @param privateKey
+     *            The private key to get WIF representation for.
+     * @return The WIF representation of the given private key.
+     * @throws IllegalStateException
+     *             If no private key is present in the given ECKey instance.
+     */
+    public static String privateKeyToWIF(ECKey privateKey) {
+        ECKey currentPrivateKey = privateKey;
+        if (currentPrivateKey.isCompressed()) {
+            currentPrivateKey = currentPrivateKey.decompress();
+        }
+        return currentPrivateKey.getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET))
+                .toBase58();
     }
 }

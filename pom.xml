@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.bittrade.libs</groupId>
 	<artifactId>steem-api-wrapper</artifactId>
-	<version>0.3.3-J7</version>
+	<version>0.3.3.2-J7</version>
 	<name>Steem Java API Wrapper</name>
 	<description>A simple wrapper to enable the access of the steem web socket API through Java.</description>
 	<url>http://www.steemit.com/@dez1337</url>
