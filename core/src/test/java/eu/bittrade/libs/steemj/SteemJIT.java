@@ -84,18 +84,30 @@ public class SteemJIT extends BaseIntegrationTest {
     private static final AccountName WITNESS_ACCOUNT = new AccountName("riverhead");
     private static final Permlink PERMLINK = new Permlink("steem-api-wrapper-for-java-update1");
 
+    /**
+     * Prepare the test environment.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironment();
     }
 
+    /**
+     * Test the {@link SteemJ#getNextScheduledHarfork()} method.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
     @Category({ IntegrationTest.class })
     @Test
     public void testGetNextScheduledHarfork() throws Exception {
         final ScheduledHardfork hardforkSchedule = steemJ.getNextScheduledHarfork();
 
-        assertTrue(hardforkSchedule.getHardforkVersion().matches("[0-9\\.]+"));
-        assertTrue(hardforkSchedule.getLiveTime().matches("[0-9\\-:T]+"));
+        assertTrue(hardforkSchedule.getHardforkVersion().toString().matches("[0-9\\.]+"));
+        assertThat(hardforkSchedule.getLiveTime().getDateTimeAsTimestamp(), greaterThan(1497970799L));
     }
 
     @Category({ IntegrationTest.class })
