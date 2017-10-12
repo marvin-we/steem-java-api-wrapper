@@ -73,6 +73,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+import eu.bittrade.libs.steemj.util.KeyGenerator;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * @author Anthony Martin
@@ -614,5 +616,31 @@ public class SteemJIT extends BaseIntegrationTest {
                 new TimePointSec(EXPIRATION_DATE), operations, null);
 
         assertFalse(steemJ.verifyAuthority(signedTransaction));
+    }
+
+    // #########################################################################
+    // ## UTILITY METHODS ######################################################
+    // #########################################################################
+
+    /**
+     * Test if the
+     * {@link SteemJ#getPrivateKeyFromPassword(AccountName, PrivateKeyType, String)}
+     * method is working as expected.
+     * 
+     * @throws Exception
+     *             If something went wrong.
+     */
+    @Test
+    public void testGetPrivateKeyFromPassword() throws Exception {
+        // Create a new random key using the KeyGenerator and use this password
+        // to generate the additional keys.
+        String masterPassword = SteemJUtils.privateKeyToWIF(new KeyGenerator(
+                "COLORER BICORN KASBEKE FAERIE LOCHIA GOMUTI SOVKHOZ Y GERMAL AUNTIE PERFUMY TIME FEATURE GANGAN CELEMIN MATZO",
+                0).getPrivateKey());
+
+        assertThat(SteemJ.getPrivateKeyFromPassword(new AccountName("dez1337"), PrivateKeyType.POSTING, masterPassword)
+                .getLeft().getAddressFromPublicKey(), equalTo("STM7UCTzg9orXeWKnHpMr9viwzMBRy1pnxC2nMHNDEkZnBbiSKJDD"));
+        assertThat(SteemJ.getPrivateKeyFromPassword(new AccountName("dez1337"), PrivateKeyType.POSTING, masterPassword)
+                .getRight(), equalTo("5KHroQR6SU3oquhirVKvRpDUYGeuXEksZfqkaqU5KEFSypFHXvU"));
     }
 }
