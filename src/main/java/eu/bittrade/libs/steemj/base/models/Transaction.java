@@ -104,18 +104,20 @@ public class Transaction implements ByteTransformable, Serializable {
         this.setExpirationDate(expirationDate);
         this.setOperations(operations);
         this.setExtensions(extensions);
+	this.signatures = new ArrayList<>();
     }
 
     /**
      * Like {@link #Transaction(int, long, TimePointSec, List, List)}, but
      * allows you to provide a
-     * {@link eu.bittrade.libs.steemj.base.models.BlockId} object as the
-     * reference block and will also set the <code>expirationDate</code> to the
+     * reference block index as a string and will also set the <code>expirationDate</code> to the
      * latest possible time.
      * 
-     * @param blockId
-     *            The block reference (see {@link #setRefBlockNum(int)} and
-     *            {@link #setRefBlockPrefix(long)}).
+     * @param refBlockNum
+     *            The reference block number (see {@link #setRefBlockNum(int)}).
+     * @param refBlockPrefix
+     *            The reference block index (see
+     *            {@link #setRefBlockPrefix(String)}) in the String form.
      * @param operations
      *            A list of operations to process within this Transaction (see
      *            {@link #setOperations(List)}).
@@ -123,13 +125,14 @@ public class Transaction implements ByteTransformable, Serializable {
      *            Extensions are currently not supported and will be ignored
      *            (see {@link #setExtensions(List)}).
      */
-    public Transaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
-        this.setRefBlockNum(blockId.getNumberFromHash());
-        this.setRefBlockPrefix(blockId.getHashValue());
+    public Transaction(int refBlockNum, String refBlockPrefix, List<Operation> operations, List<FutureExtensions> extensions) {
+        this.setRefBlockNum(refBlockNum);
+        this.setRefBlockPrefix(refBlockPrefix);
         this.setExpirationDate(new TimePointSec(
                 System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
         this.setOperations(operations);
         this.setExtensions(extensions);
+	this.signatures = new ArrayList<>();
     }
 
     /**
