@@ -45,7 +45,7 @@ import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
@@ -92,7 +92,7 @@ public class SteemJIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetNextScheduledHarfork() throws Exception {
-        final HardforkSchedule hardforkSchedule = steemJ.getNextScheduledHarfork();
+        final ScheduledHardfork hardforkSchedule = steemJ.getNextScheduledHarfork();
 
         assertTrue(hardforkSchedule.getHardforkVersion().matches("[0-9\\.]+"));
         assertTrue(hardforkSchedule.getLiveTime().matches("[0-9\\-:T]+"));

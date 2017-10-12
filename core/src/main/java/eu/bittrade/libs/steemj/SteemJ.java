@@ -49,7 +49,7 @@ import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.HardforkSchedule;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
@@ -896,14 +896,14 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public HardforkSchedule getNextScheduledHarfork() throws SteemCommunicationException {
+    public ScheduledHardfork getNextScheduledHarfork() throws SteemCommunicationException {
         RequestWrapperDTO requestObject = new RequestWrapperDTO();
         requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
         requestObject.setSteemApi(SteemApis.DATABASE_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, HardforkSchedule.class).get(0);
+        return communicationHandler.performRequest(requestObject, ScheduledHardfork.class).get(0);
     }
 
     /**
