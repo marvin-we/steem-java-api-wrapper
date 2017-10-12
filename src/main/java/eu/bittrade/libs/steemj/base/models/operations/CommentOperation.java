@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -40,6 +41,57 @@ public class CommentOperation extends Operation {
     public CommentOperation() {
         // Define the required key type for this operation.
         super(false);
+    }
+
+    /**
+     * Create a new and empty comment operation. This operation can be used to:
+     * <ul>
+     * <li>Create a post</li>
+     * <li>Update a post</li>
+     * <li>Write a comment to a post</li>
+     * <li>Update a comment</li>
+     * </ul>
+     * 
+     * @param parentAuthor
+     *            Define the parent author in case of a comment or set this to
+     *            an empty account name in case of a new post (see
+     *            {@link #setParentAuthor(AccountName)}).
+     * @param parentPermlink
+     *            Define the parent permlink. In case of a new post, this field
+     *            will be used to define the main tag of the post (see
+     *            {@link #setParentAuthor(AccountName)}).
+     * @param author
+     *            Set the author of the comment/post (see
+     *            {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            Define the permlink of this comment/post (see
+     *            {@link #setPermlink(Permlink)}).
+     * @param title
+     *            Define the title of this comment/post (see
+     *            {@link #setTitle(String)}).
+     * @param body
+     *            Define the body of this comment/post (see
+     *            {@link #setBody(String)}).
+     * @param jsonMetadata
+     *            Define additional JSON meta data like additional tags (see
+     *            {@link #setJsonMetadata(String)}).
+     * @throws InvalidParameterException
+     *             If one of the parameters does not fulfill the requirements.
+     */
+    @JsonCreator
+    public CommentOperation(@JsonProperty("parent_author") AccountName parentAuthor,
+            @JsonProperty("parent_permlink") String parentPermlink, @JsonProperty("author") AccountName author,
+            @JsonProperty("permlink") String permlink, @JsonProperty("title") String title,
+            @JsonProperty("body") String body, @JsonProperty("json_metadata") String jsonMetadata) {
+        super(false);
+
+        this.setParentAuthor(parentAuthor);
+        this.setParentPermlink(parentPermlink);
+        this.setAuthor(author);
+        this.setPermlink(permlink);
+        this.setTitle(title);
+        this.setBody(body);
+        this.setJsonMetadata(jsonMetadata);
     }
 
     /**
