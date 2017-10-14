@@ -14,5 +14,10 @@ import eu.bittrade.libs.steemj.apis.follow.model.serializer.FollowTypeSerializer
 @JsonDeserialize(using = FollowTypeDeserializer.class)
 @JsonSerialize(using = FollowTypeSerializer.class)
 public enum FollowType {
-    UNDEFINED, BLOG, IGNORE
+    /** Used to unfollow someone. */
+    UNDEFINED,
+    /** Used to follow someone. */
+    BLOG,
+    /** Used to mute someone. */
+    IGNORE
 }
