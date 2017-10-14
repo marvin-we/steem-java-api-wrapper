@@ -15,6 +15,10 @@ public class FollowTypeSerializer extends JsonSerializer<FollowType> {
     @Override
     public void serialize(FollowType followType, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException {
-        jsonGenerator.writeString(followType.toString().toLowerCase());
+        if (followType.equals(FollowType.UNDEFINED)) {
+            jsonGenerator.writeString("");
+        } else {
+            jsonGenerator.writeString(followType.toString().toLowerCase());
+        }
     }
 }

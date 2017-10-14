@@ -19,10 +19,14 @@ public class FollowTypeDeserializer extends JsonDeserializer<FollowType> {
 
         JsonToken currentToken = jasonParser.currentToken();
         if (currentToken != null && JsonToken.VALUE_STRING.equals(currentToken)) {
+            if (jasonParser.getText().isEmpty()) {
+                return FollowType.UNDEFINED;
+            }
+
             FollowType followType = FollowType.valueOf(jasonParser.getText().toUpperCase());
 
             if (followType == null) {
-                throw new IllegalArgumentException("Could not deserialize '" + currentToken + "' to a CurveId type.");
+                throw new IllegalArgumentException("Could not deserialize '" + currentToken + "' to a follow type.");
             }
 
             return followType;
