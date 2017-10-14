@@ -78,7 +78,7 @@ public class Account {
     private TimePointSec savingsSbdLastInterestPayment;
     // Original type is uint8_t.
     @JsonProperty("savings_withdraw_requests")
-    private short SavingWithdrawRequests;
+    private short savingWithdrawRequests;
     @JsonProperty("reward_sbd_balance")
     private Asset rewardSdbBalance;
     @JsonProperty("reward_steem_balance")
@@ -315,7 +315,7 @@ public class Account {
     }
 
     public short getSavingWithdrawRequests() {
-        return SavingWithdrawRequests;
+        return savingWithdrawRequests;
     }
 
     public Asset getRewardSdbBalance() {
