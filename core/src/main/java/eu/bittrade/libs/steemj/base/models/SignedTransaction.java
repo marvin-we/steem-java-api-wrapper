@@ -217,9 +217,9 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                     this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1);
                 } else {
                     isCanonical = true;
-
-                    this.signatures.add(
-                            Utils.HEX.encode(SteemJUtils.createSignedTransaction(0, signature, requiredPrivateKey)));
+                    int keyType = SteemJUtils.getKeyType(signature, messageAsHash, requiredPrivateKey);
+                    this.signatures.add(Utils.HEX
+                            .encode(SteemJUtils.createSignedTransaction(keyType, signature, requiredPrivateKey)));
                 }
             }
         }
