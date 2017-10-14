@@ -24,7 +24,6 @@ import com.google.common.annotations.VisibleForTesting;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
@@ -196,7 +195,6 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
         for (ECKey requiredPrivateKey : getRequiredSignatureKeys()) {
             boolean isCanonical = false;
-            byte[] signedTransaction = null;
 
             Sha256Hash messageAsHash;
             while (!isCanonical) {
@@ -206,42 +204,24 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                     throw new SteemInvalidTransactionException(
                             "The required encoding is not supported by your platform.", e);
                 }
+
                 ECDSASignature signature = requiredPrivateKey.sign(messageAsHash);
 
                 /*
-                 * Identify the correct key type (posting, active, owner, memo)
-                 * by iterating through the types and comparing the elliptic
-                 * curves.
+                 * Use 0 as the key type until the signature is canonical as the
+                 * key type does not effect the canonical test. The correct key
+                 * type will be tested later on. This technique improves the
+                 * performance (thanks to ray66rus).
                  */
-                Integer recId = null;
-                for (int i = 0; i < 4; i++) {
-                    ECKey publicKey = ECKey.recoverFromSignature(i, signature, messageAsHash,
-                            requiredPrivateKey.isCompressed());
-                    if (publicKey != null && publicKey.getPubKeyPoint().equals(requiredPrivateKey.getPubKeyPoint())) {
-                        recId = i;
-                        break;
-                    }
-                }
-
-                if (recId == null) {
-                    throw new SteemFatalErrorException(
-                            "Could not construct a recoverable key. This should never happen.");
-                }
-
-                int headerByte = recId + 27 + (requiredPrivateKey.isCompressed() ? 4 : 0);
-                signedTransaction = new byte[65];
-                signedTransaction[0] = (byte) headerByte;
-                System.arraycopy(Utils.bigIntegerToBytes(signature.r, 32), 0, signedTransaction, 1, 32);
-                System.arraycopy(Utils.bigIntegerToBytes(signature.s, 32), 0, signedTransaction, 33, 32);
-
-                if (isCanonical(signedTransaction)) {
+                if (isCanonical(SteemJUtils.createSignedTransaction(0, signature, requiredPrivateKey))) {
                     this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1);
                 } else {
                     isCanonical = true;
+
+                    this.signatures.add(
+                            Utils.HEX.encode(SteemJUtils.createSignedTransaction(0, signature, requiredPrivateKey)));
                 }
             }
-
-            this.signatures.add(Utils.HEX.encode(signedTransaction));
         }
     }
 
