@@ -13,6 +13,7 @@ import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Checksum;
 import eu.bittrade.libs.steemj.base.models.Pow;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
@@ -138,5 +139,11 @@ public class PowOperation extends Operation {
         // TODO: return mergeRequiredAuthorities(requiredAuthoritiesBase,
         // this.getOwner(), PrivateKeyType.ACTIVE);
         return requiredAuthoritiesBase;
+    }
+
+    @Override
+    public void validate(ValidationType validationType) {
+        // TODO Auto-generated method stub
+
     }
 }

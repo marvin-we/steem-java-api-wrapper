@@ -11,6 +11,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 
@@ -64,5 +65,10 @@ public class ReturnVestingDelegationOperation extends Operation {
         // A virtual operation can't be created by the user, therefore it also
         // does not require any authority.
         return null;
+    }
+
+    @Override
+    public void validate(ValidationType validationType) {
+        // There is no need to validate virtual operations.
     }
 }

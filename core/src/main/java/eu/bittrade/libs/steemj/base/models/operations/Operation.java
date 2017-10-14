@@ -12,8 +12,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
-import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
@@ -32,6 +30,7 @@ import eu.bittrade.libs.steemj.base.models.operations.virtual.ShutdownWitnessOpe
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.interfaces.Validatable;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user
@@ -96,11 +95,8 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
         @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
         @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
         @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
-        @Type(value = ProducerRewardOperation.class, name = "producer_reward"),
-        // Follow Plugin Operations
-        @Type(value = ReblogOperation.class, name = "reblog_operation"),
-        @Type(value = FollowOperation.class, name = "follow_operation") })
-public abstract class Operation implements ByteTransformable {
+        @Type(value = ProducerRewardOperation.class, name = "producer_reward") })
+public abstract class Operation implements ByteTransformable, Validatable {
     /**
      * This field is used to store the operation type.
      */
