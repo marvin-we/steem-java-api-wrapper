@@ -49,13 +49,13 @@ import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
+import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
@@ -86,6 +86,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
+import eu.bittrade.libs.steemj.util.CondenserUtils;
 
 /**
  * This class is a wrapper for the Steem web socket API and provides all
@@ -2469,58 +2470,11 @@ public class SteemJ {
         Permlink parentPermlink = new Permlink(tags[0]);
         // One new posts the parentAuthor is empty.
         AccountName parentAuthor = new AccountName("");
-        // Collect all information for the meta data.
-        // 1. Gather all links from the content
-        List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
-        // 2. Gather all images from the content
-        List<String> imagesFromLinks = new ArrayList<>();
-        List<String> linksInContentCleaned = new ArrayList<>();
-        for (String link : linksInContent) {
-            if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
-                    || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
-                    || link.endsWith(".GIF")) {
-                imagesFromLinks.add(link);
-            } else {
-                linksInContentCleaned.add(link);
-            }
-        }
-        // 3. Gather all users from the content
-        List<String> usernamesInContent = SteemJUtils.extractUsersFromContent(content);
 
-        // Now build everything together and add it as the metadata.
-        // TODO: Improve this!
-        StringBuilder jsonMetadataBuilder = new StringBuilder();
-        jsonMetadataBuilder.append("{");
-        jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
-        for (int i = 1; i < tags.length; i++) {
-            jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
-        }
-        jsonMetadataBuilder.append("],");
-        if (!usernamesInContent.isEmpty()) {
-            jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
-            for (int i = 1; i < usernamesInContent.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!imagesFromLinks.isEmpty()) {
-            jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
-            for (int i = 1; i < imagesFromLinks.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!linksInContentCleaned.isEmpty()) {
-            jsonMetadataBuilder.append("\"links\":[\"" + linksInContentCleaned.get(0) + "\"");
-            for (int i = 1; i < linksInContentCleaned.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + linksInContentCleaned.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
-                authorThatPublishsThePost, permlink, title, content, jsonMetadataBuilder.toString());
+                authorThatPublishsThePost, permlink, title, content, jsonMetadata);
 
         operations.add(commentOperation);
 
@@ -2604,59 +2558,11 @@ public class SteemJ {
         Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
                 + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
                 + UUID.randomUUID().toString() + "uid");
-        // Collect all information for the meta data.
-        // 1. Gather all links from the content
-        List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
-        // 2. Gather all images from the content
-        List<String> imagesFromLinks = new ArrayList<>();
-        List<String> linksInContentCleaned = new ArrayList<>();
-        for (String link : linksInContent) {
-            if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
-                    || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
-                    || link.endsWith(".GIF")) {
-                imagesFromLinks.add(link);
-            } else {
-                linksInContentCleaned.add(link);
-            }
-        }
-        // 3. Gather all users from the content
-        List<String> usernamesInContent = SteemJUtils.extractUsersFromContent(content);
 
-        // Now build everything together and add it as the metadata.
-        // TODO: Improve this!
-        StringBuilder jsonMetadataBuilder = new StringBuilder();
-        jsonMetadataBuilder.append("{");
-        jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
-        for (int i = 1; i < tags.length; i++) {
-            jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
-        }
-        jsonMetadataBuilder.append("],");
-        if (!usernamesInContent.isEmpty()) {
-            jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
-            for (int i = 1; i < usernamesInContent.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!imagesFromLinks.isEmpty()) {
-            jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
-            for (int i = 1; i < imagesFromLinks.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!linksInContentCleaned.isEmpty()) {
-            jsonMetadataBuilder.append("\"links\":[\"" + linksInContentCleaned.get(0) + "\"");
-            for (int i = 1; i < linksInContentCleaned.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + linksInContentCleaned.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
-                permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content,
-                jsonMetadataBuilder.toString());
+                permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content, jsonMetadata);
 
         operations.add(commentOperation);
 
@@ -2736,58 +2642,11 @@ public class SteemJ {
         ArrayList<Operation> operations = new ArrayList<>();
         AccountName parentAuthor = new AccountName("");
         Permlink parentPermlink = new Permlink(tags[0]);
-        // Collect all information for the meta data.
-        // 1. Gather all links from the content
-        List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
-        // 2. Gather all images from the content
-        List<String> imagesFromLinks = new ArrayList<>();
-        List<String> linksInContentCleaned = new ArrayList<>();
-        for (String link : linksInContent) {
-            if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
-                    || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
-                    || link.endsWith(".GIF")) {
-                imagesFromLinks.add(link);
-            } else {
-                linksInContentCleaned.add(link);
-            }
-        }
-        // 3. Gather all users from the content
-        List<String> usernamesInContent = SteemJUtils.extractUsersFromContent(content);
 
-        // Now build everything together and add it as the metadata.
-        // TODO: Improve this!
-        StringBuilder jsonMetadataBuilder = new StringBuilder();
-        jsonMetadataBuilder.append("{");
-        jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
-        for (int i = 1; i < tags.length; i++) {
-            jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
-        }
-        jsonMetadataBuilder.append("],");
-        if (!usernamesInContent.isEmpty()) {
-            jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
-            for (int i = 1; i < usernamesInContent.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!imagesFromLinks.isEmpty()) {
-            jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
-            for (int i = 1; i < imagesFromLinks.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!linksInContentCleaned.isEmpty()) {
-            jsonMetadataBuilder.append("\"links\":[\"" + linksInContentCleaned.get(0) + "\"");
-            for (int i = 1; i < linksInContentCleaned.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + linksInContentCleaned.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
-                permlinkOfThePostToUpdate, title, content, jsonMetadataBuilder.toString());
+                permlinkOfThePostToUpdate, title, content, jsonMetadata);
 
         operations.add(commentOperation);
 
@@ -2844,59 +2703,10 @@ public class SteemJ {
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
-        // Collect all information for the meta data.
-        // 1. Gather all links from the content
-        List<String> linksInContent = SteemJUtils.extractLinksFromContent(content);
-        // 2. Gather all images from the content
-        List<String> imagesFromLinks = new ArrayList<>();
-        List<String> linksInContentCleaned = new ArrayList<>();
-        for (String link : linksInContent) {
-            if (link.endsWith(".png") || link.endsWith(".PNG") || link.endsWith(".jpg") || link.endsWith(".JPG")
-                    || link.endsWith(".jpeg") || link.endsWith(".JPEG") || link.endsWith(".gif")
-                    || link.endsWith(".GIF")) {
-                imagesFromLinks.add(link);
-            } else {
-                linksInContentCleaned.add(link);
-            }
-        }
-        // 3. Gather all users from the content
-        List<String> usernamesInContent = SteemJUtils.extractUsersFromContent(content);
-
-        // Now build everything together and add it as the metadata.
-        // TODO: Improve this!
-        StringBuilder jsonMetadataBuilder = new StringBuilder();
-        jsonMetadataBuilder.append("{");
-        jsonMetadataBuilder.append("\"tags\":[\"" + tags[0] + "\"");
-        for (int i = 1; i < tags.length; i++) {
-            jsonMetadataBuilder.append(",\"" + tags[i] + "\"");
-        }
-        jsonMetadataBuilder.append("],");
-        if (!usernamesInContent.isEmpty()) {
-            jsonMetadataBuilder.append("\"users\":[\"" + usernamesInContent.get(0) + "\"");
-            for (int i = 1; i < usernamesInContent.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + usernamesInContent.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!imagesFromLinks.isEmpty()) {
-            jsonMetadataBuilder.append("\"images\":[\"" + imagesFromLinks.get(0) + "\"");
-            for (int i = 1; i < imagesFromLinks.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + imagesFromLinks.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        if (!linksInContentCleaned.isEmpty()) {
-            jsonMetadataBuilder.append("\"links\":[\"" + linksInContentCleaned.get(0) + "\"");
-            for (int i = 1; i < linksInContentCleaned.size(); i++) {
-                jsonMetadataBuilder.append(",\"" + linksInContentCleaned.get(i) + "\"");
-            }
-            jsonMetadataBuilder.append("],");
-        }
-        jsonMetadataBuilder.append("\"app\":\"steemj/0.4.0\",\"format\":\"markdown\"}");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
-                originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content,
-                jsonMetadataBuilder.toString());
+                originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content, jsonMetadata);
 
         operations.add(commentOperation);
         GlobalProperties globalProperties = this.getDynamicGlobalProperties();
