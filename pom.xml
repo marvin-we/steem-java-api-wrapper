@@ -206,6 +206,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<sonar.host.url>http://localhost:9000</sonar.host.url>
-		<java.version>1.8</java.version>
+		<java.version>1.7</java.version>
 	</properties>
 </project>
