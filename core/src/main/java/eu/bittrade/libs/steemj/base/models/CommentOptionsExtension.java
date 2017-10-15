@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.bittrade.libs.steemj.base.models.deserializer.CommentOptionsExtensionDeserializer;
 import eu.bittrade.libs.steemj.base.models.serializer.CommentOptionsExtensionSerializer;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.interfaces.Validatable;
 
 /**
  * This class repesents a Steem "comment_options_extenson" object.
@@ -28,7 +29,7 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
  */
 @JsonDeserialize(using = CommentOptionsExtensionDeserializer.class)
 @JsonSerialize(using = CommentOptionsExtensionSerializer.class)
-public abstract class CommentOptionsExtension implements ByteTransformable {
+public abstract class CommentOptionsExtension implements ByteTransformable, Validatable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

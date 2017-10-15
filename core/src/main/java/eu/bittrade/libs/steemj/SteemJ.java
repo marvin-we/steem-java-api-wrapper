@@ -2491,9 +2491,8 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
-        beneficiaryRouteType.setAccount(new AccountName("steemj"));
-        beneficiaryRouteType.setWeight(SteemJConfig.getInstance().getSteemJWeight());
+        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(new AccountName("steemj"),
+                SteemJConfig.getInstance().getSteemJWeight());
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
         beneficiaryRouteTypes.add(beneficiaryRouteType);
@@ -2585,9 +2584,8 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
-        beneficiaryRouteType.setAccount(new AccountName("steemj"));
-        beneficiaryRouteType.setWeight(SteemJConfig.getInstance().getSteemJWeight());
+        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(new AccountName("steemj"),
+                SteemJConfig.getInstance().getSteemJWeight());
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
         beneficiaryRouteTypes.add(beneficiaryRouteType);

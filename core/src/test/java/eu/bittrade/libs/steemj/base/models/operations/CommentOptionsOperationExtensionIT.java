@@ -68,9 +68,7 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegra
         boolean allowCurationRewards = true;
         short percentSteemDollars = (short) 10000;
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType();
-        beneficiaryRouteType.setAccount(new AccountName("steemj"));
-        beneficiaryRouteType.setWeight((short) 500);
+        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(new AccountName("steemj"), (short) 500);
 
         ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
         beneficiaryRouteTypes.add(beneficiaryRouteType);

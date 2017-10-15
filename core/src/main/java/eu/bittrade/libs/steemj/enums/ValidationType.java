@@ -6,7 +6,10 @@ package eu.bittrade.libs.steemj.enums;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum ValidationType {
-    /** Indicates that the validation should be skipped. */
+    /**
+     * Indicates that all validation methods (except of null pointer checks)
+     * should be skipped.
+     */
     SKIP_VALIDATION,
     /** Indicates that the validation of assets should be skipped. */
     SKIP_ASSET_VALIDATION,
