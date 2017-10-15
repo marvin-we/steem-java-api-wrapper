@@ -26,6 +26,9 @@ public class MarketHistoryApi {
     }
 
     /**
+     * Use this method to receive statistic values of the internal SBD:STEEM
+     * market for the last 24 hours.
+     * 
      * @param communicationHandler
      *            A
      *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
@@ -56,6 +59,9 @@ public class MarketHistoryApi {
     }
 
     /**
+     * Use this method to get the SBD and Steem volume that has been traded in
+     * the past 24 hours at the internal SBD:STEEM market.
+     * 
      * @param communicationHandler
      *            A
      *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
@@ -86,6 +92,9 @@ public class MarketHistoryApi {
     }
 
     /**
+     * Use this method to receive the current order book of the internal
+     * SBD:STEEM market.
+     * 
      * @param communicationHandler
      *            A
      *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
@@ -126,7 +135,8 @@ public class MarketHistoryApi {
     }
 
     /**
-     * Returns the trade history for the internal SBD:STEEM market.
+     * Use this method to get the trade history of the internal SBD:STEEM market
+     * between the defined <code>start</code> and <code>end</code> time.
      * 
      * @param communicationHandler
      *            A
@@ -171,8 +181,9 @@ public class MarketHistoryApi {
     }
 
     /**
-     * Returns the <code>limit</code> most recent trades for the internal
-     * SBD:STEEM market.
+     * Use this method to request the most recent trades for the internal
+     * SBD:STEEM market. The number of results is limited by the
+     * <code>limit</code> parameter.
      * 
      * @param communicationHandler
      *            A
@@ -255,12 +266,14 @@ public class MarketHistoryApi {
     }
 
     /**
+     * Use this method to receive the bucket seconds being tracked by the node.
+     * 
      * @param communicationHandler
      *            A
      *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
      *            CommunicationHandler} instance that should be used to send the
      *            request.
-     * @return Returns the bucket seconds being tracked by the plugin.
+     * @return Returns The bucket seconds being tracked by the node.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
