@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.api.network.broadcast;
+package eu.bittrade.libs.steemj.apis.network.broadcast;
 
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
