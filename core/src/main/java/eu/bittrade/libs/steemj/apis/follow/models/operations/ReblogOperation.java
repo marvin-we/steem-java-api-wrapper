@@ -1,42 +1,75 @@
 package eu.bittrade.libs.steemj.apis.follow.models.operations;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperationPayload;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 
 /**
  * This class represents the Steem "reblog_operation" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ReblogOperation extends Operation {
+public class ReblogOperation extends CustomJsonOperationPayload {
+    @JsonProperty("account")
     private AccountName account;
+    @JsonProperty("author")
     private AccountName author;
+    @JsonProperty("permlink")
     private Permlink permlink;
 
     /**
-     * Create a new reblog operation to reblog a comment a post. *
-     * <b>Attention</b> This operation is currently (HF 0.19) disabled. Please
-     * use a
-     * {@link eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation
-     * CustomJsonOperation] instead.}
+     * Create a new reblog operation to reblog a comment or a post.
+     * <b>Attention</b>
+     * <ul>
+     * <li>This operation can't be broadcasted directly. It needs to be added as
+     * a payload to a {@link CustomJsonOperation}.</li>
+     * <li>Once broadcasted, this operation cannot be reverted.</li>
+     * </ul>
+     * 
+     * @param account
+     *            The account that wants to reblog the post or comment specified
+     *            by the <code>permlink</code> and <code>author</code> (see
+     *            {@link #setAccount(AccountName)}).
+     * @param author
+     *            The author that has written the comment or the post to resteem
+     *            (see {@link #setAuthor(AccountName)}).
+     * @param permlink
+     *            The permlink of the comment or post to resteem (see
+     *            {@link #setPermlink(Permlink)}).
+     * @throws InvalidParameterException
+     *             If one of the arguments does not fulfill the requirements.
      */
-    public ReblogOperation() {
-        super(false);
+    @JsonCreator
+    public ReblogOperation(@JsonProperty("account") AccountName account, @JsonProperty("author") AccountName author,
+            @JsonProperty("permlink") Permlink permlink) {
+        this.setAccount(account);
+        this.setAuthor(author);
+        this.setPermlink(permlink);
     }
 
     /**
-     * @return the account
+     * Create an empty reblog operation to reblog a comment or a post.
+     * <b>Attention</b>
+     * <ul>
+     * <li>This operation can't be broadcasted directly. It needs to be added as
+     * a payload to a {@link CustomJsonOperation}.</li>
+     * <li>Once broadcasted, this operation cannot be reverted.</li>
+     * </ul>
+     */
+    public ReblogOperation() {
+    }
+
+    /**
+     * @return The account that resteemed the comment or the post.
      */
     public AccountName getAccount() {
         return account;
@@ -55,7 +88,7 @@ public class ReblogOperation extends Operation {
     }
 
     /**
-     * @return the author
+     * @return The author of the post or comment to resteem.
      */
     public AccountName getAuthor() {
         return author;
@@ -63,7 +96,7 @@ public class ReblogOperation extends Operation {
 
     /**
      * @param author
-     *            the author to set
+     *            The author of the post or comment to resteem.
      */
     public void setAuthor(AccountName author) {
         this.author = author;
@@ -91,27 +124,24 @@ public class ReblogOperation extends Operation {
     }
 
     @Override
-    public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedVoteOperation = new ByteArrayOutputStream()) {
-            serializedVoteOperation.write(this.getAccount().toByteArray());
-            serializedVoteOperation.write(this.getAuthor().toByteArray());
-            serializedVoteOperation.write(this.getPermlink().toByteArray());
-
-            return serializedVoteOperation.toByteArray();
-        } catch (IOException e) {
-            throw new SteemInvalidTransactionException(
-                    "A problem occured while transforming the operation into a byte array.", e);
-        }
-    }
-
-    @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 
     @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.POSTING);
+    public void validate(ValidationType validationType) {
+        if (validationType.equals(ValidationType.SKIP_VALIDATION)) {
+            return;
+        }
+        // Validate the object.
+        if (this.getAccount() == null) {
+            throw new InvalidParameterException("The account cannot be null.");
+        } else if (this.getAuthor() == null) {
+            throw new InvalidParameterException("The author account cannot be null.");
+        } else if (this.getPermlink() == null) {
+            throw new InvalidParameterException("The permlink account cannot be null.");
+        } else if (this.getAccount().equals(this.getAuthor())) {
+            throw new InvalidParameterException("You cannot reblog your own content.");
+        }
     }
 }

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -207,36 +208,33 @@ public class CustomJsonOperation extends Operation {
      *             If the given <code>json</code> is not valid.
      */
     public void setJson(String json) {
-        if (!json.isEmpty() && !SteemJUtils.verifyJsonString(json)) {
-            throw new InvalidParameterException("The given String is no valid JSON");
-        }
-
         this.json = json;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedCustomOperation = new ByteArrayOutputStream()) {
-            serializedCustomOperation
+        try (ByteArrayOutputStream serializedCustomJsonOperation = new ByteArrayOutputStream()) {
+            serializedCustomJsonOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_JSON_OPERATION.ordinal()));
 
-            serializedCustomOperation.write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
+            serializedCustomJsonOperation
+                    .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));
 
             for (AccountName accountName : this.getRequiredAuths()) {
-                serializedCustomOperation.write(accountName.toByteArray());
+                serializedCustomJsonOperation.write(accountName.toByteArray());
             }
 
-            serializedCustomOperation
+            serializedCustomJsonOperation
                     .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredPostingAuths().size()));
 
             for (AccountName accountName : this.getRequiredPostingAuths()) {
-                serializedCustomOperation.write(accountName.toByteArray());
+                serializedCustomJsonOperation.write(accountName.toByteArray());
             }
 
-            serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getId()));
-            serializedCustomOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getJson()));
+            serializedCustomJsonOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getId()));
+            serializedCustomJsonOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getJson()));
 
-            return serializedCustomOperation.toByteArray();
+            return serializedCustomJsonOperation.toByteArray();
         } catch (IOException e) {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);
@@ -259,5 +257,10 @@ public class CustomJsonOperation extends Operation {
                 PrivateKeyType.POSTING);
 
         return requiredAuthorities;
+    }
+
+    @Override
+    public void validate(ValidationType validationType) {
+
     }
 }

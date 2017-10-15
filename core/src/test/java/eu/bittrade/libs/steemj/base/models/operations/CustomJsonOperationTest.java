@@ -5,12 +5,15 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -51,9 +54,11 @@ public class CustomJsonOperationTest extends BaseTransactionalUnitTest {
         ArrayList<AccountName> requiredActiveAuths = null;
 
         String id = "follow";
-        String json = "[\"follow\",{\"follower\":\"dez1337\",\"following\":\"steemj\",\"what\":[\"blog\"]}]";
+        FollowOperation followOperation = new FollowOperation(new AccountName("dez1337"), new AccountName("steemj"),
+                Arrays.asList(FollowType.BLOG));
 
-        customJsonOperation = new CustomJsonOperation(requiredActiveAuths, requiredPostingAuths, id, json);
+        customJsonOperation = new CustomJsonOperation(requiredActiveAuths, requiredPostingAuths, id,
+                followOperation.toJson());
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customJsonOperation);

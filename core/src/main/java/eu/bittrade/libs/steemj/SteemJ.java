@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
 import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
+import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi;
 import eu.bittrade.libs.steemj.apis.market.history.model.Bucket;
 import eu.bittrade.libs.steemj.apis.market.history.model.MarketTicker;
@@ -85,8 +87,8 @@ import eu.bittrade.libs.steemj.enums.SteemApis;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
 import eu.bittrade.libs.steemj.util.CondenserUtils;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class is a wrapper for the Steem web socket API and provides all
@@ -2324,8 +2326,8 @@ public class SteemJ {
         requiredPostingAuths.add(accountThatFollows);
 
         String id = "follow";
-        String json = "[\"follow\",{\"follower\":\"" + accountThatFollows.getName() + "\",\"following\":\""
-                + accountToFollow.getName() + "\",\"what\":[\"blog\"]}]";
+        String json = (new FollowOperation(accountThatFollows, accountToFollow, Arrays.asList(FollowType.BLOG)))
+                .toJson();
 
         CustomJsonOperation customJsonOperation = new CustomJsonOperation(null, requiredPostingAuths, id, json);
 
@@ -2411,8 +2413,8 @@ public class SteemJ {
         requiredPostingAuths.add(accountThatUnfollows);
 
         String id = "follow";
-        String json = "[\"follow\",{\"follower\":\"" + accountThatUnfollows.getName() + "\",\"following\":\""
-                + accountToUnfollow.getName() + "\",\"what\":[\"\"]}]";
+        String json = (new FollowOperation(accountThatUnfollows, accountToUnfollow,
+                Arrays.asList(FollowType.UNDEFINED))).toJson();
 
         CustomJsonOperation customJsonOperation = new CustomJsonOperation(null, requiredPostingAuths, id, json);
 
@@ -2434,6 +2436,9 @@ public class SteemJ {
      * @param title
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
@@ -2453,6 +2458,9 @@ public class SteemJ {
      * @param title
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
@@ -2520,6 +2528,9 @@ public class SteemJ {
      * @param permlinkOfThePostOrCommentToReplyTo
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
@@ -2542,6 +2553,9 @@ public class SteemJ {
      * @param authorThatPublishsTheComment
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
@@ -2608,6 +2622,9 @@ public class SteemJ {
      * @param title
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
@@ -2629,6 +2646,9 @@ public class SteemJ {
      * @param title
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
@@ -2669,6 +2689,9 @@ public class SteemJ {
      * @param originalPermlinkOfYourComment
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */
@@ -2692,6 +2715,9 @@ public class SteemJ {
      * @param originalAuthorOfTheCommentToUpdate
      * @param content
      * @param tags
+     * @return The {@link CommentOperation} which has been created within this
+     *         method. The returned Operation allows you to access the generated
+     *         values.
      * @throws SteemCommunicationException
      * @throws SteemInvalidTransactionException
      */

@@ -5,12 +5,15 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
@@ -30,9 +33,12 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
 
     /**
      * Prepare the environment for the test execution.
+     * 
+     * @throws Exception
+     *             If something went wrong.
      */
     @BeforeClass
-    public static void init() {
+    public static void init() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
         AccountName voter = new AccountName("xeroc");
@@ -47,7 +53,8 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         requiredPostingAuths.add(new AccountName("dez1337"));
 
         String id = "follow";
-        String json = "[\"follow\",{\"follower\":\"dez1337\",\"following\":\"steemj\",\"what\":[\"blog\"]}]";
+        String json = (new FollowOperation(new AccountName("dez1337"), new AccountName("steemj"),
+                Arrays.asList(FollowType.BLOG))).toJson();
 
         customJsonOperation = new CustomJsonOperation(requiredAuth, requiredPostingAuths, id, json);
     }
