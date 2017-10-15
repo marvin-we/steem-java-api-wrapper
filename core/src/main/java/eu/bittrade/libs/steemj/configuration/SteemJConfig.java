@@ -29,6 +29,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
     private static final String DEFAULT_STEEM_NODE_URI = "wss://steemd.steemit.com";
+    private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
 
     private static SteemJConfig steemJConfigInstance;
 
@@ -487,5 +488,12 @@ public class SteemJConfig {
      */
     public void setSteemJWeight(short steemJWeight) {
         this.steemJWeight = steemJWeight;
+    }
+
+    /**
+     * @return The official SteemJ account name.
+     */
+    public static AccountName getSteemJAccount() {
+        return STEEMJ_ACCOUNT;
     }
 }
