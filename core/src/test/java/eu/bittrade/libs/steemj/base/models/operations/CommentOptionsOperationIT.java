@@ -58,9 +58,9 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
         boolean allowCurationRewards = true;
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
-        
-        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink, maxAcceptedPayout,
-                percentSteemDollars, allowVotes, allowCurationRewards, null);
+
+        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink,
+                maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOptionsOperation);
@@ -86,7 +86,8 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getAllowVotes(),
                 equalTo(EXPECTED_VOTES_ALLOWED));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink(), equalTo(EXPECTED_PERMANENT_LINK));
+        assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink().getLink(),
+                equalTo(EXPECTED_PERMANENT_LINK));
         assertThat(((CommentOptionsOperation) commentOptionsOperation).getMaxAcceptedPayout(), equalTo(EXPECTED_ASSET));
     }
 

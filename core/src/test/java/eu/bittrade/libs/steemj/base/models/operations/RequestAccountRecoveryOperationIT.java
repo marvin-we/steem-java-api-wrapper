@@ -47,7 +47,7 @@ public class RequestAccountRecoveryOperationIT extends BaseTransactionalIntegrat
         AccountName recoveryAccount = new AccountName("dez1337");
 
         Authority newOwnerAuthority = new Authority();
-        newOwnerAuthority.setAccountAuths(new HashMap<>());
+        newOwnerAuthority.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
         newOwnerAuthority.setKeyAuths(ownerKeyAuth);

@@ -60,7 +60,7 @@ public class PrivateKeyStorage {
      *            The account to be added to the key storage.
      */
     public void addAccount(AccountName accountName) {
-        this.getPrivateKeysPerAccounts().put(accountName, new ArrayList<>());
+        this.getPrivateKeysPerAccounts().put(accountName, new ArrayList<ImmutablePair<PrivateKeyType, ECKey>>());
     }
 
     /**

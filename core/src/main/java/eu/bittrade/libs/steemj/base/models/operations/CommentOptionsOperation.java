@@ -146,7 +146,7 @@ public class CommentOptionsOperation extends Operation {
      *             If one of the parameters does not fulfill the requirements.
      */
     public CommentOptionsOperation(AccountName author, Permlink permlink, Short percentSteemDollars) {
-        this(author, permlink, percentSteemDollars, new ArrayList<>());
+        this(author, permlink, percentSteemDollars, new ArrayList<CommentOptionsExtension>());
     }
 
     /**
@@ -186,7 +186,7 @@ public class CommentOptionsOperation extends Operation {
      *             If one of the parameters does not fulfill the requirements.
      */
     public CommentOptionsOperation(AccountName author, Permlink permlink) {
-        this(author, permlink, new ArrayList<>());
+        this(author, permlink, new ArrayList<CommentOptionsExtension>());
     }
 
     /**

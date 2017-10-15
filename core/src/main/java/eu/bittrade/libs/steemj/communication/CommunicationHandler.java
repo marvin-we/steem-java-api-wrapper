@@ -8,6 +8,7 @@ import java.util.TimeZone;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
@@ -76,7 +77,15 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 && SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("wss")
                 || SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("https")) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            sslEngineConfigurator.setHostnameVerifier((String host, SSLSession sslSession) -> true);
+            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String host, SSLSession sslSession) {
+                    return true;
+                }
+            });
+            // TODO: Requires Java 8:
+            // sslEngineConfigurator.setHostnameVerifier((String host,
+            // SSLSession sslSession) -> true);
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 

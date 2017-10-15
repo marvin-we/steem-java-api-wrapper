@@ -57,21 +57,21 @@ public class AccountUpdateOperationIT extends BaseTransactionalIntegrationTest {
         PublicKey memoKey = new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp");
 
         Authority posting = new Authority();
-        posting.setAccountAuths(new HashMap<>());
+        posting.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> postingKeyAuth = new HashMap<>();
         postingKeyAuth.put(new PublicKey("STM688NyXXSjXmXCy4FSaPH5L2FitugsKU9PbLn5ZiUQr3GaztmCL"), 1);
         posting.setKeyAuths(postingKeyAuth);
         posting.setWeightThreshold(1);
 
         Authority active = new Authority();
-        active.setAccountAuths(new HashMap<>());
+        active.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> activeKeyAuth = new HashMap<>();
         activeKeyAuth.put(new PublicKey("STM6uWaRvGTtvKTdciKU3rtBbeq3ZfBopvjewQdngeAG31EGSXA2f"), 1);
         active.setKeyAuths(activeKeyAuth);
         active.setWeightThreshold(1);
 
         Authority owner = new Authority();
-        owner.setAccountAuths(new HashMap<>());
+        owner.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
         ownerKeyAuth.put(new PublicKey("STM5RBRDAfpq4RrWGtLAyMf2qQaiS9abkU2nmDegQiH3P1vMbP2Lq"), 1);
         owner.setKeyAuths(ownerKeyAuth);
