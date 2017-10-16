@@ -126,6 +126,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      * 
      * @return The account which approved this operation.
      */
+    @Override
     public AccountName getWho() {
         return who;
     }
