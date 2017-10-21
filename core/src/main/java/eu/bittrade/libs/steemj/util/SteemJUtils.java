@@ -108,6 +108,10 @@ public class SteemJUtils {
      * @return The VarInt-byte representation of the given String.
      */
     public static byte[] transformStringToVarIntByteArray(String string) {
+        if (string == null || string.isEmpty()) {
+            return new byte[0];
+        }
+
         Charset encodingCharset = SteemJConfig.getInstance().getEncodingCharset();
         try (ByteArrayOutputStream resultingByteRepresentation = new ByteArrayOutputStream()) {
             byte[] stringAsByteArray = string.getBytes(encodingCharset);
