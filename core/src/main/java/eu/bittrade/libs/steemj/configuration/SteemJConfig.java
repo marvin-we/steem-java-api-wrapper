@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 
 /**
@@ -75,6 +76,7 @@ public class SteemJConfig {
     private SteemitAddressPrefix steemitAddressPrefix;
     private String chainId;
     private short steemJWeight;
+    private ValidationType validationLevel;
 
     /**
      * Default constructor that will set all default values.
@@ -101,6 +103,7 @@ public class SteemJConfig {
         this.steemitAddressPrefix = SteemitAddressPrefix.STM;
         this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
         this.steemJWeight = 250;
+        this.validationLevel = ValidationType.ALL;
 
         // Fill the key store with the provided accountName and private keys.
         this.defaultAccount = new AccountName(System.getProperty("steemj.default.account", ""));
@@ -419,6 +422,18 @@ public class SteemJConfig {
     }
 
     /**
+     * Override the default validation level that SteemJ will use to validate if
+     * an Object contains valid information before broadcasting it to the Steem
+     * Node. By default SteemJ will validate as much as possible.
+     * 
+     * @param validationLevel
+     *            The validation level to set.
+     */
+    public void setValidationLevel(ValidationType validationLevel) {
+        this.validationLevel = validationLevel;
+    }
+
+    /**
      * Override the default, maximum time that SteemJ will keep an unused
      * connection open.A value that is 0 or negative indicates the sessions will
      * never timeout due to inactivity.
@@ -488,6 +503,15 @@ public class SteemJConfig {
      */
     public void setSteemJWeight(short steemJWeight) {
         this.steemJWeight = steemJWeight;
+    }
+
+    /**
+     * Get the currently configured validation level.
+     * 
+     * @return The currently configured validation level.
+     */
+    public ValidationType getValidationLevel() {
+        return validationLevel;
     }
 
     /**
