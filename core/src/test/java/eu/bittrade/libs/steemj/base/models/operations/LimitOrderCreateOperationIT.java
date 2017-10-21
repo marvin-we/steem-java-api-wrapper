@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -60,7 +61,7 @@ public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTes
         minToReceive.setAmount(10L);
         minToReceive.setSymbol(AssetSymbolType.STEEM);
 
-        long orderId = 492995;
+        UInteger orderId = UInteger.valueOf(492995);
         AccountName owner = new AccountName("dez1337");
 
         LimitOrderCreateOperation limitOrderCreateOperation = new LimitOrderCreateOperation(owner, orderId,
@@ -70,7 +71,7 @@ public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTes
         operations.add(limitOrderCreateOperation);
 
         signedTransaction.setOperations(operations);
-        
+
         sign();
 
         // Set expected objects.

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.util.ArrayList;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -62,7 +63,7 @@ public class LimitOrderCreate2OperationIT extends BaseTransactionalIntegrationTe
 
         TimePointSec expirationDate = new TimePointSec(EXPIRATION_DATE);
         boolean fillOrKill = false;
-        long orderId = 492991L;
+        UInteger orderId = UInteger.valueOf(492991);
         AccountName owner = new AccountName("dez1337");
 
         LimitOrderCreate2Operation limitOrderCreate2Operation = new LimitOrderCreate2Operation(owner, orderId,

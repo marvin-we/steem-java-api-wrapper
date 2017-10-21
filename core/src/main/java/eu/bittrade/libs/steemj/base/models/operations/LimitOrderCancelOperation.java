@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,12 +31,14 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
      *            The owner of the operation (see
      *            {@link #setOwner(AccountName)}).
      * @param orderId
-     *            The id of the order to cancel (see {@link #setOrderId(long)}).
+     *            The id of the order to cancel (see
+     *            {@link #setOrderId(UInteger)}).
      * @throws InvalidParameterException
      *             If the provided <code>owner</code> is null.
      */
     @JsonCreator
-    public LimitOrderCancelOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("orderid") long orderId) {
+    public LimitOrderCancelOperation(@JsonProperty("owner") AccountName owner,
+            @JsonProperty("orderid") UInteger orderId) {
         super(false);
 
         this.setOwner(owner);
@@ -43,8 +46,8 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
     }
 
     /**
-     * Like {@link #LimitOrderCancelOperation(AccountName, long)}, but sets the
-     * <code>orderId</code> to its default value (0).
+     * Like {@link #LimitOrderCancelOperation(AccountName, UInteger)}, but sets
+     * the <code>orderId</code> to its default value (0).
      * 
      * @param owner
      *            The owner of the operation (see
@@ -53,7 +56,7 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
      *             If the provided <code>owner</code> is null.
      */
     public LimitOrderCancelOperation(AccountName owner) {
-        this(owner, 0);
+        this(owner, UInteger.valueOf(0));
     }
 
     /**
@@ -87,8 +90,8 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
      * 
      * @return The order id of the order that has been canceled.
      */
-    public int getOrderId() {
-        return (int) orderId;
+    public UInteger getOrderId() {
+        return orderId;
     }
 
     /**
@@ -97,7 +100,7 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
      * @param orderId
      *            The order id of the order that should be canceled.
      */
-    public void setOrderId(long orderId) {
+    public void setOrderId(UInteger orderId) {
         this.orderId = orderId;
     }
 
@@ -107,7 +110,8 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
             serializedLimitOrderCancelOperation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CANCEL_OPERATION.ordinal()));
             serializedLimitOrderCancelOperation.write(this.getOwner().toByteArray());
-            serializedLimitOrderCancelOperation.write(SteemJUtils.transformIntToByteArray(this.getOrderId()));
+            serializedLimitOrderCancelOperation
+                    .write(SteemJUtils.transformIntToByteArray(this.getOrderId().intValue()));
 
             return serializedLimitOrderCancelOperation.toByteArray();
         } catch (IOException e) {

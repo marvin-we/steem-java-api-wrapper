@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
+import org.joou.UShort;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -78,7 +79,7 @@ public class CustomOperationIT extends BaseTransactionalIntegrationTest {
                 .getOperations().get(OPERATION_INDEX);
 
         assertThat(customOperation, instanceOf(CustomOperation.class));
-        assertThat(((CustomOperation) customOperation).getId(), equalTo(EXPECTED_ID));
+        assertThat(((CustomOperation) customOperation).getId(), equalTo(UShort.valueOf(EXPECTED_ID)));
         assertThat(((CustomOperation) customOperation).getRequiredAuths().get(0).getName(), equalTo(EXPECTED_ACCOUNT));
         assertThat(((CustomOperation) customOperation).getData(), equalTo(EXPECTED_DATA));
     }

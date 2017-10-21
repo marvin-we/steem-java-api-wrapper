@@ -14,11 +14,11 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
 import org.bitcoinj.core.VarInt;
-import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,8 +112,7 @@ public class SteemJUtils {
         try (ByteArrayOutputStream resultingByteRepresentation = new ByteArrayOutputStream()) {
             byte[] stringAsByteArray = string.getBytes(encodingCharset);
 
-            resultingByteRepresentation
-                    .write(transformLongToVarIntByteArray(Integer.toUnsignedLong(stringAsByteArray.length)));
+            resultingByteRepresentation.write(transformLongToVarIntByteArray(stringAsByteArray.length));
             resultingByteRepresentation.write(stringAsByteArray);
 
             return resultingByteRepresentation.toByteArray();

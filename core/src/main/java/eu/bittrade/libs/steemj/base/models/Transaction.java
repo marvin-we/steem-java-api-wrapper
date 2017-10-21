@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bitcoinj.core.Utils;
+import org.joou.UInteger;
+import org.joou.UShort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,24 +39,15 @@ public class Transaction implements Serializable {
     /**
      * The ref_block_num indicates a particular block in the past by referring
      * to the block number which has this number as the last two bytes.
-     * 
-     * The original type is Uint16, but we have to use int (32bit) as Java does
-     * not support unsigned types. For sure we will only use 2 bytes of this
-     * field when we serialize it.
      */
     @JsonProperty("ref_block_num")
-    protected short refBlockNum;
+    protected UShort refBlockNum;
     /**
      * The ref_block_prefix on the other hand is obtain from the block id of
      * that particular reference block.
-     * 
-     * The original type is Uint32, but we have to use long (64 bit) as Java
-     * does not support unsigned types. For sure we will only use 4 bytes of
-     * this field when we serialize it.
-     * 
      */
     @JsonProperty("ref_block_prefix")
-    protected int refBlockPrefix;
+    protected UInteger refBlockPrefix;
     @JsonProperty("expiration")
     protected transient TimePointSec expirationDate;
     @JsonProperty("operations")
@@ -67,10 +60,11 @@ public class Transaction implements Serializable {
      * Create a new transaction object.
      * 
      * @param refBlockNum
-     *            The reference block number (see {@link #setRefBlockNum(int)}).
+     *            The reference block number (see
+     *            {@link #setRefBlockNum(UShort)}).
      * @param refBlockPrefix
      *            The reference block index (see
-     *            {@link #setRefBlockPrefix(long)}).
+     *            {@link #setRefBlockPrefix(UInteger)}).
      * @param expirationDate
      *            Define until when the transaction has to be processed (see
      *            {@link #setExpirationDate(TimePointSec)}).
@@ -87,8 +81,8 @@ public class Transaction implements Serializable {
             @JsonProperty("expiration") TimePointSec expirationDate,
             @JsonProperty("operations") List<Operation> operations,
             @JsonProperty("extensions") List<FutureExtensions> extensions) {
-        this.setRefBlockNum(refBlockNum);
-        this.setRefBlockPrefix(refBlockPrefix);
+        this.setRefBlockNum(UShort.valueOf(refBlockNum));
+        this.setRefBlockPrefix(UInteger.valueOf(refBlockPrefix));
         this.setExpirationDate(expirationDate);
         this.setOperations(operations);
         this.setExtensions(extensions);
@@ -102,8 +96,8 @@ public class Transaction implements Serializable {
      * latest possible time.
      * 
      * @param blockId
-     *            The block reference (see {@link #setRefBlockNum(int)} and
-     *            {@link #setRefBlockPrefix(long)}).
+     *            The block reference (see {@link #setRefBlockNum(UShort)} and
+     *            {@link #setRefBlockPrefix(UInteger)}).
      * @param operations
      *            A list of operations to process within this Transaction (see
      *            {@link #setOperations(List)}).
@@ -112,8 +106,8 @@ public class Transaction implements Serializable {
      *            (see {@link #setExtensions(List)}).
      */
     public Transaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
-        this.setRefBlockNum(blockId.getNumberFromHash());
-        this.setRefBlockPrefix(blockId.getHashValue());
+        this.setRefBlockNum(UShort.valueOf(blockId.getNumberFromHash()));
+        this.setRefBlockPrefix(UInteger.valueOf(blockId.getHashValue()));
         this.setExpirationDate(new TimePointSec(
                 System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
         this.setOperations(operations);
@@ -158,8 +152,8 @@ public class Transaction implements Serializable {
      * 
      * @return The ref block number.
      */
-    public int getRefBlockNum() {
-        return Short.toUnsignedInt(refBlockNum);
+    public UShort getRefBlockNum() {
+        return refBlockNum;
     }
 
     /**
@@ -170,8 +164,8 @@ public class Transaction implements Serializable {
      * 
      * @return The ref block prefix.
      */
-    public long getRefBlockPrefix() {
-        return Integer.toUnsignedLong(refBlockPrefix);
+    public UInteger getRefBlockPrefix() {
+        return refBlockPrefix;
     }
 
     /**
@@ -209,8 +203,8 @@ public class Transaction implements Serializable {
      * @param refBlockNum
      *            The ref block number as int.
      */
-    public void setRefBlockNum(int refBlockNum) {
-        this.refBlockNum = (short) refBlockNum;
+    public void setRefBlockNum(UShort refBlockNum) {
+        this.refBlockNum = refBlockNum;
     }
 
     /**
@@ -221,8 +215,8 @@ public class Transaction implements Serializable {
      * @param refBlockPrefix
      *            The ref block prefix.
      */
-    public void setRefBlockPrefix(long refBlockPrefix) {
-        this.refBlockPrefix = (int) refBlockPrefix;
+    public void setRefBlockPrefix(UInteger refBlockPrefix) {
+        this.refBlockPrefix = refBlockPrefix;
     }
 
     /**
@@ -235,7 +229,7 @@ public class Transaction implements Serializable {
      *            The String representation of the ref block prefix.
      */
     public void setRefBlockPrefix(String refBlockPrefix) {
-        this.refBlockPrefix = (int) Utils.readUint32(Utils.HEX.decode(refBlockPrefix), 4);
+        this.refBlockPrefix = UInteger.valueOf(Utils.readUint32(Utils.HEX.decode(refBlockPrefix), 4));
     }
 
     /**

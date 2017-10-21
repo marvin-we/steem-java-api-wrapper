@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bitcoinj.core.Utils;
+import org.joou.UShort;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,7 +32,7 @@ public class CustomOperation extends Operation {
     private List<AccountName> requiredAuths;
     // Original type is uint16_t.
     @JsonProperty("id")
-    private short id;
+    private UShort id;
     // Original type is vector< char >.
     @JsonProperty("data")
     private String data;
@@ -105,8 +106,8 @@ public class CustomOperation extends Operation {
      * 
      * @return The id of this operation.
      */
-    public int getId() {
-        return Short.toUnsignedInt(this.id);
+    public UShort getId() {
+        return this.id;
     }
 
     /**
@@ -116,7 +117,7 @@ public class CustomOperation extends Operation {
      *            The id to set.
      */
     public void setId(int id) {
-        this.id = (short) id;
+        this.id = UShort.valueOf(id);
     }
 
     /**
@@ -152,7 +153,7 @@ public class CustomOperation extends Operation {
                 serializedCustomOperation.write(accountName.toByteArray());
             }
 
-            serializedCustomOperation.write(SteemJUtils.transformShortToByteArray(this.getId()));
+            serializedCustomOperation.write(SteemJUtils.transformShortToByteArray(this.getId().shortValue()));
 
             byte[] decodedData = Utils.HEX.decode(this.getData());
             serializedCustomOperation.write(SteemJUtils.transformIntToVarIntByteArray(decodedData.length));

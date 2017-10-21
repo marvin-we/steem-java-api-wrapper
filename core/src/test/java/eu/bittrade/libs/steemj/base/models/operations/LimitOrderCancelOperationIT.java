@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -45,7 +46,7 @@ public class LimitOrderCancelOperationIT extends BaseTransactionalIntegrationTes
     public static void prepareTestClass() throws Exception {
         setupIntegrationTestEnvironmentForTransactionalTests();
 
-        int orderId = 20000;
+        UInteger orderId = UInteger.valueOf(20000);
         AccountName owner = new AccountName("dez1337");
 
         LimitOrderCancelOperation limitOrderCancelOperation = new LimitOrderCancelOperation(owner, orderId);
@@ -68,7 +69,8 @@ public class LimitOrderCancelOperationIT extends BaseTransactionalIntegrationTes
 
         assertThat(voteOperation, instanceOf(LimitOrderCancelOperation.class));
         assertThat(((LimitOrderCancelOperation) voteOperation).getOwner().getName(), equalTo(EXPECTED_AUTHOR));
-        assertThat(((LimitOrderCancelOperation) voteOperation).getOrderId(), equalTo(EXPECTED_ORDER_ID));
+        assertThat(((LimitOrderCancelOperation) voteOperation).getOrderId(),
+                equalTo(UInteger.valueOf(EXPECTED_ORDER_ID)));
     }
 
     @Category({ IntegrationTest.class })

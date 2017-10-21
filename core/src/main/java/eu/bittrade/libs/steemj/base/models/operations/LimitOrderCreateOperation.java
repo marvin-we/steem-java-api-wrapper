@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -40,7 +41,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *            The account to create the operation for (see
      *            {@link #setOwner(AccountName)}).
      * @param orderId
-     *            The id of this order (see {@link #setOrderId(long)}).
+     *            The id of this order (see {@link #setOrderId(UInteger)}).
      * @param amountToSell
      *            The amount to sell (see {@link #setAmountToSell(Asset)}).
      * @param minToReceive
@@ -55,9 +56,10 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreateOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("orderid") long orderId,
-            @JsonProperty("amount_to_sell") Asset amountToSell, @JsonProperty("min_to_receive") Asset minToReceive,
-            @JsonProperty("fill_or_kill") Boolean fillOrKill, @JsonProperty("expiration") TimePointSec expirationDate) {
+    public LimitOrderCreateOperation(@JsonProperty("owner") AccountName owner,
+            @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") Asset amountToSell,
+            @JsonProperty("min_to_receive") Asset minToReceive, @JsonProperty("fill_or_kill") Boolean fillOrKill,
+            @JsonProperty("expiration") TimePointSec expirationDate) {
         super(false);
 
         this.setOwner(owner);
@@ -69,7 +71,8 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     }
 
     /**
-     * Like {@link #LimitOrderCreateOperation(AccountName, long, Asset, Asset)},
+     * Like
+     * {@link #LimitOrderCreateOperation(AccountName, UInteger, Asset, Asset)},
      * but this constructor applies default values for the
      * <code>fillOrKill</code> and the <code>expirationDate</code> parameters.
      * The <code>fillOrKill</code> parameter is set to false and the
@@ -80,7 +83,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *            The account to create the operation for (see
      *            {@link #setOwner(AccountName)}).
      * @param orderId
-     *            The id of this order (see {@link #setOrderId(long)}).
+     *            The id of this order (see {@link #setOrderId(UInteger)}).
      * @param amountToSell
      *            The amount to sell (see {@link #setAmountToSell(Asset)}).
      * @param minToReceive
@@ -89,12 +92,13 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreateOperation(AccountName owner, long orderId, Asset amountToSell, Asset minToReceive) {
+    public LimitOrderCreateOperation(AccountName owner, UInteger orderId, Asset amountToSell, Asset minToReceive) {
         this(owner, orderId, amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
     }
 
     /**
-     * Like {@link #LimitOrderCreateOperation(AccountName, long, Asset, Asset)},
+     * Like
+     * {@link #LimitOrderCreateOperation(AccountName, UInteger, Asset, Asset)},
      * but also sets the <code>orderId</code> to its default value (0).
      * 
      * @param owner
@@ -109,7 +113,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If one of the arguments does not fulfill the requirements.
      */
     public LimitOrderCreateOperation(AccountName owner, Asset amountToSell, Asset minToReceive) {
-        this(owner, 0L, amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
+        this(owner, UInteger.valueOf(0), amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
     }
 
     /**
@@ -143,8 +147,8 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * 
      * @return The id of this order.
      */
-    public int getOrderId() {
-        return (int) orderId;
+    public UInteger getOrderId() {
+        return orderId;
     }
 
     /**
@@ -154,7 +158,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @param orderId
      *            The id of this order.
      */
-    public void setOrderId(long orderId) {
+    public void setOrderId(UInteger orderId) {
         this.orderId = orderId;
     }
 
@@ -251,27 +255,14 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
         }
     }
 
-    /**
-     * TODO: Validate all parameter of this Operation type.
-     */
-    public void validate() {
-        /*
-         * FC_ASSERT( (is_asset_type(amount_to_sell, STEEM_SYMBOL) &&
-         * is_asset_type(min_to_receive, SBD_SYMBOL)) ||
-         * (is_asset_type(amount_to_sell, SBD_SYMBOL) &&
-         * is_asset_type(min_to_receive, STEEM_SYMBOL)),
-         * "Limit order must be for the STEEM:SBD market"); (amount_to_sell /
-         * min_to_receive).validate();
-         */
-    }
-
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedLimitOrderCreateOperation = new ByteArrayOutputStream()) {
             serializedLimitOrderCreateOperation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE_OPERATION.ordinal()));
             serializedLimitOrderCreateOperation.write(this.getOwner().toByteArray());
-            serializedLimitOrderCreateOperation.write(SteemJUtils.transformIntToByteArray(this.getOrderId()));
+            serializedLimitOrderCreateOperation
+                    .write(SteemJUtils.transformIntToByteArray(this.getOrderId().intValue()));
             serializedLimitOrderCreateOperation.write(this.getAmountToSell().toByteArray());
             serializedLimitOrderCreateOperation.write(this.getMinToReceive().toByteArray());
             serializedLimitOrderCreateOperation.write(SteemJUtils.transformBooleanToByteArray(this.getFillOrKill()));
@@ -293,5 +284,16 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
 
+        /**
+         * TODO: Validate all parameter of this Operation type.
+         */
+        /*
+         * FC_ASSERT( (is_asset_type(amount_to_sell, STEEM_SYMBOL) &&
+         * is_asset_type(min_to_receive, SBD_SYMBOL)) ||
+         * (is_asset_type(amount_to_sell, SBD_SYMBOL) &&
+         * is_asset_type(min_to_receive, STEEM_SYMBOL)),
+         * "Limit order must be for the STEEM:SBD market"); (amount_to_sell /
+         * min_to_receive).validate();
+         */
     }
 }

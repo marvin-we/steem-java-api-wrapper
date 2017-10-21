@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -47,7 +48,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The owner of the order that should be created (see
      *            {@link #setOwner(AccountName)}).
      * @param orderId
-     *            The order id for this order (see {@link #setOrderId(long)}).
+     *            The order id for this order (see
+     *            {@link #setOrderId(UInteger)}).
      * @param amountToSell
      *            The amount to sell (see {@link #setAmountToSell(Asset)}).
      * @param fillOrKill
@@ -63,9 +65,9 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
-    public LimitOrderCreate2Operation(@JsonProperty("owner") AccountName owner, @JsonProperty("orderid") long orderId,
-            @JsonProperty("amount_to_sell") Asset amountToSell, @JsonProperty("fill_or_kill") Boolean fillOrKill,
-            @JsonProperty("exchange_rate") Price exchangeRate,
+    public LimitOrderCreate2Operation(@JsonProperty("owner") AccountName owner,
+            @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") Asset amountToSell,
+            @JsonProperty("fill_or_kill") Boolean fillOrKill, @JsonProperty("exchange_rate") Price exchangeRate,
             @JsonProperty("expiration") TimePointSec expirationDate) {
         super(false);
 
@@ -79,7 +81,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
 
     /**
      * Like
-     * {@link #LimitOrderCreate2Operation(AccountName, long, Asset, Boolean, Price, TimePointSec)},
+     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, Asset, Boolean, Price, TimePointSec)},
      * but this constructor applies default values for the
      * <code>fillOrKill</code> and the <code>expirationDate</code> parameters.
      * The <code>fillOrKill</code> parameter is set to false and the
@@ -90,7 +92,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The owner of the order that should be created (see
      *            {@link #setOwner(AccountName)}).
      * @param orderId
-     *            The order id for this order (see {@link #setOrderId(long)}).
+     *            The order id for this order (see
+     *            {@link #setOrderId(UInteger)}).
      * @param amountToSell
      *            The amount to sell (see {@link #setAmountToSell(Asset)}).
      * @param exchangeRate
@@ -99,14 +102,14 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreate2Operation(AccountName owner, long orderId, Asset amountToSell, Price exchangeRate) {
+    public LimitOrderCreate2Operation(AccountName owner, UInteger orderId, Asset amountToSell, Price exchangeRate) {
         this(owner, orderId, amountToSell, false, exchangeRate, new TimePointSec(Long.MAX_VALUE));
     }
 
     /**
      * Like
-     * {@link #LimitOrderCreate2Operation(AccountName, long, Asset, Price)}, but
-     * also sets the <code>orderId</code> to its default value (0).
+     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, Asset, Price)},
+     * but also sets the <code>orderId</code> to its default value (0).
      * 
      * @param owner
      *            The owner of the order that should be created (see
@@ -120,7 +123,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If one of the arguments does not fulfill the requirements.
      */
     public LimitOrderCreate2Operation(AccountName owner, Asset amountToSell, Price exchangeRate) {
-        this(owner, 0, amountToSell, false, exchangeRate, new TimePointSec(Long.MAX_VALUE));
+        this(owner, UInteger.valueOf(0), amountToSell, false, exchangeRate, new TimePointSec(Long.MAX_VALUE));
     }
 
     /**
@@ -154,8 +157,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * 
      * @return The id of this order.
      */
-    public int getOrderId() {
-        return (int) orderId;
+    public UInteger getOrderId() {
+        return orderId;
     }
 
     /**
@@ -165,7 +168,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * @param orderId
      *            The id of this order.
      */
-    public void setOrderId(long orderId) {
+    public void setOrderId(UInteger orderId) {
         this.orderId = orderId;
     }
 
@@ -281,7 +284,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
             serializedLimitOrderCreate2Operation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE2_OPERATION.ordinal()));
             serializedLimitOrderCreate2Operation.write(this.getOwner().toByteArray());
-            serializedLimitOrderCreate2Operation.write(SteemJUtils.transformIntToByteArray(this.getOrderId()));
+            serializedLimitOrderCreate2Operation
+                    .write(SteemJUtils.transformIntToByteArray(this.getOrderId().intValue()));
             serializedLimitOrderCreate2Operation.write(this.getAmountToSell().toByteArray());
             serializedLimitOrderCreate2Operation.write(this.getExchangeRate().toByteArray());
             serializedLimitOrderCreate2Operation.write(SteemJUtils.transformBooleanToByteArray(this.getFillOrKill()));

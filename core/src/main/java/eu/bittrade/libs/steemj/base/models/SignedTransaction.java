@@ -14,6 +14,8 @@ import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.ECKey.ECDSASignature;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
+import org.joou.UInteger;
+import org.joou.UShort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,10 +60,10 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * Create a new signed transaction object.
      * 
      * @param refBlockNum
-     *            The reference block number (see {@link #setRefBlockNum(int)}).
+     *            The reference block number (see {@link #setRefBlockNum(UShort)}).
      * @param refBlockPrefix
      *            The reference block index (see
-     *            {@link #setRefBlockPrefix(long)}).
+     *            {@link #setRefBlockPrefix(UInteger)}).
      * @param expirationDate
      *            Define until when the transaction has to be processed (see
      *            {@link #setExpirationDate(TimePointSec)}).
@@ -86,8 +88,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * latest possible time.
      * 
      * @param blockId
-     *            The block reference (see {@link #setRefBlockNum(int)} and
-     *            {@link #setRefBlockPrefix(long)}).
+     *            The block reference (see {@link #setRefBlockNum(UShort)} and
+     *            {@link #setRefBlockPrefix(UInteger)}).
      * @param operations
      *            A list of operations to process within this Transaction (see
      *            {@link #setOperations(List)}).
@@ -327,8 +329,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
             if (chainId != null && !chainId.isEmpty()) {
                 serializedTransaction.write(Utils.HEX.decode(chainId));
             }
-            serializedTransaction.write(SteemJUtils.transformShortToByteArray(this.getRefBlockNum()));
-            serializedTransaction.write(SteemJUtils.transformIntToByteArray((int) this.getRefBlockPrefix()));
+            serializedTransaction.write(SteemJUtils.transformShortToByteArray(this.getRefBlockNum().shortValue()));
+            serializedTransaction.write(SteemJUtils.transformIntToByteArray(this.getRefBlockPrefix().intValue()));
             serializedTransaction.write(this.getExpirationDate().toByteArray());
 
             serializedTransaction.write(SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size()));

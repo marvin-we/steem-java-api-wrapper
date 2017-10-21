@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import java.math.BigInteger;
 
+import org.joou.ULong;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -55,7 +56,7 @@ public class PowOperationIT extends BaseTransactionalIntegrationTest {
 
         assertThat(powOperation, instanceOf(PowOperation.class));
         assertThat(((PowOperation) powOperation).getBlockId().getNumberFromHash(), equalTo(EXPECTED_BLOCK_ID));
-        assertThat(((PowOperation) powOperation).getNonce(), equalTo(EXPECTED_NONCE));
+        assertThat(((PowOperation) powOperation).getNonce(), equalTo(ULong.valueOf(EXPECTED_NONCE)));
         assertThat(((PowOperation) powOperation).getWorkerAccount(), equalTo(EXPECTED_WORKER_ACCOUNT));
         assertThat(((PowOperation) powOperation).getProperties().getMaximumBlockSize(),
                 equalTo(EXPECTED_MAXIMUM_BLOCK_SIZE));

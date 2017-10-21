@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public class LimitOrderCancelOperationTest extends BaseTransactionalUnitTest {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        long orderId = 492995L;
+        UInteger orderId = UInteger.valueOf(492995);
         AccountName owner = new AccountName("dez1337");
 
         limitOrderCancelOperation = new LimitOrderCancelOperation(owner, orderId);

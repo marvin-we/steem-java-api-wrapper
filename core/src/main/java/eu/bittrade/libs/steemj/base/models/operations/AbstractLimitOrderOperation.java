@@ -3,6 +3,8 @@ package eu.bittrade.libs.steemj.base.models.operations;
 import java.util.List;
 import java.util.Map;
 
+import org.joou.UInteger;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
@@ -18,10 +20,8 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 public abstract class AbstractLimitOrderOperation extends Operation {
     @JsonProperty("owner")
     protected AccountName owner;
-    // Type is uint32 in the original code, but has to be long here as Java does
-    // not support unsigned numbers accurate.
     @JsonProperty("orderid")
-    protected long orderId;
+    protected UInteger orderId;
 
     /**
      * Create a new Operation object by providing the operation type.
@@ -55,7 +55,7 @@ public abstract class AbstractLimitOrderOperation extends Operation {
      * 
      * @return The id of this order.
      */
-    public abstract int getOrderId();
+    public abstract UInteger getOrderId();
 
     /**
      * Set the id of this order. The only limitation for this id is that it has
@@ -64,7 +64,7 @@ public abstract class AbstractLimitOrderOperation extends Operation {
      * @param orderId
      *            The id of this order.
      */
-    public abstract void setOrderId(long orderId);
+    public abstract void setOrderId(UInteger orderId);
 
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(

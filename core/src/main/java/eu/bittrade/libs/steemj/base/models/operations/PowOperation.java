@@ -1,10 +1,10 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.ULong;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,9 +27,8 @@ public class PowOperation extends Operation {
     private AccountName workerAccount;
     @JsonProperty("block_id")
     private Checksum blockId;
-    // Original type is uint64_t.
     @JsonProperty("nonce")
-    private long nonce;
+    private ULong nonce;
     @JsonProperty("work")
     private Pow work;
     @JsonProperty("props")
@@ -41,7 +40,7 @@ public class PowOperation extends Operation {
     public PowOperation() {
         super(false);
         // Set default values:
-        this.setNonce(BigInteger.valueOf(0));
+        this.setNonce(ULong.valueOf(0));
     }
 
     /**
@@ -80,16 +79,16 @@ public class PowOperation extends Operation {
     /**
      * @return the nonce
      */
-    public BigInteger getNonce() {
-        return new BigInteger(Long.toUnsignedString(this.nonce));
+    public ULong getNonce() {
+        return this.nonce;
     }
 
     /**
      * @param nonce
      *            the nonce to set
      */
-    public void setNonce(BigInteger nonce) {
-        this.nonce = Long.parseUnsignedLong(nonce.toString());
+    public void setNonce(ULong nonce) {
+        this.nonce = nonce;
     }
 
     /**

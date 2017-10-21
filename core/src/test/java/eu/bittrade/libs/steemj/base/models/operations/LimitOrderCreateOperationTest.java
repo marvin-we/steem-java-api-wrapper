@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Utils;
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ public class LimitOrderCreateOperationTest extends BaseTransactionalUnitTest {
         minToReceive.setAmount(10L);
         minToReceive.setSymbol(AssetSymbolType.STEEM);
 
-        long orderId = 492995;
+        UInteger orderId = UInteger.valueOf(492995);
         AccountName owner = new AccountName("dez1337");
 
         limitOrderCreateOperation = new LimitOrderCreateOperation(owner, orderId, amountToSell, minToReceive,
