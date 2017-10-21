@@ -11,6 +11,7 @@ This project allows you to easily access data stored in the Steem blockchain. Th
 - Or create an [Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues) here on GitHub
 
 # Contributors
+- [ray66rus](https://steemit.com/@ray66rus) is testing SteemJ for Android and provided a lot of improvements.
 - [inertia](https://steemit.com/@inertia) provided a bunch of unit tests to this project.
 - An article from [Kyle](https://steemit.com/@klye) has been used to improve the documentation of the methods.
 - The [guide](https://steemit.com/steem/@xeroc/steem-transaction-signing-in-a-nutshell) from [xeroc](https://steemit.com/@xeroc) shows how to create and sign transactions.
