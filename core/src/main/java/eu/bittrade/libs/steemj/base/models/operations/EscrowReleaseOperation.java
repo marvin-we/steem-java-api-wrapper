@@ -3,6 +3,8 @@ package eu.bittrade.libs.steemj.base.models.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -13,8 +15,10 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -200,7 +204,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      * 
      * @return The account that is attempting to release the funds.
      */
-    @Override
     public AccountName getWho() {
         return who;
     }
@@ -345,6 +348,12 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getWho(), PrivateKeyType.ACTIVE);
     }
 
     @Override

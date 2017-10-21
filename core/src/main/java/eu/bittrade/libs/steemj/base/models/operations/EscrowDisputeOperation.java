@@ -3,6 +3,8 @@ package eu.bittrade.libs.steemj.base.models.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -11,8 +13,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -91,7 +95,6 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
      * 
      * @return The account which approved this operation.
      */
-    @Override
     public AccountName getWho() {
         return who;
     }
@@ -111,13 +114,6 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
         }
 
         this.who = who;
-    }
-
-    /**
-     * TODO: Validate all parameter of this Operation type.
-     */
-    public void validate() {
-        // FC_ASSERT( who == from || who == to, "who must be from or to" );
     }
 
     @Override
@@ -144,8 +140,17 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
     }
 
     @Override
+    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
+            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getWho(), PrivateKeyType.ACTIVE);
+    }
+
+    @Override
     public void validate(ValidationType validationType) {
         // TODO Auto-generated method stub
-
+        /**
+         * TODO: Validate all parameter of this Operation type.
+         */
+        // FC_ASSERT( who == from || who == to, "who must be from or to" );
     }
 }

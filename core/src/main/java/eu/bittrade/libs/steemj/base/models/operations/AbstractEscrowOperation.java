@@ -49,15 +49,6 @@ abstract class AbstractEscrowOperation extends Operation {
     }
 
     /**
-     * Get the account who wants to make an operation.
-     *
-     * @return The account who wants to make an operation.
-     */
-    public AccountName getWho() {
-        return getFrom();
-    }
-
-    /**
      * Set the account who wants to transfer the fund to the to account.
      * <b>Notice:</b> The private active key of this account needs to be stored
      * in the key storage.
@@ -147,6 +138,6 @@ abstract class AbstractEscrowOperation extends Operation {
     @Override
     public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
             Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
-        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getWho(), PrivateKeyType.ACTIVE);
+        return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getFrom(), PrivateKeyType.ACTIVE);
     }
 }
