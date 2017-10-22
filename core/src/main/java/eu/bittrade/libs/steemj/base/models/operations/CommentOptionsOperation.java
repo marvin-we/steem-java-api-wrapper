@@ -404,10 +404,11 @@ public class CommentOptionsOperation extends Operation {
                         "The percent of steem dollars can't be higher than 10000 which is equivalent to 100%.");
             }
 
-            for (CommentOptionsExtension commentOptionsExtension : extensions) {
-                commentOptionsExtension.validate(validationType);
+            if (extensions != null) {
+                for (CommentOptionsExtension commentOptionsExtension : extensions) {
+                    commentOptionsExtension.validate(validationType);
+                }
             }
-
         }
     }
 }
