@@ -34,9 +34,9 @@ public class EscrowDisputeOperationIT extends BaseTransactionalIntegrationTest {
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
-     * "from" account. If no active key is provided or the active key is not valid an
-     * Exception will be thrown. The private key is passed as a -D parameter
-     * during test execution.
+     * "from" account. If no active key is provided or the active key is not
+     * valid an Exception will be thrown. The private key is passed as a -D
+     * parameter during test execution.
      * 
      * @throws Exception
      *             If something went wrong.

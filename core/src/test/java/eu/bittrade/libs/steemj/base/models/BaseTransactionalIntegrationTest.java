@@ -1,8 +1,5 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import org.joou.UInteger;
-import org.joou.UShort;
-
 import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -25,8 +22,8 @@ public abstract class BaseTransactionalIntegrationTest extends BaseIntegrationTe
 
         signedTransaction = new SignedTransaction();
         signedTransaction.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
-        signedTransaction.setRefBlockNum(UShort.valueOf(REF_BLOCK_NUM));
-        signedTransaction.setRefBlockPrefix(UInteger.valueOf(REF_BLOCK_PREFIX));
+        signedTransaction.setRefBlockNum(REF_BLOCK_NUM);
+        signedTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
         // Add extensions when supported.
         // signedTransaction.setExtensions(extensions);
     }

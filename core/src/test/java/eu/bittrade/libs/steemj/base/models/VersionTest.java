@@ -1,8 +1,9 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+
+import org.junit.Test;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

@@ -2,9 +2,6 @@ package eu.bittrade.libs.steemj.base.models;
 
 import java.io.UnsupportedEncodingException;
 
-import org.joou.UInteger;
-import org.joou.UShort;
-
 import eu.bittrade.libs.steemj.BaseUnitTest;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -26,8 +23,8 @@ public abstract class BaseTransactionalUnitTest extends BaseUnitTest {
 
         signedTransaction = new SignedTransaction();
         signedTransaction.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
-        signedTransaction.setRefBlockNum(UShort.valueOf(REF_BLOCK_NUM));
-        signedTransaction.setRefBlockPrefix(UInteger.valueOf(REF_BLOCK_PREFIX));
+        signedTransaction.setRefBlockNum(REF_BLOCK_NUM);
+        signedTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
         // Add extensions when supported.
         // signedTransaction.setExtensions(extensions);
     }

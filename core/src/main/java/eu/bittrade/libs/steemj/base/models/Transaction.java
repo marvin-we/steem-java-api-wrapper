@@ -76,21 +76,21 @@ public class Transaction implements Serializable {
      *            (see {@link #setExtensions(List)}).
      */
     @JsonCreator
-    public Transaction(@JsonProperty("ref_block_num") int refBlockNum,
-            @JsonProperty("ref_block_prefix") long refBlockPrefix,
+    public Transaction(@JsonProperty("ref_block_num") UShort refBlockNum,
+            @JsonProperty("ref_block_prefix") UInteger refBlockPrefix,
             @JsonProperty("expiration") TimePointSec expirationDate,
             @JsonProperty("operations") List<Operation> operations,
             @JsonProperty("extensions") List<FutureExtensions> extensions) {
-        this.setRefBlockNum(UShort.valueOf(refBlockNum));
-        this.setRefBlockPrefix(UInteger.valueOf(refBlockPrefix));
+        this.setRefBlockNum(refBlockNum);
+        this.setRefBlockPrefix(refBlockPrefix);
         this.setExpirationDate(expirationDate);
         this.setOperations(operations);
         this.setExtensions(extensions);
     }
 
     /**
-     * Like {@link #Transaction(int, long, TimePointSec, List, List)}, but
-     * allows you to provide a
+     * Like {@link #Transaction(UShort, UInteger, TimePointSec, List, List)},
+     * but allows you to provide a
      * {@link eu.bittrade.libs.steemj.base.models.BlockId} object as the
      * reference block and will also set the <code>expirationDate</code> to the
      * latest possible time.
@@ -273,9 +273,9 @@ public class Transaction implements Serializable {
      * 
      * @return All required authorities and private key types.
      */
-    protected Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities() {
+    protected Map<SignatureObject, PrivateKeyType> getRequiredAuthorities() {
 
-        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = new HashMap<>();
+        Map<SignatureObject, PrivateKeyType> requiredAuthorities = new HashMap<>();
 
         // Iterate over all Operations and collect the requried authorities.
         for (Operation operation : this.getOperations()) {
@@ -289,7 +289,7 @@ public class Transaction implements Serializable {
      * Validate if all fields of this transaction object have acceptable values.
      * 
      * @throws SteemInvalidTransactionException
-     *             In case a field does not fullfil the requirements.
+     *             In case a field does not fulfill the requirements.
      */
     public void validate() throws SteemInvalidTransactionException {
         if (this.getExpirationDate().getDateTimeAsTimestamp() > (new Timestamp(System.currentTimeMillis())).getTime()
@@ -307,19 +307,18 @@ public class Transaction implements Serializable {
 
         // Posting authority cannot be mixed with active authority in same
         // transaction
-        for (Entry<SignatureObject, List<PrivateKeyType>> requiredAuthorities : getRequiredAuthorities().entrySet()) {
-            for (PrivateKeyType keyType : requiredAuthorities.getValue()) {
-                if (keyType.equals(PrivateKeyType.POSTING) && !isActiveKeyRequired && !isOwnerKeyRequired) {
-                    isPostingKeyRequired = true;
-                } else if (keyType.equals(PrivateKeyType.ACTIVE) && !isPostingKeyRequired) {
-                    isActiveKeyRequired = true;
-                } else if (keyType.equals(PrivateKeyType.OWNER) && !isPostingKeyRequired) {
-                    isOwnerKeyRequired = true;
-                } else {
-                    throw new SteemInvalidTransactionException(
-                            "Steem does not allow to process Operation requiring a POSTING "
-                                    + "key together with Operations requireing an ACTIVE or OWNER key.");
-                }
+        for (Entry<SignatureObject, PrivateKeyType> requiredAuthorities : getRequiredAuthorities().entrySet()) {
+            PrivateKeyType keyType = requiredAuthorities.getValue();
+            if (keyType.equals(PrivateKeyType.POSTING) && !isActiveKeyRequired && !isOwnerKeyRequired) {
+                isPostingKeyRequired = true;
+            } else if (keyType.equals(PrivateKeyType.ACTIVE) && !isPostingKeyRequired) {
+                isActiveKeyRequired = true;
+            } else if (keyType.equals(PrivateKeyType.OWNER) && !isPostingKeyRequired) {
+                isOwnerKeyRequired = true;
+            } else {
+                throw new SteemInvalidTransactionException(
+                        "Steem does not allow to process Operation requiring a POSTING "
+                                + "key together with Operations requireing an ACTIVE or OWNER key.");
             }
         }
     }

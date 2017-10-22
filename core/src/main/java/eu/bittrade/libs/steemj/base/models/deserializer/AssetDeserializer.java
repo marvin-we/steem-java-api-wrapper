@@ -15,8 +15,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
  */
 public class AssetDeserializer extends JsonDeserializer<Asset> {
     @Override
-    public Asset deserialize(JsonParser jasonParser, DeserializationContext deserializationContext)
-            throws IOException {
+    public Asset deserialize(JsonParser jasonParser, DeserializationContext deserializationContext) throws IOException {
         JsonToken currentToken = jasonParser.currentToken();
         if (currentToken != null && JsonToken.VALUE_STRING.equals(currentToken)) {
             String[] assetFields = jasonParser.getText().split(" ");

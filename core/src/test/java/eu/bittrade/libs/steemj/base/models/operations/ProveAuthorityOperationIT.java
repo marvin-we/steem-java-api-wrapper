@@ -21,9 +21,9 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest {
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcebc80457010b0764657a313333371c68747470733a2f2f737465656d69742e636f6d2f4064657a31333"
-            + "33702e5127bd7d41f01d9981a5a2c2524a60706040bbec8838a39719550ea25071000881300000000000003535445454d0000000001000000010000000000000003535445454"
-            + "d000000011c2125f9ad6d2a0a9b5f75ee042f71d44029f361df17be8da017f784b75ebe33152404af3e11c1e2ed853e0e85a58fc9cea4cc9f2d17803766edd5d917a9b21081";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcefc8045702170764657a3133333700170764657a313333370100"
+            + "011c4c882be373ff6a4a3d06bd0da932b981ac46bfc4bde38284943dc2685cc2c00a5e8196f22c5b5704cf4fd963cd3a12347306bf9ea"
+            + "76e23f99c06ab74c3b8fe51";
 
     /**
      * <b>Attention:</b> This test class requires a valid posting key of the

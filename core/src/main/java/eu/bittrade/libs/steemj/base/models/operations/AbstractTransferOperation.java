@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
 import java.security.InvalidParameterException;
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -120,8 +119,8 @@ abstract class AbstractTransferOperation extends Operation {
     }
 
     @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+    public Map<SignatureObject, PrivateKeyType> getRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getFrom(), PrivateKeyType.ACTIVE);
     }
 

@@ -1,6 +1,5 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -133,8 +132,8 @@ public class PowOperation extends Operation {
     }
 
     @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+    public Map<SignatureObject, PrivateKeyType> getRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         // TODO: return mergeRequiredAuthorities(requiredAuthoritiesBase,
         // this.getOwner(), PrivateKeyType.ACTIVE);
         return requiredAuthoritiesBase;

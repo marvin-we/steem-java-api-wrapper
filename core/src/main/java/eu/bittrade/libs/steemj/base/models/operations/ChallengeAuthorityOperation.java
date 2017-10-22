@@ -3,7 +3,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -169,8 +168,8 @@ public class ChallengeAuthorityOperation extends Operation {
     }
 
     @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+    public Map<SignatureObject, PrivateKeyType> getRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         if (this.getRequireOwner()) {
             return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getChallenger(), PrivateKeyType.OWNER);
         } else {

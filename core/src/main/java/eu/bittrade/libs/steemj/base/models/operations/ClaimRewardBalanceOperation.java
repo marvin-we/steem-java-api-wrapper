@@ -207,8 +207,8 @@ public class ClaimRewardBalanceOperation extends Operation {
     }
 
     @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+    public Map<SignatureObject, PrivateKeyType> getRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getAccount(), PrivateKeyType.POSTING);
     }
 

@@ -54,31 +54,41 @@ public class PublicKey implements ByteTransformable {
         // As this method is also used for parsing different operations where
         // the field could be empty we sadly have to handle "null" cases here.
         if (address != null && !"".equals(address)) {
-            // We expect the first three chars to be the prefix (STM). The rest
-            // of the String contains the base58 encoded public key and its
-            // checksum.
-            this.prefix = address.substring(0, 3);
-            byte[] decodedAddress = Base58.decode(address.substring(3, address.length()));
-            // As sha256 is used for Bitcoin and ripemd160 for Steem, we can't
-            // use Bitcoinjs Base58.decodeChecked here and have to do all stuff
-            // on our own.
-            byte[] potentialPublicKey = Arrays.copyOfRange(decodedAddress, 0, decodedAddress.length - CHECKSUM_BYTES);
-            byte[] expectedChecksum = Arrays.copyOfRange(decodedAddress, decodedAddress.length - CHECKSUM_BYTES,
-                    decodedAddress.length);
+            if (address.length() != 53) {
+                LOGGER.warn("The provided address '{}' has an invalid length and will not be set.", address);
+                this.setPublicKey(null);
+            } else {
+                // We expect the first three chars to be the prefix (STM). The
+                // rest
+                // of the String contains the base58 encoded public key and its
+                // checksum.
+                this.prefix = address.substring(0, 3);
+                byte[] decodedAddress = Base58.decode(address.substring(3, address.length()));
+                // As sha256 is used for Bitcoin and ripemd160 for Steem, we
+                // can't
+                // use Bitcoinjs Base58.decodeChecked here and have to do all
+                // stuff
+                // on our own.
+                byte[] potentialPublicKey = Arrays.copyOfRange(decodedAddress, 0,
+                        decodedAddress.length - CHECKSUM_BYTES);
+                byte[] expectedChecksum = Arrays.copyOfRange(decodedAddress, decodedAddress.length - CHECKSUM_BYTES,
+                        decodedAddress.length);
 
-            byte[] actualChecksum = calculateChecksum(potentialPublicKey);
+                byte[] actualChecksum = calculateChecksum(potentialPublicKey);
 
-            // And compare them.
-            for (int i = 0; i < expectedChecksum.length; i++) {
-                if (expectedChecksum[i] != actualChecksum[i]) {
-                    throw new AddressFormatException("Checksum does not match.");
+                // And compare them.
+                for (int i = 0; i < expectedChecksum.length; i++) {
+                    if (expectedChecksum[i] != actualChecksum[i]) {
+                        throw new AddressFormatException("Checksum does not match.");
+                    }
                 }
-            }
 
-            this.setPublicKey(ECKey.fromPublicOnly(potentialPublicKey));
+                this.setPublicKey(ECKey.fromPublicOnly(potentialPublicKey));
+            }
         } else {
-            LOGGER.debug(
+            LOGGER.warn(
                     "An empty address has been provided. This can cause some problems if you plan to broadcast this key.");
+            this.setPublicKey(null);
         }
     }
 

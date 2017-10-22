@@ -1,6 +1,5 @@
 package eu.bittrade.libs.steemj.base.models.operations.virtual;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -93,8 +92,8 @@ public class CurationRewardOperation extends Operation {
     }
 
     @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+    public Map<SignatureObject, PrivateKeyType> getRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         // A virtual operation can't be created by the user, therefore it also
         // does not require any authority.
         return null;

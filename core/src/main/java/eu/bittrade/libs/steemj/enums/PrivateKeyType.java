@@ -3,6 +3,11 @@ package eu.bittrade.libs.steemj.enums;
 /**
  * An enumeration for all existing private key types.
  * 
+ * <b>Attention</b>
+ * 
+ * Changing the order of the private key types will result in an unexpected
+ * behavior.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public enum PrivateKeyType {

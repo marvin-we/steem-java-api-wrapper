@@ -46,8 +46,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * This constructor is only used to create the POJO from a JSON response.
      */
     @JsonCreator
-    private SignedTransaction(@JsonProperty("ref_block_num") int refBlockNum,
-            @JsonProperty("ref_block_prefix") long refBlockPrefix,
+    private SignedTransaction(@JsonProperty("ref_block_num") UShort refBlockNum,
+            @JsonProperty("ref_block_prefix") UInteger refBlockPrefix,
             @JsonProperty("expiration") TimePointSec expirationDate,
             @JsonProperty("operations") List<Operation> operations,
             @JsonProperty("extensions") List<FutureExtensions> extensions,
@@ -75,15 +75,16 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *            Extensions are currently not supported and will be ignored
      *            (see {@link #setExtensions(List)}).
      */
-    public SignedTransaction(int refBlockNum, long refBlockPrefix, TimePointSec expirationDate,
+    public SignedTransaction(UShort refBlockNum, UInteger refBlockPrefix, TimePointSec expirationDate,
             List<Operation> operations, List<FutureExtensions> extensions) {
         super(refBlockNum, refBlockPrefix, expirationDate, operations, extensions);
         this.signatures = new ArrayList<>();
     }
 
     /**
-     * Like {@link #SignedTransaction(int, long, TimePointSec, List, List)}, but
-     * allows you to provide a
+     * Like
+     * {@link #SignedTransaction(UShort, UInteger, TimePointSec, List, List)},
+     * but allows you to provide a
      * {@link eu.bittrade.libs.steemj.base.models.BlockId} object as the
      * reference block and will also set the <code>expirationDate</code> to the
      * latest possible time.
@@ -236,21 +237,12 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      */
     protected List<ECKey> getRequiredSignatureKeys() throws SteemInvalidTransactionException {
         List<ECKey> requiredSignatures = new ArrayList<>();
-        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = getRequiredAuthorities();
+        Map<SignatureObject, PrivateKeyType> requiredAuthorities = getRequiredAuthorities();
 
-        for (Entry<SignatureObject, List<PrivateKeyType>> requiredAuthority : requiredAuthorities.entrySet()) {
+        for (Entry<SignatureObject, PrivateKeyType> requiredAuthority : requiredAuthorities.entrySet()) {
             if (requiredAuthority.getKey() instanceof AccountName) {
-                for (PrivateKeyType requiredKeyType : requiredAuthority.getValue()) {
-                    /*
-                     * TODO: Minimize the required signatures. If the
-                     * transaction requires the owner and the active key the
-                     * Steem Node only allows the owner key signature. Therefore
-                     * the following code replaces 'lower' keys if a higher key
-                     * is required too.
-                     */
-                    requiredSignatures = getRequiredSignatureKeyForAccount(requiredSignatures,
-                            (AccountName) requiredAuthority.getKey(), requiredKeyType);
-                }
+                requiredSignatures = getRequiredSignatureKeyForAccount(requiredSignatures,
+                        (AccountName) requiredAuthority.getKey(), requiredAuthority.getValue());
             } else if (requiredAuthority.getKey() instanceof Authority) {
                 // TODO: Support authorities.
             } else {

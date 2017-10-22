@@ -1,6 +1,5 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import java.util.List;
 import java.util.Map;
 
 import org.joou.UInteger;
@@ -67,8 +66,8 @@ public abstract class AbstractLimitOrderOperation extends Operation {
     public abstract void setOrderId(UInteger orderId);
 
     @Override
-    public Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase) {
+    public Map<SignatureObject, PrivateKeyType> getRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         return mergeRequiredAuthorities(requiredAuthoritiesBase, this.getOwner(), PrivateKeyType.ACTIVE);
     }
 }

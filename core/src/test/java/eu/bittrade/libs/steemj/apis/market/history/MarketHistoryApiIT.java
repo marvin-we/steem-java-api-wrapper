@@ -17,7 +17,6 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseIntegrationTest;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi;
 import eu.bittrade.libs.steemj.apis.market.history.model.Bucket;
 import eu.bittrade.libs.steemj.apis.market.history.model.MarketTicker;
 import eu.bittrade.libs.steemj.apis.market.history.model.MarketTrade;

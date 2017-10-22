@@ -1,6 +1,5 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -136,8 +135,8 @@ public abstract class Operation implements ByteTransformable, Validatable {
      * 
      * @return A map of required authorities.
      */
-    public abstract Map<SignatureObject, List<PrivateKeyType>> getRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase);
+    public abstract Map<SignatureObject, PrivateKeyType> getRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase);
 
     /**
      * Use this helper method to merge a single <code>accountName</code> into
@@ -154,20 +153,22 @@ public abstract class Operation implements ByteTransformable, Validatable {
      * @return The merged set of signature objects and required private key
      *         types.
      */
-    protected Map<SignatureObject, List<PrivateKeyType>> mergeRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase, SignatureObject signatureObject,
+    protected Map<SignatureObject, PrivateKeyType> mergeRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase, SignatureObject signatureObject,
             PrivateKeyType privateKeyType) {
-        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
+        Map<SignatureObject, PrivateKeyType> requiredAuthorities = requiredAuthoritiesBase;
         if (requiredAuthorities == null) {
             requiredAuthorities = new HashMap<>();
         } else if (requiredAuthorities.containsKey(signatureObject)
                 && requiredAuthorities.get(signatureObject) != null) {
-            requiredAuthorities.get(signatureObject).add(privateKeyType);
+            // Only the most powerful key is needed to sign the transaction, so
+            // if there is already the same key type or a higher key type there
+            // is no need to change it.
+            if (requiredAuthorities.get(signatureObject).ordinal() > privateKeyType.ordinal()) {
+                requiredAuthorities.put(signatureObject, privateKeyType);
+            }
         } else {
-            ArrayList<PrivateKeyType> requiredKeyType = new ArrayList<>();
-            requiredKeyType.add(privateKeyType);
-
-            requiredAuthorities.put(signatureObject, requiredKeyType);
+            requiredAuthorities.put(signatureObject, privateKeyType);
         }
 
         return requiredAuthorities;
@@ -188,10 +189,10 @@ public abstract class Operation implements ByteTransformable, Validatable {
      * @return The merged set of signature objects and required private key
      *         types.
      */
-    protected Map<SignatureObject, List<PrivateKeyType>> mergeRequiredAuthorities(
-            Map<SignatureObject, List<PrivateKeyType>> requiredAuthoritiesBase,
+    protected Map<SignatureObject, PrivateKeyType> mergeRequiredAuthorities(
+            Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase,
             List<? extends SignatureObject> signatureObjects, PrivateKeyType privateKeyType) {
-        Map<SignatureObject, List<PrivateKeyType>> requiredAuthorities = requiredAuthoritiesBase;
+        Map<SignatureObject, PrivateKeyType> requiredAuthorities = requiredAuthoritiesBase;
 
         for (SignatureObject signatureObject : signatureObjects) {
             requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, signatureObject, privateKeyType);
