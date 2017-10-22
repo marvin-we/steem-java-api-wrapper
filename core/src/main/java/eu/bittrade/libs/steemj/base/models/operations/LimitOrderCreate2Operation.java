@@ -313,9 +313,9 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
                 && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
             if (!amountToSell.getSymbol().equals(this.getExchangeRate().getBase().getSymbol())) {
                 throw new InvalidParameterException("The sell asset must be the base of the price.");
-            } else if (this.getExchangeRate().multiply(amountToSell).getAmount() <= 0) {
+            } else if (exchangeRate.multiply(amountToSell).getAmount() <= 0) {
                 throw new InvalidParameterException("The Amount to sell cannot round to 0 when traded.");
-            } else if (((amountToSell.getSymbol().equals(AssetSymbolType.STEEM)
+            } else if (!((amountToSell.getSymbol().equals(AssetSymbolType.STEEM)
                     && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.SBD))
                     || (amountToSell.getSymbol().equals(AssetSymbolType.SBD)
                             && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.STEEM)))) {

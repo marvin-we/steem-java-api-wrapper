@@ -177,8 +177,7 @@ public class SetResetAccountOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
-                && currentResetAccount.equals(this.getResetAccount())) {
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType) && currentResetAccount.equals(resetAccount)) {
             throw new InvalidParameterException(
                     "The current reset account can't be set to the same account as the new reset account.");
         }

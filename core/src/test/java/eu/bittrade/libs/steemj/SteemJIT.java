@@ -231,9 +231,9 @@ public class SteemJIT extends BaseIntegrationTest {
         final Asset base = steemJ.getCurrentMedianHistoryPrice().getBase();
         final Asset quote = steemJ.getCurrentMedianHistoryPrice().getQuote();
 
-        assertThat("expect current median price greater than zero", base.getAmount(), greaterThan(0.00));
+        assertThat("expect current median price greater than zero", base.getAmount(), greaterThan(0L));
         assertEquals("expect current median price symbol", AssetSymbolType.SBD, base.getSymbol());
-        assertThat("expect current median price greater than zero", quote.getAmount(), greaterThan(0.00));
+        assertThat("expect current median price greater than zero", quote.getAmount(), greaterThan(0L));
         assertEquals("expect current median price symbol", AssetSymbolType.STEEM, quote.getSymbol());
     }
 
@@ -551,7 +551,7 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetFeedHistory() throws Exception {
         final FeedHistory feedHistory = steemJ.getFeedHistory();
 
-        assertThat(feedHistory.getCurrentPrice().getBase().getAmount(), greaterThan(1.0));
+        assertThat(feedHistory.getCurrentPrice().getBase().getAmount(), greaterThan(1000L));
         assertThat(feedHistory.getPriceHistory().size(), greaterThan(1));
     }
 
@@ -638,8 +638,10 @@ public class SteemJIT extends BaseIntegrationTest {
                 "COLORER BICORN KASBEKE FAERIE LOCHIA GOMUTI SOVKHOZ Y GERMAL AUNTIE PERFUMY TIME FEATURE GANGAN CELEMIN MATZO",
                 0).getPrivateKey());
 
-        assertThat(SteemJ.getPrivateKeyFromPassword(new AccountName("dez1337"), PrivateKeyType.POSTING, masterPassword)
-                .getLeft().getAddressFromPublicKey(), equalTo("STM7UCTzg9orXeWKnHpMr9viwzMBRy1pnxC2nMHNDEkZnBbiSKJDD"));
+        assertThat(
+                SteemJ.getPrivateKeyFromPassword(new AccountName("dez1337"), PrivateKeyType.POSTING, masterPassword)
+                        .getLeft().getAddressFromPublicKey(),
+                equalTo("STM7UCTzg9orXeWKnHpMr9viwzMBRy1pnxC2nMHNDEkZnBbiSKJDD"));
         assertThat(SteemJ.getPrivateKeyFromPassword(new AccountName("dez1337"), PrivateKeyType.POSTING, masterPassword)
                 .getRight(), equalTo("5KHroQR6SU3oquhirVKvRpDUYGeuXEksZfqkaqU5KEFSypFHXvU"));
     }

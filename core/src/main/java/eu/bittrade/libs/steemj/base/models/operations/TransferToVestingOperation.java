@@ -11,7 +11,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -125,5 +127,14 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    @Override
+    public void validate(ValidationType validationType) {
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
+                && (!amount.getSymbol().equals(AssetSymbolType.STEEM))) {
+            throw new InvalidParameterException("The amount must be of type STEEM.");
+        }
     }
 }

@@ -77,7 +77,7 @@ public class DelegateVestingSharesOperationIT extends BaseTransactionalIntegrati
                 equalTo(EXPECTED_FROM_ACCOUNT));
         assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getDelegatee().getName(),
                 equalTo(EXPECTED_TO_ACCOUNT));
-        assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getVestingShares().getAmount(),
+        assertThat(((DelegateVestingSharesOperation) delegateVestingSharesOperation).getVestingShares().toReal(),
                 equalTo(EXPECTED_AMOUNT));
     }
 

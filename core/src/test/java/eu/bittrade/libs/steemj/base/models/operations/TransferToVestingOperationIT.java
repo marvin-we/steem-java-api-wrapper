@@ -76,7 +76,7 @@ public class TransferToVestingOperationIT extends BaseTransactionalIntegrationTe
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
 
         assertThat(transferToVestingOperation, instanceOf(TransferToVestingOperation.class));
-        assertThat(((TransferToVestingOperation) transferToVestingOperation).getAmount().getAmount(),
+        assertThat(((TransferToVestingOperation) transferToVestingOperation).getAmount().toReal(),
                 equalTo(EXPECTED_AMOUNT));
         assertThat(((TransferToVestingOperation) transferToVestingOperation).getFrom().getName(),
                 equalTo(EXPECTED_FROM));

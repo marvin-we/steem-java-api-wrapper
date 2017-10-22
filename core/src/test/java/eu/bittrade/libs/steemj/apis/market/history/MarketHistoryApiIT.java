@@ -68,7 +68,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
         assertThat(marketTicker.getLowestAsk(), greaterThan(0.0));
         assertThat(marketTicker.getPercentChange(), allOf(greaterThan(-100.0), lessThan(100.0)));
         assertThat(marketTicker.getSbdVolume().getSymbol(), equalTo(AssetSymbolType.SBD));
-        assertThat(marketTicker.getSteemVolume().getAmount(), greaterThan(1.0));
+        assertThat(marketTicker.getSteemVolume().toReal(), greaterThan(1.0));
     }
 
     /**
@@ -84,9 +84,9 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
     public void testGetVolume() throws SteemCommunicationException {
         MarketVolume marketVolume = MarketHistoryApi.getVolume(COMMUNICATION_HANDLER);
 
-        assertThat(marketVolume.getSbdVolume().getAmount(), greaterThan(0.0));
+        assertThat(marketVolume.getSbdVolume().toReal(), greaterThan(0.0));
         assertThat(marketVolume.getSbdVolume().getSymbol(), equalTo(AssetSymbolType.SBD));
-        assertThat(marketVolume.getSteemVolume().getAmount(), greaterThan(0.0));
+        assertThat(marketVolume.getSteemVolume().toReal(), greaterThan(0.0));
         assertThat(marketVolume.getSteemVolume().getSymbol(), equalTo(AssetSymbolType.STEEM));
     }
 

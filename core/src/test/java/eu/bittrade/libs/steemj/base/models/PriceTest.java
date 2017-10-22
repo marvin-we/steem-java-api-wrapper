@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.base.models;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertTrue;
 
 import java.security.InvalidParameterException;
 
@@ -144,5 +145,28 @@ public class PriceTest {
         quote.setSymbol(AssetSymbolType.STEEM);
 
         new Price(base, quote);
+    }
+
+    /**
+     * Test the {@link Price#multiply(Asset)} method.
+     */
+    @Test
+    public void testMultiply() {
+        Asset base = new Asset();
+        base.setAmount(50L);
+        base.setSymbol(AssetSymbolType.SBD);
+
+        Asset quote = new Asset();
+        quote.setAmount(100L);
+        quote.setSymbol(AssetSymbolType.STEEM);
+
+        Price exchangeRate = new Price(base, quote);
+
+        Asset amountToSell = new Asset();
+        amountToSell.setAmount(2L);
+        amountToSell.setSymbol(AssetSymbolType.SBD);
+
+        assertTrue(exchangeRate.multiply(amountToSell).getAmount().equals(4L));
+        assertTrue(exchangeRate.multiply(amountToSell).getSymbol().equals(AssetSymbolType.STEEM));
     }
 }

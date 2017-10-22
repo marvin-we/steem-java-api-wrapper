@@ -92,10 +92,9 @@ public class WitnessUpdateOperationIT extends BaseTransactionalIntegrationTest {
 
         assertThat(witnessUpdateOperation, instanceOf(WitnessUpdateOperation.class));
         assertThat(((WitnessUpdateOperation) witnessUpdateOperation).getOwner().getName(), equalTo(WITNESS_NAME));
-        assertThat(((WitnessUpdateOperation) witnessUpdateOperation).getFee().getAmount(), equalTo(FEE_AMOUNT));
+        assertThat(((WitnessUpdateOperation) witnessUpdateOperation).getFee().toReal(), equalTo(FEE_AMOUNT));
         assertThat(((WitnessUpdateOperation) witnessUpdateOperation).getUrl().toString(), equalTo(URL));
-        assertThat(
-                ((WitnessUpdateOperation) witnessUpdateOperation).getProperties().getAccountCreationFee().getAmount(),
+        assertThat(((WitnessUpdateOperation) witnessUpdateOperation).getProperties().getAccountCreationFee().toReal(),
                 equalTo(ACCOUNT_CREATION_FEE));
     }
 

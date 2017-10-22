@@ -86,7 +86,7 @@ public class ClaimRewardBalanceOperationIT extends BaseTransactionalIntegrationT
         assertThat(claimRewardBalanceOperation, instanceOf(ClaimRewardBalanceOperation.class));
         assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getAccount().getName(),
                 equalTo(EXPECTED_ACCOUNT));
-        assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getRewardVests().getAmount(),
+        assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getRewardVests().toReal(),
                 equalTo(EXPECTED_VESTS));
     }
 

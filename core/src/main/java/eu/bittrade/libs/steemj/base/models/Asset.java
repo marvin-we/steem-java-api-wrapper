@@ -55,12 +55,12 @@ public class Asset implements ByteTransformable {
     }
 
     /**
-     * Get the amount of this asset object.
+     * Get the amount stored in this asset object.
      * 
      * @return The amount.
      */
-    public Double getAmount() {
-        return Double.valueOf(this.amount / Math.pow(10.0, this.getPrecision()));
+    public Long getAmount() {
+        return amount;
     }
 
     /**
@@ -108,6 +108,15 @@ public class Asset implements ByteTransformable {
         }
 
         this.symbol = symbol;
+    }
+
+    /**
+     * Transform this asset into its double representation.
+     * 
+     * @return The value of this asset in its double representation.
+     */
+    public Double toReal() {
+        return Double.valueOf(this.amount / Math.pow(10.0, this.getPrecision()));
     }
 
     @Override

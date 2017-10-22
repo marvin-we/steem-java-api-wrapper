@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
@@ -129,12 +128,8 @@ abstract class AbstractTransferOperation extends Operation {
     @Override
     public void validate(ValidationType validationType) {
         if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_VALIDATION.equals(validationType)) {
-            if (!amount.getSymbol().equals(AssetSymbolType.STEEM)) {
-                throw new InvalidParameterException("The amount must be of type STEEM.");
-            } else if (amount.getAmount() <= 0) {
-                throw new InvalidParameterException("Must transfer a nonzero amount.");
-            }
+                && !ValidationType.SKIP_VALIDATION.equals(validationType) && amount.getAmount() <= 0) {
+            throw new InvalidParameterException("Must transfer a nonzero amount.");
         }
     }
 }

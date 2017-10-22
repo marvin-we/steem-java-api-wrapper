@@ -108,7 +108,7 @@ public class SteemJUtils {
      * @return The VarInt-byte representation of the given String.
      */
     public static byte[] transformStringToVarIntByteArray(String string) {
-        if (string == null || string.isEmpty()) {
+        if (string == null) {
             return new byte[0];
         }
 

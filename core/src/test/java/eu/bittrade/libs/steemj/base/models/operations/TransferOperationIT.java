@@ -79,7 +79,7 @@ public class TransferOperationIT extends BaseTransactionalIntegrationTest {
         assertThat(transferOperation, instanceOf(TransferOperation.class));
         assertThat(((TransferOperation) transferOperation).getFrom().getName(), equalTo(EXPECTED_FROM_ACCOUNT));
         assertThat(((TransferOperation) transferOperation).getTo().getName(), equalTo(EXPECTED_TO_ACCOUNT));
-        assertThat(((TransferOperation) transferOperation).getAmount().getAmount(), equalTo(EXPECTED_AMOUNT));
+        assertThat(((TransferOperation) transferOperation).getAmount().toReal(), equalTo(EXPECTED_AMOUNT));
     }
 
     @Category({ IntegrationTest.class })
