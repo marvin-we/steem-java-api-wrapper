@@ -108,7 +108,7 @@ public class PublicKey implements ByteTransformable {
     }
 
     /**
-     * Create a new public key by provding a ECKey object containg the public
+     * Create a new public key by providing a ECKey object containing the public
      * key.
      * 
      * @param publicKey
@@ -116,7 +116,7 @@ public class PublicKey implements ByteTransformable {
      */
     public PublicKey(ECKey publicKey) {
         this.setPublicKey(publicKey);
-        this.prefix = SteemJConfig.getInstance().getSteemitAddressPrefix().toString().toUpperCase();
+        this.prefix = SteemJConfig.getInstance().getAddressPrefix().toString().toUpperCase();
     }
 
     /**
