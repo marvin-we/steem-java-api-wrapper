@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -129,7 +130,7 @@ public class FollowApiIT extends BaseIntegrationTest {
         assertTrue(feedEntries.get(0).getPermlink().getLink().matches("[a-z0-9\\-]+"));
         assertFalse(feedEntries.get(0).getAuthor().isEmpty());
         assertThat(feedEntries.get(0).getEntryId(), greaterThanOrEqualTo(0));
-        assertTrue(feedEntries.get(0).getReblogBy().isEmpty());
+        assertNotNull(feedEntries.get(0).getReblogBy());
         assertThat(feedEntries.get(0).getReblogOn().getDateTimeAsTimestamp(), greaterThanOrEqualTo(0L));
     }
 
@@ -153,7 +154,7 @@ public class FollowApiIT extends BaseIntegrationTest {
         assertFalse(feed.get(0).getComment().getTitle().isEmpty());
 
         assertThat(feed.get(0).getEntryId(), greaterThanOrEqualTo(0));
-        assertTrue(feed.get(0).getReblogBy().isEmpty());
+        assertNotNull(feed.get(0).getReblogBy());
         assertThat(feed.get(0).getReblogOn().getDateTimeAsTimestamp(), greaterThanOrEqualTo(0L));
     }
 
