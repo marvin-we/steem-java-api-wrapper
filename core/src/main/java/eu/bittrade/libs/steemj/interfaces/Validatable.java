@@ -9,7 +9,6 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@FunctionalInterface
 public interface Validatable {
     /**
      * Use this method to verify that this object is valid.

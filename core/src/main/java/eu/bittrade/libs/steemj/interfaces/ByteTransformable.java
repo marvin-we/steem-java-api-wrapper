@@ -8,7 +8,6 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@FunctionalInterface
 public interface ByteTransformable {
     /**
      * Covert the operation into a byte array.
