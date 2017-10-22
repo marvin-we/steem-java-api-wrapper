@@ -31,10 +31,10 @@ public class TransferOperationIT extends BaseTransactionalIntegrationTest {
     private static final String EXPECTED_FROM_ACCOUNT = "bittrex";
     private static final String EXPECTED_TO_ACCOUNT = "kurtbeil";
     private static final double EXPECTED_AMOUNT = 14.358;
-    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c8045701020764657a3133"
-            + "33370764657a31333337010000000000000003535445454d00001354657374203420537465656d4a2"
-            + "0302e322e3200011c0b8e4977d4f049050219ea8d3d1078be7cba2e25341f5b0678c749799191ba7c"
-            + "75f5693cbe955c4a1cfeef1866084dd40509ef5a9cb7d706fa6493cc86fe5fd7";
+    private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcecc8045701020764657a3133333706737465656d"
+            + "6a010000000000000003535445454d00001354657374203420537465656d4a20302e322e3200011c658003b815daf2f16"
+            + "628698bfcdfae003fb437554465c8241af5276066110e07066a4f27130e1b6da3e4c9e0d996138893ef7e8b6e4bd9acf6"
+            + "15963040996fc3";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
