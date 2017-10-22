@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.communication;
 
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 import org.glassfish.tyrus.client.SslContextConfigurator;
@@ -54,6 +56,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
 
     private static ObjectMapper mapper = getObjectMapper();
+    private static int numberOfConnectionTries = 0;
 
     private CountDownLatch responseCountDownLatch = new CountDownLatch(1);
     private ClientManager client;
@@ -69,29 +72,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
     public CommunicationHandler() throws SteemCommunicationException {
         this.client = ClientManager.createClient();
 
-        // Tyrus expects a SSL connection if the SSL_ENGINE_CONFIGURATOR
-        // property is present. This leads to a "connection failed" error when
-        // a non SSL secured protocol is used. Due to this we only add the
-        // property when connecting to a SSL secured node.
-        if (SteemJConfig.getInstance().isSslVerificationDisabled()
-                && SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("wss")
-                || SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("https")) {
-            SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            // TODO: This can also be solved with a lamda expression which would
-            // require Java 8:
-            // sslEngineConfigurator.setHostnameVerifier((String host,
-            // SSLSession sslSession) -> true);
-            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String host, SSLSession sslSession) {
-                    return true;
-                }
-            });
-            client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
-        }
-
-        client.setDefaultMaxSessionIdleTimeout(SteemJConfig.getInstance().getSocketTimeout());
-        client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new SteemJReconnectHandler());
+        this.client.setDefaultMaxSessionIdleTimeout(SteemJConfig.getInstance().getSocketTimeout());
+        this.client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new SteemJReconnectHandler());
 
         connect();
     }
@@ -106,7 +88,8 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     @Override
     public void onClose(Session session, CloseReason closeReason) {
-        LOGGER.info("Connection has been closed.", closeReason);
+        LOGGER.info("Connection has been closed (Code: {}, Reason: {}).", closeReason.getCloseCode(),
+                closeReason.getReasonPhrase());
     }
 
     @Override
@@ -184,20 +167,47 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
 
     /**
      * This method establishes a new connection to the web socket Server.
-     * 
-     * @throws SteemCommunicationException
-     *             If there is a connection problem.
      */
-    protected void connect() throws SteemCommunicationException {
+    protected synchronized void connect() {
+        // Get a websocket URI based on the number of retries.
+        Pair<URI, Boolean> endpoint = SteemJConfig.getInstance().getNextWebSocketEndpointURI(numberOfConnectionTries);
+
+        // Tyrus expects a SSL connection if the SSL_ENGINE_CONFIGURATOR
+        // property is present. This leads to a "connection failed" error when
+        // a non SSL secured protocol is used. Due to this we only add the
+        // property when connecting to a SSL secured node.
+        if (endpoint.getRight() && endpoint.getLeft().getScheme().equals("wss")
+                || endpoint.getLeft().getScheme().equals("https")) {
+            SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
+            // TODO: This can also be solved with a lamda expression which would
+            // require Java 8:
+            // sslEngineConfigurator.setHostnameVerifier((String host,
+            // SSLSession sslSession) -> true);
+            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
+                @Override
+                public boolean verify(String host, SSLSession sslSession) {
+                    return true;
+                }
+            });
+            client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
+        }
+
         try {
             if (session != null && session.isOpen()) {
+                LOGGER.debug("Closing existing session.");
                 session.close();
             }
 
-            client.connectToServer(this, SteemJConfig.getInstance().getClientEndpointConfig(),
-                    SteemJConfig.getInstance().getWebSocketEndpointURI());
+            LOGGER.info("Connecting to {}.", endpoint.getLeft());
+
+            client.connectToServer(this, SteemJConfig.getInstance().getClientEndpointConfig(), endpoint.getLeft());
         } catch (DeploymentException | IOException e) {
-            throw new SteemCommunicationException("Could not connect to the server.", e);
+            LOGGER.info("Could not connect to the node - Trying to reconnect.");
+            LOGGER.debug("Reason:", e);
+            // Increase the number of connection tries.
+            numberOfConnectionTries++;
+            // And reconnect.
+            connect();
         }
     }
 
@@ -217,10 +227,21 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      * 
      */
     private void sendMessageSynchronously(RequestWrapperDTO requestObject)
-            throws IOException, EncodeException, SteemTimeoutException, InterruptedException {
+            throws EncodeException, SteemTimeoutException, InterruptedException {
         responseCountDownLatch = new CountDownLatch(1);
 
-        session.getBasicRemote().sendObject(requestObject);
+        try {
+            session.getBasicRemote().sendObject(requestObject);
+        } catch (IOException e) {
+            LOGGER.warn("Could not transfer the data to the Steem Node. - Reconnecting.");
+            LOGGER.debug("Reason:", e);
+            // Increase the number of connection tries.
+            numberOfConnectionTries++;
+            // And reconnect.
+            connect();
+            // Resend the message.
+            sendMessageSynchronously(requestObject);
+        }
 
         // Wait until we received a response from the Server.
         if (SteemJConfig.getInstance().getResponseTimeout() == 0) {

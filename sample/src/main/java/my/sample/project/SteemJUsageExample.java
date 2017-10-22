@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,9 +46,14 @@ public class SteemJUsageExample {
         myConfig.setDefaultAccount(new AccountName("steemj"));
 
         try {
-            // SteemJ already comes with a configured EndPoint, but if you want
-            // to connect to another one, you can simply configure it here:
-            myConfig.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"), false);
+            // SteemJ already comes with a bunch of preconfigured EndPoints, but
+            // if you want to connect to another one, you can simply configure
+            // it as shown here:
+
+            // Reset the currently configured endpoints.
+            myConfig.setWebSocketEndpointURIs(new ArrayList<Pair<URI, Boolean>>());
+            // Change the default settings if needed.
+            myConfig.addWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"), true);
         } catch (URISyntaxException e) {
             throw new RuntimeException("The given URI is not valid.", e);
         }

@@ -5,11 +5,14 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.websocket.ClientEndpointConfig;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +32,9 @@ import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
  */
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
-    private static final String DEFAULT_STEEM_NODE_URI = "wss://steemd.steemit.com";
+    private static final String DEFAULT_STEEM_NODE_URI_ONE = "wss://steemd.steemit.com";
+    private static final String DEFAULT_STEEM_NODE_URI_TWO = "wss://seed.bitcoiner.me";
+    private static final String DEFAULT_STEEM_NODE_URI_THREE = "wss://steemd.minnowsupportproject.org";
     private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
 
     private static SteemJConfig steemJConfigInstance;
@@ -61,7 +66,7 @@ public class SteemJConfig {
     }
 
     private ClientEndpointConfig clientEndpointConfig;
-    private URI webSocketEndpointURI;
+    private List<Pair<URI, Boolean>> webSocketEndpointURIs;
     private long responseTimeout;
     private long socketTimeout;
     private String dateTimePattern;
@@ -70,7 +75,6 @@ public class SteemJConfig {
     private AccountName apiUsername;
     private char[] apiPassword;
     private AccountName defaultAccount;
-    private boolean sslVerificationDisabled;
     private PrivateKeyStorage privateKeyStorage;
     private Charset encodingCharset;
     private SteemitAddressPrefix steemitAddressPrefix;
@@ -85,11 +89,13 @@ public class SteemJConfig {
         this.clientEndpointConfig = ClientEndpointConfig.Builder.create().build();
 
         try {
-            this.setWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI));
+            this.webSocketEndpointURIs = new ArrayList<>();
+            this.addWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI_ONE));
+            this.addWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI_TWO));
+            this.addWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI_THREE));
         } catch (URISyntaxException e) {
             // This can never happen!
-            LOGGER.error("The configured default URI has a Syntax error.", e);
-            this.webSocketEndpointURI = null;
+            LOGGER.error("At least one of the configured default URIs has a Syntax error.", e);
         }
         this.responseTimeout = 1000;
         this.socketTimeout = 60000;
@@ -262,19 +268,23 @@ public class SteemJConfig {
     }
 
     /**
-     * @return Get the configured websocket endpoint URI.
+     * @return Get all configured websocket endpoint URIs.
      */
-    public URI getWebSocketEndpointURI() {
-        return webSocketEndpointURI;
+    public List<Pair<URI, Boolean>> getWebSocketEndpointURIs() {
+        return webSocketEndpointURIs;
     }
 
     /**
-     * Check if the SSL-Verification should be disabled.
+     * Get one of the configured websocket endpoint URIs by providing a
+     * <code>selector</code>.
      * 
-     * @return True if the SSL-Verification should be disabled or false if not.
+     * @param selector
+     *            A number used to calculate the next stored websocket endpoint
+     *            URI from the list of configured endpoint URIs.
+     * @return One specific websocket endpoint URI.
      */
-    public boolean isSslVerificationDisabled() {
-        return sslVerificationDisabled;
+    public Pair<URI, Boolean> getNextWebSocketEndpointURI(int selector) {
+        return webSocketEndpointURIs.get(((int) (selector % webSocketEndpointURIs.size())));
     }
 
     /**
@@ -383,16 +393,6 @@ public class SteemJConfig {
     }
 
     /**
-     * Define if the SSL-Verification should be disabled.
-     * 
-     * @param sslVerificationDisabled
-     *            Defines if the SSL-Verification should be disabled or not.
-     */
-    public void setSslVerificationDisabled(boolean sslVerificationDisabled) {
-        this.sslVerificationDisabled = sslVerificationDisabled;
-    }
-
-    /**
      * Set the Steemit address prefix. This prefix is used to parse keys in
      * their WIF format.
      * 
@@ -447,8 +447,18 @@ public class SteemJConfig {
     }
 
     /**
+     * Override the currently configured <code>webSocketEndpointURIs</code>.
+     * 
+     * @param webSocketEndpointURIs
+     *            The web socket endpoints to connect to.
+     */
+    public void setWebSocketEndpointURIs(List<Pair<URI, Boolean>> webSocketEndpointURIs) {
+        this.webSocketEndpointURIs = webSocketEndpointURIs;
+    }
+
+    /**
      * This method has the same functionality than
-     * {@link #setWebSocketEndpointURI(URI, boolean)
+     * {@link #addWebSocketEndpointURI(URI, boolean)
      * setWebsocketEndpointURI(URI, boolean)}, but this method will enable the
      * SSL verification by default.
      * 
@@ -457,8 +467,8 @@ public class SteemJConfig {
      * @throws URISyntaxException
      *             If the <code>websocketEndpointURI</code> is null.
      */
-    public void setWebSocketEndpointURI(URI webSocketEndpointURI) throws URISyntaxException {
-        setWebSocketEndpointURI(webSocketEndpointURI, false);
+    public void addWebSocketEndpointURI(URI webSocketEndpointURI) throws URISyntaxException {
+        addWebSocketEndpointURI(webSocketEndpointURI, false);
     }
 
     /**
@@ -474,15 +484,14 @@ public class SteemJConfig {
      * @throws URISyntaxException
      *             If the <code>websocketEndpointURI</code> is null.
      */
-    public void setWebSocketEndpointURI(URI webSocketEndpointURI, boolean sslVerificationDisabled)
+    public void addWebSocketEndpointURI(URI webSocketEndpointURI, boolean sslVerificationDisabled)
             throws URISyntaxException {
         if (webSocketEndpointURI == null) {
             throw new URISyntaxException("websocketEndpointURI",
                     "The websocketEndpointURI can't be null, because a valid URI to the RPC endpoint of a Steem Node is required.");
         }
 
-        this.webSocketEndpointURI = webSocketEndpointURI;
-        this.sslVerificationDisabled = sslVerificationDisabled;
+        this.webSocketEndpointURIs.add(new ImmutablePair<URI, Boolean>(webSocketEndpointURI, sslVerificationDisabled));
     }
 
     /**

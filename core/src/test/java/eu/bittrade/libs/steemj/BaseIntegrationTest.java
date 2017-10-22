@@ -1,8 +1,5 @@
 package eu.bittrade.libs.steemj;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
@@ -19,14 +16,11 @@ public abstract class BaseIntegrationTest extends BaseTest {
      */
     protected static void setupIntegrationTestEnvironment() {
         try {
-            // Change the default settings if needed.
-            CONFIG.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"));
             // Create a new apiWrapper with your config object.
             CONFIG.setResponseTimeout(0);
-            CONFIG.setSslVerificationDisabled(true);
 
             steemJ = new SteemJ();
-        } catch (SteemCommunicationException | URISyntaxException e) {
+        } catch (SteemCommunicationException e) {
             LOGGER.error("Could not create a SteemJ instance. - Test execution stopped.", e);
         }
     }
