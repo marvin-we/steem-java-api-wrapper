@@ -113,6 +113,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
         this.setFee(fee);
         this.setRatificationDeadlineDate(ratificationDeadlineDate);
         this.setEscrowExpirationDate(escrowExpirationDate);
+        this.setJsonMeta(jsonMeta);
     }
 
     /**
