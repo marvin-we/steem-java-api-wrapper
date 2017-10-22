@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.enums.AddressPrefixType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.enums.SteemitAddressPrefix;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 
@@ -77,7 +77,7 @@ public class SteemJConfig {
     private AccountName defaultAccount;
     private PrivateKeyStorage privateKeyStorage;
     private Charset encodingCharset;
-    private SteemitAddressPrefix steemitAddressPrefix;
+    private AddressPrefixType addressPrefix;
     private String chainId;
     private short steemJWeight;
     private ValidationType validationLevel;
@@ -106,7 +106,7 @@ public class SteemJConfig {
         this.timeZoneId = "GMT";
         this.encodingCharset = StandardCharsets.UTF_8;
         this.privateKeyStorage = new PrivateKeyStorage();
-        this.steemitAddressPrefix = SteemitAddressPrefix.STM;
+        this.addressPrefix = AddressPrefixType.STM;
         this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
         this.steemJWeight = 250;
         this.validationLevel = ValidationType.ALL;
@@ -226,13 +226,13 @@ public class SteemJConfig {
     }
 
     /**
-     * Get the currently configured Steemit address prefix. This prefix is used
-     * to parse keys in their WIF format.
+     * Get the currently configured address prefix. This prefix is used to parse
+     * keys in their WIF format.
      * 
-     * @return The Steemit address prefix.
+     * @return The address prefix.
      */
-    public SteemitAddressPrefix getSteemitAddressPrefix() {
-        return steemitAddressPrefix;
+    public AddressPrefixType getAddressPrefix() {
+        return addressPrefix;
     }
 
     /**
@@ -393,14 +393,14 @@ public class SteemJConfig {
     }
 
     /**
-     * Set the Steemit address prefix. This prefix is used to parse keys in
-     * their WIF format.
+     * Set the address prefix. This prefix is used to parse keys in their WIF
+     * format.
      * 
-     * @param steemitAddressPrefix
-     *            The Steemit address prefix to set.
+     * @param addressPrefix
+     *            The address prefix to set.
      */
-    public void setSteemitAddressPrefix(SteemitAddressPrefix steemitAddressPrefix) {
-        this.steemitAddressPrefix = steemitAddressPrefix;
+    public void setSteemitAddressPrefix(AddressPrefixType addressPrefix) {
+        this.addressPrefix = addressPrefix;
     }
 
     /**
