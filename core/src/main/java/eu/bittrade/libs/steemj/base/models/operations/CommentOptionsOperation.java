@@ -332,10 +332,6 @@ public class CommentOptionsOperation extends Operation {
      * @return All extensions.
      */
     public List<CommentOptionsExtension> getExtensions() {
-        if (extensions == null || extensions.isEmpty()) {
-            // Create a new ArrayList to avoid a NullPointerException.
-            extensions = new ArrayList<>();
-        }
         return extensions;
     }
 
@@ -346,7 +342,12 @@ public class CommentOptionsOperation extends Operation {
      *            Define a list of extensions.
      */
     public void setExtensions(List<CommentOptionsExtension> extensions) {
-        this.extensions = extensions;
+        if (extensions == null) {
+            // Create a new ArrayList to avoid a NullPointerException.
+            this.extensions = new ArrayList<>();
+        } else {
+            this.extensions = extensions;
+        }
     }
 
     @Override

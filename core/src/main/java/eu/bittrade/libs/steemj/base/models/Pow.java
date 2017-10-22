@@ -26,6 +26,10 @@ public class Pow implements ByteTransformable {
     @JsonProperty("work")
     private Sha256Hash work;
 
+    public Pow() {
+
+    }
+
     public Pow(ECKey privateKey, Sha256Hash input) {
     }
 

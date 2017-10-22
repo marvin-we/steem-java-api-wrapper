@@ -51,7 +51,7 @@ public class EscrowApproveOperationIT extends BaseTransactionalIntegrationTest {
         AccountName to = new AccountName("dez1337");
         AccountName who = new AccountName("dez1337");
         int escrowId = 34;
-        Boolean approve = true;
+        boolean approve = true;
 
         EscrowApproveOperation escrowApproveOperation = new EscrowApproveOperation(from, to, agent, escrowId, who,
                 approve);
