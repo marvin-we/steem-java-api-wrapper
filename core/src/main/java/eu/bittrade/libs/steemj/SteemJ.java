@@ -31,6 +31,7 @@ import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
 import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi;
 import eu.bittrade.libs.steemj.apis.market.history.model.Bucket;
 import eu.bittrade.libs.steemj.apis.market.history.model.MarketTicker;
@@ -98,6 +99,12 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class SteemJ {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJ.class);
+
+    // Error messages as constants to make SonarQube happy.
+    private static final String TAG_ERROR_MESSAGE = "You need to provide at least one tag, but not more than five.";
+    private static final String NO_DEFAULT_ACCOUNT_ERROR_MESSAGE = "You try to use a simplified operation without having a default account configured in SteemJConfig. Please configure a default account or use another method.";
+    private static final String MARKDOWN = "markdown";
+    private static final String STEEMJ_VERSION_STRING = "steemj/0.4.1";
 
     private CommunicationHandler communicationHandler;
 
@@ -2308,8 +2315,7 @@ public class SteemJ {
     public void follow(AccountName accountToFollow)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(
-                    "Using the follow method without providing an account requires to have a default account configured.");
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
         follow(SteemJConfig.getInstance().getDefaultAccount(), accountToFollow);
@@ -2394,8 +2400,7 @@ public class SteemJ {
     public void unfollow(AccountName accountToUnfollow)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(
-                    "Using the unfollow method without providing an account requires to have a default account configured.");
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
         unfollow(SteemJConfig.getInstance().getDefaultAccount(), accountToUnfollow);
@@ -2447,42 +2452,175 @@ public class SteemJ {
     }
 
     /**
+     * Use this method to reblog a post.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * reblog operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} that will resteem
+     * the post defined by the <code>accountThatResteemsThePost</code> and
+     * <code>authorOfThePostToResteem</code> parameters. - If no default account
+     * has been provided, this method will throw an error. If you do not want to
+     * configure the following account as a default account, please use the
+     * {@link #reblog(AccountName, Permlink)} method and provide the account who
+     * wants to reblog the post separately.</li>
+     * <li>Please be aware that there is no way to undo a reblog operation - If
+     * a post has been reblogged it has been reblogged.
+     * </ul>
+     * 
+     * @param authorOfThePostToReblog
+     *            The author of the post to reblog.
+     * @param permlinkOfThePostToReblog
+     *            The permlink of the post to reblog.
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void reblog(AccountName authorOfThePostToReblog, Permlink permlinkOfThePostToReblog)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        }
+
+        reblog(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostToReblog, permlinkOfThePostToReblog);
+    }
+
+    /**
+     * This method is equivalent to the {@link #reblog(AccountName, Permlink)}
+     * method, but lets you define the <code>accountThatReblogsThePost</code>
+     * account separately instead of using the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+     * 
+     * @param accountThatReblogsThePost
+     *            The account who wants to reblog the post defined by the
+     *            <code>accountThatResteemsThePost</code> and
+     *            <code>authorOfThePostToResteem</code> parameters.
+     * @param authorOfThePostToReblog
+     *            The author of the post to reblog.
+     * @param permlinkOfThePostToReblog
+     *            The permlink of the post to reblog.
+     * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void reblog(AccountName accountThatReblogsThePost, AccountName authorOfThePostToReblog,
+            Permlink permlinkOfThePostToReblog) throws SteemCommunicationException, SteemInvalidTransactionException {
+        ArrayList<Operation> operations = new ArrayList<>();
+
+        ReblogOperation reblogOperation = new ReblogOperation(accountThatReblogsThePost, authorOfThePostToReblog,
+                permlinkOfThePostToReblog);
+
+        ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
+        requiredPostingAuths.add(accountThatReblogsThePost);
+
+        CustomJsonOperation customJsonReblogOperation = new CustomJsonOperation(null, requiredPostingAuths, "reblog",
+                reblogOperation.toJson());
+
+        operations.add(customJsonReblogOperation);
+
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
+    }
+
+    /**
+     * Use this method to create a new post.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * create post operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
+     * that will publish the post - If no default account has been provided,
+     * this method will throw an error. If you do not want to configure the
+     * author account as a default account, please use the
+     * {@link #createPost(AccountName, String, String, String[])} method and
+     * provide the author account separately.</li>
+     * </ul>
      * 
      * @param title
+     *            The title of the post to publish.
      * @param content
+     *            The content of the post to publish.
      * @param tags
+     *            A list of tags while the first tag in this list is the main
+     *            tag. You can provide up to five tags but at least one needs to
+     *            be provided.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public CommentOperation createPost(String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(
-                    "Using the unfollow method without providing an account requires to have a default account configured.");
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
         return createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags);
     }
 
     /**
+     * This method is equivalent to the
+     * {@link #createPost(String, String, String[])} method, but lets you define
+     * the <code>authorThatPublishsThePost</code> account separately instead of
+     * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
      * 
      * @param authorThatPublishsThePost
+     *            The account who wants to publish the post.
      * @param title
+     *            The title of the post to publish.
      * @param content
+     *            The content of the post to publish.
      * @param tags
+     *            A list of tags while the first tag in this list is the main
+     *            tag. You can provide up to five tags but at least one needs to
+     *            be provided.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
             String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
@@ -2494,7 +2632,7 @@ public class SteemJ {
         // One new posts the parentAuthor is empty.
         AccountName parentAuthor = new AccountName("");
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, STEEMJ_VERSION_STRING, MARKDOWN);
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 authorThatPublishsThePost, permlink, title, content, jsonMetadata);
@@ -2506,21 +2644,27 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
-                SteemJConfig.getInstance().getSteemJWeight());
+        CommentOptionsOperation commentOptionsOperation;
+        // Only add a BeneficiaryRouteType if it makes sense.
+        if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
+            BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+                    SteemJConfig.getInstance().getSteemJWeight());
 
-        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
-        beneficiaryRouteTypes.add(beneficiaryRouteType);
+            ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
+            beneficiaryRouteTypes.add(beneficiaryRouteType);
 
-        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
-        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+            CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+            commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
-        ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+            ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
+            commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
-        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost,
-                permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
-                commentOptionsExtensions);
+            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
+        } else {
+            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
+        }
 
         operations.add(commentOptionsOperation);
 
@@ -2537,47 +2681,92 @@ public class SteemJ {
     }
 
     /**
+     * Use this method to create a new comment.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * create comment operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
+     * that will publish the comment - If no default account has been provided,
+     * this method will throw an error. If you do not want to configure the
+     * author account as a default account, please use the
+     * {@link #createComment(AccountName, AccountName, Permlink, String, String[])}
+     * method and provide the author account separately.</li>
+     * </ul>
      * 
      * @param authorOfThePostOrCommentToReplyTo
+     *            The author of the post or comment to reply to.
      * @param permlinkOfThePostOrCommentToReplyTo
+     *            The permlink of the post or comment to reply to.
      * @param content
+     *            The content to publish.
      * @param tags
+     *            A list of tags while the first tag in this list is the main
+     *            tag. You can provide up to five tags but at least one needs to
+     *            be provided.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
             Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(
-                    "Using the unfollow method without providing an account requires to have a default account configured.");
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return createComment(authorOfThePostOrCommentToReplyTo, permlinkOfThePostOrCommentToReplyTo,
-                SteemJConfig.getInstance().getDefaultAccount(), content, tags);
+        return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
+                permlinkOfThePostOrCommentToReplyTo, content, tags);
     }
 
     /**
+     * This method is equivalent to the
+     * {@link #createComment(AccountName, Permlink, String, String[])} method,
+     * but lets you define the <code>authorThatPublishsTheComment</code> account
+     * separately instead of using the {@link SteemJConfig#getDefaultAccount()
+     * DefaultAccount}.
      * 
-     * @param authorOfThePostOrCommentToReplyTo
-     * @param permlinkOfThePostOrCommentToReplyTo
      * @param authorThatPublishsTheComment
+     *            The account that wants to publish the comment.
+     * @param authorOfThePostOrCommentToReplyTo
+     *            The author of the post or comment to reply to.
+     * @param permlinkOfThePostOrCommentToReplyTo
+     *            The permlink of the post or comment to reply to.
      * @param content
+     *            The content to publish.
      * @param tags
+     *            A list of tags while the first tag in this list is the main
+     *            tag. You can provide up to five tags but at least one needs to
+     *            be provided.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
-    public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
-            Permlink permlinkOfThePostOrCommentToReplyTo, AccountName authorThatPublishsTheComment, String content,
+    public CommentOperation createComment(AccountName authorThatPublishsTheComment,
+            AccountName authorOfThePostOrCommentToReplyTo, Permlink permlinkOfThePostOrCommentToReplyTo, String content,
             String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
@@ -2587,7 +2776,7 @@ public class SteemJ {
                 + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
                 + UUID.randomUUID().toString() + "uid");
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, STEEMJ_VERSION_STRING, MARKDOWN);
 
         CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
                 permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content, jsonMetadata);
@@ -2599,21 +2788,27 @@ public class SteemJ {
         short percentSteemDollars = (short) 10000;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
-        BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
-                SteemJConfig.getInstance().getSteemJWeight());
+        CommentOptionsOperation commentOptionsOperation;
+        // Only add a BeneficiaryRouteType if it makes sense.
+        if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
+            BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+                    SteemJConfig.getInstance().getSteemJWeight());
 
-        ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
-        beneficiaryRouteTypes.add(beneficiaryRouteType);
+            ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
+            beneficiaryRouteTypes.add(beneficiaryRouteType);
 
-        CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
-        commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+            CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+            commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
 
-        ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-        commentOptionsExtensions.add(commentPayoutBeneficiaries);
+            ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
+            commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
-        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment,
-                permlink, maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards,
-                commentOptionsExtensions);
+            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
+        } else {
+            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
+        }
 
         operations.add(commentOptionsOperation);
 
@@ -2630,22 +2825,59 @@ public class SteemJ {
     }
 
     /**
+     * Use this method to update an existing post.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>Updating a post only works if Steem can identify the existing post -
+     * If this is not the case, this operation will create a new post instead of
+     * updating the existing one. The identification is based on the
+     * <code>permlinkOfThePostToUpdate</code> and the first tag of the
+     * <code>tags</code> array to be the same ones as of the post to update.
+     * </li>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * update post operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of
+     * the post to update - If no default account has been provided, this method
+     * will throw an error. If you do not want to configure the author account
+     * as a default account, please use the
+     * {@link #updatePost(AccountName, Permlink, String, String, String[])}
+     * method and provide the author account separately.</li>
+     * </ul>
      * 
      * @param permlinkOfThePostToUpdate
+     *            The permlink of the post to update. <b>Attention</b> If the
+     *            permlink is not configured currently, SteemJ could accidently
+     *            create a new post instead of updating an existing one.
      * @param title
+     *            The new title of the post to set.
      * @param content
+     *            The new content of the post to set.
      * @param tags
+     *            The new tags of the post. <b>Attention</b> The first tag still
+     *            needs to be the same as before otherwise SteemJ could
+     *            accidently create a new post instead of updating an existing
+     *            one.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(
-                    "Using the unfollow method without providing an account requires to have a default account configured.");
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
         return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
@@ -2653,30 +2885,51 @@ public class SteemJ {
     }
 
     /**
+     * This method is equivalent to the
+     * {@link #updatePost(Permlink, String, String, String[])} method, but lets
+     * you define the <code>authorOfThePostToUpdate</code> account separately
+     * instead of using the {@link SteemJConfig#getDefaultAccount()
+     * DefaultAccount}.
      * 
      * @param authorOfThePostToUpdate
+     *            The account that wants to perform the update. In most cases,
+     *            this should be the author of the already existing post.
      * @param permlinkOfThePostToUpdate
+     *            The permlink of the post to update. <b>Attention</b> If the
+     *            permlink is not configured currently, SteemJ could accidently
+     *            create a new post instead of updating an existing one.
      * @param title
+     *            The new title of the post to set.
      * @param content
+     *            The new content of the post to set.
      * @param tags
+     *            The new tags of the post. <b>Attention</b> The first tag still
+     *            needs to be the same as before otherwise SteemJ could
+     *            accidently create a new post instead of updating an existing
+     *            one.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
             String title, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
         }
 
         ArrayList<Operation> operations = new ArrayList<>();
         AccountName parentAuthor = new AccountName("");
         Permlink parentPermlink = new Permlink(tags[0]);
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, STEEMJ_VERSION_STRING, MARKDOWN);
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
                 permlinkOfThePostToUpdate, title, content, jsonMetadata);
@@ -2696,53 +2949,115 @@ public class SteemJ {
     }
 
     /**
+     * Use this method to update an existing comment.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>Updating a comment only works if Steem can identify the existing
+     * comment - If this is not the case, this operation will create a new
+     * comment instead of updating the existing one. The identification is based
+     * on the <code>originalPermlinkOfYourComment</code>, the
+     * <code>parentAuthor</code>, the <code>parentPermlink</code> and the first
+     * tag of the <code>tags</code> array to be the same ones as of the post to
+     * update.</li>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * update comment operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of
+     * the comment to update - If no default account has been provided, this
+     * method will throw an error. If you do not want to configure the author
+     * account as a default account, please use the
+     * {@link #updateComment(AccountName, AccountName, Permlink, Permlink, String, String[])}
+     * method and provide the author account separately.</li>
+     * </ul>
      * 
      * @param parentAuthor
+     *            The author of the post or comment that you initially replied
+     *            to.
      * @param parentPermlink
-     * @param originalPermlinkOfYourComment
+     *            The permlink of the post or comment that you initially replied
+     *            to.
+     * @param originalPermlinkOfTheCommentToUpdate
+     *            The permlink of the comment to update.
      * @param content
+     *            The new content of the comment to set.
      * @param tags
+     *            The new tags of the comment. <b>Attention</b> The first tag
+     *            still needs to be the same as before otherwise SteemJ could
+     *            accidently create a new comment instead of updating an
+     *            existing one.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
     public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
-            Permlink originalPermlinkOfYourComment, String content, String[] tags)
+            Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(
-                    "Using the unfollow method without providing an account requires to have a default account configured.");
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return updateComment(parentAuthor, parentPermlink, originalPermlinkOfYourComment,
-                SteemJConfig.getInstance().getDefaultAccount(), content, tags);
+        return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
+                originalPermlinkOfTheCommentToUpdate, content, tags);
     }
 
     /**
+     * This method is like the
+     * {@link #updateComment(AccountName, Permlink, Permlink, String, String[])}
+     * method, but allows you to define the
+     * <code>originalAuthorOfTheCommentToUpdate</code> account separately
+     * instead of using the {@link SteemJConfig#getDefaultAccount()
+     * DefaultAccount}.
      * 
-     * @param parentAuthor
-     * @param parentPermlink
-     * @param originalPermlinkOfTheCommentToUpdate
      * @param originalAuthorOfTheCommentToUpdate
+     *            The account that wants to perform the update. In most cases,
+     *            this should be the author of the already existing comment.
+     * @param parentAuthor
+     *            The author of the post or comment that you initially replied
+     *            to.
+     * @param parentPermlink
+     *            The permlink of the post or comment that you initially replied
+     *            to.
+     * @param originalPermlinkOfTheCommentToUpdate
+     *            The permlink of the comment to update.
      * @param content
+     *            The new content of the comment to set.
      * @param tags
+     *            The new tags of the comment. <b>Attention</b> The first tag
+     *            still needs to be the same as before otherwise SteemJ could
+     *            accidently create a new comment instead of updating an
+     *            existing one.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
      * @throws SteemCommunicationException
+     *             If there is a problem reaching the Steem Node.
      * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
      */
-    public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
-            Permlink originalPermlinkOfTheCommentToUpdate, AccountName originalAuthorOfTheCommentToUpdate,
-            String content, String[] tags) throws SteemCommunicationException, SteemInvalidTransactionException {
+    public CommentOperation updateComment(AccountName originalAuthorOfTheCommentToUpdate, AccountName parentAuthor,
+            Permlink parentPermlink, Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
+            throws SteemCommunicationException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException("You need to provide at least one tag, but not more than five.");
+            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
         }
         ArrayList<Operation> operations = new ArrayList<>();
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, "steemj/0.4.0", "markdown");
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags, STEEMJ_VERSION_STRING, MARKDOWN);
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content, jsonMetadata);
@@ -2798,8 +3113,7 @@ public class SteemJ {
     public void deletePostOrComment(Permlink postOrCommentPermlink)
             throws SteemCommunicationException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(
-                    "Using the upVote method without providing an account requires to have a default account configured.");
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
         deletePostOrComment(SteemJConfig.getInstance().getDefaultAccount(), postOrCommentPermlink);

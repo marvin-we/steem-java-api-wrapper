@@ -45,7 +45,7 @@ public class SteemJUsageExample {
         myConfig.setDefaultAccount(new AccountName("steemj"));
 
         try {
-            // SteemJ already comes with a configured EndPoint, but if you want 
+            // SteemJ already comes with a configured EndPoint, but if you want
             // to connect to another one, you can simply configure it here:
             myConfig.setWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"), false);
         } catch (URISyntaxException e) {
@@ -91,12 +91,15 @@ public class SteemJUsageExample {
             // Let the default account ("steemj") unfollow "cyriana"
             steemJ.unfollow(new AccountName("cyriana"));
 
+            // Let the default account ("steemj") resteem a post".
+            steemJ.reblog(new AccountName("dez1337"),
+                    new Permlink("steemj-v0-4-0-has-been-released-integrate-steem-into-your-java-project"));
+
             /*
              * Write a new post.
              * 
-             * Title = "Test of SteemJ 0.4.0" 
-             * Content = "Test using SteemJ 0. ..... "
-             * Tags = "test", "dontvote"
+             * Title = "Test of SteemJ 0.4.0" Content =
+             * "Test using SteemJ 0. ..... " Tags = "test", "dontvote"
              * 
              */
             CommentOperation myNewPost = steemJ.createPost("Test of SteemJ 0.4.0",
@@ -111,16 +114,14 @@ public class SteemJUsageExample {
             /*
              * Write a new comment.
              * 
-             * Author of the post to reply to = "steemj"
-             * Permlink of the post to reply to = "testofsteemj040"
-             * Title = "Test of SteemJ 0.4.0" 
-             * Content = "Test using SteemJ 0. ..... "
-             * Tags = "test"
+             * Author of the post to reply to = "steemj" Permlink of the post to
+             * reply to = "testofsteemj040" Title = "Test of SteemJ 0.4.0"
+             * Content = "Test using SteemJ 0. ..... " Tags = "test"
              * 
              */
             steemJ.createComment(new AccountName("steemj"), new Permlink("testofsteemj040"),
                     "Example comment without a link but with a @user .", new String[] { "test" });
-            
+
             /*
              * Delete the newly created post.
              */
