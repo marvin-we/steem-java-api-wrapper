@@ -184,10 +184,6 @@ public class RecoverAccountOperation extends Operation {
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
         if (newOwnerAuthority == null) {
             throw new InvalidParameterException("The new owner authority can't be null.");
-        } else if (this.getRecentOwnerAuthority() != null && this.getRecentOwnerAuthority().equals(newOwnerAuthority)) {
-            throw new InvalidParameterException("Cannot set new owner authority to the recent owner authority.");
-        } else if (newOwnerAuthority.isImpossible()) {
-            throw new InvalidParameterException("The new owner authority cannot be trivial.");
         }
 
         this.newOwnerAuthority = newOwnerAuthority;
@@ -217,10 +213,6 @@ public class RecoverAccountOperation extends Operation {
     public void setRecentOwnerAuthority(Authority recentOwnerAuthority) {
         if (recentOwnerAuthority == null) {
             throw new InvalidParameterException("The recent owner authority can't be null.");
-        } else if (this.getNewOwnerAuthority() != null && this.getNewOwnerAuthority().equals(recentOwnerAuthority)) {
-            throw new InvalidParameterException("Cannot set recent owner authority to the recent owner authority.");
-        } else if (recentOwnerAuthority.isImpossible()) {
-            throw new InvalidParameterException("The recent owner authority cannot be trivial.");
         }
 
         this.recentOwnerAuthority = recentOwnerAuthority;
@@ -290,7 +282,16 @@ public class RecoverAccountOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (this.getRecentOwnerAuthority().equals(newOwnerAuthority)) {
+                throw new InvalidParameterException("Cannot set new owner authority to the recent owner authority.");
+            } else if (newOwnerAuthority.isImpossible()) {
+                throw new InvalidParameterException("The new owner authority cannot be impossible.");
+            } else if (recentOwnerAuthority.isImpossible()) {
+                throw new InvalidParameterException("The recent owner authority cannot be impossible.");
+            } else if (newOwnerAuthority.getWeightThreshold() != 1) {
+                throw new InvalidParameterException("The new owner authority cannot be trivial.");
+            }
+        }
     }
 }

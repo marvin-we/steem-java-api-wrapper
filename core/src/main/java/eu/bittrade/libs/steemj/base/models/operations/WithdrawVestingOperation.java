@@ -107,11 +107,11 @@ public class WithdrawVestingOperation extends Operation {
      * @param vestingShares
      *            The amount that should be requested for withdrawing.
      * @throws InvalidParameterException
-     *             If the asset type is not VESTS.
+     *             If the asset type is null.
      */
     public void setVestingShares(Asset vestingShares) {
-        if (vestingShares == null || !vestingShares.getSymbol().equals(AssetSymbolType.VESTS)) {
-            throw new InvalidParameterException("The provided asset needs to have the symbol type VESTS.");
+        if (vestingShares == null) {
+            throw new InvalidParameterException("The vesting shares can't be null.");
         }
         this.vestingShares = vestingShares;
     }
@@ -144,7 +144,10 @@ public class WithdrawVestingOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if ((!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
+                && !ValidationType.SKIP_VALIDATION.equals(validationType))
+                && (!AssetSymbolType.VESTS.equals(this.getVestingShares().getSymbol()))) {
+            throw new InvalidParameterException("The vesting shares needs to be provided in VESTS.");
+        }
     }
 }

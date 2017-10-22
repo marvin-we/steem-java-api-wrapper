@@ -97,9 +97,6 @@ public class ChallengeAuthorityOperation extends Operation {
     public void setChallenger(AccountName challenger) {
         if (challenger == null) {
             throw new InvalidParameterException("The challenger can't be null");
-        } else if (challenger == this.getChallenger()) {
-            throw new InvalidParameterException(
-                    "The challenged account and the challenger account can't be the same account.");
         }
 
         this.challenger = challenger;
@@ -124,9 +121,6 @@ public class ChallengeAuthorityOperation extends Operation {
     public void setChallenged(AccountName challenged) {
         if (challenged == null) {
             throw new InvalidParameterException("The challenged can't be null");
-        } else if (challenged == this.getChallenger()) {
-            throw new InvalidParameterException(
-                    "The challenged account and the challenger account can't be the same account.");
         }
 
         this.challenged = challenged;
@@ -186,7 +180,9 @@ public class ChallengeAuthorityOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType) && (this.getChallenged() == this.getChallenger())) {
+            throw new InvalidParameterException(
+                    "The challenged account and the challenger account can't be the same account.");
+        }
     }
 }

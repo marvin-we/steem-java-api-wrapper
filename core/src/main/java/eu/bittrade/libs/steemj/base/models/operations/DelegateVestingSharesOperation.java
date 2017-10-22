@@ -90,8 +90,6 @@ public class DelegateVestingSharesOperation extends Operation {
     public void setDelegator(AccountName delegator) {
         if (delegator == null) {
             throw new InvalidParameterException("The delegatee account can't be null.");
-        } else if (this.getDelegatee() != null && this.getDelegatee().equals(delegator)) {
-            throw new InvalidParameterException("The delegatee account can't be equal to the delegator account.");
         }
 
         this.delegator = delegator;
@@ -118,8 +116,6 @@ public class DelegateVestingSharesOperation extends Operation {
     public void setDelegatee(AccountName delegatee) {
         if (delegatee == null) {
             throw new InvalidParameterException("The delegatee account can't be null.");
-        } else if (this.getDelegator() != null && this.getDelegator().equals(delegatee)) {
-            throw new InvalidParameterException("The delegatee account can't be equal to the delegator account.");
         }
 
         this.delegatee = delegatee;
@@ -146,10 +142,6 @@ public class DelegateVestingSharesOperation extends Operation {
     public void setVestingShares(Asset vestingShares) {
         if (vestingShares == null) {
             throw new InvalidParameterException("The vesting shares to delegate can't be null.");
-        } else if (!vestingShares.getSymbol().equals(AssetSymbolType.VESTS)) {
-            throw new InvalidParameterException("Can only delegate VESTS.");
-        } else if (vestingShares.getAmount() <= 0) {
-            throw new InvalidParameterException("Can't delegate a negative amount of VESTS.");
         }
 
         this.vestingShares = vestingShares;
@@ -184,7 +176,18 @@ public class DelegateVestingSharesOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+                if (!vestingShares.getSymbol().equals(AssetSymbolType.VESTS)) {
+                    throw new InvalidParameterException("Can only delegate VESTS.");
+                } else if (vestingShares.getAmount() <= 0) {
+                    throw new InvalidParameterException("Can't delegate a negative amount of VESTS.");
+                }
+            }
 
+            if (this.getDelegator().equals(this.getDelegatee())) {
+                throw new InvalidParameterException("The delegatee account can't be equal to the delegator account.");
+            }
+        }
     }
 }

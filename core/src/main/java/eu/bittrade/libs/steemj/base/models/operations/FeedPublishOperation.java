@@ -103,11 +103,6 @@ public class FeedPublishOperation extends Operation {
     public void setExchangeRate(Price exchangeRate) {
         if (exchangeRate == null) {
             throw new InvalidParameterException("The price feed can't be null");
-        } else if (!(exchangeRate.getBase().getSymbol().equals(AssetSymbolType.STEEM)
-                && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.SBD)
-                || exchangeRate.getBase().getSymbol().equals(AssetSymbolType.SBD)
-                        && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.STEEM))) {
-            throw new InvalidParameterException("The Price feed must be a STEEM/SBD price");
         }
 
         this.exchangeRate = exchangeRate;
@@ -141,7 +136,13 @@ public class FeedPublishOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType))
+                && (!(exchangeRate.getBase().getSymbol().equals(AssetSymbolType.STEEM)
+                        && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.SBD)
+                        || exchangeRate.getBase().getSymbol().equals(AssetSymbolType.SBD)
+                                && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.STEEM)))) {
+            throw new InvalidParameterException("The Price feed must be a STEEM/SBD price.");
+        }
     }
 }

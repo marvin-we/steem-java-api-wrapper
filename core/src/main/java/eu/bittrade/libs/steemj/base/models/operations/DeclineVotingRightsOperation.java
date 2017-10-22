@@ -131,7 +131,6 @@ public class DeclineVotingRightsOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        return;
     }
 }

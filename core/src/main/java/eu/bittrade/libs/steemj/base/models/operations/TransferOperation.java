@@ -69,10 +69,6 @@ public class TransferOperation extends AbstractTransferOperation {
     public void setAmount(Asset amount) {
         if (amount == null) {
             throw new InvalidParameterException("The amount can't be null.");
-        } else if (amount.getSymbol().equals(AssetSymbolType.VESTS)) {
-            throw new InvalidParameterException("Transfering Steem Power (VESTS) is not allowed.");
-        } else if (amount.getAmount() <= 0) {
-            throw new InvalidParameterException("Must transfer a nonzero amount.");
         }
 
         this.amount = amount;
@@ -96,9 +92,6 @@ public class TransferOperation extends AbstractTransferOperation {
      *             If the <code>memo</code> has more than 2048 characters.
      */
     public void setMemo(String memo) {
-        if (memo.length() > 2048) {
-            throw new InvalidParameterException("The memo is too long. Only 2048 characters are allowed.");
-        }
         this.memo = memo;
     }
 
@@ -126,7 +119,20 @@ public class TransferOperation extends AbstractTransferOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            super.validate(validationType);
 
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+                if (amount.getSymbol().equals(AssetSymbolType.VESTS)) {
+                    throw new InvalidParameterException("Transfering Steem Power (VESTS) is not allowed.");
+                } else if (amount.getAmount() <= 0) {
+                    throw new InvalidParameterException("Must transfer a nonzero amount.");
+                }
+            }
+
+            if (memo.length() > 2048) {
+                throw new InvalidParameterException("The memo is too long. Only 2048 characters are allowed.");
+            }
+        }
     }
 }

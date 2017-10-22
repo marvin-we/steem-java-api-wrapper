@@ -167,8 +167,14 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * 
      * @param orderId
      *            The id of this order.
+     * @throws InvalidParameterException
+     *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
+        if (orderId == null) {
+            throw new InvalidParameterException("The provided order id can't be null.");
+        }
+
         this.orderId = orderId;
     }
 
@@ -186,20 +192,12 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * 
      * @param amountToSell
      *            The amount to sell within this order.
+     * @throws InvalidParameterException
+     *             If the <code>amountToSell</code> is null.
      */
     public void setAmountToSell(Asset amountToSell) {
         if (amountToSell == null) {
             throw new InvalidParameterException("The amount to sell can't be null.");
-        } else if (this.getExchangeRate() != null
-                && (!amountToSell.getSymbol().equals(this.getExchangeRate().getBase().getSymbol()))) {
-            throw new InvalidParameterException("The sell asset must be the base of the price.");
-        } else if (this.getExchangeRate() != null && this.getExchangeRate().multiply(amountToSell).getAmount() <= 0) {
-            throw new InvalidParameterException("The Amount to sell cannot round to 0 when traded.");
-        } else if (this.getExchangeRate() != null && ((amountToSell.getSymbol().equals(AssetSymbolType.STEEM)
-                && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.SBD))
-                || (amountToSell.getSymbol().equals(AssetSymbolType.SBD)
-                        && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.STEEM)))) {
-            throw new InvalidParameterException("Limit order must be for the STEEM:SBD market.");
         }
 
         this.amountToSell = amountToSell;
@@ -209,7 +207,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * Get the information if this order was a "fill or kill" order. A "fill or
      * kill" is an option that can be added to limit order. If set to
      * <code>true</code>, the order will be automatically removed, if the order
-     * can't be fullfilled immediatly.
+     * can't be fulfilled immediately.
      * 
      * @return <code>true</code> if this order was a fill or kill order,
      *         otherwise <code>false</code>.
@@ -221,8 +219,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
     /**
      * Define if this order was a "fill or kill" order. A "fill or kill" is an
      * option that can be added to limit order. If set to <code>true</code>, the
-     * order will be automatically removed, if the order can't be fullfilled
-     * immediatly.
+     * order will be automatically removed, if the order can't be fulfilled
+     * Immediately.
      * 
      * @param fillOrKill
      *            <code>true</code> if this order is a fill or kill order,
@@ -250,8 +248,14 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * 
      * @param exchangeRate
      *            The exchange rate used for this order.
+     * @throws InvalidParameterException
+     *             If the <code>exchangeRate</code> is null.
      */
     public void setExchangeRate(Price exchangeRate) {
+        if (exchangeRate == null) {
+            throw new InvalidParameterException("The provided exchange rate can't be null.");
+        }
+
         this.exchangeRate = exchangeRate;
     }
 
@@ -305,7 +309,18 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+            if (!amountToSell.getSymbol().equals(this.getExchangeRate().getBase().getSymbol())) {
+                throw new InvalidParameterException("The sell asset must be the base of the price.");
+            } else if (this.getExchangeRate().multiply(amountToSell).getAmount() <= 0) {
+                throw new InvalidParameterException("The Amount to sell cannot round to 0 when traded.");
+            } else if (((amountToSell.getSymbol().equals(AssetSymbolType.STEEM)
+                    && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.SBD))
+                    || (amountToSell.getSymbol().equals(AssetSymbolType.SBD)
+                            && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.STEEM)))) {
+                throw new InvalidParameterException("Limit order must be for the STEEM:SBD market.");
+            }
+        }
     }
 }

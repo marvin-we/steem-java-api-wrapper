@@ -118,10 +118,6 @@ public class ClaimRewardBalanceOperation extends Operation {
     public void setRewardSteem(Asset rewardSteem) {
         if (rewardSteem == null) {
             throw new InvalidParameterException("The STEEM reward can't be null.");
-        } else if (!rewardSteem.getSymbol().equals(AssetSymbolType.STEEM)) {
-            throw new InvalidParameterException("The STEEM reward must be of symbol type STEEM.");
-        } else if (rewardSteem.getAmount() < 0) {
-            throw new InvalidParameterException("Cannot claim a negative STEEM amount");
         }
 
         this.rewardSteem = rewardSteem;
@@ -152,10 +148,6 @@ public class ClaimRewardBalanceOperation extends Operation {
     public void setRewardSbd(Asset rewardSbd) {
         if (rewardSbd == null) {
             throw new InvalidParameterException("The SBD reward can't be null.");
-        } else if (!rewardSbd.getSymbol().equals(AssetSymbolType.SBD)) {
-            throw new InvalidParameterException("The SBD reward must be of symbol type SBD.");
-        } else if (rewardSbd.getAmount() < 0) {
-            throw new InvalidParameterException("Cannot claim a negative SBD amount");
         }
 
         this.rewardSbd = rewardSbd;
@@ -187,32 +179,9 @@ public class ClaimRewardBalanceOperation extends Operation {
     public void setRewardVests(Asset rewardVests) {
         if (rewardVests == null) {
             throw new InvalidParameterException("The VESTS reward can't be null.");
-        } else if (!rewardVests.getSymbol().equals(AssetSymbolType.VESTS)) {
-            throw new InvalidParameterException("The VESTS reward must be of symbol type VESTS.");
-        } else if (rewardVests.getAmount() < 0) {
-            throw new InvalidParameterException("Cannot claim a negative VESTS amount");
         }
 
         this.rewardVests = rewardVests;
-    }
-
-    /**
-     * TODO: Validate all parameter of this Operation type.
-     */
-    public void validate() {
-        /*
-         * validate_account_name(account); FC_ASSERT(is_asset_type(reward_steem,
-         * STEEM_SYMBOL), "Reward Steem must be STEEM");
-         * FC_ASSERT(is_asset_type(reward_sbd, SBD_SYMBOL),
-         * "Reward Steem must be SBD"); FC_ASSERT(is_asset_type(reward_vests,
-         * VESTS_SYMBOL), "Reward Steem must be VESTS");
-         * FC_ASSERT(reward_steem.amount >= 0,
-         * "Cannot claim a negative amount"); FC_ASSERT(reward_sbd.amount >= 0,
-         * "Cannot claim a negative amount"); FC_ASSERT(reward_vests.amount >=
-         * 0, "Cannot claim a negative amount"); FC_ASSERT(reward_steem.amount >
-         * 0 || reward_sbd.amount > 0 || reward_vests.amount > 0,
-         * "Must claim something.");
-         */
     }
 
     @Override
@@ -245,7 +214,26 @@ public class ClaimRewardBalanceOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if ((rewardSbd.getAmount() + rewardSteem.getAmount() + rewardVests.getAmount()) <= 0) {
+                throw new InvalidParameterException("Must claim something.");
+            }
 
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+                if (!rewardSbd.getSymbol().equals(AssetSymbolType.SBD)) {
+                    throw new InvalidParameterException("The SBD reward must be of symbol type SBD.");
+                } else if (rewardSbd.getAmount() < 0) {
+                    throw new InvalidParameterException("Cannot claim a negative SBD amount");
+                } else if (!rewardVests.getSymbol().equals(AssetSymbolType.VESTS)) {
+                    throw new InvalidParameterException("The VESTS reward must be of symbol type VESTS.");
+                } else if (rewardVests.getAmount() < 0) {
+                    throw new InvalidParameterException("Cannot claim a negative VESTS amount");
+                } else if (!rewardSteem.getSymbol().equals(AssetSymbolType.STEEM)) {
+                    throw new InvalidParameterException("The STEEM reward must be of symbol type STEEM.");
+                } else if (rewardSteem.getAmount() < 0) {
+                    throw new InvalidParameterException("Cannot claim a negative STEEM amount");
+                }
+            }
+        }
     }
 }

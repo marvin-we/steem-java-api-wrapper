@@ -99,8 +99,14 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
      * 
      * @param orderId
      *            The order id of the order that should be canceled.
+     * @throws InvalidParameterException
+     *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
+        if (orderId == null) {
+            throw new InvalidParameterException("The provided order id can't be null.");
+        }
+
         this.orderId = orderId;
     }
 
@@ -127,7 +133,6 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        return;
     }
 }

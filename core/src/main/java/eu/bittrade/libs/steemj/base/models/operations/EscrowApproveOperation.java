@@ -55,7 +55,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      *            {@link #setWho(AccountName)}).
      * @param approve
      *            Define if the {@link #getWho()} account approves the operation
-     *            (see {@link #setApprove(Boolean)}).
+     *            (see {@link #setApprove(boolean)}).
      * @throws InvalidParameterException
      *             If one of the arguemnts does not fulfill the requirements.
      */
@@ -168,15 +168,8 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      * @param approve
      *            True if the operation has been approved or false if not.
      */
-    public void setApprove(Boolean approve) {
+    public void setApprove(boolean approve) {
         this.approve = approve;
-    }
-
-    /**
-     * TODO: Validate all parameter of this Operation type.
-     */
-    public void validate() {
-        // FC_ASSERT( who == from || who == to, "who must be from or to" );
     }
 
     @Override
@@ -211,7 +204,9 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType) && (!who.equals(to) || !who.equals(agent))) {
+            throw new InvalidParameterException(
+                    "The to account or the agent account must approve this escrow operation.");
+        }
     }
 }

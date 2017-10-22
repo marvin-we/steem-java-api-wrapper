@@ -26,9 +26,13 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class VoteOperation extends Operation {
+    @JsonProperty("voter")
     private AccountName voter;
+    @JsonProperty("author")
     private AccountName author;
+    @JsonProperty("permlink")
     private Permlink permlink;
+    @JsonProperty("weight")
     private short weight;
 
     /**
@@ -179,13 +183,6 @@ public class VoteOperation extends Operation {
      *             If the weight is greater than 10000 or less than -10000.
      */
     public void setWeight(short weight) {
-        if (weight > 10000) {
-            throw new InvalidParameterException(
-                    "The voting weight can't be higher than 10000 which is equivalent to 100%.");
-        } else if (weight < -10000) {
-            throw new InvalidParameterException(
-                    "The voting weight can't be lower than -10000 which is equivalent to -100%.");
-        }
         this.weight = weight;
     }
 
@@ -219,7 +216,14 @@ public class VoteOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (weight > 10000) {
+                throw new InvalidParameterException(
+                        "The voting weight can't be higher than 10000 which is equivalent to 100%.");
+            } else if (weight < -10000) {
+                throw new InvalidParameterException(
+                        "The voting weight can't be lower than -10000 which is equivalent to -100%.");
+            }
+        }
     }
 }

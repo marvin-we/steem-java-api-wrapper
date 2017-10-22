@@ -171,9 +171,11 @@ public class CommentOperation extends Operation {
      * 
      * @param parentAuthor
      *            The author of the parent article you want to comment on.
+     * @throws InvalidParameterException
+     *             If the <code>parentAuthor</code> is null.
      */
     public void setParentAuthor(AccountName parentAuthor) {
-        if (parentAuthor == null || parentAuthor.isEmpty()) {
+        if (parentAuthor == null) {
             this.parentAuthor = new AccountName("");
         } else {
             this.parentAuthor = parentAuthor;
@@ -251,6 +253,10 @@ public class CommentOperation extends Operation {
      *             If the <code>parentPermlink</code> is null.
      */
     public void setParentPermlink(Permlink parentPermlink) {
+        if (parentPermlink == null) {
+            throw new InvalidParameterException("The permlink can't be null.");
+        }
+
         this.parentPermlink = parentPermlink;
     }
 
@@ -274,8 +280,6 @@ public class CommentOperation extends Operation {
     public void setTitle(String title) {
         if (title == null) {
             this.title = "";
-        } else if (title.length() > 255) {
-            throw new InvalidParameterException("The title can't have more than 255 characters.");
         } else {
             this.title = title;
         }
@@ -325,14 +329,7 @@ public class CommentOperation extends Operation {
      *             but the JSON is invalid.
      */
     public void setJsonMetadata(String jsonMetadata) {
-        if (jsonMetadata != null && !jsonMetadata.isEmpty()) {
-            if (!SteemJUtils.verifyJsonString(jsonMetadata)) {
-                throw new InvalidParameterException("The given String is no valid JSON");
-            }
-            this.jsonMetadata = jsonMetadata;
-        } else {
-            this.jsonMetadata = "";
-        }
+        this.jsonMetadata = jsonMetadata;
     }
 
     @Override
@@ -368,7 +365,12 @@ public class CommentOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (title.length() > 255) {
+                throw new InvalidParameterException("The title can't have more than 255 characters.");
+            } else if (!SteemJUtils.verifyJsonString(jsonMetadata)) {
+                throw new InvalidParameterException("The given String is no valid JSON");
+            }
+        }
     }
 }

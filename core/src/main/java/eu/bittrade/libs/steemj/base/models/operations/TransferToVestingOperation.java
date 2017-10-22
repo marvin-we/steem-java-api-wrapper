@@ -11,9 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -103,10 +101,6 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
     public void setAmount(Asset amount) {
         if (amount == null) {
             throw new InvalidParameterException("The amount can't be null.");
-        } else if (!amount.getSymbol().equals(AssetSymbolType.STEEM)) {
-            throw new InvalidParameterException("The amount must be of type STEEM.");
-        } else if (amount.getAmount() <= 0) {
-            throw new InvalidParameterException("Must transfer a nonzero amount.");
         }
 
         this.amount = amount;
@@ -131,11 +125,5 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
-    }
-
-    @Override
-    public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
     }
 }

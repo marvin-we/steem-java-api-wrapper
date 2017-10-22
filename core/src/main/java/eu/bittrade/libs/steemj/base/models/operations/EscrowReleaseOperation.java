@@ -63,7 +63,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      * @param sbdAmount
      * @param steemAmount
      * @throws InvalidParameterException
-     *             If one of the arguemnts does not fulfill the requirements.
+     *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
     public EscrowReleaseOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
@@ -72,26 +72,14 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
             @JsonProperty("sbd_amount") Asset sbdAmount, @JsonProperty("steem_amount") Asset steemAmount) {
         super(false);
 
-        if (from == null || to == null || agent == null || who == null
-                || (!who.equals(agent) && !who.equals(to) && !who.equals(from))) {
-            throw new InvalidParameterException(
-                    "The who account must be the from account or the to account or the agent account.");
-        }
-
-        this.from = from;
-        this.to = to;
-        this.agent = agent;
-
-        if (sbdAmount == null || steemAmount == null || (sbdAmount.getAmount() + steemAmount.getAmount() <= 0)) {
-            throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
-        }
-
-        this.sbdAmount = sbdAmount;
-        this.steemAmount = steemAmount;
-
-        this.setReceiver(receiver);
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAgent(agent);
         this.setEscrowId(escrowId);
         this.setWho(who);
+        this.setReceiver(receiver);
+        this.setSbdAmount(sbdAmount);
+        this.setSteemAmount(steemAmount);
     }
 
     /**
@@ -103,7 +91,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      * @param who
      * @param receiver
      * @throws InvalidParameterException
-     *             If one of the arguemnts does not fulfill the requirements.
+     *             If one of the arguments does not fulfill the requirements.
      */
     public EscrowReleaseOperation(AccountName from, AccountName to, AccountName agent, long escrowId, AccountName who,
             AccountName receiver) {
@@ -119,7 +107,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      * @param who
      * @param receiver
      * @throws InvalidParameterException
-     *             If one of the arguemnts does not fulfill the requirements.
+     *             If one of the arguments does not fulfill the requirements.
      */
     public EscrowReleaseOperation(AccountName from, AccountName to, AccountName agent, AccountName who,
             AccountName receiver) {
@@ -141,12 +129,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public void setFrom(AccountName from) {
         if (from == null) {
             throw new InvalidParameterException("The from account can't be null.");
-        } else if (!this.getWho().equals(this.getAgent()) && !this.getWho().equals(this.getTo())
-                && !this.getWho().equals(from)) {
-            throw new InvalidParameterException(
-                    "The who account must be the from account or the to account or the agent account.");
-        } else if (!this.getReceiver().equals(from) && !this.getReceiver().equals(this.getTo())) {
-            throw new InvalidParameterException("The receiver account must be from or to.");
         }
 
         this.from = from;
@@ -165,12 +147,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public void setTo(AccountName to) {
         if (to == null) {
             throw new InvalidParameterException("The to account can't be null.");
-        } else if (!this.getWho().equals(this.getAgent()) && !this.getWho().equals(to)
-                && !this.getWho().equals(this.getFrom())) {
-            throw new InvalidParameterException(
-                    "The who account must be the from account or the to account or the agent account.");
-        } else if (!this.getReceiver().equals(this.getFrom()) && !this.getReceiver().equals(to)) {
-            throw new InvalidParameterException("The receiver account must be from or to.");
         }
 
         this.to = to;
@@ -190,10 +166,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public void setAgent(AccountName agent) {
         if (agent == null) {
             throw new InvalidParameterException("The agent can't be null.");
-        } else if (!this.getWho().equals(agent) && !this.getWho().equals(this.getTo())
-                && !this.getWho().equals(this.getFrom())) {
-            throw new InvalidParameterException(
-                    "The who account must be the from account or the to account or the agent account.");
         }
 
         this.agent = agent;
@@ -221,8 +193,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public void setWho(AccountName who) {
         if (who == null) {
             throw new InvalidParameterException("The who account can't be null.");
-        } else if (!who.equals(this.getFrom()) && !who.equals(this.getAgent())) {
-            throw new InvalidParameterException("The who account must be the from or the agent account.");
         }
 
         this.who = who;
@@ -249,8 +219,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public void setReceiver(AccountName receiver) {
         if (receiver == null) {
             throw new InvalidParameterException("The receiver account can't be null.");
-        } else if (!receiver.equals(this.getFrom()) && !receiver.equals(this.getTo())) {
-            throw new InvalidParameterException("The receiver account must be the from or the to account.");
         }
 
         this.receiver = receiver;
@@ -279,12 +247,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public void setSbdAmount(Asset sbdAmount) {
         if (sbdAmount == null) {
             throw new InvalidParameterException("The sbd amount can't be null.");
-        } else if (sbdAmount.getAmount() < 0) {
-            throw new InvalidParameterException("The sbd amount cannot be negative.");
-        } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
-            throw new InvalidParameterException("The sbd amount must contain SBD.");
-        } else if (sbdAmount.getAmount() + this.getSteemAmount().getAmount() < 0) {
-            throw new InvalidParameterException("An escrow must release a non-zero amount.");
         }
 
         this.sbdAmount = sbdAmount;
@@ -313,12 +275,6 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public void setSteemAmount(Asset steemAmount) {
         if (steemAmount == null) {
             throw new InvalidParameterException("The steem amount can't be null.");
-        } else if (steemAmount.getAmount() < 0) {
-            throw new InvalidParameterException("The steem amount cannot be negative.");
-        } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
-            throw new InvalidParameterException("The steem amount must contain STEEM.");
-        } else if (steemAmount.getAmount() + this.getSbdAmount().getAmount() < 0) {
-            throw new InvalidParameterException("An escrow must release a non-zero amount.");
         }
 
         this.steemAmount = steemAmount;
@@ -358,7 +314,28 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+                if (steemAmount.getAmount() < 0) {
+                    throw new InvalidParameterException("The steem amount cannot be negative.");
+                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                    throw new InvalidParameterException("The steem amount must contain STEEM.");
+                } else if (sbdAmount.getAmount() < 0) {
+                    throw new InvalidParameterException("The sbd amount cannot be negative.");
+                } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                    throw new InvalidParameterException("The sbd amount must contain SBD.");
+                } else if (sbdAmount.getAmount() + steemAmount.getAmount() < 0) {
+                    throw new InvalidParameterException("An escrow must release a non-zero amount.");
+                }
+            }
 
+            if (!who.equals(from) && !who.equals(to) && !who.equals(agent)) {
+                throw new InvalidParameterException(
+                        "The who account must be either the from account, the to account or the agent account.");
+            } else if (!receiver.equals(from) && receiver.equals(to)) {
+                throw new InvalidParameterException(
+                        "The receiver account must be either the from account or the to account.");
+            }
+        }
     }
 }

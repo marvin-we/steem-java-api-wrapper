@@ -147,10 +147,8 @@ public class EscrowDisputeOperation extends AbstractEscrowOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-        /**
-         * TODO: Validate all parameter of this Operation type.
-         */
-        // FC_ASSERT( who == from || who == to, "who must be from or to" );
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType) && (!who.equals(from) || !who.equals(to))) {
+            throw new InvalidParameterException("The who account must be either the from account or the to account.");
+        }
     }
 }

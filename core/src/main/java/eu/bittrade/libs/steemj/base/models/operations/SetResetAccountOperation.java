@@ -113,10 +113,6 @@ public class SetResetAccountOperation extends Operation {
      *            account}. I
      */
     public void setCurrentResetAccount(AccountName currentResetAccount) {
-        if (currentResetAccount.equals(this.getResetAccount())) {
-            throw new InvalidParameterException(
-                    "The current reset account can't be set to the same account as the new reset account.");
-        }
         this.currentResetAccount = currentResetAccount;
     }
 
@@ -181,7 +177,10 @@ public class SetResetAccountOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && currentResetAccount.equals(this.getResetAccount())) {
+            throw new InvalidParameterException(
+                    "The current reset account can't be set to the same account as the new reset account.");
+        }
     }
 }

@@ -60,7 +60,8 @@ public class CustomBinaryOperation extends Operation {
      *            The required authorities that need to sign this operation (see
      *            {@link #setRequiredAuths(List)}).
      * @param id
-     *            The id of this operation (see {@link #setId(String)}).
+     *            The id of the plugin which can process this operation (see
+     *            {@link #setId(String)}).
      * @param data
      *            The data to set (see {@link #setData(String)}).
      * @throws InvalidParameterException
@@ -185,19 +186,23 @@ public class CustomBinaryOperation extends Operation {
     }
 
     /**
-     * @return the id.
+     * @return Get the plugin id.
      */
     public String getId() {
         return id;
     }
 
     /**
+     * Set the id of the plugin which can process this operation.
+     * 
      * @param id
-     *            The id to set.
+     *            The plugin id to set.
+     * @throws InvalidParameterException
+     *             If the <code>id</code> is null.
      */
     public void setId(String id) {
-        if (id.length() > 32) {
-            throw new InvalidParameterException("The id must be less than 32 characters long.");
+        if (id == null) {
+            throw new InvalidParameterException("The id can't be null.");
         }
 
         this.id = id;
@@ -222,16 +227,6 @@ public class CustomBinaryOperation extends Operation {
      */
     public void setData(String data) {
         this.data = data;
-    }
-
-    /**
-     * TODO: Validate all parameter of this Operation type.
-     */
-    public void validate() {
-        // FC_ASSERT( (required_owner_auths.size() +
-        // required_active_auths.size() + required_posting_auths.size()) > 0,
-        // "at least on account must be specified" );
-        // for( const auto& a : required_auths ) a.validate();
     }
 
     @Override
@@ -305,7 +300,12 @@ public class CustomBinaryOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (id.length() > 32) {
+                throw new InvalidParameterException("The id must be less than 32 characters long.");
+            } else if (requiredOwnerAuths.size() + requiredActiveAuths.size() + requiredPostingAuths.size() <= 0) {
+                throw new InvalidParameterException("At least on account must be specified.");
+            }
+        }
     }
 }

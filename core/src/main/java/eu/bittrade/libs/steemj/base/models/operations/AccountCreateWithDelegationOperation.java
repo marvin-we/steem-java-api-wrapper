@@ -111,17 +111,14 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      * to the {@link #getNewAccountName() newAccountName}.
      * 
      * @param delegation
-     *            The amount of VESTS delegated to the new account. * @throws
-     *            InvalidParameterException If the <code>fee</code> is null, of
-     *            symbol type VESTS or less than 0.
+     *            The amount of VESTS delegated to the new account.
+     * @throws InvalidParameterException
+     *             If the <code>fee</code> is null, of symbol type VESTS or less
+     *             than 0.
      */
     public void setDelegation(Asset delegation) {
         if (delegation == null) {
             throw new InvalidParameterException("The delegation can't be null.");
-        } else if (!delegation.getSymbol().equals(AssetSymbolType.VESTS)) {
-            throw new InvalidParameterException("The delegation must have the symbol type VESTS.");
-        } else if (delegation.getAmount() < 0) {
-            throw new InvalidParameterException("The delegation must be a postive amount.");
         }
 
         this.delegation = delegation;
@@ -186,7 +183,16 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            super.validate(validationType);
 
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+                if (!delegation.getSymbol().equals(AssetSymbolType.VESTS)) {
+                    throw new InvalidParameterException("The delegation must have the symbol type VESTS.");
+                } else if (delegation.getAmount() < 0) {
+                    throw new InvalidParameterException("The delegation must be a postive amount.");
+                }
+            }
+        }
     }
 }

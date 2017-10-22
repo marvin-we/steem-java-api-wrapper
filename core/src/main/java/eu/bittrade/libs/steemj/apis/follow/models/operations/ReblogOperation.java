@@ -130,18 +130,16 @@ public class ReblogOperation extends CustomJsonOperationPayload {
 
     @Override
     public void validate(ValidationType validationType) {
-        if (validationType.equals(ValidationType.SKIP_VALIDATION)) {
-            return;
-        }
-        // Validate the object.
-        if (this.getAccount() == null) {
-            throw new InvalidParameterException("The account cannot be null.");
-        } else if (this.getAuthor() == null) {
-            throw new InvalidParameterException("The author account cannot be null.");
-        } else if (this.getPermlink() == null) {
-            throw new InvalidParameterException("The permlink account cannot be null.");
-        } else if (this.getAccount().equals(this.getAuthor())) {
-            throw new InvalidParameterException("You cannot reblog your own content.");
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (this.getAccount() == null) {
+                throw new InvalidParameterException("The account cannot be null.");
+            } else if (this.getAuthor() == null) {
+                throw new InvalidParameterException("The author account cannot be null.");
+            } else if (this.getPermlink() == null) {
+                throw new InvalidParameterException("The permlink account cannot be null.");
+            } else if (this.getAccount().equals(this.getAuthor())) {
+                throw new InvalidParameterException("You cannot reblog your own content.");
+            }
         }
     }
 }

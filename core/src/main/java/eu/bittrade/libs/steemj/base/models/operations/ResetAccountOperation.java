@@ -134,10 +134,6 @@ public class ResetAccountOperation extends Operation {
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
         if (newOwnerAuthority == null) {
             throw new InvalidParameterException("The new owner authority can't be null.");
-        } else if (newOwnerAuthority.isImpossible()) {
-            throw new InvalidParameterException("The new owner authority can't be impossible.");
-        } else if (newOwnerAuthority.getWeightThreshold() < 1) {
-            throw new InvalidParameterException("The new owner authority can't be trivial.");
         }
 
         this.newOwnerAuthority = newOwnerAuthority;
@@ -172,7 +168,12 @@ public class ResetAccountOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (newOwnerAuthority.isImpossible()) {
+                throw new InvalidParameterException("The new owner authority can't be impossible.");
+            } else if (newOwnerAuthority.getWeightThreshold() < 1) {
+                throw new InvalidParameterException("The new owner authority can't be trivial.");
+            }
+        }
     }
 }

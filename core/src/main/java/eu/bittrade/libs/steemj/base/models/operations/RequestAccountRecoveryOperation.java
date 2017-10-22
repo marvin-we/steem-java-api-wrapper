@@ -261,7 +261,6 @@ public class RequestAccountRecoveryOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        return;
     }
 }

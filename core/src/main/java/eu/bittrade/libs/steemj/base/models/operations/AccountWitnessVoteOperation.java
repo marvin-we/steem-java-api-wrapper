@@ -47,7 +47,7 @@ public class AccountWitnessVoteOperation extends Operation {
      *            {@link #setWitness(AccountName)}).
      * @param approve
      *            Define if the vote is be approved or not (see
-     *            {@link #setApprove(Boolean)}).
+     *            {@link #setApprove(boolean)}).
      * @throws InvalidParameterException
      *             If one of the parameters does not fulfill the requirements.
      */
@@ -95,8 +95,14 @@ public class AccountWitnessVoteOperation extends Operation {
      * 
      * @param account
      *            The account name that should perform the vote.
+     * @throws InvalidParameterException
+     *             If the <code>account</code> account is null
      */
     public void setAccount(AccountName account) {
+        if (account == null) {
+            throw new InvalidParameterException("The witness acccount can't be null.");
+        }
+
         this.account = account;
     }
 
@@ -114,8 +120,14 @@ public class AccountWitnessVoteOperation extends Operation {
      * 
      * @param witness
      *            The witness that should be voted for.
+     * @throws InvalidParameterException
+     *             If the <code>witness</code> account is null
      */
     public void setWitness(AccountName witness) {
+        if (witness == null) {
+            throw new InvalidParameterException("The witness acccount can't be null.");
+        }
+
         this.witness = witness;
     }
 
@@ -124,7 +136,7 @@ public class AccountWitnessVoteOperation extends Operation {
      * 
      * @return The information if this vote has been approved or not.
      */
-    public Boolean getApprove() {
+    public boolean getApprove() {
         return approve;
     }
 
@@ -134,7 +146,7 @@ public class AccountWitnessVoteOperation extends Operation {
      * @param approve
      *            Define if this vote is approved or not.
      */
-    public void setApprove(Boolean approve) {
+    public void setApprove(boolean approve) {
         this.approve = approve;
     }
 
@@ -167,7 +179,6 @@ public class AccountWitnessVoteOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        return;
     }
 }

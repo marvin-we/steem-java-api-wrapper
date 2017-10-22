@@ -94,7 +94,7 @@ public class CustomOperation extends Operation {
      *             If less than 1 account name has been provided.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
-        if (requiredAuths == null || requiredAuths.isEmpty()) {
+        if (requiredAuths == null) {
             throw new InvalidParameterException("At least on account must be specified.");
         }
 
@@ -179,7 +179,8 @@ public class CustomOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType) && requiredAuths.isEmpty()) {
+            throw new InvalidParameterException("At least on account must be specified.");
+        }
     }
 }

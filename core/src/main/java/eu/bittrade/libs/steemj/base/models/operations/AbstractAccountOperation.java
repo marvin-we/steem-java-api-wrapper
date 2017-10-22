@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -122,10 +123,14 @@ public abstract class AbstractAccountOperation extends Operation {
      *            The json metadata.
      */
     public void setJsonMetadata(String jsonMetadata) {
-        if (!jsonMetadata.isEmpty() && !SteemJUtils.verifyJsonString(jsonMetadata)) {
+        this.jsonMetadata = jsonMetadata;
+    }
+
+    @Override
+    public void validate(ValidationType validationType) {
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && (!jsonMetadata.isEmpty() && !SteemJUtils.verifyJsonString(jsonMetadata))) {
             throw new InvalidParameterException("The given json metadata is no valid JSON");
         }
-
-        this.jsonMetadata = jsonMetadata;
     }
 }

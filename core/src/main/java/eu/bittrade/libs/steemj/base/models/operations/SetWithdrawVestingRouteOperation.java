@@ -165,10 +165,6 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      *             which is equivalent to 0.00%-100.00%.
      */
     public void setPercent(int percent) {
-        if (percent < 0 || percent > 10000) {
-            throw new InvalidParameterException(
-                    "The given percentage must be a postive number between 0 and 10000 which is equivalent to 0.00%-100.00%.");
-        }
         this.percent = percent;
     }
 
@@ -226,7 +222,9 @@ public class SetWithdrawVestingRouteOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if ((!ValidationType.SKIP_VALIDATION.equals(validationType)) && (percent < 0 || percent > 10000)) {
+            throw new InvalidParameterException(
+                    "The given percentage must be a postive number between 0 and 10000 which is equivalent to 0.00%-100.00%.");
+        }
     }
 }

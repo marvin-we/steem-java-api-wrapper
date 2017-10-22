@@ -104,32 +104,15 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
             @JsonProperty("json_meta") String jsonMeta) {
         super(false);
 
-        if (from == null || to == null || agent == null || from.equals(agent) || to.equals(agent)) {
-            throw new InvalidParameterException("The agent account must be a third party.");
-        }
-
-        this.from = from;
-        this.to = to;
-        this.agent = agent;
-
-        if (sbdAmount == null || steemAmount == null || (sbdAmount.getAmount() + steemAmount.getAmount() <= 0)) {
-            throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
-        }
-
-        this.sbdAmount = sbdAmount;
-        this.steemAmount = steemAmount;
-
-        if (ratificationDeadlineDate == null || escrowExpirationDate == null
-                || ratificationDeadlineDate.getDateTimeAsTimestamp() >= escrowExpirationDate.getDateTimeAsTimestamp()) {
-            throw new InvalidParameterException("The ratification deadline must be before escrow expiration");
-        }
-
-        this.ratificationDeadlineDate = ratificationDeadlineDate;
-        this.escrowExpirationDate = escrowExpirationDate;
-
+        this.setFrom(from);
+        this.setTo(to);
+        this.setAgent(agent);
         this.setEscrowId(escrowId);
+        this.setSbdAmount(sbdAmount);
+        this.setSteemAmount(steemAmount);
         this.setFee(fee);
-        this.setJsonMeta(jsonMeta);
+        this.setRatificationDeadlineDate(ratificationDeadlineDate);
+        this.setEscrowExpirationDate(escrowExpirationDate);
     }
 
     /**
@@ -154,7 +137,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *            Set the fee that will be paid to the agent (see
      *            {@link #setFee(Asset)}).
      * @param ratificationDeadlineDate
-     *            Define until when the escrow opperation needs to be approved
+     *            Define until when the escrow operation needs to be approved
      *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
      * @param escrowExpirationDate
      *            Define when this escrow operation expires (see
@@ -189,7 +172,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *            Set the fee that will be paid to the agent (see
      *            {@link #setFee(Asset)}).
      * @param ratificationDeadlineDate
-     *            Define until when the escrow opperation needs to be approved
+     *            Define until when the escrow operation needs to be approved
      *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
      * @param escrowExpirationDate
      *            Define when this escrow operation expires (see
@@ -220,8 +203,6 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public void setFrom(AccountName from) {
         if (from == null) {
             throw new InvalidParameterException("The from account can't be null.");
-        } else if (from.equals(this.getAgent())) {
-            throw new InvalidParameterException("The agent account must be a third party.");
         }
 
         this.from = from;
@@ -240,8 +221,6 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public void setTo(AccountName to) {
         if (to == null) {
             throw new InvalidParameterException("The to account can't be null.");
-        } else if (to.equals(this.getAgent())) {
-            throw new InvalidParameterException("The agent account must be a third party.");
         }
 
         this.to = to;
@@ -260,8 +239,6 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public void setAgent(AccountName agent) {
         if (agent == null) {
             throw new InvalidParameterException("The agent can't be null.");
-        } else if (agent.equals(this.getFrom()) || agent.equals(this.getTo())) {
-            throw new InvalidParameterException("The agent account must be a third party.");
         }
 
         this.agent = agent;
@@ -290,12 +267,6 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public void setSbdAmount(Asset sbdAmount) {
         if (sbdAmount == null) {
             throw new InvalidParameterException("The sbd amount can't be null.");
-        } else if (sbdAmount.getAmount() < 0) {
-            throw new InvalidParameterException("The sbd amount cannot be negative.");
-        } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
-            throw new InvalidParameterException("The sbd amount must contain SBD.");
-        } else if (sbdAmount.getAmount() + this.getSteemAmount().getAmount() < 0) {
-            throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
         }
 
         this.sbdAmount = sbdAmount;
@@ -324,12 +295,6 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public void setSteemAmount(Asset steemAmount) {
         if (steemAmount == null) {
             throw new InvalidParameterException("The steem amount can't be null.");
-        } else if (steemAmount.getAmount() < 0) {
-            throw new InvalidParameterException("The steem amount cannot be negative.");
-        } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
-            throw new InvalidParameterException("The steem amount must contain STEEM.");
-        } else if (steemAmount.getAmount() + this.getSbdAmount().getAmount() < 0) {
-            throw new InvalidParameterException("An escrow must transfer a non-zero amount.");
         }
 
         this.steemAmount = steemAmount;
@@ -356,18 +321,13 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public void setFee(Asset fee) {
         if (fee == null) {
             throw new InvalidParameterException("The fee can't be null.");
-        } else if (fee.getAmount() < 0) {
-            throw new InvalidParameterException("The fee cannot be negative.");
-        } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM) && !fee.getSymbol().equals(AssetSymbolType.SBD)) {
-            throw new InvalidParameterException("The fee must be STEEM or SBD.");
         }
 
         this.fee = fee;
     }
 
     /**
-     * Get the information until when the escrow opperation needs to be
-     * approved.
+     * Get the information until when the escrow operation needs to be approved.
      * 
      * @return The ratification deadline.
      */
@@ -376,7 +336,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     }
 
     /**
-     * Define until when the escrow opperation needs to be approved.
+     * Define until when the escrow operation needs to be approved.
      * 
      * @param ratificationDeadlineDate
      *            The ratification deadline. to set.
@@ -388,9 +348,6 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public void setRatificationDeadlineDate(TimePointSec ratificationDeadlineDate) {
         if (ratificationDeadlineDate == null) {
             throw new InvalidParameterException("The ratification deadline date can't be null.");
-        } else if (ratificationDeadlineDate.getDateTimeAsTimestamp() >= this.getEscrowExpirationDate()
-                .getDateTimeAsTimestamp()) {
-            throw new InvalidParameterException("The ratification deadline must be before escrow expiration.");
         }
 
         this.ratificationDeadlineDate = ratificationDeadlineDate;
@@ -410,13 +367,14 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @param escrowExpirationDate
      *            The escrow expiration date to set.
+     * @throws InvalidParameterException
+     *             If the <code>escrowExpirationDate</code> is null or if the
+     *             {@link #getRatificationDeadlineDate()} is <b>not</b> before
+     *             the <code>escrowExpirationDate</code>.
      */
     public void setEscrowExpirationDate(TimePointSec escrowExpirationDate) {
         if (escrowExpirationDate == null) {
             throw new InvalidParameterException("The escrow expiration date can't be null.");
-        } else if (escrowExpirationDate.getDateTimeAsTimestamp() < this.getRatificationDeadlineDate()
-                .getDateTimeAsTimestamp()) {
-            throw new InvalidParameterException("The ratification deadline must be before escrow expiration.");
         }
 
         this.escrowExpirationDate = escrowExpirationDate;
@@ -440,10 +398,6 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             If the given <code>jsonMeta</code> is not valid.
      */
     public void setJsonMeta(String jsonMeta) {
-        if (!jsonMeta.isEmpty() && !SteemJUtils.verifyJsonString(jsonMeta)) {
-            throw new InvalidParameterException("The given String is no valid JSON");
-        }
-
         this.jsonMeta = jsonMeta;
     }
 
@@ -477,7 +431,34 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+                if (fee.getAmount() < 0) {
+                    throw new InvalidParameterException("The fee cannot be negative.");
+                } else if (sbdAmount.getAmount() < 0) {
+                    throw new InvalidParameterException("The sbd amount cannot be negative.");
+                } else if (steemAmount.getAmount() < 0) {
+                    throw new InvalidParameterException("The steem amount cannot be negative.");
+                } else if (sbdAmount.getAmount() + steemAmount.getAmount() < 0) {
+                    throw new InvalidParameterException("An escrow must release a non-zero amount.");
+                } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM)
+                        && !fee.getSymbol().equals(AssetSymbolType.SBD)) {
+                    throw new InvalidParameterException("The fee must be STEEM or SBD.");
+                } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                    throw new InvalidParameterException("The sbd amount must contain SBD.");
+                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                    throw new InvalidParameterException("The steem amount must contain STEEM.");
+                }
+            }
 
+            if (agent.equals(from) || agent.equals(to)) {
+                throw new InvalidParameterException("The agent needs to be a third party.");
+            } else if (escrowExpirationDate.getDateTimeAsTimestamp() < this.getRatificationDeadlineDate()
+                    .getDateTimeAsTimestamp()) {
+                throw new InvalidParameterException("The ratification deadline must be before escrow expiration.");
+            } else if (jsonMeta != null && !jsonMeta.isEmpty() && !SteemJUtils.verifyJsonString(jsonMeta)) {
+                throw new InvalidParameterException("The given String is no valid JSON");
+            }
+        }
     }
 }

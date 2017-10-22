@@ -74,8 +74,6 @@ public class AccountWitnessProxyOperation extends Operation {
     public void setAccount(AccountName account) {
         if (account == null) {
             throw new InvalidParameterException("The account can't be null.");
-        } else if (this.getProxy() != null && this.getProxy().equals(account)) {
-            throw new InvalidParameterException("You can't proxy yourself.");
         }
 
         this.account = account;
@@ -103,8 +101,6 @@ public class AccountWitnessProxyOperation extends Operation {
         AccountName localProxy = proxy;
         if (localProxy == null) {
             localProxy = new AccountName("");
-        } else if (this.getAccount() != null && this.getAccount().equals(proxy)) {
-            throw new InvalidParameterException("You can't proxy yourself.");
         }
 
         this.proxy = localProxy;
@@ -138,7 +134,9 @@ public class AccountWitnessProxyOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && (this.getProxy() != null && this.getProxy().equals(account))) {
+            throw new InvalidParameterException("You can't proxy yourself.");
+        }
     }
 }

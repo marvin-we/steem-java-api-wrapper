@@ -16,6 +16,13 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 public class SteemJReconnectHandler extends ReconnectHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
 
+    /**
+     * 
+     */
+    void SteemJReconnectHandler() {
+
+    }
+
     @Override
     public boolean onDisconnect(CloseReason closeReason) {
         if (SteemJConfig.getInstance().getSocketTimeout() <= 0) {
@@ -29,6 +36,11 @@ public class SteemJReconnectHandler extends ReconnectHandler {
 
     @Override
     public boolean onConnectFailure(Exception exception) {
+        LOGGER.info(
+                "The connection has been closed due to a failure. Depending on the available nodes SteemJ will either try to reconnect"
+                        + " to the same node or switch to a different one.");
+        LOGGER.debug("Reason: ", exception);
+
         // Always try to reconnect.
         // TODO: Switch the node before reconnecting.
         return true;

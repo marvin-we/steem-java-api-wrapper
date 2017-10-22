@@ -242,12 +242,11 @@ public class WitnessUpdateOperation extends Operation {
      * @param fee
      *            The fee that should be paid for this witness update.
      * @throws InvalidParameterException
-     *             If the provided asset object is null, the amount is 0 or the
-     *             asset symbol is not STEEM.
+     *             If the provided asset object is null.
      */
     public void setFee(Asset fee) {
-        if (fee == null || fee.getAmount() < 0 || fee.getSymbol() != AssetSymbolType.STEEM) {
-            throw new InvalidParameterException("The fee needs to be a positive amount of STEEM.");
+        if (fee == null) {
+            throw new InvalidParameterException("The fee can't be null.");
         }
         this.fee = fee;
     }
@@ -284,7 +283,10 @@ public class WitnessUpdateOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if ((!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
+                && !ValidationType.SKIP_VALIDATION.equals(validationType))
+                && (this.getFee().getAmount() < 0 || !AssetSymbolType.STEEM.equals(this.getFee().getSymbol()))) {
+            throw new InvalidParameterException("The fee needs to be a positive amount of STEEM.");
+        }
     }
 }

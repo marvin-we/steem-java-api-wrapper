@@ -60,7 +60,8 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * Create a new signed transaction object.
      * 
      * @param refBlockNum
-     *            The reference block number (see {@link #setRefBlockNum(UShort)}).
+     *            The reference block number (see
+     *            {@link #setRefBlockNum(UShort)}).
      * @param refBlockPrefix
      *            The reference block index (see
      *            {@link #setRefBlockPrefix(UInteger)}).
@@ -335,6 +336,12 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
             serializedTransaction.write(SteemJUtils.transformLongToVarIntByteArray(this.getOperations().size()));
             for (Operation operation : this.getOperations()) {
+                /*
+                 * Validate all Operations
+                 * 
+                 * TODO: Add a validation method to the Transaction Object?
+                 */
+                operation.validate(SteemJConfig.getInstance().getValidationLevel());
                 serializedTransaction.write(operation.toByteArray());
             }
 

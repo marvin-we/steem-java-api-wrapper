@@ -77,15 +77,16 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
                 && SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("wss")
                 || SteemJConfig.getInstance().getWebSocketEndpointURI().getScheme().equals("https")) {
             SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
+            // TODO: This can also be solved with a lamda expression which would
+            // require Java 8:
+            // sslEngineConfigurator.setHostnameVerifier((String host,
+            // SSLSession sslSession) -> true);
             sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
                 @Override
                 public boolean verify(String host, SSLSession sslSession) {
                     return true;
                 }
             });
-            // TODO: Requires Java 8:
-            // sslEngineConfigurator.setHostnameVerifier((String host,
-            // SSLSession sslSession) -> true);
             client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
         }
 
@@ -187,7 +188,7 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      * @throws SteemCommunicationException
      *             If there is a connection problem.
      */
-    private void connect() throws SteemCommunicationException {
+    protected void connect() throws SteemCommunicationException {
         try {
             if (session != null && session.isOpen()) {
                 session.close();

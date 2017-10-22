@@ -142,16 +142,14 @@ public class FollowOperation extends CustomJsonOperationPayload {
 
     @Override
     public void validate(ValidationType validationType) {
-        if (validationType.equals(ValidationType.SKIP_VALIDATION)) {
-            return;
-        }
-        // Validate the object.
-        if (this.getFollower() == null) {
-            throw new InvalidParameterException("The follower account cannot be null.");
-        } else if (this.getFollowing() == null) {
-            throw new InvalidParameterException("The following account cannot be null.");
-        } else if (this.getFollower().equals(this.getFollowing())) {
-            throw new InvalidParameterException("You cannot follow yourself.");
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (this.getFollower() == null) {
+                throw new InvalidParameterException("The follower account cannot be null.");
+            } else if (this.getFollowing() == null) {
+                throw new InvalidParameterException("The following account cannot be null.");
+            } else if (this.getFollower().equals(this.getFollowing())) {
+                throw new InvalidParameterException("You cannot follow yourself.");
+            }
         }
     }
 }

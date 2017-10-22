@@ -66,35 +66,10 @@ public class CustomJsonOperation extends Operation {
             @JsonProperty("id") String id, @JsonProperty("json") String json) {
         super(false);
 
-        if ((requiredAuths == null || requiredAuths.isEmpty())
-                && (requiredPostingAuths == null || requiredPostingAuths.isEmpty())) {
-            throw new InvalidParameterException("At least one authority needs to be provided (POSTING or ACTIVE).");
-        }
-
-        if (requiredAuths == null) {
-            this.requiredAuths = new ArrayList<>();
-        } else {
-            this.requiredAuths = requiredAuths;
-        }
-
-        if (requiredPostingAuths == null) {
-            this.requiredPostingAuths = new ArrayList<>();
-        } else {
-            this.requiredPostingAuths = requiredPostingAuths;
-        }
-
-        if (id == null) {
-            this.setId("");
-        } else {
-            this.setId(id);
-        }
-
-        if (json == null) {
-            this.setJson("");
-        } else {
-            this.setJson(json);
-        }
-
+        this.setRequiredAuths(requiredAuths);
+        this.setRequiredPostingAuths(requiredPostingAuths);
+        this.setId(id);
+        this.setJson(json);
     }
 
     /**
@@ -118,12 +93,6 @@ public class CustomJsonOperation extends Operation {
      *             addition no {@link #getRequiredPostingAuths()} are provided.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
-        if ((requiredAuths == null || requiredAuths.isEmpty())
-                && (this.getRequiredPostingAuths() == null || this.getRequiredPostingAuths().isEmpty())) {
-            throw new InvalidParameterException(
-                    "The list of required posting authorities is empty too - At least one authority type (POSTING or ACTIVE) needs to be provided.");
-        }
-
         if (requiredAuths == null) {
             this.requiredAuths = new ArrayList<>();
         } else {
@@ -153,12 +122,6 @@ public class CustomJsonOperation extends Operation {
      *             and in addition no {@link #getRequiredAuths()} are provided.
      */
     public void setRequiredPostingAuths(List<AccountName> requiredPostingAuths) {
-        if ((requiredPostingAuths == null || requiredPostingAuths.isEmpty())
-                && (this.getRequiredAuths() == null || this.getRequiredAuths().isEmpty())) {
-            throw new InvalidParameterException(
-                    "The list of required active authorities is empty too - At least one authority type (POSTING or ACTIVE) needs to be provided.");
-        }
-
         if (requiredPostingAuths == null) {
             this.requiredPostingAuths = new ArrayList<>();
         } else {
@@ -185,8 +148,6 @@ public class CustomJsonOperation extends Operation {
     public void setId(String id) {
         if (id == null) {
             throw new InvalidParameterException("An ID is required.");
-        } else if (id.length() > 32) {
-            throw new InvalidParameterException("The ID must be less than 32 characters long.");
         }
 
         this.id = id;
@@ -261,6 +222,15 @@ public class CustomJsonOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (requiredPostingAuths.isEmpty() && requiredAuths.isEmpty()) {
+                throw new InvalidParameterException(
+                        "At least one authority type (POSTING or ACTIVE) needs to be provided.");
+            } else if (id.length() > 32) {
+                throw new InvalidParameterException("The ID must be less than 32 characters long.");
+            } else if (json != null && !json.isEmpty() && !SteemJUtils.verifyJsonString(json)) {
+                throw new InvalidParameterException("The given String is no valid JSON");
+            }
+        }
     }
 }

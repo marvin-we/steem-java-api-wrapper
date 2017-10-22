@@ -70,7 +70,7 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setMaxAcceptedPayout(Asset)}).
      * @param percentSteemDollars
      *            The percent of Steem dollars the reward should be paid in (see
-     *            {@link #setPercentSteemDollars(Short)}).
+     *            {@link #setPercentSteemDollars(short)}).
      * @param allowVotes
      *            Define if votes are allowed (see
      *            {@link #setAllowVotes(Boolean)}).
@@ -104,7 +104,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, short, Boolean, Boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes
      * and curation rewards.
      * 
@@ -116,14 +116,14 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setPermlink(Permlink)}).
      * @param percentSteemDollars
      *            The percent of Steem dollars the reward should be paid in (see
-     *            {@link #setPercentSteemDollars(Short)}).
+     *            {@link #setPercentSteemDollars(short)}).
      * @param extensions
      *            Additional extensions to set (see
      *            {@link #setExtensions(List)}.
      * @throws InvalidParameterException
      *             If one of the parameters does not fulfill the requirements.
      */
-    public CommentOptionsOperation(AccountName author, Permlink permlink, Short percentSteemDollars,
+    public CommentOptionsOperation(AccountName author, Permlink permlink, short percentSteemDollars,
             List<CommentOptionsExtension> extensions) {
         this(author, permlink, new Asset(1000000000, AssetSymbolType.SBD), percentSteemDollars, true, true, extensions);
     }
@@ -141,7 +141,7 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setPermlink(Permlink)}).
      * @param percentSteemDollars
      *            The percent of Steem dollars the reward should be paid in (see
-     *            {@link #setPercentSteemDollars(Short)}).
+     *            {@link #setPercentSteemDollars(short)}).
      * @throws InvalidParameterException
      *             If one of the parameters does not fulfill the requirements.
      */
@@ -151,7 +151,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, short, Boolean, Boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes,
      * allows curation rewards and sets the <code>percentSteemDollars</code> to
      * 100.0%.
@@ -261,10 +261,6 @@ public class CommentOptionsOperation extends Operation {
     public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
         if (maxAcceptedPayout == null) {
             throw new InvalidParameterException("The maximal accepted payout can't be null.");
-        } else if (!maxAcceptedPayout.getSymbol().equals(AssetSymbolType.SBD)) {
-            throw new InvalidParameterException("The maximal accepted payout must be in SBD.");
-        } else if (maxAcceptedPayout.getAmount() < 0) {
-            throw new InvalidParameterException("Cannot accept less than 0 payout.");
         }
 
         this.maxAcceptedPayout = maxAcceptedPayout;
@@ -326,12 +322,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>percentSteemDollars</code> is higher than 10000
      *             which is equal to 100.00%.
      */
-    public void setPercentSteemDollars(Short percentSteemDollars) {
-        if (percentSteemDollars > 10000) {
-            throw new InvalidParameterException(
-                    "The percent of steem dollars can't be higher than 10000 which is equivalent to 100%.");
-        }
-
+    public void setPercentSteemDollars(short percentSteemDollars) {
         this.percentSteemDollars = percentSteemDollars;
     }
 
@@ -399,7 +390,24 @@ public class CommentOptionsOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+                if (!maxAcceptedPayout.getSymbol().equals(AssetSymbolType.SBD)) {
+                    throw new InvalidParameterException("The maximal accepted payout must be in SBD.");
+                } else if (maxAcceptedPayout.getAmount() < 0) {
+                    throw new InvalidParameterException("Cannot accept less than 0 payout.");
+                }
+            }
 
+            if (percentSteemDollars > 10000) {
+                throw new InvalidParameterException(
+                        "The percent of steem dollars can't be higher than 10000 which is equivalent to 100%.");
+            }
+
+            for (CommentOptionsExtension commentOptionsExtension : extensions) {
+                commentOptionsExtension.validate(validationType);
+            }
+
+        }
     }
 }

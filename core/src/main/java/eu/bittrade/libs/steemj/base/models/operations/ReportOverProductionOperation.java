@@ -116,14 +116,6 @@ public class ReportOverProductionOperation extends Operation {
     public void setFirstBlock(SignedBlockHeader firstBlock) {
         if (firstBlock == null) {
             throw new InvalidParameterException("The provided first block can't be null.");
-        } else if (this.getSecondBlock() != null
-                && this.getSecondBlock().getWitness().equals(firstBlock.getWitness())) {
-            throw new InvalidParameterException(
-                    "The first block witness needs to be the same than the second block witness.");
-        } else if (this.getSecondBlock() != null
-                && this.getSecondBlock().getTimestamp().equals(firstBlock.getTimestamp())) {
-            throw new InvalidParameterException(
-                    "The first block timestamp needs to be the same than the second block timestamp.");
         }
 
         /*
@@ -161,24 +153,8 @@ public class ReportOverProductionOperation extends Operation {
     public void setSecondBlock(SignedBlockHeader secondBlock) {
         if (secondBlock == null) {
             throw new InvalidParameterException("The provided second block can't be null.");
-        } else if (this.getFirstBlock() != null && this.getFirstBlock().getWitness().equals(secondBlock.getWitness())) {
-            throw new InvalidParameterException(
-                    "The first block witness needs to be the same than the second block witness.");
-        } else if (this.getFirstBlock() != null
-                && this.getFirstBlock().getTimestamp().equals(secondBlock.getTimestamp())) {
-            throw new InvalidParameterException(
-                    "The first block timestamp needs to be the same than the second block timestamp.");
         }
 
-        /*
-         * TODO: Implement additional checks:
-         * 
-         * - first_block.signee() == second_block.signee() - first_block.id() !=
-         * second_block.id()
-         * 
-         * Both checks require that the SignedBlockHeader has the signee() and
-         * the id().
-         */
         this.secondBlock = secondBlock;
     }
 
@@ -211,7 +187,23 @@ public class ReportOverProductionOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+            if (this.getSecondBlock().getWitness().equals(firstBlock.getWitness())) {
+                throw new InvalidParameterException(
+                        "The first block witness needs to be the same than the second block witness.");
+            } else if (this.getSecondBlock().getTimestamp().equals(firstBlock.getTimestamp())) {
+                throw new InvalidParameterException(
+                        "The first block timestamp needs to be the same than the second block timestamp.");
+            }
+            /*
+             * TODO: Implement additional checks:
+             * 
+             * 1. first_block.signee() == second_block.signee() 2.
+             * first_block.id() != second_block.id()
+             * 
+             * Both checks require that the SignedBlockHeader has the signee()
+             * and the id().
+             */
+        }
     }
 }

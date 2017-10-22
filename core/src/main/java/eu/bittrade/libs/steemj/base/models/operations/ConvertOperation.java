@@ -144,13 +144,6 @@ public class ConvertOperation extends Operation {
     public void setAmount(Asset amount) {
         if (amount == null) {
             throw new InvalidParameterException("The amount to convert can't be null.");
-        } else if (!amount.getSymbol().equals(AssetSymbolType.SBD)) {
-            // Only allow conversion from SBD to STEEM, allowing the opposite
-            // can enable traders to abuse market fluxuations through converting
-            // large quantities without moving the price.
-            throw new InvalidParameterException("Can only convert SBD to STEEM.");
-        } else if (amount.getAmount() <= 0) {
-            throw new InvalidParameterException("Can only convert more than 0 SBD.");
         }
 
         this.amount = amount;
@@ -185,7 +178,16 @@ public class ConvertOperation extends Operation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+            if (!amount.getSymbol().equals(AssetSymbolType.SBD)) {
+                // Only allow conversion from SBD to STEEM, allowing the
+                // opposite can enable traders to abuse market fluxuations
+                // through converting large quantities without moving the price.
+                throw new InvalidParameterException("Can only convert SBD to STEEM.");
+            } else if (amount.getAmount() <= 0) {
+                throw new InvalidParameterException("Can only convert more than 0 SBD.");
+            }
+        }
     }
 }

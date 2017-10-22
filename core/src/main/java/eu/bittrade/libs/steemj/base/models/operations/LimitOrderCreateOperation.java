@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -157,8 +158,14 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * 
      * @param orderId
      *            The id of this order.
+     * @throws InvalidParameterException
+     *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
+        if (orderId == null) {
+            throw new InvalidParameterException("The provided order id can't be null.");
+        }
+
         this.orderId = orderId;
     }
 
@@ -176,8 +183,14 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * 
      * @param amountToSell
      *            The amount to sell within this order.
+     * @throws InvalidParameterException
+     *             If the <code>amountToSell</code> is null.
      */
     public void setAmountToSell(Asset amountToSell) {
+        if (amountToSell == null) {
+            throw new InvalidParameterException("The amount to sell owner can't be null.");
+        }
+
         this.amountToSell = amountToSell;
     }
 
@@ -196,8 +209,14 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @param minToReceive
      *            The amount that should be received for the asset that will be
      *            sold.
+     * @throws InvalidParameterException
+     *             If the <code>minToReceive</code> is null.
      */
     public void setMinToReceive(Asset minToReceive) {
+        if (minToReceive == null) {
+            throw new InvalidParameterException("The min to receive owner can't be null.");
+        }
+
         this.minToReceive = minToReceive;
     }
 
@@ -205,7 +224,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * Get the information if this order was a "fill or kill" order. A "fill or
      * kill" is an option that can be added to limit order. If set to
      * <code>true</code>, the order will be automatically removed, if the order
-     * can't be fullfilled immediatly.
+     * can't be fulfilled immediately.
      * 
      * @return <code>true</code> if this order was a fill or kill order,
      *         otherwise <code>false</code>.
@@ -217,8 +236,8 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     /**
      * Define if this order was a "fill or kill" order. A "fill or kill" is an
      * option that can be added to limit order. If set to <code>true</code>, the
-     * order will be automatically removed, if the order can't be fullfilled
-     * immediatly.
+     * order will be automatically removed, if the order can't be fulfilled
+     * Immediately.
      * 
      * @param fillOrKill
      *            <code>true</code> if this order is a fill or kill order,
@@ -282,18 +301,12 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        // TODO Auto-generated method stub
-
-        /**
-         * TODO: Validate all parameter of this Operation type.
-         */
-        /*
-         * FC_ASSERT( (is_asset_type(amount_to_sell, STEEM_SYMBOL) &&
-         * is_asset_type(min_to_receive, SBD_SYMBOL)) ||
-         * (is_asset_type(amount_to_sell, SBD_SYMBOL) &&
-         * is_asset_type(min_to_receive, STEEM_SYMBOL)),
-         * "Limit order must be for the STEEM:SBD market"); (amount_to_sell /
-         * min_to_receive).validate();
-         */
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
+                && (!AssetSymbolType.STEEM.equals(amountToSell) && AssetSymbolType.SBD.equals(minToReceive))
+                || (AssetSymbolType.SBD.equals(amountToSell) && AssetSymbolType.STEEM.equals(minToReceive))) {
+            // TODO: (amount_to_sell / min_to_receive).validate();
+            throw new InvalidParameterException("Limit order must be for the STEEM:SBD market.");
+        }
     }
 }
