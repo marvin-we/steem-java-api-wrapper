@@ -139,33 +139,6 @@ public class Account {
     private TimePointSec lastPost;
     @JsonProperty("last_root_post")
     private TimePointSec lastRootPost;
-    /**
-     * Original type is "share_type" which is a "safe<int64_t>".
-     * 
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("post_bandwidth")
-    private long postBandwidth;
-    /**
-     * Original type is "share_type" which is a "safe<int64_t>".
-     * 
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("new_average_bandwidth")
-    private long newAverageBandwidth;
-    /**
-     * Original type is "share_type" which is a "safe<int64_t>".
-     * 
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("new_average_market_bandwidth")
-    private long newAverageMarketBandwidth;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -174,256 +147,424 @@ public class Account {
     protected Account() {
     }
 
+    /**
+     * @return the id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @return the name
+     */
     public AccountName getName() {
         return name;
     }
 
+    /**
+     * @return the owner
+     */
     public Authority getOwner() {
         return owner;
     }
 
+    /**
+     * @return the active
+     */
     public Authority getActive() {
         return active;
     }
 
+    /**
+     * @return the posting
+     */
     public Authority getPosting() {
         return posting;
     }
 
+    /**
+     * @return the memoKey
+     */
     public PublicKey getMemoKey() {
         return memoKey;
     }
 
+    /**
+     * @return the jsonMetadata
+     */
     public String getJsonMetadata() {
         return jsonMetadata;
     }
 
+    /**
+     * @return the proxy
+     */
     public AccountName getProxy() {
         return proxy;
     }
 
+    /**
+     * @return the lastOwnerUpdate
+     */
     public TimePointSec getLastOwnerUpdate() {
         return lastOwnerUpdate;
     }
 
+    /**
+     * @return the lastAccountUpdate
+     */
     public TimePointSec getLastAccountUpdate() {
         return lastAccountUpdate;
     }
 
+    /**
+     * @return the created
+     */
     public TimePointSec getCreated() {
         return created;
     }
 
+    /**
+     * @return the mined
+     */
     public boolean isMined() {
         return mined;
     }
 
+    /**
+     * @return the ownerChallenged
+     */
     public boolean isOwnerChallenged() {
         return ownerChallenged;
     }
 
+    /**
+     * @return the activeChallenged
+     */
     public boolean isActiveChallenged() {
         return activeChallenged;
     }
 
+    /**
+     * @return the lastOwnerProved
+     */
     public TimePointSec getLastOwnerProved() {
         return lastOwnerProved;
     }
 
+    /**
+     * @return the lastActiveProved
+     */
     public TimePointSec getLastActiveProved() {
         return lastActiveProved;
     }
 
+    /**
+     * @return the recoveryAccount
+     */
     public AccountName getRecoveryAccount() {
         return recoveryAccount;
     }
 
+    /**
+     * @return the resetAccount
+     */
     public AccountName getResetAccount() {
         return resetAccount;
     }
 
+    /**
+     * @return the lastAccountRecovery
+     */
     public TimePointSec getLastAccountRecovery() {
         return lastAccountRecovery;
     }
 
+    /**
+     * @return the commentCount
+     */
     public long getCommentCount() {
         return commentCount;
     }
 
+    /**
+     * @return the lifetimeVoteCount
+     */
     public long getLifetimeVoteCount() {
         return lifetimeVoteCount;
     }
 
+    /**
+     * @return the postCount
+     */
     public long getPostCount() {
         return postCount;
     }
 
+    /**
+     * @return the canVote
+     */
     public boolean isCanVote() {
         return canVote;
     }
 
+    /**
+     * @return the votingPower
+     */
     public int getVotingPower() {
         return votingPower;
     }
 
+    /**
+     * @return the lastVoteTime
+     */
     public TimePointSec getLastVoteTime() {
         return lastVoteTime;
     }
 
+    /**
+     * @return the balance
+     */
     public Asset getBalance() {
         return balance;
     }
 
+    /**
+     * @return the savingsBalance
+     */
     public Asset getSavingsBalance() {
         return savingsBalance;
     }
 
+    /**
+     * @return the sbdBalance
+     */
     public Asset getSbdBalance() {
         return sbdBalance;
     }
 
+    /**
+     * @return the sbdSeconds
+     */
     public BigInteger getSbdSeconds() {
         return sbdSeconds;
     }
 
+    /**
+     * @return the sbdSecondsLastUpdate
+     */
     public TimePointSec getSbdSecondsLastUpdate() {
         return sbdSecondsLastUpdate;
     }
 
+    /**
+     * @return the sbdLastInterestPayment
+     */
     public TimePointSec getSbdLastInterestPayment() {
         return sbdLastInterestPayment;
     }
 
+    /**
+     * @return the savingsSbdBalance
+     */
     public Asset getSavingsSbdBalance() {
         return savingsSbdBalance;
     }
 
+    /**
+     * @return the savingsSbdSeconds
+     */
     public BigInteger getSavingsSbdSeconds() {
         return savingsSbdSeconds;
     }
 
+    /**
+     * @return the savingsSbdSecondsLastUpdate
+     */
     public TimePointSec getSavingsSbdSecondsLastUpdate() {
         return savingsSbdSecondsLastUpdate;
     }
 
+    /**
+     * @return the savingsSbdLastInterestPayment
+     */
     public TimePointSec getSavingsSbdLastInterestPayment() {
         return savingsSbdLastInterestPayment;
     }
 
+    /**
+     * @return the savingWithdrawRequests
+     */
     public short getSavingWithdrawRequests() {
         return savingWithdrawRequests;
     }
 
+    /**
+     * @return the rewardSdbBalance
+     */
     public Asset getRewardSdbBalance() {
         return rewardSdbBalance;
     }
 
+    /**
+     * @return the rewardSteemBalance
+     */
     public Asset getRewardSteemBalance() {
         return rewardSteemBalance;
     }
 
+    /**
+     * @return the rewardVestingBalance
+     */
     public Asset getRewardVestingBalance() {
         return rewardVestingBalance;
     }
 
+    /**
+     * @return the rewardVestingSteem
+     */
     public Asset getRewardVestingSteem() {
         return rewardVestingSteem;
     }
 
+    /**
+     * @return the curationRewards
+     */
     public long getCurationRewards() {
         return curationRewards;
     }
 
+    /**
+     * @return the postingRewards
+     */
     public long getPostingRewards() {
         return postingRewards;
     }
 
+    /**
+     * @return the vestingShares
+     */
     public Asset getVestingShares() {
         return vestingShares;
     }
 
+    /**
+     * @return the delegatedVestingShares
+     */
     public Asset getDelegatedVestingShares() {
         return delegatedVestingShares;
     }
 
+    /**
+     * @return the receivedVestingShares
+     */
     public Asset getReceivedVestingShares() {
         return receivedVestingShares;
     }
 
+    /**
+     * @return the vestingWithdrawRate
+     */
     public Asset getVestingWithdrawRate() {
         return vestingWithdrawRate;
     }
 
+    /**
+     * @return the nextVestingWithdrawal
+     */
     public TimePointSec getNextVestingWithdrawal() {
         return nextVestingWithdrawal;
     }
 
+    /**
+     * @return the withdrwan
+     */
     public long getWithdrwan() {
         return withdrwan;
     }
 
+    /**
+     * @return the toWithdraw
+     */
     public long getToWithdraw() {
         return toWithdraw;
     }
 
+    /**
+     * @return the withdrawRoutes
+     */
     public int getWithdrawRoutes() {
         return withdrawRoutes;
     }
 
+    /**
+     * @return the proxiedVsfVotes
+     */
     public List<Long> getProxiedVsfVotes() {
         return proxiedVsfVotes;
     }
 
+    /**
+     * @return the witnessesVotedFor
+     */
     public int getWitnessesVotedFor() {
         return witnessesVotedFor;
     }
 
+    /**
+     * @return the averageBandwidth
+     */
     public long getAverageBandwidth() {
         return averageBandwidth;
     }
 
+    /**
+     * @return the lifetimeBandwidth
+     */
     public long getLifetimeBandwidth() {
         return lifetimeBandwidth;
     }
 
+    /**
+     * @return the lastBandwidthUpdate
+     */
     public TimePointSec getLastBandwidthUpdate() {
         return lastBandwidthUpdate;
     }
 
+    /**
+     * @return the averageMarketBandwidth
+     */
     public long getAverageMarketBandwidth() {
         return averageMarketBandwidth;
     }
 
+    /**
+     * @return the lifetimeMarketBandwidth
+     */
     public long getLifetimeMarketBandwidth() {
         return lifetimeMarketBandwidth;
     }
 
+    /**
+     * @return the lastMarketBandwidthUpdate
+     */
     public TimePointSec getLastMarketBandwidthUpdate() {
         return lastMarketBandwidthUpdate;
     }
 
+    /**
+     * @return the lastPost
+     */
     public TimePointSec getLastPost() {
         return lastPost;
     }
 
+    /**
+     * @return the lastRootPost
+     */
     public TimePointSec getLastRootPost() {
         return lastRootPost;
-    }
-
-    public long getPostBandwidth() {
-        return postBandwidth;
-    }
-
-    public long getNewAverageBandwidth() {
-        return newAverageBandwidth;
-    }
-
-    public long getNewAverageMarketBandwidth() {
-        return newAverageMarketBandwidth;
     }
 
     @Override

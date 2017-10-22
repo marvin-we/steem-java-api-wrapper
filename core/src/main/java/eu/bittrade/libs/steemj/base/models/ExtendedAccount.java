@@ -8,6 +8,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import eu.bittrade.libs.steemj.base.models.deserializer.GuestBloggerPairDeserializer;
+import eu.bittrade.libs.steemj.base.models.deserializer.OperationHistoryHashMapDeserializer;
+import eu.bittrade.libs.steemj.base.models.deserializer.TagUsagePairDeserializer;
 
 /**
  * This class represents a Steem "extended_account" object.
@@ -23,57 +28,59 @@ public class ExtendedAccount extends Account {
     // The original tpye is map<uint64_t,applied_operation>
     /** Transfer to/from vesting. */
     @JsonProperty("transfer_history")
+    @JsonDeserialize(using = OperationHistoryHashMapDeserializer.class)
     private Map<BigInteger, AppliedOperation> transferHistory;
     // The original tpye is map<uint64_t,applied_operation>
     /** Limit order / cancel / fill. */
     @JsonProperty("market_history")
+    @JsonDeserialize(using = OperationHistoryHashMapDeserializer.class)
     private Map<BigInteger, AppliedOperation> marketHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("post_history")
+    @JsonDeserialize(using = OperationHistoryHashMapDeserializer.class)
     private Map<BigInteger, AppliedOperation> postHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("vote_history")
+    @JsonDeserialize(using = OperationHistoryHashMapDeserializer.class)
     private Map<BigInteger, AppliedOperation> voteHistory;
     // The original tpye is map<uint64_t,applied_operation>
     @JsonProperty("other_history")
+    @JsonDeserialize(using = OperationHistoryHashMapDeserializer.class)
     private Map<BigInteger, AppliedOperation> otherHistory;
     // Original type is set<string>.
     @JsonProperty("witness_votes")
     private List<AccountName> witnessVotes;
     // Original type is "vector<pair<string,uint32_t>>".
     @JsonProperty("tags_usage")
+    @JsonDeserialize(using = TagUsagePairDeserializer.class)
     private List<Pair<String, Long>> tagsUsage;
     // Original type is "vector<pair<account_name_type,uint32_t>>".
     @JsonProperty("guest_bloggers")
+    @JsonDeserialize(using = GuestBloggerPairDeserializer.class)
     private List<Pair<AccountName, Long>> guestBloggers;
     // Original type is "optional<map<uint32_t,extended_limit_order>>".
     @JsonProperty("open_orders")
-    private Object[] openOrders;
+    private List<String> openOrders;
     // Original type is "optional<vector<string>>".
     /** Permlinks for this user. */
     @JsonProperty("comments")
-    private Object[] comments;
+    private List<String> comments;
     // Original type is "optional<vector<string>>".
     /** Blog posts for this user. */
     @JsonProperty("blog")
-    private Object[] blog;
+    private List<String> blog;
     // Original type is "optional<vector<string>>".
     /** Feed posts for this user. */
     @JsonProperty("feed")
-    private Object[] feed;
+    private List<String> feed;
     // Original type is "optional<vector<string>>".
     /** Blog posts for this user. */
     @JsonProperty("recent_replies")
-    private Object[] recentReplies;
+    private List<String> recentReplies;
     // Original type is "optional<vector<string>>".
     /** Posts recommened for this user. */
     @JsonProperty("recommended")
-    private Object[] recommended;
-    /**
-     * @deprecated This field is deprecated since HF 0.19.0 and may be null.
-     */
-    @JsonProperty("blog_category")
-    private Object[] blogCategory;
+    private List<String> recommended;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -153,52 +160,131 @@ public class ExtendedAccount extends Account {
     }
 
     /**
-     * @return the openOrders
+     * @param vestingBalance
+     *            the vestingBalance to set
      */
-    public Object[] getOpenOrders() {
-        return openOrders;
+    public void setVestingBalance(Asset vestingBalance) {
+        this.vestingBalance = vestingBalance;
     }
 
     /**
-     * @return the comments
+     * @param reputation
+     *            the reputation to set
      */
-    public Object[] getComments() {
-        return comments;
+    public void setReputation(long reputation) {
+        this.reputation = reputation;
     }
 
     /**
-     * @return the blog
+     * @param transferHistory
+     *            the transferHistory to set
      */
-    public Object[] getBlog() {
-        return blog;
+    public void setTransferHistory(Map<BigInteger, AppliedOperation> transferHistory) {
+        this.transferHistory = transferHistory;
     }
 
     /**
-     * @return the feed
+     * @param marketHistory
+     *            the marketHistory to set
      */
-    public Object[] getFeed() {
-        return feed;
+    public void setMarketHistory(Map<BigInteger, AppliedOperation> marketHistory) {
+        this.marketHistory = marketHistory;
     }
 
     /**
-     * @return the recentReplies
+     * @param postHistory
+     *            the postHistory to set
      */
-    public Object[] getRecentReplies() {
-        return recentReplies;
+    public void setPostHistory(Map<BigInteger, AppliedOperation> postHistory) {
+        this.postHistory = postHistory;
     }
 
     /**
-     * @return the recommended
+     * @param voteHistory
+     *            the voteHistory to set
      */
-    public Object[] getRecommended() {
-        return recommended;
+    public void setVoteHistory(Map<BigInteger, AppliedOperation> voteHistory) {
+        this.voteHistory = voteHistory;
     }
 
     /**
-     * @return the blogCategory
+     * @param otherHistory
+     *            the otherHistory to set
      */
-    public Object[] getBlogCategory() {
-        return blogCategory;
+    public void setOtherHistory(Map<BigInteger, AppliedOperation> otherHistory) {
+        this.otherHistory = otherHistory;
+    }
+
+    /**
+     * @param witnessVotes
+     *            the witnessVotes to set
+     */
+    public void setWitnessVotes(List<AccountName> witnessVotes) {
+        this.witnessVotes = witnessVotes;
+    }
+
+    /**
+     * @param tagsUsage
+     *            the tagsUsage to set
+     */
+    public void setTagsUsage(List<Pair<String, Long>> tagsUsage) {
+        this.tagsUsage = tagsUsage;
+    }
+
+    /**
+     * @param guestBloggers
+     *            the guestBloggers to set
+     */
+    public void setGuestBloggers(List<Pair<AccountName, Long>> guestBloggers) {
+        this.guestBloggers = guestBloggers;
+    }
+
+    /**
+     * @param openOrders
+     *            the openOrders to set
+     */
+    public void setOpenOrders(List<String> openOrders) {
+        this.openOrders = openOrders;
+    }
+
+    /**
+     * @param comments
+     *            the comments to set
+     */
+    public void setComments(List<String> comments) {
+        this.comments = comments;
+    }
+
+    /**
+     * @param blog
+     *            the blog to set
+     */
+    public void setBlog(List<String> blog) {
+        this.blog = blog;
+    }
+
+    /**
+     * @param feed
+     *            the feed to set
+     */
+    public void setFeed(List<String> feed) {
+        this.feed = feed;
+    }
+
+    /**
+     * @param recentReplies
+     *            the recentReplies to set
+     */
+    public void setRecentReplies(List<String> recentReplies) {
+        this.recentReplies = recentReplies;
+    }
+
+    /**
+     * @param recommended
+     *            the recommended to set
+     */
+    public void setRecommended(List<String> recommended) {
+        this.recommended = recommended;
     }
 
     @Override
