@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
@@ -36,6 +37,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
+
 public class SignedTransaction extends Transaction implements ByteTransformable, Serializable {
     private static final long serialVersionUID = 4821422578657270330L;
     private static final Logger LOGGER = LoggerFactory.getLogger(SignedTransaction.class);
@@ -235,6 +237,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *             If the required private key is not present in the
      *             {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
      */
+    @JsonIgnore
     protected List<ECKey> getRequiredSignatureKeys() throws SteemInvalidTransactionException {
         List<ECKey> requiredSignatures = new ArrayList<>();
         Map<SignatureObject, PrivateKeyType> requiredAuthorities = getRequiredAuthorities();
