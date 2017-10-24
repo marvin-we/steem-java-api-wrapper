@@ -2,8 +2,13 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.interfaces.Validatable;
@@ -14,6 +19,9 @@ import eu.bittrade.libs.steemj.interfaces.Validatable;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_ARRAY)
+@JsonSubTypes({ @Type(value = FollowOperation.class, name = "follow"),
+        @Type(value = ReblogOperation.class, name = "reblog") })
 public abstract class CustomJsonOperationPayload implements Validatable {
     /**
      * Transform the operation into its json representation.
