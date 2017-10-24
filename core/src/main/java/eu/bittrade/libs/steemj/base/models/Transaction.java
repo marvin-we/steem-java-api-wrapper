@@ -106,8 +106,8 @@ public class Transaction implements Serializable {
      *            (see {@link #setExtensions(List)}).
      */
     public Transaction(BlockId blockId, List<Operation> operations, List<FutureExtensions> extensions) {
-        this.setRefBlockNum(UShort.valueOf(blockId.getNumberFromHash()));
-        this.setRefBlockPrefix(UInteger.valueOf(blockId.getHashValue()));
+        this.setRefBlockNum(UShort.valueOf(blockId.getNumberFromHash() & 0xffff));
+        this.setRefBlockPrefix(blockId.getHashValue());
         this.setExpirationDate(new TimePointSec(
                 System.currentTimeMillis() + SteemJConfig.getInstance().getMaximumExpirationDateOffset() - 60000L));
         this.setOperations(operations);
