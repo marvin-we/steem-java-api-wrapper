@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -16,14 +17,14 @@ import eu.bittrade.libs.steemj.interfaces.SignatureObject;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 abstract class AbstractEscrowOperation extends Operation {
-    @JsonProperty("from")
+    @JsonProperty(index = 1, value = "from")
     protected AccountName from;
-    @JsonProperty("to")
+    @JsonProperty(index = 2, value = "to")
     protected AccountName to;
-    @JsonProperty("agent")
+    @JsonProperty(index = 3, value = "agent")
     protected AccountName agent;
     // Original type is unit32_t so we use long here.
-    @JsonProperty("escrow_id")
+    @JsonProperty(index = 4, value = "escrow_id")
     protected long escrowId;
 
     /**

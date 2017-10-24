@@ -317,7 +317,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
                 if (steemAmount.getAmount() < 0) {
                     throw new InvalidParameterException("The steem amount cannot be negative.");
-                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.STEEM)) {
                     throw new InvalidParameterException("The steem amount must contain STEEM.");
                 } else if (sbdAmount.getAmount() < 0) {
                     throw new InvalidParameterException("The sbd amount cannot be negative.");
