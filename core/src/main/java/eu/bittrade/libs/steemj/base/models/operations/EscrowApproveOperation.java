@@ -203,7 +203,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
 
     @Override
     public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType) && (!who.equals(to) || !who.equals(agent))) {
+        if (!ValidationType.SKIP_VALIDATION.equals(validationType) && !(who.equals(to) || who.equals(agent))) {
             throw new InvalidParameterException(
                     "The to account or the agent account must approve this escrow operation.");
         }
