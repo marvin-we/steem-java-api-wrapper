@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.BaseOperationParsingIT;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -11,7 +10,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public abstract class BaseTransactionalIntegrationTest extends BaseIntegrationTest {
+public abstract class BaseTransactionalIntegrationTest extends BaseOperationParsingIT {
     protected static SignedTransaction signedTransaction;
 
     /**
@@ -37,15 +36,6 @@ public abstract class BaseTransactionalIntegrationTest extends BaseIntegrationTe
     protected static void sign() throws SteemInvalidTransactionException {
         signedTransaction.sign(true);
     }
-
-    /**
-     * Test if a JSON String received from a Steem Node is correctly parsed into
-     * a POJO.
-     * 
-     * @throws SteemCommunicationException
-     *             If something went wrong.
-     */
-    public abstract void testOperationParsing() throws SteemCommunicationException;
 
     /**
      * Verify that a transaction is signed correctly by using the verify
