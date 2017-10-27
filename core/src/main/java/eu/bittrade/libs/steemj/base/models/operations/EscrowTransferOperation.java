@@ -447,7 +447,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
                     throw new InvalidParameterException("The fee must be STEEM or SBD.");
                 } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
                     throw new InvalidParameterException("The sbd amount must contain SBD.");
-                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.STEEM)) {
                     throw new InvalidParameterException("The steem amount must contain STEEM.");
                 }
             }
