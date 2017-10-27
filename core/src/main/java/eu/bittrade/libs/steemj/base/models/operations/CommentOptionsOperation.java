@@ -104,7 +104,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, short, Boolean, Boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes
      * and curation rewards.
      * 
@@ -130,7 +130,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Short, List)}, but
+     * {@link #CommentOptionsOperation(AccountName, Permlink, short, List)}, but
      * does not require extensions.
      * 
      * @param author
@@ -151,7 +151,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, short, Boolean, Boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes,
      * allows curation rewards and sets the <code>percentSteemDollars</code> to
      * 100.0%.
