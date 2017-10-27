@@ -153,7 +153,7 @@
 		<tyrus.client.version>1.13.1</tyrus.client.version>
 		<jackson.version>2.9.2</jackson.version>
 		<apache.commons.lang.version>3.6</apache.commons.lang.version>
-		<apache.commons.io.version>2.5</apache.commons.io.version>
+		<apache.commons.io.version>2.6</apache.commons.io.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.9.1</log4j.version>
 	</properties>
