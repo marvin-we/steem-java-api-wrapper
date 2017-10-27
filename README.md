@@ -22,11 +22,11 @@ SteemJ binaries are pushed into the maven central repository and can be integrat
 ## Maven
 File: <i>pom.xml</i>
 ```Xml
-	<dependency>
-            <groupId>eu.bittrade.libs</groupId>
-            <artifactId>steemj-core</artifactId>
-            <version>0.4.0</version>
-	</dependency>
+<dependency>
+    <groupId>eu.bittrade.libs</groupId>
+    <artifactId>steemj-core</artifactId>
+    <version>0.4.1</version>
+</dependency>
 ```
 
 Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki/How-to-add-SteemJ-to-your-project) to find examples for Maven, Ivy, Gradle and others.
