@@ -36,9 +36,9 @@ public class WebsocketEndpoint extends Endpoint implements MessageHandler.Whole<
     }
 
     /**
-     * @param latestResponse
-     *            the latestResponse to set
-     * @throws IOException
+     * 
+     * @return
+     * @throws SteemResponseError
      */
     protected JsonRPCResponse getLatestResponse() throws SteemResponseError {
         try {
