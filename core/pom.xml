@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>eu.bittrade.libs</groupId>
 		<artifactId>steemj-parent</artifactId>
-		<version>0.4.1</version>
+		<version>0.4.2-SNAPSHOT</version>
 	</parent>
 
 	<licenses>
@@ -36,11 +36,19 @@
 	</scm>
 
 	<dependencies>
+		<!-- WS Client -->
 		<dependency>
 			<groupId>org.glassfish.tyrus.bundles</groupId>
 			<artifactId>tyrus-standalone-client</artifactId>
 			<version>${tyrus.client.version}</version>
 		</dependency>
+		<!-- HTTP Client -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${apache.http.client.version}</version>
+		</dependency>
+		<!-- Utility -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -156,5 +164,6 @@
 		<apache.commons.io.version>2.6</apache.commons.io.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.9.1</log4j.version>
+		<apache.http.client.version>4.5.3</apache.http.client.version>
 	</properties>
 </project>
