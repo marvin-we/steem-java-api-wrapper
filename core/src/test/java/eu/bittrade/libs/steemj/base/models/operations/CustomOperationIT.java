@@ -17,6 +17,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 /**
  * Verify the functionality of the "custom operation" under the use of real api
@@ -71,7 +72,7 @@ public class CustomOperationIT extends BaseTransactionalIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException {
+    public void testOperationParsing() throws SteemCommunicationException, SteemResponseError {
         SignedBlockWithInfo blockContainingCustomOperationOperation = steemJ
                 .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 

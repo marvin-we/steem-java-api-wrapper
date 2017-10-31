@@ -26,6 +26,7 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 /**
  * This class contains all test connected to the
@@ -43,7 +44,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      *             If a communication error occurs.
      */
     @BeforeClass
-    public static void init() throws SteemCommunicationException {
+    public static void init() throws SteemCommunicationException, SteemResponseError {
         setupIntegrationTestEnvironment();
 
         COMMUNICATION_HANDLER = new CommunicationHandler();
@@ -59,7 +60,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetTicker() throws SteemCommunicationException {
+    public void testGetTicker() throws SteemCommunicationException, SteemResponseError {
         MarketTicker marketTicker = MarketHistoryApi.getTicker(COMMUNICATION_HANDLER);
 
         assertThat(marketTicker.getHighestBid(), greaterThan(0.0));
@@ -80,7 +81,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetVolume() throws SteemCommunicationException {
+    public void testGetVolume() throws SteemCommunicationException, SteemResponseError {
         MarketVolume marketVolume = MarketHistoryApi.getVolume(COMMUNICATION_HANDLER);
 
         assertThat(marketVolume.getSbdVolume().toReal(), greaterThan(0.0));
@@ -99,7 +100,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetOrderBook() throws SteemCommunicationException {
+    public void testGetOrderBook() throws SteemCommunicationException, SteemResponseError {
         OrderBook orderBook = MarketHistoryApi.getOrderBook(COMMUNICATION_HANDLER, (short) 50);
 
         assertThat(orderBook.getAsks().size(), lessThanOrEqualTo(50));
@@ -122,7 +123,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetTradeHistory() throws SteemCommunicationException {
+    public void testGetTradeHistory() throws SteemCommunicationException, SteemResponseError {
         List<MarketTrade> marketTrades = MarketHistoryApi.getTradeHistory(COMMUNICATION_HANDLER,
                 new TimePointSec(1497112817), new TimePointSec(System.currentTimeMillis()), (short) 10);
 
@@ -143,7 +144,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetRecentTrades() throws SteemCommunicationException {
+    public void testGetRecentTrades() throws SteemCommunicationException, SteemResponseError {
         List<MarketTrade> marketTrades = MarketHistoryApi.getRecentTrades(COMMUNICATION_HANDLER, (short) 30);
 
         assertThat(marketTrades.size(), lessThanOrEqualTo(30));
@@ -163,7 +164,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetMarketHistory() throws SteemCommunicationException {
+    public void testGetMarketHistory() throws SteemCommunicationException, SteemResponseError {
         List<Bucket> marketHistory = MarketHistoryApi.getMarketHistory(COMMUNICATION_HANDLER, 3600,
                 new TimePointSec(1504885989), new TimePointSec(System.currentTimeMillis()));
 
@@ -196,7 +197,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetMarketHistoryBuckets() throws SteemCommunicationException {
+    public void testGetMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseError {
         List<Integer> marketHistoryBuckets = MarketHistoryApi.getMarketHistoryBuckets(COMMUNICATION_HANDLER);
 
         assertThat(marketHistoryBuckets.size(), greaterThan(0));

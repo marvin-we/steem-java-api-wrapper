@@ -16,6 +16,7 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 /**
  * Test that the {@link CurationRewardOperation} can be parsed.
@@ -46,7 +47,7 @@ public class CurationRewardOperationIT extends BaseOperationParsingIT {
 
     @Override
     @Test
-    public void testOperationParsing() throws SteemCommunicationException {
+    public void testOperationParsing() throws SteemCommunicationException, SteemResponseError {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
         Operation curationRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();

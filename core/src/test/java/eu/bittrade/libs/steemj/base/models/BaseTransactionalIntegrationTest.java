@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.base.models;
 
 import eu.bittrade.libs.steemj.BaseOperationParsingIT;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 /**
  * This class defines which tests should at least be performed for an operation

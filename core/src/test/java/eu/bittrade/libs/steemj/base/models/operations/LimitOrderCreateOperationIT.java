@@ -19,6 +19,7 @@ import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 /**
  * Verify the functionality of the "limit order create operation" under the use
@@ -81,7 +82,7 @@ public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTes
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException {
+    public void testOperationParsing() throws SteemCommunicationException, SteemResponseError {
         SignedBlockWithInfo blockContainingLimitOrderCreateOperation = steemJ
                 .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 

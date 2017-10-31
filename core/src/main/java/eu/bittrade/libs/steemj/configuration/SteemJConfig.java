@@ -24,7 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 
 /**
  * This class stores the configuration that is used for the communication to the
- * defined web socket server.
+ * defined server.
  * 
  * The setters can be used to override the default values.
  * 
@@ -32,9 +32,9 @@ import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
  */
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
-    private static final String DEFAULT_STEEM_NODE_URI_ONE = "wss://steemd.steemit.com";
-    private static final String DEFAULT_STEEM_NODE_URI_TWO = "wss://seed.bitcoiner.me";
-    private static final String DEFAULT_STEEM_NODE_URI_THREE = "wss://steemd.minnowsupportproject.org";
+    /** The endpoint URI used by default. */
+    private static final String DEFAULT_STEEM_API_URI = "https://api.steemit.com";
+    /** The SteemJ account. */
     private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
 
     private static SteemJConfig steemJConfigInstance;
@@ -66,9 +66,9 @@ public class SteemJConfig {
     }
 
     private ClientEndpointConfig clientEndpointConfig;
-    private List<Pair<URI, Boolean>> webSocketEndpointURIs;
-    private long responseTimeout;
-    private long socketTimeout;
+    private List<Pair<URI, Boolean>> endpointURIs;
+    private int responseTimeout;
+    private int idleTimeout;
     private String dateTimePattern;
     private long maximumExpirationDateOffset;
     private String timeZoneId;
@@ -89,16 +89,14 @@ public class SteemJConfig {
         this.clientEndpointConfig = ClientEndpointConfig.Builder.create().build();
 
         try {
-            this.webSocketEndpointURIs = new ArrayList<>();
-            this.addWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI_ONE));
-            this.addWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI_TWO));
-            this.addWebSocketEndpointURI(new URI(DEFAULT_STEEM_NODE_URI_THREE));
+            this.endpointURIs = new ArrayList<>();
+            this.addEndpointURI(new URI(DEFAULT_STEEM_API_URI));
         } catch (URISyntaxException e) {
             // This can never happen!
             LOGGER.error("At least one of the configured default URIs has a Syntax error.", e);
         }
         this.responseTimeout = 1000;
-        this.socketTimeout = 60000;
+        this.idleTimeout = 60000;
         this.dateTimePattern = "yyyy-MM-dd'T'HH:mm:ss";
         this.apiUsername = new AccountName(System.getProperty("steemj.api.username", ""));
         this.apiPassword = System.getProperty("steemj.api.password", "").toCharArray();
@@ -169,7 +167,11 @@ public class SteemJConfig {
     }
 
     /**
-     * @return Get the configured ClientEndpointConfig instance.
+     * Get the configured ClientEndpointConfig instance. Please be aware that
+     * the <code>clientEndpointConfig</code> is only used for WebSocket
+     * endpoints.
+     * 
+     * @return The configured ClientEndpointConfig instance.
      */
     public ClientEndpointConfig getClientEndpointConfig() {
         return clientEndpointConfig;
@@ -237,12 +239,11 @@ public class SteemJConfig {
 
     /**
      * Get the configured, maximum time that SteemJ will wait for an answer of
-     * the websocket server before throwing a {@link SteemTimeoutException}
-     * exception.
+     * the endpoint before throwing a {@link SteemTimeoutException} exception.
      * 
      * @return Time in milliseconds
      */
-    public long getResponseTimeout() {
+    public int getResponseTimeout() {
         return responseTimeout;
     }
 
@@ -254,8 +255,8 @@ public class SteemJConfig {
      * @return The time in milliseconds a connection should be left intact even
      *         when no activities are performed.
      */
-    public long getSocketTimeout() {
-        return socketTimeout;
+    public int getIdleTimeout() {
+        return idleTimeout;
     }
 
     /**
@@ -268,23 +269,23 @@ public class SteemJConfig {
     }
 
     /**
-     * @return Get all configured websocket endpoint URIs.
+     * @return Get all configured endpoint URIs.
      */
-    public List<Pair<URI, Boolean>> getWebSocketEndpointURIs() {
-        return webSocketEndpointURIs;
+    public List<Pair<URI, Boolean>> getEndpointURIs() {
+        return endpointURIs;
     }
 
     /**
-     * Get one of the configured websocket endpoint URIs by providing a
+     * Get one of the configured endpoint URIs by providing a
      * <code>selector</code>.
      * 
      * @param selector
-     *            A number used to calculate the next stored websocket endpoint
-     *            URI from the list of configured endpoint URIs.
-     * @return One specific websocket endpoint URI.
+     *            A number used to calculate the next stored endpoint URI from
+     *            the list of configured endpoint URIs.
+     * @return One specific endpoint URI.
      */
-    public Pair<URI, Boolean> getNextWebSocketEndpointURI(int selector) {
-        return webSocketEndpointURIs.get(((int) (selector % webSocketEndpointURIs.size())));
+    public Pair<URI, Boolean> getNextEndpointURI(int selector) {
+        return endpointURIs.get(((int) (selector % endpointURIs.size())));
     }
 
     /**
@@ -413,7 +414,7 @@ public class SteemJConfig {
      * @throws IllegalArgumentException
      *             If the value of timeout is negative.
      */
-    public void setResponseTimeout(long responseTimeout) {
+    public void setResponseTimeout(int responseTimeout) {
         if (responseTimeout < 0) {
             throw new IllegalArgumentException("The timeout has to be greater than 0. (0 will disable the timeout).");
         }
@@ -438,60 +439,57 @@ public class SteemJConfig {
      * connection open.A value that is 0 or negative indicates the sessions will
      * never timeout due to inactivity.
      *
-     * @param socketTimeout
+     * @param idleTimeout
      *            The time in milliseconds a connection should be left intact
      *            even when no activities are performed.
      */
-    public void setSocketTimeout(long socketTimeout) {
-        this.socketTimeout = socketTimeout;
+    public void setIdleTimeout(int idleTimeout) {
+        this.idleTimeout = idleTimeout;
     }
 
     /**
-     * Override the currently configured <code>webSocketEndpointURIs</code>.
+     * Override the currently configured <code>endpointURIs</code>.
      * 
-     * @param webSocketEndpointURIs
-     *            The web socket endpoints to connect to.
+     * @param endpointURIs
+     *            A list of endpoints to connect to.
      */
-    public void setWebSocketEndpointURIs(List<Pair<URI, Boolean>> webSocketEndpointURIs) {
-        this.webSocketEndpointURIs = webSocketEndpointURIs;
+    public void setEndpointURIs(List<Pair<URI, Boolean>> endpointURIs) {
+        this.endpointURIs = endpointURIs;
     }
 
     /**
      * This method has the same functionality than
-     * {@link #addWebSocketEndpointURI(URI, boolean)
-     * setWebsocketEndpointURI(URI, boolean)}, but this method will enable the
-     * SSL verification by default.
+     * {@link #addEndpointURI(URI, boolean) setEndpointURI(URI, boolean)}, but
+     * this method will enable the SSL verification by default.
      * 
-     * @param webSocketEndpointURI
+     * @param endpointURI
      *            The URI of the node you want to connect to.
      * @throws URISyntaxException
-     *             If the <code>websocketEndpointURI</code> is null.
+     *             If the <code>endpointURI</code> is null.
      */
-    public void addWebSocketEndpointURI(URI webSocketEndpointURI) throws URISyntaxException {
-        addWebSocketEndpointURI(webSocketEndpointURI, false);
+    public void addEndpointURI(URI endpointURI) throws URISyntaxException {
+        addEndpointURI(endpointURI, false);
     }
 
     /**
      * Configure the connection to the Steem Node by providing the endpoint URI
      * and the SSL verification settings.
      * 
-     * @param webSocketEndpointURI
+     * @param endpointURI
      *            The URI of the node you want to connect to.
      * @param sslVerificationDisabled
      *            Define if SteemJ should verify the SSL certificate of the
      *            endpoint. This option will be ignored if the given
-     *            <code>webSocketEndpointURI</code> is using a non SSL protocol.
+     *            <code>endpointURI</code> is using a non SSL protocol.
      * @throws URISyntaxException
-     *             If the <code>websocketEndpointURI</code> is null.
+     *             If the <code>endpointURI</code> is null.
      */
-    public void addWebSocketEndpointURI(URI webSocketEndpointURI, boolean sslVerificationDisabled)
-            throws URISyntaxException {
-        if (webSocketEndpointURI == null) {
-            throw new URISyntaxException("websocketEndpointURI",
-                    "The websocketEndpointURI can't be null, because a valid URI to the RPC endpoint of a Steem Node is required.");
+    public void addEndpointURI(URI endpointURI, boolean sslVerificationDisabled) throws URISyntaxException {
+        if (endpointURI == null) {
+            throw new URISyntaxException("endpointURI", "The endpointURI can't be null.");
         }
 
-        this.webSocketEndpointURIs.add(new ImmutablePair<URI, Boolean>(webSocketEndpointURI, sslVerificationDisabled));
+        this.endpointURIs.add(new ImmutablePair<URI, Boolean>(endpointURI, sslVerificationDisabled));
     }
 
     /**

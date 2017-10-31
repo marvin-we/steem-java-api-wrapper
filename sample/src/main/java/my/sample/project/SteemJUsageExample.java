@@ -1,13 +1,10 @@
 package my.sample.project;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,21 +39,8 @@ public class SteemJUsageExample {
     public static void main(String args[]) {
         // Change the default settings if needed.
         SteemJConfig myConfig = SteemJConfig.getInstance();
-        myConfig.setResponseTimeout(100000L);
+        myConfig.setResponseTimeout(100000);
         myConfig.setDefaultAccount(new AccountName("steemj"));
-
-        try {
-            // SteemJ already comes with a bunch of preconfigured EndPoints, but
-            // if you want to connect to another one, you can simply configure
-            // it as shown here:
-
-            // Reset the currently configured endpoints.
-            myConfig.setWebSocketEndpointURIs(new ArrayList<Pair<URI, Boolean>>());
-            // Change the default settings if needed.
-            myConfig.addWebSocketEndpointURI(new URI("wss://seed.bitcoiner.me"), true);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("The given URI is not valid.", e);
-        }
 
         try {
             // Create a new apiWrapper with your config object.
@@ -159,9 +143,7 @@ public class SteemJUsageExample {
             steemJ.getAccountVotes(new AccountName("thisAcountDoesNotExistYet"));
         } catch (SteemResponseError e) {
             // The SteemResponseError contains the error response.
-            LOGGER.error("An error with code {} occured with the following message {}.",
-                    e.getError().getSteemErrorDetails().getData().getCode(),
-                    e.getError().getSteemErrorDetails().getMessage());
+            LOGGER.error("An error occured.", e);
         } catch (SteemCommunicationException e) {
             LOGGER.error("A communication error occured!", e);
         } catch (SteemInvalidTransactionException e) {

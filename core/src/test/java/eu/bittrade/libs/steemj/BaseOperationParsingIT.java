@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj;
 
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -13,5 +14,5 @@ public abstract class BaseOperationParsingIT extends BaseIntegrationTest {
      * @throws SteemCommunicationException
      *             If something went wrong.
      */
-    public abstract void testOperationParsing() throws SteemCommunicationException;
+    public abstract void testOperationParsing() throws SteemCommunicationException, SteemResponseError;
 }

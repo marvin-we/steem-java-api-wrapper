@@ -13,15 +13,15 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class SteemJReconnectHandler extends ReconnectHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
+public class WebsocketReconnectHandler extends ReconnectHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebsocketReconnectHandler.class);
 
     @Override
     public boolean onDisconnect(CloseReason closeReason) {
         LOGGER.debug("The connection has been closed (Code: {}, Reason: {}).", closeReason.getCloseCode(),
                 closeReason.getReasonPhrase());
 
-        if (SteemJConfig.getInstance().getSocketTimeout() <= 0) {
+        if (SteemJConfig.getInstance().getIdleTimeout() <= 0) {
             LOGGER.info(
                     "The connection has been closed, but SteemJ is configured to never close the conenction. Initiating reconnect.");
             return true;

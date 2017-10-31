@@ -1,15 +1,16 @@
 package eu.bittrade.libs.steemj.communication.dto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Random;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
-import eu.bittrade.libs.steemj.enums.SteemApis;
+import eu.bittrade.libs.steemj.enums.SteemApiType;
 
 /**
  * A wrapper object that carries all required fields for a request.
@@ -17,33 +18,30 @@ import eu.bittrade.libs.steemj.enums.SteemApis;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 @JsonPropertyOrder({ "jsonrpc", "params", "id", "method" })
-public class RequestWrapperDTO {
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final Logger LOGGER = LoggerFactory.getLogger(RequestWrapperDTO.class);
+public class JsonRPCRequest {
+    private static final String JSONRPC = "2.0";
+    private static final String METHOD = "call";
 
     /**
      * The id of the request (used to identify which answer belongs to which
      * request
      */
     @JsonIgnore
-    private static int globalRequestId = 0;
+    private static Random randomGenerator = new Random();
     @JsonIgnore
-    private SteemApis steemApi;
+    private SteemApiType steemApi;
     @JsonIgnore
     private RequestMethods apiMethod;
     @JsonIgnore
     private Object[] additionalParameters;
 
-    private static final String JSONRPC = "2.0";
-    private static final String METHOD = "call";
-
-    private int id;
+    private long id;
 
     /**
      * Instantiate a new RequestObject.
      */
-    public RequestWrapperDTO() {
-        this.id = globalRequestId++;
+    public JsonRPCRequest() {
+        this.id = randomGenerator.nextLong();
     }
 
     /**
@@ -51,7 +49,7 @@ public class RequestWrapperDTO {
      * 
      * @return The selected steem api name.
      */
-    public SteemApis getSteemApi() {
+    public SteemApiType getSteemApi() {
         return steemApi;
     }
 
@@ -61,7 +59,7 @@ public class RequestWrapperDTO {
      * @param steemApi
      *            The name of the api you want to connect to.
      */
-    public void setSteemApi(SteemApis steemApi) {
+    public void setSteemApi(SteemApiType steemApi) {
         this.steemApi = steemApi;
     }
 
@@ -140,27 +138,21 @@ public class RequestWrapperDTO {
      * 
      * @return The id of this request.
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
     /**
-     * Increments the global request id.
-     * 
-     * @return The current value of the global request id after it has been
-     *         incremented.
+     * @return The json representation of this object.
+     * @throws JsonProcessingException
+     *             If the object can not be transformed into valid json.
      */
-    public static int incrementGlobalRequestId() {
-        return ++globalRequestId;
+    public String toJson() throws JsonProcessingException {
+        return CommunicationHandler.getObjectMapper().writeValueAsString(this);
     }
 
     @Override
     public String toString() {
-        try {
-            return MAPPER.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Could not transform object to JSON.", e);
-            return "";
-        }
+        return ToStringBuilder.reflectionToString(this);
     }
 }

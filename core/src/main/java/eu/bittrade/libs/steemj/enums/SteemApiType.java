@@ -5,7 +5,7 @@ package eu.bittrade.libs.steemj.enums;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public enum SteemApis {
+public enum SteemApiType {
     /** The Steem "login_api" */
     LOGIN_API,
     /** The Steem "network_node_api" */

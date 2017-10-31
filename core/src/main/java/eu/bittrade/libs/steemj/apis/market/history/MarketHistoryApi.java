@@ -10,10 +10,11 @@ import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
 import eu.bittrade.libs.steemj.apis.market.history.model.OrderBook;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
+import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
-import eu.bittrade.libs.steemj.enums.SteemApis;
+import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
 
 /**
  * This class implements the market history api.
@@ -39,7 +40,7 @@ public class MarketHistoryApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
@@ -47,10 +48,10 @@ public class MarketHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static MarketTicker getTicker(CommunicationHandler communicationHandler) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+    public static MarketTicker getTicker(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseError {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_TICKER);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
@@ -72,7 +73,7 @@ public class MarketHistoryApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
@@ -80,10 +81,10 @@ public class MarketHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static MarketVolume getVolume(CommunicationHandler communicationHandler) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+    public static MarketVolume getVolume(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseError {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_VOLUME);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
@@ -108,7 +109,7 @@ public class MarketHistoryApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
@@ -119,14 +120,14 @@ public class MarketHistoryApi {
      *             If the limit is less than 0 or greater than 500.
      */
     public static OrderBook getOrderBook(CommunicationHandler communicationHandler, short limit)
-            throws SteemCommunicationException {
+            throws SteemCommunicationException, SteemResponseError {
         if (limit < 0 || limit > 500) {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 500.");
         }
 
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = { limit };
         requestObject.setAdditionalParameters(parameters);
@@ -154,7 +155,7 @@ public class MarketHistoryApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
@@ -165,14 +166,14 @@ public class MarketHistoryApi {
      *             If the limit is less than 0 or greater than 500.
      */
     public static List<MarketTrade> getTradeHistory(CommunicationHandler communicationHandler, TimePointSec start,
-            TimePointSec end, short limit) throws SteemCommunicationException {
+            TimePointSec end, short limit) throws SteemCommunicationException, SteemResponseError {
         if (limit < 0 || limit > 1000) {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 1000.");
         }
 
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_TRADE_HISTORY);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = { start, end, limit };
         requestObject.setAdditionalParameters(parameters);
@@ -197,7 +198,7 @@ public class MarketHistoryApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
@@ -208,14 +209,14 @@ public class MarketHistoryApi {
      *             If the limit is less than 0 or greater than 500.
      */
     public static List<MarketTrade> getRecentTrades(CommunicationHandler communicationHandler, short limit)
-            throws SteemCommunicationException {
+            throws SteemCommunicationException, SteemResponseError {
         if (limit < 0 || limit > 1000) {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 500.");
         }
 
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+        JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_RECENT_TRADES);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = { limit };
         requestObject.setAdditionalParameters(parameters);
@@ -245,7 +246,7 @@ public class MarketHistoryApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
@@ -254,10 +255,10 @@ public class MarketHistoryApi {
      *             </ul>
      */
     public static List<Bucket> getMarketHistory(CommunicationHandler communicationHandler, long bucketSeconds,
-            TimePointSec start, TimePointSec end) throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+            TimePointSec start, TimePointSec end) throws SteemCommunicationException, SteemResponseError {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_MARKET_HISTORY);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = { bucketSeconds, start, end };
         requestObject.setAdditionalParameters(parameters);
@@ -278,7 +279,7 @@ public class MarketHistoryApi {
      *             <ul>
      *             <li>If the server was not able to answer the request in the
      *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
      *             <li>If the SteemJ is unable to transform the JSON response
@@ -287,10 +288,10 @@ public class MarketHistoryApi {
      *             </ul>
      */
     public static List<Integer> getMarketHistoryBuckets(CommunicationHandler communicationHandler)
-            throws SteemCommunicationException {
-        RequestWrapperDTO requestObject = new RequestWrapperDTO();
+            throws SteemCommunicationException, SteemResponseError {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_MARKET_HISTORY_BUCKETS);
-        requestObject.setSteemApi(SteemApis.MARKET_HISTORY_API);
+        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = {};
         requestObject.setAdditionalParameters(parameters);

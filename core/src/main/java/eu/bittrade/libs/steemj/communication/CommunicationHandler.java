@@ -2,45 +2,24 @@ package eu.bittrade.libs.steemj.communication;
 
 import java.io.IOException;
 import java.net.URI;
+import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
-import javax.websocket.CloseReason;
-import javax.websocket.DeploymentException;
-import javax.websocket.EncodeException;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.glassfish.tyrus.client.ClientManager;
-import org.glassfish.tyrus.client.ClientProperties;
-import org.glassfish.tyrus.client.SslContextConfigurator;
-import org.glassfish.tyrus.client.SslEngineConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
-import eu.bittrade.libs.steemj.base.models.error.SteemError;
 import eu.bittrade.libs.steemj.base.models.serializer.BooleanSerializer;
-import eu.bittrade.libs.steemj.communication.dto.NotificationDTO;
-import eu.bittrade.libs.steemj.communication.dto.RequestWrapperDTO;
-import eu.bittrade.libs.steemj.communication.dto.ResponseWrapperDTO;
+import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
+import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
@@ -52,16 +31,15 @@ import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommunicationHandler extends Endpoint implements MessageHandler.Whole<String> {
+public class CommunicationHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
 
+    /** */
     private static ObjectMapper mapper = getObjectMapper();
-    private static int numberOfConnectionTries = 0;
-
-    private CountDownLatch responseCountDownLatch = new CountDownLatch(1);
-    private ClientManager client;
-    private Session session;
-    private String rawJsonResponse;
+    /** */
+    private int numberOfConnectionTries = 0;
+    /** */
+    private AbstractClient client;
 
     /**
      * Initialize the Connection Handler.
@@ -70,31 +48,34 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      *             If no connection to the Steem Node could be established.
      */
     public CommunicationHandler() throws SteemCommunicationException {
-        this.client = ClientManager.createClient();
-
-        this.client.setDefaultMaxSessionIdleTimeout(SteemJConfig.getInstance().getSocketTimeout());
-        this.client.getProperties().put(ClientProperties.RECONNECT_HANDLER, new SteemJReconnectHandler());
-
-        connect();
+        // Create a new connection
+        initializeNewClient();
     }
 
-    @Override
-    public void onOpen(Session session, EndpointConfig config) {
-        this.session = session;
-        this.session.addMessageHandler(this);
+    /**
+     * @throws SteemCommunicationException
+     * 
+     * 
+     */
+    public void initializeNewClient() throws SteemCommunicationException {
+        if (client != null) {
+            try {
+                client.closeConnection();
+            } catch (IOException e) {
+                throw new SteemCommunicationException("Could not close the current client connection.", e);
+            }
+        }
+        // Get a new endpoint URI based on the number of retries.
+        Pair<URI, Boolean> endpoint = SteemJConfig.getInstance().getNextEndpointURI(numberOfConnectionTries);
 
-        LOGGER.info("Connection has been established.");
-    }
-
-    @Override
-    public void onClose(Session session, CloseReason closeReason) {
-        LOGGER.info("Connection has been closed (Code: {}, Reason: {}).", closeReason.getCloseCode(),
-                closeReason.getReasonPhrase());
-    }
-
-    @Override
-    public void onError(Session session, Throwable thr) {
-        LOGGER.error("Connection error.", thr);
+        if (endpoint.getLeft().getScheme().toLowerCase().matches("(http){1}[s]?")) {
+            client = new HttpClient();
+        } else if (endpoint.getLeft().getScheme().toLowerCase().matches("(ws){1}[s]?")) {
+            client = new WebsocketClient();
+        } else {
+            throw new InvalidParameterException("No client implementation for the following protocol available: "
+                    + endpoint.getLeft().getScheme().toLowerCase());
+        }
     }
 
     /**
@@ -104,14 +85,14 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      * @param requestObject
      *            A request object that contains all needed parameters.
      * @param targetClass
-     *            The target class for the transformation.
+     *            The type the response should be transformed to.
      * @param <T>
-     *            The object that you want to map the result to.
+     *            The type that should be returned.
      * @return The server response transformed into a list of given objects.
      * @throws SteemTimeoutException
      *             If the server was not able to answer the request in the given
      *             time (@see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(long)
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
      *             setResponseTimeout()})
      * @throws SteemCommunicationException
      *             If there is a connection problem.
@@ -121,172 +102,31 @@ public class CommunicationHandler extends Endpoint implements MessageHandler.Who
      * @throws SteemResponseError
      *             If the Server returned an error object.
      */
-    public <T> List<T> performRequest(RequestWrapperDTO requestObject, Class<T> targetClass)
-            throws SteemCommunicationException {
-        if (!session.isOpen()) {
-            connect();
-        }
-
+    public <T> List<T> performRequest(JsonRPCRequest requestObject, Class<T> targetClass)
+            throws SteemCommunicationException, SteemResponseError {
         try {
-            sendMessageSynchronously(requestObject);
+            Pair<URI, Boolean> endpoint = SteemJConfig.getInstance().getNextEndpointURI(numberOfConnectionTries++);
+            JsonRPCResponse rawJsonResponse = client.invokeAndReadResponse(requestObject, endpoint.getLeft(),
+                    endpoint.getRight());
+            LOGGER.debug("Received {} ", rawJsonResponse);
 
-            @SuppressWarnings("unchecked")
-            ResponseWrapperDTO<T> response = mapper.readValue(rawJsonResponse, ResponseWrapperDTO.class);
-
-            if (response == null || "".equals(response.toString()) || response.getResult() == null
-                    || "".equals(response.getResult().toString())) {
-                LOGGER.debug("The response was empty. The requested node may not provid the method {}.",
-                        requestObject.getApiMethod());
-                List<T> emptyResult = new ArrayList<>();
-                emptyResult.add(null);
-                return emptyResult;
+            if (rawJsonResponse.isError()) {
+                throw new SteemResponseError("The response contains an error.", rawJsonResponse.createThrowable());
+            } else {
+                // HANDLE NORMAL RESPONSE
+                JavaType expectedResultType = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);
+                return rawJsonResponse.handleResult(expectedResultType, requestObject.getId());
             }
+        } catch (SteemCommunicationException e) {
+            LOGGER.warn("The connection has been closed. Switching the endpoint and reconnecting.");
+            LOGGER.debug("For the following reason: ", e);
 
-            if (response.getResponseId() != requestObject.getId()) {
-                LOGGER.error("The request and the response id are not equal! This may cause some strange behaivior.");
-            }
-
-            // Make sure that the inner result object has the correct type.
-            JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);
-
-            return mapper.convertValue(response.getResult(), type);
-        } catch (JsonParseException | JsonMappingException e) {
-            LOGGER.debug("Could not parse the response. Trying to transform it to an error object.", e);
-
-            try {
-                // TODO: Find a better solution for errors in general.
-                throw new SteemResponseError(mapper.readValue(rawJsonResponse, SteemError.class));
-            } catch (IOException ex) {
-                throw new SteemTransformationException("Could not transform the response into an object.", ex);
-            }
-
-        } catch (IOException | EncodeException | InterruptedException e) {
-            throw new SteemCommunicationException("Could not send the message to the Steem Node.", e);
+            return performRequest(requestObject, targetClass);
         }
     }
 
     /**
-     * This method establishes a new connection to the web socket Server.
-     */
-    protected synchronized void connect() {
-        // Get a websocket URI based on the number of retries.
-        Pair<URI, Boolean> endpoint = SteemJConfig.getInstance().getNextWebSocketEndpointURI(numberOfConnectionTries);
-
-        // Tyrus expects a SSL connection if the SSL_ENGINE_CONFIGURATOR
-        // property is present. This leads to a "connection failed" error when
-        // a non SSL secured protocol is used. Due to this we only add the
-        // property when connecting to a SSL secured node.
-        if (endpoint.getRight() && endpoint.getLeft().getScheme().equals("wss")
-                || endpoint.getLeft().getScheme().equals("https")) {
-            SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(new SslContextConfigurator());
-            // TODO: This can also be solved with a lamda expression which would
-            // require Java 8:
-            // sslEngineConfigurator.setHostnameVerifier((String host,
-            // SSLSession sslSession) -> true);
-            sslEngineConfigurator.setHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String host, SSLSession sslSession) {
-                    return true;
-                }
-            });
-            client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
-        }
-
-        try {
-            if (session != null && session.isOpen()) {
-                LOGGER.debug("Closing existing session.");
-                session.close();
-            }
-
-            LOGGER.info("Connecting to {}.", endpoint.getLeft());
-
-            client.connectToServer(this, SteemJConfig.getInstance().getClientEndpointConfig(), endpoint.getLeft());
-        } catch (DeploymentException | IOException e) {
-            LOGGER.info("Could not connect to the node - Trying to reconnect.");
-            LOGGER.debug("Reason:", e);
-            // Increase the number of connection tries.
-            numberOfConnectionTries++;
-            // And reconnect.
-            connect();
-        }
-    }
-
-    /**
-     * Sends a message to the Steem Node and waits for an answer.
-     * 
-     * @param requestObject
-     *            The object to send.
-     * @throws IOException
-     *             If something went wrong.
-     * @throws EncodeException
-     *             If something went wrong.
-     * @throws SteemTimeoutException
-     *             If the node took to long to answer.
-     * @throws InterruptedException
-     *             If something went wrong.
-     * 
-     */
-    private void sendMessageSynchronously(RequestWrapperDTO requestObject)
-            throws EncodeException, SteemTimeoutException, InterruptedException {
-        responseCountDownLatch = new CountDownLatch(1);
-
-        try {
-            session.getBasicRemote().sendObject(requestObject);
-        } catch (IOException e) {
-            LOGGER.warn("Could not transfer the data to the Steem Node. - Reconnecting.");
-            LOGGER.debug("Reason:", e);
-            // Increase the number of connection tries.
-            numberOfConnectionTries++;
-            // And reconnect.
-            connect();
-            // Resend the message.
-            sendMessageSynchronously(requestObject);
-        }
-
-        // Wait until we received a response from the Server.
-        if (SteemJConfig.getInstance().getResponseTimeout() == 0) {
-            responseCountDownLatch.await();
-        } else {
-            if (!responseCountDownLatch.await(SteemJConfig.getInstance().getResponseTimeout(), TimeUnit.MILLISECONDS)) {
-                String errorMessage = "Timeout occured. The WebSocket server was not able to answer in "
-                        + SteemJConfig.getInstance().getResponseTimeout() + " millisecond(s).";
-
-                LOGGER.error(errorMessage);
-                throw new SteemTimeoutException(errorMessage);
-            }
-        }
-    }
-
-    @Override
-    public void onMessage(String message) {
-        // Check if we are waiting for an answer.
-        if (responseCountDownLatch.getCount() > 0) {
-            LOGGER.debug("Raw JSON response: {}", message);
-
-            this.rawJsonResponse = message;
-
-            responseCountDownLatch.countDown();
-        } else {
-            // A message has been send while we are not waiting for it - It can
-            // be a callback.
-            LOGGER.debug("Received callback: {}", message);
-
-            try {
-                NotificationDTO response = mapper.readValue(message, NotificationDTO.class);
-
-                // Make sure that the inner result object is a BlockHeader.
-                CallbackHub.getInstance().getCallbackByUuid(Integer.valueOf(response.getParams()[0].toString()))
-                        .onNewBlock(mapper.convertValue(((ArrayList<Object>) (response.getParams()[1])).get(0),
-                                SignedBlockHeader.class));
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                LOGGER.error("Could not parse callback {}.", e);
-            }
-        }
-    }
-
-    /**
-     * Get a preconfigured jackson Object Mapper instance.
+     * Get a preconfigured Jackson Object Mapper instance.
      * 
      * @return The object mapper.
      */
