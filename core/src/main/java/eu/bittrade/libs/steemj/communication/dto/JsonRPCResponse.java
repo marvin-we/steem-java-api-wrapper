@@ -22,66 +22,36 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  */
 public class JsonRPCResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonRPCResponse.class);
-    /** The field name of the Json RPC "error" field. */
+    /** The field name of the JSON RPC "error" field. */
     public static final String ERROR_FIELD_NAME = "error";
-    /** The field name of the Json RPC "id" field. */
+    /** The field name of the JSON RPC "id" field. */
     public static final String ID_FIELD_NAME = "id";
-    /** The field name of the Json RPC "result" field. */
+    /** The field name of the JSON RPC "result" field. */
     public static final String RESULT_FIELD_NAME = "result";
 
-    /** */
+    /** The raw JSON String returned by a node. */
     private JsonNode rawJsonResponse;
 
     /**
+     * Create a new {@link JsonRPCResponse} instance.
      * 
      * @param rawJsonResponse
+     *            The raw JSON response that should be wrapped by this
+     *            {@link JsonRPCResponse} instance.
      */
     public JsonRPCResponse(JsonNode rawJsonResponse) {
         this.rawJsonResponse = rawJsonResponse;
     }
 
     /**
-     * @return The raw Json response.
+     * Get the raw JSON response that is wrapped by this {@link JsonRPCResponse}
+     * instance.
+     * 
+     * @return The raw JSON response that is wrapped by this
+     *         {@link JsonRPCResponse} instance.
      */
     public JsonNode getRawJsonResponse() {
         return rawJsonResponse;
-    }
-
-    public void handleError() {
-        /*
-         * ObjectNode dataObject =
-         * ObjectNode.class.cast(errorObject.get(JsonRpcBasicServer.DATA)); if
-         * (!hasNonNullTextualData(dataObject,
-         * JsonRpcBasicServer.EXCEPTION_TYPE_NAME)) return
-         * createJsonRpcClientException(errorObject);
-         * 
-         * try { String exceptionTypeName =
-         * dataObject.get(JsonRpcBasicServer.EXCEPTION_TYPE_NAME).asText();
-         * String message = hasNonNullTextualData(dataObject,
-         * JsonRpcBasicServer.ERROR_MESSAGE) ?
-         * dataObject.get(JsonRpcBasicServer.ERROR_MESSAGE).asText() : null;
-         * return createThrowable(exceptionTypeName, message); } catch
-         * (Exception e) { logger.warn("Unable to create throwable", e); return
-         * createJsonRpcClientException(errorObject); } }
-         * 
-         * }catch(JsonParseException|
-         * 
-         * JsonMappingException e) { LOGGER.
-         * debug("Could not parse the response. Trying to transform it to an error object."
-         * , e);
-         * 
-         * try { // TODO: Find a better solution for errors in general. throw
-         * new SteemResponseError(mapper.readValue(rawJsonResponse,
-         * SteemError.class)); } catch (IOException ex) { throw new
-         * SteemTransformationException("Could not transform the response into an object."
-         * , ex); }
-         * 
-         * }catch(IOException|EncodeException| InterruptedException e) { throw
-         * new
-         * SteemCommunicationException("Could not send the message to the Steem Node."
-         * , e); }
-         */
-        System.out.println("handleError");
     }
 
     // #########################################################################
@@ -89,27 +59,35 @@ public class JsonRPCResponse {
     // #########################################################################
 
     /**
+     * Check if the given <code>response</code> has the expected <code> id.
      * 
-     * @param id
-     * @param responseAsObject
-     * @return
+     * &#64;param id The request id to compare with.
+     * &#64;param response The JSON returned from the node.
+     * @return <code>true</code> if the <code>response</code> contains the
+     *         <code>id</code> or <code>false</code> if not.
      */
-    private boolean hasExpectedId(long id, ObjectNode responseAsObject) {
-        return responseAsObject.has(ID_FIELD_NAME) && responseAsObject.get(ID_FIELD_NAME) != null
-                && responseAsObject.get(ID_FIELD_NAME).asLong() == id;
+    private boolean hasExpectedId(long id, ObjectNode response) {
+        return response.has(ID_FIELD_NAME) && response.get(ID_FIELD_NAME) != null
+                && response.get(ID_FIELD_NAME).asLong() == id;
     }
 
     /**
+     * Check if the JSON response wrapped by this {@link JsonRPCResponse}
+     * instance contains a result field.
      * 
-     * @return
+     * @return <code>true</code> if this is the case or <code>false</code> if
+     *         not.
      */
     private boolean isResult() {
         return rawJsonResponse.has(RESULT_FIELD_NAME);
     }
 
     /**
+     * Check if the JSON response wrapped by this {@link JsonRPCResponse}
+     * instance is empty.
      * 
-     * @return
+     * @return <code>true</code> if this is the case or <code>false</code> if
+     *         not.
      */
     private boolean isResultEmpty() {
         if (rawJsonResponse.get(RESULT_FIELD_NAME) == null || rawJsonResponse.get(RESULT_FIELD_NAME).isNull())
@@ -120,8 +98,11 @@ public class JsonRPCResponse {
     }
 
     /**
+     * Check if the JSON response wrapped by this {@link JsonRPCResponse}
+     * instance has the expected JSON structure.
      * 
-     * @return
+     * @return <code>true</code> if this is the case or <code>false</code> if
+     *         not.
      */
     private boolean isResponseValid() {
         if (rawJsonResponse.isObject())
@@ -132,11 +113,19 @@ public class JsonRPCResponse {
     }
 
     /**
+     * This method checks if the JSON response wrapped by this
+     * {@link JsonRPCResponse} instance has the expected <code>id</code> and
+     * will try to transform the JSON into the given <code>type</code>.
      * 
      * @param type
+     *            The type to transform the JSON to.
      * @param id
-     * @return asd
+     *            The expected id of the response.
+     * @return A list of of <code>type</code> instances.
      * @throws SteemResponseException
+     *             If the response does not contain the expected <code>id</code>
+     *             or if the response could not be transformed into the expected
+     *             <code>type</code>.
      */
     public <T> List<T> handleResult(JavaType type, long id) throws SteemResponseException {
         if (isResponseValid()) {
