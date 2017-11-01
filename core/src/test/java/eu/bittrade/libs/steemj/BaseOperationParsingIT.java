@@ -13,6 +13,8 @@ public abstract class BaseOperationParsingIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If something went wrong.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     public abstract void testOperationParsing() throws SteemCommunicationException, SteemResponseException;
 }

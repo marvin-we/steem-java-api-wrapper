@@ -63,6 +63,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -83,6 +85,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -103,6 +107,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -121,6 +127,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -142,6 +150,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -166,6 +176,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -188,6 +200,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -212,6 +226,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -232,6 +248,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test
@@ -250,6 +268,8 @@ public class FollowApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Category({ IntegrationTest.class })
     @Test

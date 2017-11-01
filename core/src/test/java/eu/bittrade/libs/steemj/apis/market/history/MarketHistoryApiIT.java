@@ -42,6 +42,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @BeforeClass
     public static void init() throws SteemCommunicationException, SteemResponseException {
@@ -57,6 +59,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Test
     @Category({ IntegrationTest.class })
@@ -78,6 +82,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Test
     @Category({ IntegrationTest.class })
@@ -97,6 +103,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Test
     @Category({ IntegrationTest.class })
@@ -120,6 +128,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Test
     @Category({ IntegrationTest.class })
@@ -141,6 +151,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Test
     @Category({ IntegrationTest.class })
@@ -161,6 +173,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Test
     @Category({ IntegrationTest.class })
@@ -194,6 +208,8 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
      */
     @Test
     @Category({ IntegrationTest.class })
