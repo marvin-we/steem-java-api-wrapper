@@ -6,7 +6,7 @@ import java.net.URI;
 import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
 import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * This class defines the set of methods expected from a client.
@@ -21,11 +21,11 @@ public abstract class AbstractClient {
      * @param sslVerificationDisabled
      * @return The response
      * @throws SteemCommunicationException
-     * @throws SteemResponseError
+     * @throws SteemResponseException
      *             If the answer received from the node is no valid JSON.
      */
     public abstract JsonRPCResponse invokeAndReadResponse(JsonRPCRequest requestObject, URI endpointUri,
-            boolean sslVerificationDisabled) throws SteemCommunicationException, SteemResponseError;
+            boolean sslVerificationDisabled) throws SteemCommunicationException, SteemResponseException;
 
     /**
      * 

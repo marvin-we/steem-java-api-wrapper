@@ -26,7 +26,7 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * This class contains all test connected to the
@@ -44,7 +44,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      *             If a communication error occurs.
      */
     @BeforeClass
-    public static void init() throws SteemCommunicationException, SteemResponseError {
+    public static void init() throws SteemCommunicationException, SteemResponseException {
         setupIntegrationTestEnvironment();
 
         COMMUNICATION_HANDLER = new CommunicationHandler();
@@ -60,7 +60,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetTicker() throws SteemCommunicationException, SteemResponseError {
+    public void testGetTicker() throws SteemCommunicationException, SteemResponseException {
         MarketTicker marketTicker = MarketHistoryApi.getTicker(COMMUNICATION_HANDLER);
 
         assertThat(marketTicker.getHighestBid(), greaterThan(0.0));
@@ -81,7 +81,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetVolume() throws SteemCommunicationException, SteemResponseError {
+    public void testGetVolume() throws SteemCommunicationException, SteemResponseException {
         MarketVolume marketVolume = MarketHistoryApi.getVolume(COMMUNICATION_HANDLER);
 
         assertThat(marketVolume.getSbdVolume().toReal(), greaterThan(0.0));
@@ -100,7 +100,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetOrderBook() throws SteemCommunicationException, SteemResponseError {
+    public void testGetOrderBook() throws SteemCommunicationException, SteemResponseException {
         OrderBook orderBook = MarketHistoryApi.getOrderBook(COMMUNICATION_HANDLER, (short) 50);
 
         assertThat(orderBook.getAsks().size(), lessThanOrEqualTo(50));
@@ -123,7 +123,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetTradeHistory() throws SteemCommunicationException, SteemResponseError {
+    public void testGetTradeHistory() throws SteemCommunicationException, SteemResponseException {
         List<MarketTrade> marketTrades = MarketHistoryApi.getTradeHistory(COMMUNICATION_HANDLER,
                 new TimePointSec(1497112817), new TimePointSec(System.currentTimeMillis()), (short) 10);
 
@@ -144,7 +144,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetRecentTrades() throws SteemCommunicationException, SteemResponseError {
+    public void testGetRecentTrades() throws SteemCommunicationException, SteemResponseException {
         List<MarketTrade> marketTrades = MarketHistoryApi.getRecentTrades(COMMUNICATION_HANDLER, (short) 30);
 
         assertThat(marketTrades.size(), lessThanOrEqualTo(30));
@@ -164,7 +164,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetMarketHistory() throws SteemCommunicationException, SteemResponseError {
+    public void testGetMarketHistory() throws SteemCommunicationException, SteemResponseException {
         List<Bucket> marketHistory = MarketHistoryApi.getMarketHistory(COMMUNICATION_HANDLER, 3600,
                 new TimePointSec(1504885989), new TimePointSec(System.currentTimeMillis()));
 
@@ -197,7 +197,7 @@ public class MarketHistoryApiIT extends BaseIntegrationTest {
      */
     @Test
     @Category({ IntegrationTest.class })
-    public void testGetMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseError {
+    public void testGetMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseException {
         List<Integer> marketHistoryBuckets = MarketHistoryApi.getMarketHistoryBuckets(COMMUNICATION_HANDLER);
 
         assertThat(marketHistoryBuckets.size(), greaterThan(0));

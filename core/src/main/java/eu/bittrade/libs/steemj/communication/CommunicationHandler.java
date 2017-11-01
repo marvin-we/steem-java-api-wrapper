@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
 import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 
@@ -99,11 +99,11 @@ public class CommunicationHandler {
      * @throws SteemTransformationException
      *             If the SteemJ is unable to transform the JSON response into a
      *             Java object.
-     * @throws SteemResponseError
+     * @throws SteemResponseException
      *             If the Server returned an error object.
      */
     public <T> List<T> performRequest(JsonRPCRequest requestObject, Class<T> targetClass)
-            throws SteemCommunicationException, SteemResponseError {
+            throws SteemCommunicationException, SteemResponseException {
         try {
             Pair<URI, Boolean> endpoint = SteemJConfig.getInstance().getNextEndpointURI(numberOfConnectionTries++);
             JsonRPCResponse rawJsonResponse = client.invokeAndReadResponse(requestObject, endpoint.getLeft(),
@@ -111,7 +111,7 @@ public class CommunicationHandler {
             LOGGER.debug("Received {} ", rawJsonResponse);
 
             if (rawJsonResponse.isError()) {
-                throw new SteemResponseError("The response contains an error.", rawJsonResponse.createThrowable());
+                throw new SteemResponseException("The response contains an error.", rawJsonResponse.createThrowable());
             } else {
                 // HANDLE NORMAL RESPONSE
                 JavaType expectedResultType = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);

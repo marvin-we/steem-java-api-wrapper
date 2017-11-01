@@ -5,14 +5,14 @@ package eu.bittrade.libs.steemj.exceptions;
  * 
  * @author<a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class SteemResponseError extends Exception {
+public class SteemResponseException extends Exception {
     private static final long serialVersionUID = 147694337695115012L;
 
-    public SteemResponseError(String message) {
+    public SteemResponseException(String message) {
         super(message);
     }
 
-    public SteemResponseError(String message, Throwable cause) {
+    public SteemResponseException(String message, Throwable cause) {
         super(message, cause);
     }
 }

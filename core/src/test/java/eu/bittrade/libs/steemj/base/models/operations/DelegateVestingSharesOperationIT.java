@@ -17,7 +17,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "delegate vesting shares operation" under the
@@ -66,7 +66,7 @@ public class DelegateVestingSharesOperationIT extends BaseTransactionalIntegrati
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseError {
+    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         SignedBlockWithInfo blockContainingDelegateVestingSharesOperation = steemJ
                 .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 

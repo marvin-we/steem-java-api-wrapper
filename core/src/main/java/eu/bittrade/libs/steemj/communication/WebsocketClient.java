@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
 import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 
 /**
@@ -61,7 +61,7 @@ public class WebsocketClient extends AbstractClient {
 
     @Override
     public JsonRPCResponse invokeAndReadResponse(JsonRPCRequest requestObject, URI endpointUri,
-            boolean sslVerificationDisabled) throws SteemCommunicationException, SteemResponseError {
+            boolean sslVerificationDisabled) throws SteemCommunicationException, SteemResponseException {
         if (session == null || !session.isOpen() || currentEndpointUri == null
                 || !currentEndpointUri.equals(endpointUri)) {
             connect(endpointUri, sslVerificationDisabled);

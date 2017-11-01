@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * This class contains a Json RPC response and offers additional utility
@@ -136,18 +136,18 @@ public class JsonRPCResponse {
      * @param type
      * @param id
      * @return asd
-     * @throws SteemResponseError
+     * @throws SteemResponseException
      */
-    public <T> List<T> handleResult(JavaType type, long id) throws SteemResponseError {
+    public <T> List<T> handleResult(JavaType type, long id) throws SteemResponseException {
         if (isResponseValid()) {
             if (!isResult()) {
-                throw new SteemResponseError(
+                throw new SteemResponseException(
                         "The result does not contain the required " + RESULT_FIELD_NAME + " field.");
             } else {
                 ObjectNode responseAsObject = ObjectNode.class.cast(rawJsonResponse);
 
                 if (!hasExpectedId(id, responseAsObject)) {
-                    throw new SteemResponseError(
+                    throw new SteemResponseException(
                             "The id of this response does not match the expected id. This can cause an unexpected behavior.");
                 }
 

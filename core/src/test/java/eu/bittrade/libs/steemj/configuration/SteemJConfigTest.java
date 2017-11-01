@@ -2,11 +2,14 @@ package eu.bittrade.libs.steemj.configuration;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 
@@ -64,5 +67,16 @@ public class SteemJConfigTest {
         assertThat(SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.MEMO, accountName)
                 .decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
                 equalTo(STEEMJ_KEY_MEMO));
+    }
+
+    /**
+     * Test if the version and the application name have been set correctly
+     * during the build process.
+     */
+    @Test
+    @Category({ IntegrationTest.class })
+    public void testVersionAndName() {
+        assertThat(SteemJConfig.getSteemJVersion(), notNullValue());
+        assertThat(SteemJConfig.getSteemJAppName(), notNullValue());
     }
 }

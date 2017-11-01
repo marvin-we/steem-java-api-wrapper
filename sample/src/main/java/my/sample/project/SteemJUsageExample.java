@@ -20,7 +20,7 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * This class provides shows some common SteemJ commands.
@@ -141,7 +141,7 @@ public class SteemJUsageExample {
 
             // Force an error response:
             steemJ.getAccountVotes(new AccountName("thisAcountDoesNotExistYet"));
-        } catch (SteemResponseError e) {
+        } catch (SteemResponseException e) {
             // The SteemResponseError contains the error response.
             LOGGER.error("An error occured.", e);
         } catch (SteemCommunicationException e) {

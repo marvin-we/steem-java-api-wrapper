@@ -17,7 +17,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "vote operation" under the use of real api
@@ -66,7 +66,7 @@ public class WithdrawVestingOperationIT extends BaseTransactionalIntegrationTest
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseError {
+    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         SignedBlockWithInfo blockContainingWithdrawVestingOperation = steemJ
                 .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 

@@ -18,7 +18,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.math.BigInteger;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.exparity.hamcrest.date.DateMatchers;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -71,7 +69,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.util.KeyGenerator;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -197,8 +195,8 @@ public class SteemJIT extends BaseIntegrationTest {
 
         assertNotNull("expect votes", votes);
         assertThat("expect account has votes", votes.size(), greaterThan(0));
-        assertThat("expect last vote after 2016-03-01", votes.get(votes.size() - 1).getTime().getDateTimeAsDate(),
-                DateMatchers.after(2016, Month.MARCH, 1));
+        assertThat("expect last vote after 2016-03-01", votes.get(votes.size() - 1).getTime().getDateTimeAsTimestamp(),
+                greaterThan(1456790400L));
 
         boolean foundSelfVote = false;
 
@@ -443,7 +441,7 @@ public class SteemJIT extends BaseIntegrationTest {
         // Force an error response:
         try {
             steemJ.getAccountVotes(new AccountName("thisacountdoes"));
-        } catch (final SteemResponseError steemResponseError) {
+        } catch (final SteemResponseException steemResponseError) {
             // success
         } catch (final Exception e) {
             LOGGER.error(e);
@@ -551,7 +549,7 @@ public class SteemJIT extends BaseIntegrationTest {
     public void testGetFeedHistory() throws Exception {
         final FeedHistory feedHistory = steemJ.getFeedHistory();
 
-        assertThat(feedHistory.getCurrentPrice().getBase().getAmount(), greaterThan(1000L));
+        assertThat(feedHistory.getCurrentPrice().getBase().getAmount(), greaterThan(100L));
         assertThat(feedHistory.getPriceHistory().size(), greaterThan(1));
     }
 

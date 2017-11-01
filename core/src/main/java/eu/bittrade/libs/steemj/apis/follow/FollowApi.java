@@ -18,7 +18,7 @@ import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * This class implements the follow api.
@@ -63,10 +63,11 @@ public class FollowApi {
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
-     * @throws SteemResponseError 
+     * @throws SteemResponseException
      */
     public static List<FollowApiObject> getFollowers(CommunicationHandler communicationHandler, AccountName following,
-            AccountName startFollower, FollowType type, short limit) throws SteemCommunicationException, SteemResponseError {
+            AccountName startFollower, FollowType type, short limit)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -105,15 +106,19 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<FollowApiObject> getFollowing(CommunicationHandler communicationHandler, AccountName follower,
-            AccountName startFollowing, FollowType type, short limit) throws SteemCommunicationException, SteemResponseError {
+            AccountName startFollowing, FollowType type, short limit)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWING);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -143,15 +148,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static FollowCountApiObject getFollowCount(CommunicationHandler communicationHandler, AccountName account)
-            throws SteemCommunicationException, SteemResponseError {
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FOLLOW_COUNT);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -188,15 +196,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<FeedEntry> getFeedEntries(CommunicationHandler communicationHandler, AccountName account,
-            int entryId, short limit) throws SteemCommunicationException, SteemResponseError {
+            int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FEED_ENTRIES);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -233,15 +244,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<CommentFeedEntry> getFeed(CommunicationHandler communicationHandler, AccountName account,
-            int entryId, short limit) throws SteemCommunicationException, SteemResponseError {
+            int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FEED);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -298,15 +312,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<BlogEntry> getBlogEntries(CommunicationHandler communicationHandler, AccountName account,
-            int entryId, short limit) throws SteemCommunicationException, SteemResponseError {
+            int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_BLOG_ENTRIES);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -343,15 +360,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<CommentBlogEntry> getBlog(CommunicationHandler communicationHandler, AccountName account,
-            int entryId, short limit) throws SteemCommunicationException, SteemResponseError {
+            int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_BLOG);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -401,15 +421,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<AccountReputation> getAccountReputations(CommunicationHandler communicationHandler,
-            AccountName accountName, int limit) throws SteemCommunicationException, SteemResponseError {
+            AccountName accountName, int limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -438,15 +461,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<AccountName> getRebloggedBy(CommunicationHandler communicationHandler, AccountName author,
-            Permlink permlink) throws SteemCommunicationException, SteemResponseError {
+            Permlink permlink) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
@@ -476,15 +502,18 @@ public class FollowApi {
      *             <li>If the server was not able to answer the request in the
      *             given time (see
      *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout})</li>
+     *             setResponseTimeout}).</li>
      *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
      *             <li>If the SteemJ is unable to transform the JSON response
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
     public static List<PostsPerAuthorPair> getBlogAuthors(CommunicationHandler communicationHandler,
-            AccountName blogAccount) throws SteemCommunicationException, SteemResponseError {
+            AccountName blogAccount) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_BLOG_AUTHORS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);

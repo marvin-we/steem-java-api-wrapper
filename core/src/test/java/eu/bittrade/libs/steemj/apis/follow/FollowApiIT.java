@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * This class contains all test connected to the
@@ -66,7 +66,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetFollowers() throws SteemCommunicationException, SteemResponseError {
+    public void testGetFollowers() throws SteemCommunicationException, SteemResponseException {
         final List<FollowApiObject> followers = FollowApi.getFollowers(COMMUNICATION_HANDLER,
                 new AccountName("dez1337"), new AccountName("dez1337"), FollowType.BLOG, (short) 100);
 
@@ -86,7 +86,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetFollowing() throws SteemCommunicationException, SteemResponseError {
+    public void testGetFollowing() throws SteemCommunicationException, SteemResponseException {
         final List<FollowApiObject> following = FollowApi.getFollowing(COMMUNICATION_HANDLER,
                 new AccountName("dez1337"), new AccountName("dez1337"), FollowType.BLOG, (short) 10);
 
@@ -106,7 +106,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetFollowCount() throws SteemCommunicationException, SteemResponseError {
+    public void testGetFollowCount() throws SteemCommunicationException, SteemResponseException {
         final FollowCountApiObject followCount = FollowApi.getFollowCount(COMMUNICATION_HANDLER,
                 new AccountName("dez1337"));
 
@@ -124,7 +124,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetFeedEntries() throws SteemCommunicationException, SteemResponseError {
+    public void testGetFeedEntries() throws SteemCommunicationException, SteemResponseException {
         final List<FeedEntry> feedEntries = FollowApi.getFeedEntries(COMMUNICATION_HANDLER, new AccountName("dez1337"),
                 0, (short) 100);
         assertThat(feedEntries.size(), equalTo(100));
@@ -145,7 +145,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetFeed() throws SteemCommunicationException, SteemResponseError {
+    public void testGetFeed() throws SteemCommunicationException, SteemResponseException {
         final List<CommentFeedEntry> feed = FollowApi.getFeed(COMMUNICATION_HANDLER, new AccountName("dez1337"), 0,
                 (short) 5);
         assertThat(feed.size(), equalTo(5));
@@ -169,7 +169,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetBlogEntries() throws SteemCommunicationException, SteemResponseError {
+    public void testGetBlogEntries() throws SteemCommunicationException, SteemResponseException {
         final List<BlogEntry> blogEntries = FollowApi.getBlogEntries(COMMUNICATION_HANDLER, new AccountName("dez1337"),
                 0, (short) 5);
 
@@ -191,7 +191,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetBlog() throws SteemCommunicationException, SteemResponseError {
+    public void testGetBlog() throws SteemCommunicationException, SteemResponseException {
         final List<CommentBlogEntry> blog = FollowApi.getBlog(COMMUNICATION_HANDLER, new AccountName("dez1337"), 0,
                 (short) 5);
 
@@ -215,7 +215,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetAccountReputation() throws SteemCommunicationException, SteemResponseError {
+    public void testGetAccountReputation() throws SteemCommunicationException, SteemResponseException {
         final List<AccountReputation> accountReputations = FollowApi.getAccountReputations(COMMUNICATION_HANDLER,
                 new AccountName("dez1337"), 10);
 
@@ -235,7 +235,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetRebloggedBy() throws SteemCommunicationException, SteemResponseError {
+    public void testGetRebloggedBy() throws SteemCommunicationException, SteemResponseException {
         final List<AccountName> accountNames = FollowApi.getRebloggedBy(COMMUNICATION_HANDLER,
                 new AccountName("dez1337"), new Permlink("steemj-v0-2-6-has-been-released-update-11"));
 
@@ -253,7 +253,7 @@ public class FollowApiIT extends BaseIntegrationTest {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetBlogAuthors() throws SteemCommunicationException, SteemResponseError {
+    public void testGetBlogAuthors() throws SteemCommunicationException, SteemResponseException {
         final List<PostsPerAuthorPair> blogAuthors = FollowApi.getBlogAuthors(COMMUNICATION_HANDLER,
                 new AccountName("dez1337"));
 

@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "comment options operation" under the use of
@@ -94,7 +94,7 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionalIntegra
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseError {
+    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         SignedBlockWithInfo blockContainingCommentOptionsOperation = steemJ
                 .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION_WITH_EXTENSION);
 

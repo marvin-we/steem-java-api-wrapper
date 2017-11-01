@@ -15,7 +15,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "escrow dispute operation" under the use of
@@ -64,7 +64,7 @@ public class EscrowDisputeOperationIT extends BaseTransactionalIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseError {
+    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         SignedBlockWithInfo blockContainingEscrowDisputeOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation escrowDisputeOperation = blockContainingEscrowDisputeOperation.getTransactions()

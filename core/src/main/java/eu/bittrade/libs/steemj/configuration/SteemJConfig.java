@@ -16,6 +16,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.AddressPrefixType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -36,6 +37,10 @@ public class SteemJConfig {
     private static final String DEFAULT_STEEM_API_URI = "https://api.steemit.com";
     /** The SteemJ account. */
     private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
+    /** The SteemJ version. */
+    private static final String STEEMJ_VERSION = SteemJ.class.getPackage().getImplementationVersion();
+    /** The SteemJ App-Name */
+    private static final String STEEMJ_NAME = SteemJ.class.getPackage().getImplementationTitle();
 
     private static SteemJConfig steemJConfigInstance;
 
@@ -526,5 +531,25 @@ public class SteemJConfig {
      */
     public static AccountName getSteemJAccount() {
         return STEEMJ_ACCOUNT;
+    }
+
+    /**
+     * Get the version of SteemJ that is currently used. This parameter is set
+     * during the build and can't be changed.
+     * 
+     * @return The SteemJ version that is currently used.
+     */
+    public static String getSteemJVersion() {
+        return STEEMJ_VERSION;
+    }
+
+    /**
+     * Get the application name of SteemJ. This parameter is set during the
+     * build and can't be changed.
+     * 
+     * @return The application name of SteemJ.
+     */
+    public static String getSteemJAppName() {
+        return STEEMJ_NAME;
     }
 }

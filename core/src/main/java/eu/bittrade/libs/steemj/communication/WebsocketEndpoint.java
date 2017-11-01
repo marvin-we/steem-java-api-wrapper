@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * This class handles a WebSocket connection.
@@ -38,16 +38,16 @@ public class WebsocketEndpoint extends Endpoint implements MessageHandler.Whole<
     /**
      * 
      * @return
-     * @throws SteemResponseError
+     * @throws SteemResponseException
      */
-    protected JsonRPCResponse getLatestResponse() throws SteemResponseError {
+    protected JsonRPCResponse getLatestResponse() throws SteemResponseException {
         try {
             if (latestResponse != null)
                 return new JsonRPCResponse(CommunicationHandler.getObjectMapper().readTree(latestResponse));
 
             return null;
         } catch (IOException e) {
-            throw new SteemResponseError("Unable to parse the response.", e);
+            throw new SteemResponseException("Unable to parse the response.", e);
         }
     }
 

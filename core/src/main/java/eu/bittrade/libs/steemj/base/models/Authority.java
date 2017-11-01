@@ -168,7 +168,7 @@ public class Authority implements ByteTransformable, SignatureObject {
         int hashCode = 1;
         hashCode = 31 * hashCode + (this.getAccountAuths() == null ? 0 : this.getAccountAuths().hashCode());
         hashCode = 31 * hashCode + (this.getKeyAuths() == null ? 0 : this.getKeyAuths().hashCode());
-        hashCode = 31 * hashCode + Long.hashCode(this.getWeightThreshold());
+        hashCode = 31 * hashCode + (int) (this.getWeightThreshold() ^ (this.getWeightThreshold() >>> 32));
         return hashCode;
     }
 

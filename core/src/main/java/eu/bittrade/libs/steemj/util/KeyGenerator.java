@@ -2,10 +2,12 @@ package eu.bittrade.libs.steemj.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.util.ArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bitcoinj.core.ECKey;
 
 import eu.bittrade.libs.steemj.base.models.PublicKey;
@@ -151,17 +153,17 @@ public class KeyGenerator {
 
         try {
             for (int i = 0; i < BRAIN_KEY_WORD_COUNT; i++) {
-                brainKeyParts.add(
-                        BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary()[SecureRandom.getInstanceStrong()
-                                .nextInt(BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary().length - 1)]
-                                        .toUpperCase());
+                brainKeyParts.add(BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary()[SecureRandom
+                        .getInstance("SHA1PRNG", "SUN")
+                        .nextInt(BrainkeyDictionaryManager.getInstance().getBrainKeyDictionary().length - 1)]
+                                .toUpperCase());
             }
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new SteemKeyHandlingException(
                     "The algorithm used to provide a strong random number is not available on your system.", e);
         }
 
-        return String.join(" ", brainKeyParts);
+        return StringUtils.join(brainKeyParts, " ");
     }
 
     /**

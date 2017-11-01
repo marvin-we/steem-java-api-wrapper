@@ -9,7 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseError;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * @author Anthony Martin
@@ -29,7 +29,7 @@ public abstract class BaseIntegrationTest extends BaseTest {
             CONFIG.setResponseTimeout(0);
 
             steemJ = new SteemJ();
-        } catch (SteemCommunicationException | SteemResponseError e) {
+        } catch (SteemCommunicationException | SteemResponseException e) {
             LOGGER.error("Could not create a SteemJ instance. - Test execution stopped.", e);
         }
     }
