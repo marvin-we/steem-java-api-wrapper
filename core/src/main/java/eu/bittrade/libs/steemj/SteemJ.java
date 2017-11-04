@@ -2969,7 +2969,7 @@ public class SteemJ {
 
         // Generate the permanent link from the title by replacing all unallowed
         // characters.
-        Permlink permlink = new Permlink(title.toLowerCase().replaceAll("[^a-z0-9-]+", ""));
+        Permlink permlink = new Permlink(SteemJUtils.createPermlinkString(title));
         // On new posts the parentPermlink is the main tag.
         Permlink parentPermlink = new Permlink(tags[0]);
         // One new posts the parentAuthor is empty.
