@@ -18,8 +18,8 @@ import org.glassfish.tyrus.client.SslEngineConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
-import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCResponse;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -34,15 +34,18 @@ import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 public class WebsocketClient extends AbstractClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebsocketClient.class);
 
-    /** */
+    /** The client. */
     private ClientManager client;
-    /** */
+    /** A {@link CountDownLatch} used to indicate that a message is expected. */
     private CountDownLatch responseCountDownLatch;
-    /** */
+    /** The current session. */
     private Session session;
-    /** */
+    /**
+     * The {@link WebsocketEndpoint} instance that will handle the incoming
+     * messages.
+     */
     private WebsocketEndpoint websocketEndpoint;
-    /** */
+    /** The endpoint this client instance is currently connected to. */
     private URI currentEndpointUri;
 
     /**
@@ -109,18 +112,8 @@ public class WebsocketClient extends AbstractClient {
     }
 
     @Override
-    protected void handleCallback(JsonRPCResponse response) {
-      //  try {
-        //    NotificationDTO response = mapper.readValue(message, NotificationDTO.class);
-
-            // Make sure that the inner result object is a BlockHeader.
-        //    CallbackHub.getInstance().getCallbackByUuid(Integer.valueOf(response.getParams()[0].toString()))
-       //             .onNewBlock(mapper.convertValue(((ArrayList<Object>) (response.getParams()[1])).get(0),
-        //                    SignedBlockHeader.class));
-       // } catch (IOException e) {
-            // TODO Auto-generated catch block
-        //    LOGGER.error("Could not parse callback {}.", e);
-        //}
+    protected void handleCallback(JsonRPCResponse response) throws SteemCommunicationException {
+        response.handleCallback();
     }
 
     @Override
@@ -132,23 +125,29 @@ public class WebsocketClient extends AbstractClient {
     }
 
     /**
+     * Get the {@link CountDownLatch} used by this instance to change its
+     * counter.
      * 
-     * @return
+     * @return The {@link CountDownLatch} used by this instance.
      */
     protected CountDownLatch getResponseCountDownLatch() {
         return this.responseCountDownLatch;
     }
 
     /**
-     * @return the session
+     * Get the current {@link Session}.
+     * 
+     * @return The session used by this instance.
      */
     protected Session getSession() {
         return session;
     }
 
     /**
+     * Update the {@link Session} this instance should use.
+     * 
      * @param session
-     *            the session to set
+     *            The session to set.
      */
     protected void setSession(Session session) {
         this.session = session;

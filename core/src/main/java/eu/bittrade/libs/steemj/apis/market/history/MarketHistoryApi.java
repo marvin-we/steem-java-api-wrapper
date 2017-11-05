@@ -10,7 +10,7 @@ import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
 import eu.bittrade.libs.steemj.apis.market.history.model.OrderBook;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;

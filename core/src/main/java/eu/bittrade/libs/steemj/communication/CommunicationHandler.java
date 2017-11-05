@@ -18,8 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import eu.bittrade.libs.steemj.base.models.serializer.BooleanSerializer;
-import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
-import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCResponse;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -34,11 +34,14 @@ import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 public class CommunicationHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
 
-    /** */
+    /**
+     * A preconfigured mapper instance used for de-/serialization of Json
+     * objects.
+     */
     private static ObjectMapper mapper = getObjectMapper();
-    /** */
+    /** A counter for failed connection tries. */
     private int numberOfConnectionTries = 0;
-    /** */
+    /** The client used to send requests. */
     private AbstractClient client;
 
     /**
@@ -53,9 +56,12 @@ public class CommunicationHandler {
     }
 
     /**
+     * Initialize a new <code>client</code> by selecting one of the configured
+     * endpoints.
+     * 
      * @throws SteemCommunicationException
-     * 
-     * 
+     *             If no {@link AbstractClient} implementation for the given
+     *             schema is available.
      */
     public void initializeNewClient() throws SteemCommunicationException {
         if (client != null) {

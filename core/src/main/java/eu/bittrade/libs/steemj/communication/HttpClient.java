@@ -16,8 +16,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.bittrade.libs.steemj.communication.dto.JsonRPCRequest;
-import eu.bittrade.libs.steemj.communication.dto.JsonRPCResponse;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCResponse;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 

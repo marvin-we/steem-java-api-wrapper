@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.communication.dto;
+package eu.bittrade.libs.steemj.communication.jrpc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
+import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
+import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -31,10 +35,17 @@ public class JsonRPCResponse {
     public static final String ERROR_MESSAGE_FIELD_NAME = "message";
     /** The field name of the JSON RPC "data" field. */
     public static final String ERROR_DATA_FIELD_NAME = "data";
+    /** The field name of the JSON RPC "method" field. */
+    public static final String METHOD_FIELD_NAME = "method";
+    /** The field name of the JSON RPC "method" field. */
+    public static final String PARAMETERS_FIELD_NAME = "params";
     /** The field name of the JSON RPC "id" field. */
     public static final String ID_FIELD_NAME = "id";
     /** The field name of the JSON RPC "result" field. */
     public static final String RESULT_FIELD_NAME = "result";
+
+    /** The method name indicating a callback. */
+    public static final String CALLBACK_METHOD_NAME = "notice";
 
     /** The raw JSON String returned by a node. */
     private JsonNode rawJsonResponse;
@@ -170,8 +181,51 @@ public class JsonRPCResponse {
      *         <code>false</code> otherwise.
      */
     public boolean isCallback() {
-        // TODO: Implement
-        return false;
+        return rawJsonResponse.has(METHOD_FIELD_NAME) && rawJsonResponse.get(METHOD_FIELD_NAME) != null
+                && !rawJsonResponse.get(METHOD_FIELD_NAME).isNull()
+                && rawJsonResponse.get(METHOD_FIELD_NAME).asText().equals(CALLBACK_METHOD_NAME);
+    }
+
+    /**
+     * This method will try to find the matching callback class and call it.
+     * 
+     * @throws SteemCommunicationException
+     *             If the response is no callback or if no matching callback
+     *             instance could be found.
+     */
+    public void handleCallback() throws SteemCommunicationException {
+        if (isResponseValid()) {
+            if (!isCallback()) {
+                throw new SteemCommunicationException("The result is not a callback.");
+            }
+
+            ObjectNode responseAsObject = ObjectNode.class.cast(rawJsonResponse);
+
+            if (!isFieldNullOrEmpty(PARAMETERS_FIELD_NAME, responseAsObject)) {
+                JsonNode parametersNode = responseAsObject.get(PARAMETERS_FIELD_NAME);
+
+                if (parametersNode.isArray()) {
+                    ArrayNode parameters = ArrayNode.class.cast(parametersNode);
+
+                    BlockAppliedCallback callbackInstance = CallbackHub.getInstance()
+                            .getCallbackByUuid(Integer.valueOf(parameters.get(0).toString()));
+
+                    if (callbackInstance != null && parameters.get(1).isArray()) {
+                        ArrayNode payload = ArrayNode.class.cast(parameters.get(1));
+
+                        callbackInstance.onNewBlock(CommunicationHandler.getObjectMapper().convertValue(payload.get(0),
+                                SignedBlockHeader.class));
+                        return;
+                    }
+                }
+                // The parameter is not an array as expected - Do nothing so
+                // that the exception at the bottom of the method is thrown.
+            } else {
+                LOGGER.info("Detected a callback but its payload was empty.");
+            }
+        }
+
+        throw new SteemCommunicationException("Tried to handle a callback based on an unexpected Json structure.");
     }
 
     // #########################################################################

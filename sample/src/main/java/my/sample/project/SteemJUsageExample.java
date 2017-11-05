@@ -37,29 +37,36 @@ public class SteemJUsageExample {
      *            The arguments to set.
      */
     public static void main(String args[]) {
-        // Change the default settings if needed.
-        SteemJConfig myConfig = SteemJConfig.getInstance();
-        myConfig.setResponseTimeout(100000);
-        myConfig.setDefaultAccount(new AccountName("steemj"));
-
         try {
-            // Create a new apiWrapper with your config object.
-            SteemJ steemJ = new SteemJ();
+            // #########################################################################
+            // ## Configure SteemJ to fit your needs ###################################
+            // #########################################################################
 
+            // Change the default settings if needed:
+            SteemJConfig myConfig = SteemJConfig.getInstance();
+            myConfig.setResponseTimeout(100000);
+            myConfig.setDefaultAccount(new AccountName("steemj"));
+
+            // Add and manage private keys:
             List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
             privateKeys.add(new ImmutablePair<>(PrivateKeyType.POSTING, "YOUR-PRIVATE-POSTING-KEY"));
             privateKeys.add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "YOUR-PRIVATE-ACTIVE-KEY"));
+            // ... add more keys if needed.
 
             myConfig.getPrivateKeyStorage().addAccount(myConfig.getDefaultAccount(), privateKeys);
 
-            // Let's have a look at the account history of dez1337
-            Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), 100,
-                    100);
-            if (accountHistory.get(0).getOp() instanceof AccountCreateOperation) {
-                AccountCreateOperation accountCreateOperation = (AccountCreateOperation) (accountHistory.get(0)
-                        .getOp());
-                LOGGER.info("The account {} has been created by {}.", "dez1337", accountCreateOperation.getCreator());
-            }
+            // Create a new apiWrapper with your config object.
+            SteemJ steemJ = new SteemJ();
+            
+            // #########################################################################
+            // ## Use Callbacks to be informed about new blocks ########################
+            // #########################################################################
+            // This is only supported if a websocket connection is used!.
+            steemJ.setBlockAppliedCallback(new MyCustomCallback());
+            
+            // #########################################################################
+            // ## EXECUTE SIMPLYFIED OPERATIONS ########################################
+            // #########################################################################
 
             /*
              * Upvote the post
@@ -117,6 +124,10 @@ public class SteemJUsageExample {
              */
             steemJ.deletePostOrComment(myNewPost.getParentPermlink());
 
+            // #########################################################################
+            // ## EXECUTE READ OPERATIONS AGAINS THE NDOE ##############################
+            // #########################################################################
+
             // Get the current Price
             LOGGER.info("The current price in the internal market is {}.",
                     steemJ.getCurrentMedianHistoryPrice().getBase().getAmount());
@@ -139,6 +150,16 @@ public class SteemJUsageExample {
                     "You may also want to vote for some posts to generate some Steem which is currently worth about {}.",
                     steemJ.getCurrentMedianHistoryPrice().getBase());
 
+
+            // Let's have a look at the account history of dez1337:
+            Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), 100,
+                    100);
+            if (accountHistory.get(0).getOp() instanceof AccountCreateOperation) {
+                AccountCreateOperation accountCreateOperation = (AccountCreateOperation) (accountHistory.get(0)
+                        .getOp());
+                LOGGER.info("The account {} has been created by {}.", "dez1337", accountCreateOperation.getCreator());
+            }
+            
             // Force an error response:
             steemJ.getAccountVotes(new AccountName("thisAcountDoesNotExistYet"));
         } catch (SteemResponseException e) {

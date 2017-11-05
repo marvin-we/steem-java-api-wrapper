@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.communication.dto;
+package eu.bittrade.libs.steemj.communication.jrpc;
 
 import java.util.Random;
 
