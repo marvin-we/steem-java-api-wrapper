@@ -142,13 +142,12 @@ public class SteemJUsageExample {
             // Force an error response:
             steemJ.getAccountVotes(new AccountName("thisAcountDoesNotExistYet"));
         } catch (SteemResponseException e) {
-            // The SteemResponseError contains the error response.
             LOGGER.error("An error occured.", e);
+            LOGGER.error("The error code is {}", e.getCode());
         } catch (SteemCommunicationException e) {
             LOGGER.error("A communication error occured!", e);
         } catch (SteemInvalidTransactionException e) {
             LOGGER.error("There was a problem to sign a transaction.", e);
         }
     }
-
 }
