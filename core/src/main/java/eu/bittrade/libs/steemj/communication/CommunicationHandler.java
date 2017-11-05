@@ -111,7 +111,7 @@ public class CommunicationHandler {
             LOGGER.debug("Received {} ", rawJsonResponse);
 
             if (rawJsonResponse.isError()) {
-                throw new SteemResponseException("The response contains an error.", rawJsonResponse.createThrowable());
+                throw rawJsonResponse.createThrowable(requestObject.getId());
             } else {
                 // HANDLE NORMAL RESPONSE
                 JavaType expectedResultType = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);

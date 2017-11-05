@@ -405,7 +405,7 @@ public class SteemJConfig {
      * @param addressPrefix
      *            The address prefix to set.
      */
-    public void setSteemitAddressPrefix(AddressPrefixType addressPrefix) {
+    public void setAddressPrefix(AddressPrefixType addressPrefix) {
         this.addressPrefix = addressPrefix;
     }
 
