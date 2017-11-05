@@ -70,7 +70,6 @@ import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.util.KeyGenerator;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -590,7 +589,7 @@ public class SteemJIT extends BaseIntegrationTest {
      *             If something went wrong.
      */
     @Category({ IntegrationTest.class })
-    @Test(expected = SteemTransformationException.class)
+    @Test(expected = SteemResponseException.class)
     public void testVerifyAuthority() throws Exception {
         List<ImmutablePair<PrivateKeyType, String>> privateKeys = new ArrayList<>();
 

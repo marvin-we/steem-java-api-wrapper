@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.exceptions;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 /**
  * A custom Exception to handle timeouts.
  * 
@@ -11,7 +13,7 @@ public class SteemResponseException extends Exception {
     /** The error code. */
     private final Integer code;
     /** The error data. */
-    private final String data;
+    private final JsonNode data;
 
     /**
      * Create a new {@link SteemResponseException} instance.
@@ -23,7 +25,7 @@ public class SteemResponseException extends Exception {
         super(message);
 
         this.code = null;
-        this.data = "";
+        this.data = null;
     }
 
     /**
@@ -38,7 +40,7 @@ public class SteemResponseException extends Exception {
         super(message, cause);
 
         this.code = null;
-        this.data = "";
+        this.data = null;
     }
 
     /**
@@ -51,7 +53,7 @@ public class SteemResponseException extends Exception {
      * @param data
      *            The additional data to set.
      */
-    public SteemResponseException(Integer code, String message, String data) {
+    public SteemResponseException(Integer code, String message, JsonNode data) {
         super(message);
 
         this.code = code;
@@ -70,7 +72,7 @@ public class SteemResponseException extends Exception {
      * @param cause
      *            The cause of this response exception.
      */
-    public SteemResponseException(Integer code, String message, String data, Throwable cause) {
+    public SteemResponseException(Integer code, String message, JsonNode data, Throwable cause) {
         super(message, cause);
 
         this.code = code;
@@ -91,7 +93,7 @@ public class SteemResponseException extends Exception {
      * 
      * @return The data.
      */
-    public String getData() {
+    public JsonNode getData() {
         return data;
     }
 }

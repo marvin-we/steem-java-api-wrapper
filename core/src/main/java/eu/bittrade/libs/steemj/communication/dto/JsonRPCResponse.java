@@ -97,7 +97,9 @@ public class JsonRPCResponse {
      *         not.
      */
     private boolean isResultEmpty() {
-        if (isFieldNullOrEmpty(RESULT_FIELD_NAME))
+        ObjectNode responseAsObject = ObjectNode.class.cast(rawJsonResponse);
+
+        if (isFieldNullOrEmpty(RESULT_FIELD_NAME, responseAsObject))
             return true;
 
         LOGGER.debug("The response is empty.");
@@ -188,16 +190,20 @@ public class JsonRPCResponse {
     }
 
     /**
-     * Create a new {@link SteemResponseException} based on the Json response.
+     * This method checks if the JSON response wrapped by this
+     * {@link JsonRPCResponse} instance has the expected <code>id</code> and
+     * will try to generate and throw a {@link SteemResponseException} based on
+     * the response.
      * 
      * @param id
      *            The expected id of the response.
      * @return A {@link SteemResponseException} based on the Json response.
      * @throws SteemCommunicationException
-     *             If the response does not contain the expected
-     *             <code>id</code>.
+     *             If the response does not contain the expected <code>id</code>
+     *             or the response do not contain an error.
+     * 
      */
-    public SteemResponseException createThrowable(long id) throws SteemCommunicationException {
+    public SteemResponseException handleError(long id) throws SteemCommunicationException {
         if (isResponseValid()) {
             if (!isError()) {
                 throw new SteemCommunicationException(
@@ -210,25 +216,40 @@ public class JsonRPCResponse {
                             "The id of this response does not match the expected id. This can cause an unexpected behavior.");
                 }
 
-                JsonNode errorObject = responseAsObject.get(ERROR_FIELD_NAME);
-
-                Integer errorCode = isFieldNullOrEmpty(ERROR_CODE_FIELD_NAME)
-                        ? errorObject.get(ERROR_CODE_FIELD_NAME).asInt() : null;
-                String message = isFieldNullOrEmpty(ERROR_MESSAGE_FIELD_NAME)
-                        ? errorObject.get(ERROR_MESSAGE_FIELD_NAME).asText() : null;
-                String data = isFieldNullOrEmpty(ERROR_DATA_FIELD_NAME)
-                        ? errorObject.get(ERROR_DATA_FIELD_NAME).asText() : null;
-
-                return new SteemResponseException(errorCode, message, data);
+                return createThrowable(responseAsObject);
             }
         }
 
         throw new SteemCommunicationException("Tried to generate a throwable out of a unexpected Json structure.");
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
+    /**
+     * Create a new {@link SteemResponseException} based on the Json response.
+     * 
+     * @param response
+     *            The response object to transform.
+     * @return A {@link SteemResponseException} based on the Json response.
+     * @throws SteemCommunicationException
+     *             If the response does not contain the expected
+     *             <code>id</code>.
+     */
+    private SteemResponseException createThrowable(ObjectNode response) throws SteemCommunicationException {
+        JsonNode errorNode = response.get(ERROR_FIELD_NAME);
+
+        if (!errorNode.isObject()) {
+            throw new SteemCommunicationException("The response does not have the expected structure.");
+        }
+
+        ObjectNode errorObject = ObjectNode.class.cast(errorNode);
+
+        Integer errorCode = isFieldNullOrEmpty(ERROR_CODE_FIELD_NAME, errorObject) ? null
+                : errorObject.get(ERROR_CODE_FIELD_NAME).asInt();
+        String message = isFieldNullOrEmpty(ERROR_MESSAGE_FIELD_NAME, errorObject) ? null
+                : errorObject.get(ERROR_MESSAGE_FIELD_NAME).asText();
+        JsonNode data = isFieldNullOrEmpty(ERROR_DATA_FIELD_NAME, errorObject) ? null
+                : errorObject.get(ERROR_DATA_FIELD_NAME);
+
+        return new SteemResponseException(errorCode, message, data);
     }
 
     // #########################################################################
@@ -240,10 +261,17 @@ public class JsonRPCResponse {
      * 
      * @param fieldName
      *            The field name to check.
+     * @param response
+     *            The response to check.
      * @return <code>true</code> if the <code>fieldName</code> has an empty or
      *         null value.
      */
-    public boolean isFieldNullOrEmpty(String fieldName) {
-        return (rawJsonResponse.get(fieldName) == null || rawJsonResponse.get(fieldName).isNull());
+    public boolean isFieldNullOrEmpty(String fieldName, ObjectNode response) {
+        return (response.get(fieldName) == null || response.get(fieldName).isNull());
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

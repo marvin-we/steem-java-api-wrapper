@@ -111,7 +111,7 @@ public class CommunicationHandler {
             LOGGER.debug("Received {} ", rawJsonResponse);
 
             if (rawJsonResponse.isError()) {
-                throw rawJsonResponse.createThrowable(requestObject.getId());
+                throw rawJsonResponse.handleError(requestObject.getId());
             } else {
                 // HANDLE NORMAL RESPONSE
                 JavaType expectedResultType = mapper.getTypeFactory().constructCollectionType(List.class, targetClass);
