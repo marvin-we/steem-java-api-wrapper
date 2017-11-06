@@ -3605,7 +3605,7 @@ public class SteemJ {
      * Transfer currency from default account to recipient. Amount is automatically converted from
      * normalized representation to base representation. For example, to transfer 1.00 SBD to another
      * account, simply use:
-     * <code>SteemJ.transfer("accountb", 1.0, AssetSymbolType.SBD, "My memo");</code>
+     * <code>SteemJ.transfer(new AccountName("accountb"), 1.0, AssetSymbolType.SBD, "My memo");</code>
      *
      * <b>Attention</b>
      * <ul>
@@ -3630,6 +3630,10 @@ public class SteemJ {
      *            to.
      * @param assetType
      *            Asset type, see {@link eu.bittrade.libs.steemj.enums.AssetSymbolType}.
+     * @param amount
+     *            Normalized amount of asset to transfer. For example, use 1.0 to transfer 1 SBD.
+     * @param amount
+     *            Normalized amount of asset to transfer. For example, use 1.0 to transfer 1 SBD.
      * @param memo
      *            Message include with transfer (255 char max)
      * @return
@@ -3667,7 +3671,7 @@ public class SteemJ {
      * Transfer currency from specified account to recipient. Amount is automatically converted from
      * normalized representation to base representation. For example, to transfer 1.00 SBD to another
      * account, simply use:
-     * <code>SteemJ.transfer("accounta", "accountb", 1.0, AssetSymbolType.SBD, "My memo");</code>
+     * <code>SteemJ.transfer(new AccountName("accounta"), new AccountName("accountb"), 1.0, AssetSymbolType.SBD, "My memo");</code>
      *
      * <b>Attention</b>
      * <ul>
