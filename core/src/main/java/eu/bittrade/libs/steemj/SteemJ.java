@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import eu.bittrade.libs.steemj.base.models.operations.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Sha256Hash;
@@ -68,12 +69,6 @@ import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
-import eu.bittrade.libs.steemj.base.models.operations.DeleteCommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -3604,5 +3599,143 @@ public class SteemJ {
         signedTransaction.sign();
 
         this.broadcastTransaction(signedTransaction);
+    }
+
+    /**
+     * Transfer currency from default account to recipient. Amount is automatically converted from
+     * normalized representation to base representation. For example, to transfer 1.00 SBD to another
+     * account, simply use:
+     * <code>SteemJ.transfer("accountb", 1.0, AssetSymbolType.SBD, "My memo");</code>
+     *
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * follow operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
+     * that will follow the <code>accountToFollow</code> - If no default account
+     * has been provided, this method will throw an error. If you do not want to
+     * configure the following account as a default account, please use the
+     * {@link #follow(AccountName, AccountName)} method and provide the
+     * following account separately.</li>
+     * </ul>
+     *
+     * @param to
+     *            The account name of the account the
+     *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should transfer currency
+     *            to.
+     * @param assetType
+     *            Asset type, see {@link eu.bittrade.libs.steemj.enums.AssetSymbolType}.
+     * @param memo
+     *            Message include with transfer (255 char max)
+     * @return
+     *       The TransferOperation broadcast.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public TransferOperation transfer(AccountName to, AssetSymbolType assetType, double amount, String memo)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        }
+
+        return transfer(SteemJConfig.getInstance().getDefaultAccount(), to, assetType, amount, memo);
+    }
+
+    /**
+     * Transfer currency from specified account to recipient. Amount is automatically converted from
+     * normalized representation to base representation. For example, to transfer 1.00 SBD to another
+     * account, simply use:
+     * <code>SteemJ.transfer("accounta", "accountb", 1.0, AssetSymbolType.SBD, "My memo");</code>
+     *
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * follow operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
+     * that will follow the <code>accountToFollow</code> - If no default account
+     * has been provided, this method will throw an error. If you do not want to
+     * configure the following account as a default account, please use the
+     * {@link #follow(AccountName, AccountName)} method and provide the
+     * following account separately.</li>
+     * </ul>
+     *
+     * @param from
+     *            The account from which to transfer currency.
+     * @param to
+     *            The account to which to transfer currency.
+     * @param assetType
+     *            Asset type, see {@link eu.bittrade.libs.steemj.enums.AssetSymbolType}.
+     * @param memo
+     *            Message include with transfer (255 char max)
+     * @return
+     *       The TransferOperation broadcast.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public TransferOperation transfer(AccountName from, AccountName to, AssetSymbolType assetType, double amount,
+                                      String memo)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        // Convert amount to long asset value. Conversion factor depends on asset type
+        Asset asset = new Asset();
+        asset.setSymbol(assetType);
+        asset.setAmount(Double.valueOf(amount * Math.pow(10.0, asset.getPrecision())).longValue());
+        if (!asset.toReal().equals(amount)) {
+            throw new IllegalStateException("Amount conversion mismatch: " + amount + " -> " + asset.toReal());
+        }
+
+        // Create & broadcast transfer operation
+        TransferOperation transferOperation = new TransferOperation(from, to, asset, memo);
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(transferOperation);
+        GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+        signedTransaction.sign();
+        this.broadcastTransaction(signedTransaction);
+        return transferOperation;
     }
 }
