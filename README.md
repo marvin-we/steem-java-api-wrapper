@@ -25,7 +25,7 @@ File: <i>pom.xml</i>
 <dependency>
     <groupId>eu.bittrade.libs</groupId>
     <artifactId>steemj-core</artifactId>
-    <version>0.4.1</version>
+    <version>0.4.2</version>
 </dependency>
 ```
 
