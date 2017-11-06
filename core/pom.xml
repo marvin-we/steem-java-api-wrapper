@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>eu.bittrade.libs</groupId>
 		<artifactId>steemj-parent</artifactId>
-		<version>0.4.2</version>
+		<version>0.4.3-SNAPSHOT</version>
 	</parent>
 
 	<licenses>
