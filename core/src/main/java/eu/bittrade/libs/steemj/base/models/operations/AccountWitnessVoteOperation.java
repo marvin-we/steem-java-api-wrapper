@@ -29,7 +29,7 @@ public class AccountWitnessVoteOperation extends Operation {
     @JsonProperty("witness")
     private AccountName witness;
     @JsonProperty("approve")
-    private Boolean approve;
+    private boolean approve;
 
     /**
      * Create a new account witness vote operation.
@@ -52,7 +52,7 @@ public class AccountWitnessVoteOperation extends Operation {
      */
     @JsonCreator
     public AccountWitnessVoteOperation(@JsonProperty("account") AccountName account,
-            @JsonProperty("witness") AccountName witness, @JsonProperty("approve") Boolean approve) {
+            @JsonProperty("witness") AccountName witness, @JsonProperty("approve") boolean approve) {
         super(false);
 
         this.setAccount(account);
@@ -62,7 +62,7 @@ public class AccountWitnessVoteOperation extends Operation {
 
     /**
      * Like
-     * {@link #AccountWitnessVoteOperation(AccountName, AccountName, Boolean)},
+     * {@link #AccountWitnessVoteOperation(AccountName, AccountName, boolean)},
      * but the <code>approve</code> parameter is automatically set to true.
      * 
      * @param account

@@ -28,7 +28,7 @@ public class ChallengeAuthorityOperation extends Operation {
     @JsonProperty("challenged")
     private AccountName challenged;
     @JsonProperty("require_owner")
-    private Boolean requireOwner;
+    private boolean requireOwner;
 
     /**
      * Create a new challenge authority operation.
@@ -46,7 +46,7 @@ public class ChallengeAuthorityOperation extends Operation {
      *             If one of the arguments does not fulfill the requirements.
      */
     public ChallengeAuthorityOperation(@JsonProperty("challenger") AccountName challenger,
-            @JsonProperty("challenged") AccountName challenged, @JsonProperty("require_owner") Boolean requireOwner) {
+            @JsonProperty("challenged") AccountName challenged, @JsonProperty("require_owner") boolean requireOwner) {
         super(false);
 
         this.setChallenger(challenger);
@@ -56,7 +56,7 @@ public class ChallengeAuthorityOperation extends Operation {
 
     /**
      * Like
-     * {@link #ChallengeAuthorityOperation(AccountName, AccountName, Boolean)},
+     * {@link #ChallengeAuthorityOperation(AccountName, AccountName, boolean)},
      * but sets the <code>requireOwner</code> to false.
      * 
      * @param challenger
@@ -129,7 +129,7 @@ public class ChallengeAuthorityOperation extends Operation {
      * @return <code>true</code> if the owner key should be used to sign this
      *         operation, or false, if the active key is sufficient.
      */
-    public Boolean getRequireOwner() {
+    public boolean getRequireOwner() {
         return requireOwner;
     }
 

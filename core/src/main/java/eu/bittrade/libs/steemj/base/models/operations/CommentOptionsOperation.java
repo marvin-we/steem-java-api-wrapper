@@ -39,9 +39,9 @@ public class CommentOptionsOperation extends Operation {
     @JsonProperty("percent_steem_dollars")
     private Short percentSteemDollars;
     @JsonProperty("allow_votes")
-    private Boolean allowVotes;
+    private boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
-    private Boolean allowCurationRewards;
+    private boolean allowCurationRewards;
     // Original type is "comment_options_extensions_type" which is a list of
     // "comment_options_extension".
     @JsonProperty("extensions")
@@ -73,10 +73,10 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setPercentSteemDollars(short)}).
      * @param allowVotes
      *            Define if votes are allowed (see
-     *            {@link #setAllowVotes(Boolean)}).
+     *            {@link #setAllowVotes(boolean)}).
      * @param allowCurationRewards
      *            Define if a curation reward should be paid (see
-     *            {@link #setAllowCurationRewards(Boolean)}).
+     *            {@link #setAllowCurationRewards(boolean)}).
      * @param extensions
      *            Additional extensions to set (see
      *            {@link #setExtensions(List)}.
@@ -87,8 +87,8 @@ public class CommentOptionsOperation extends Operation {
     public CommentOptionsOperation(@JsonProperty("author") AccountName author,
             @JsonProperty("permlink") Permlink permlink, @JsonProperty("max_accepted_payout") Asset maxAcceptedPayout,
             @JsonProperty("percent_steem_dollars") Short percentSteemDollars,
-            @JsonProperty("allow_votes") Boolean allowVotes,
-            @JsonProperty("allow_curation_rewards") Boolean allowCurationRewards,
+            @JsonProperty("allow_votes") boolean allowVotes,
+            @JsonProperty("allow_curation_rewards") boolean allowCurationRewards,
             @JsonProperty("extensions") List<CommentOptionsExtension> extensions) {
         super(false);
 
@@ -104,7 +104,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, boolean, boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes
      * and curation rewards.
      * 
@@ -151,7 +151,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, Boolean, Boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, boolean, boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes,
      * allows curation rewards and sets the <code>percentSteemDollars</code> to
      * 100.0%.
@@ -271,7 +271,7 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @return True if votes are allowed or false if not.
      */
-    public Boolean getAllowVotes() {
+    public boolean getAllowVotes() {
         return allowVotes;
     }
 
@@ -282,7 +282,7 @@ public class CommentOptionsOperation extends Operation {
      *            The information if votes have been allowed on this post or
      *            comment.
      */
-    public void setAllowVotes(Boolean allowVotes) {
+    public void setAllowVotes(boolean allowVotes) {
         this.allowVotes = allowVotes;
     }
 
@@ -291,7 +291,7 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @return True if votes curation rewards are paid or false if not.
      */
-    public Boolean getAllowCurationRewards() {
+    public boolean getAllowCurationRewards() {
         return allowCurationRewards;
     }
 
@@ -301,7 +301,7 @@ public class CommentOptionsOperation extends Operation {
      * @param allowCurationRewards
      *            True if votes curation rewards are paid or false if not.
      */
-    public void setAllowCurationRewards(Boolean allowCurationRewards) {
+    public void setAllowCurationRewards(boolean allowCurationRewards) {
         this.allowCurationRewards = allowCurationRewards;
     }
 
