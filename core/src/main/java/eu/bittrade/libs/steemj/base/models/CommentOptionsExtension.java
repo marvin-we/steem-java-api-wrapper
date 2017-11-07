@@ -14,7 +14,7 @@ import eu.bittrade.libs.steemj.interfaces.Validatable;
  * This class repesents a Steem "comment_options_extenson" object.
  * 
  * The "comment_options_extenson" class is a "static_variant" which can carry
- * different types. The resulting json of th "static_variant" fields looks like
+ * different types. The resulting json of the "static_variant" fields looks like
  * this:
  * 
  * <p>
