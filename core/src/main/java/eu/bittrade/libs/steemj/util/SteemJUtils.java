@@ -333,11 +333,11 @@ public class SteemJUtils {
      *     <li>The title is trimmed and converted to lowercase</li>
      *     <li>Spaces are converted to hyphens</li>
      *     <li>Disallowed characters are removed</li>
-     *     <li>Contiguous hyphens are replaced with a singe hyphen</li>
+     *     <li>Contiguous hyphens are replaced with a single hyphen</li>
      * </ol>
      *
      * @param title
-     *          The string to covert
+     *          The string to convert
      * @return The generated permlink
      */
     public static String createPermlinkString(String title) {
