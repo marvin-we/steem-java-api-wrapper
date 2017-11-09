@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import com.google.common.collect.Lists;
+import eu.bittrade.libs.steemj.base.models.operations.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Sha256Hash;
@@ -68,13 +70,6 @@ import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
-import eu.bittrade.libs.steemj.base.models.operations.DeleteCommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.TransferOperation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -3618,17 +3613,16 @@ public class SteemJ {
      * <ul>
      * <li>This method will write data on the blockchain. As all writing
      * operations, a private key is required to sign the transaction. For a
-     * follow operation the private posting key of the
+     * transfer operation the private active key of the
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
      * configured in the {@link SteemJConfig#getPrivateKeyStorage()
      * PrivateKeyStorage}.</li>
      * <li>This method will automatically use the
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
-     * that will follow the <code>accountToFollow</code> - If no default account
-     * has been provided, this method will throw an error. If you do not want to
-     * configure the following account as a default account, please use the
-     * {@link #follow(AccountName, AccountName)} method and provide the
-     * following account separately.</li>
+     * to transfer from. If no default account has been provided, this method will throw an error. If you
+     * do not want to configure the following account as a default account, please use the
+     * {@link #transfer(AccountName, AccountName,  AssetSymbolType, double, String)} method and provide the
+     * <code>from</code> account separately.</li>
      * </ul>
      *
      * @param to
@@ -3681,21 +3675,12 @@ public class SteemJ {
      * <code>SteemJ.transfer(new AccountName("accounta"), new AccountName("accountb"), AssetSymbolType.SBD, 1.0, "My memo");</code>
      *
      * <b>Attention</b>
-     * <ul>
-     * <li>This method will write data on the blockchain. As all writing
+     * This method will write data on the blockchain. As all writing
      * operations, a private key is required to sign the transaction. For a
-     * follow operation the private posting key of the
+     * transfer operation the private active key of the
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
      * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.</li>
-     * <li>This method will automatically use the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
-     * that will follow the <code>accountToFollow</code> - If no default account
-     * has been provided, this method will throw an error. If you do not want to
-     * configure the following account as a default account, please use the
-     * {@link #follow(AccountName, AccountName)} method and provide the
-     * following account separately.</li>
-     * </ul>
+     * PrivateKeyStorage}.
      *
      * @param from
      *            The account from which to transfer currency.
@@ -3748,5 +3733,105 @@ public class SteemJ {
         signedTransaction.sign();
         this.broadcastTransaction(signedTransaction);
         return transferOperation;
+    }
+
+    /**
+     * Claim all available Steem, SDB and VEST (Steam Power) rewards for the default account.
+     *
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain if a reward balance is available to be claimed. As with all writing
+     * operations, a private key is required to sign the transaction. See {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
+     * that will follow the <code>accountToFollow</code> - If no default account
+     * has been provided, this method will throw an error. If you do not want to
+     * configure the following account as a default account, please use the
+     * {@link #follow(AccountName, AccountName)} method and provide the
+     * following account separately.</li>
+     * </ul>
+     *
+     * @return The ClaimOperation for reward balances found. This will only have been broadcast if one of the balances
+     *         is non-zero.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     */
+    public ClaimRewardBalanceOperation claimRewards()
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        }
+
+        return claimRewards(SteemJConfig.getInstance().getDefaultAccount());
+    }
+
+    /**
+     * Claim all available Steem, SDB and VEST (Steam Power) rewards for the specified account.
+     *
+     * <b>Attention</b>
+     * This method will write data on the blockchain if a reward balance is available to be claimed. As with all writing
+     * operations, a private key is required to sign the transaction. See {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.
+     *
+     * @param accountName
+     *            The account to claim rewards for.
+     * @return The ClaimOperation for reward balances found. This will only have been broadcast if one of the balances
+     *         is non-zero.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     */
+    public ClaimRewardBalanceOperation claimRewards(AccountName accountName)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        // Get extended account info to determine reward balances
+        ExtendedAccount extendedAccount = this.getAccounts(Lists.newArrayList(accountName)).get(0);
+        Asset steemReward = extendedAccount.getRewardSteemBalance();
+        Asset sbdReward = extendedAccount.getRewardSdbBalance();
+        Asset vestingReward = extendedAccount.getRewardVestingBalance();
+
+        // Create claim operation based on available reward balances
+        ClaimRewardBalanceOperation claimOperation = new ClaimRewardBalanceOperation(accountName,
+                steemReward, sbdReward, vestingReward);
+
+        // Broadcast claim operation if there are any balances available
+        if (steemReward.getAmount() > 0 || sbdReward.getAmount() > 0 || vestingReward.getAmount() > 0) {
+            ArrayList<Operation> operations = new ArrayList<>();
+            operations.add(claimOperation);
+            GlobalProperties globalProperties = this.getDynamicGlobalProperties();
+            SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                    null);
+            signedTransaction.sign();
+            this.broadcastTransaction(signedTransaction);
+        }
+
+        return claimOperation;
     }
 }
