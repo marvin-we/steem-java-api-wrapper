@@ -2,23 +2,21 @@ package eu.bittrade.libs.steemj.communication;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.UnsupportedCharsetException;
+import java.security.GeneralSecurityException;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.api.client.http.ByteArrayContent;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.javanet.NetHttpTransport;
+
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCResponse;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
@@ -28,33 +26,36 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  */
 public class HttpClient extends AbstractClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpClient.class);
-    private static final HttpReconnectHandler RECONNECT_HANDLER = new HttpReconnectHandler();
 
     @Override
     public JsonRPCResponse invokeAndReadResponse(JsonRPCRequest requestObject, URI endpointUri,
             boolean sslVerificationDisabled) throws SteemCommunicationException {
-        HttpClientBuilder httpClientBuilder = HttpClients.custom();
-        // Disable SSL verification if needed
-        if (sslVerificationDisabled && endpointUri.getScheme().equals("https")) {
-            httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
-        }
+        try {
+            NetHttpTransport.Builder builder = new NetHttpTransport.Builder();
+            // Disable SSL verification if needed
+            if (sslVerificationDisabled && endpointUri.getScheme().equals("https")) {
+                builder.doNotValidateCertificate();
+            }
 
-        RequestConfig reqeustConfig = RequestConfig.custom()
-                .setSocketTimeout(SteemJConfig.getInstance().getResponseTimeout())
-                .setConnectTimeout(SteemJConfig.getInstance().getIdleTimeout()).build();
+            String requestPayload = requestObject.toJson();
+            HttpRequest httpRequest = builder.build().createRequestFactory(new HttpClientRequestInitializer())
+                    .buildPostRequest(new GenericUrl(endpointUri),
+                            ByteArrayContent.fromString("application/json", requestPayload));
 
-        httpClientBuilder.setDefaultRequestConfig(reqeustConfig);
+            LOGGER.debug("Sending {}.", requestPayload);
 
-        try (CloseableHttpClient httpClient = httpClientBuilder.build()) {
-            String request = requestObject.toJson();
-            LOGGER.debug("Sending {}.", request);
-            StringEntity requestEntity = new StringEntity(request, ContentType.APPLICATION_JSON);
+            HttpResponse httpResponse = httpRequest.execute();
 
-            HttpPost postMethod = new HttpPost("https://api.steemit.com");
-            postMethod.setEntity(requestEntity);
-            return new JsonRPCResponse(
-                    CommunicationHandler.getObjectMapper().readTree(httpClient.execute(postMethod, RECONNECT_HANDLER)));
-        } catch (IOException | UnsupportedCharsetException e) {
+            int status = httpResponse.getStatusCode();
+            String responsePayload = httpResponse.parseAsString();
+
+            if (status >= 200 && status < 300 && responsePayload != null) {
+                return new JsonRPCResponse(CommunicationHandler.getObjectMapper().readTree(responsePayload));
+            } else {
+                throw new ClientProtocolException("Unexpected response status: " + status);
+            }
+
+        } catch (GeneralSecurityException | IOException e) {
             throw new SteemCommunicationException("A problem occured while processing the request.", e);
         }
     }

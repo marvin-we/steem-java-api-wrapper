@@ -44,9 +44,9 @@
 		</dependency>
 		<!-- HTTP Client -->
 		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>${apache.http.client.version}</version>
+			<groupId>com.google.http-client</groupId>
+			<artifactId>google-http-client</artifactId>
+			<version>${google.http.client.version}</version>
 		</dependency>
 		<!-- Utility -->
 		<dependency>
@@ -181,6 +181,6 @@
 		<apache.commons.io.version>2.6</apache.commons.io.version>
 		<slf4j.version>1.7.25</slf4j.version>
 		<log4j.version>2.9.1</log4j.version>
-		<apache.http.client.version>4.5.3</apache.http.client.version>
+		<google.http.client.version>1.23.0</google.http.client.version>
 	</properties>
 </project>
