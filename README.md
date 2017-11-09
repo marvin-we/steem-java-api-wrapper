@@ -40,7 +40,12 @@ The project requires Maven and Java to be installed on your machine. It can be b
 The resulting JAR can be found in the target directory as usual. Please notice that some integration tests require different private keys. Please provide them as -D parameter or use the properties file ( *src/test/resources/accountDetailsUsedDuringTests.properties* ) to define them. If you do not want to execute tests at all add *"-Dmaven.test.skip"* to the mvn call which skips the test execution during the build.
 
 # Bugs and Feedback
-For bugs or feature requests please create a [GitHub Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues). For general discussions or questions you can also reply to one of the SteemJ update posts on [Steemit.com](https://steemit.com/@dez1337).
+For bugs or feature requests please create a [GitHub Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues). 
+
+For general discussions or questions you can also:
+* Post your questions in the [Discord Java Channel](https://discord.gg/fsJjr3Q)
+* Reply to one of the SteemJ update posts on [Steemit.com](https://steemit.com/@dez1337)
+* Contact me on [steemit.chat](https://steemit.chat/channel/dev)
 
 # Example
 The [sample module](https://github.com/marvin-we/steem-java-api-wrapper/tree/master/sample) of the SteemJ project provides showcases for the most common acitivies and operations users want to perform. 
