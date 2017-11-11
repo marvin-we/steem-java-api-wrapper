@@ -58,5 +58,4 @@ public class ProducerRewardOperationIT extends BaseOperationParsingIT {
         assertThat(((ProducerRewardOperation) producerRewardOperation).getVestingShares().getAmount(),
                 equalTo(EXPECTED_VESTS_VALUE));
     }
-
 }
