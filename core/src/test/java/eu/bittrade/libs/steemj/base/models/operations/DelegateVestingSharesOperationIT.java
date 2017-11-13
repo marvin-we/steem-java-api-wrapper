@@ -25,7 +25,9 @@ public class DelegateVestingSharesOperationIT extends BaseTransactionalIntegrati
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c8045701280764657a31333337067374656"
             + "56d6ac4f4f51800000000065645535453000000011c7b28a34479885c3ca12abcd180577382cf2d7d05a4f64219587"
             + "c9cc8ae87f2707ace6d2297830935a1c21922b51c2647af44f3baaf7a0a860f55f4fefdbf2cc4";
-    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dceac8045701280764657a313333370"
+            + "6737465656d6ac4f4f51800000000065645535453000000011c290d28c51bbc69a7526dda0fb0002298fdddd536e26"
+            + "21f0f8ef81b365b5b6b6655bf088d36029cca6543e834f85aad1164d93966c5dd7c9a23aea227ac641c26";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
