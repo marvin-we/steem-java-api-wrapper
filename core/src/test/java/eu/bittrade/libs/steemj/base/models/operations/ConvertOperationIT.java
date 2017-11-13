@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
@@ -14,10 +13,7 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "convert operation" under the use of real api
@@ -26,14 +22,12 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ConvertOperationIT extends BaseTransactionalIntegrationTest {
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5764515;
-    private static final int TRANSACTION_INDEX = 1;
-    private static final int OPERATION_INDEX = 0;
-    private static final String EXPECTED_OWNER = "mindhunter";
-    private static final Asset EXPECTED_AMOUNT = new Asset();
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dceec8045701080764657a31333337390500"
             + "000100000000000000035342440000000000011b39df7757e8d202e850d45ac9f7de49cce804ed0cb3ace0cbe87"
             + "f34e9be7ee33f4f50c4212e551983a29f6f4827b96432a253400ecef29e468c1b31e33c559f2d";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dce9c8045701080764657a313333"
+            + "37390500000100000000000000035342440000000000011b0086e22c73d11014590162503809969cf0c61c1d324"
+            + "5ac5e41bae5a08add09352b51451242fe6c44fd372c5cd461491a0cfdc8cab2a0e67cd893b597ff5bf31b";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -63,23 +57,6 @@ public class ConvertOperationIT extends BaseTransactionalIntegrationTest {
         signedTransaction.setOperations(operations);
 
         sign();
-
-        // Set expected objects.
-        EXPECTED_AMOUNT.setAmount(24);
-        EXPECTED_AMOUNT.setSymbol(AssetSymbolType.SBD);
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingConvertOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
-
-        Operation convertOperation = blockContainingConvertOperation.getTransactions().get(TRANSACTION_INDEX)
-                .getOperations().get(OPERATION_INDEX);
-
-        assertThat(convertOperation, instanceOf(ConvertOperation.class));
-        assertThat(((ConvertOperation) convertOperation).getOwner().getName(), equalTo(EXPECTED_OWNER));
-        assertThat(((ConvertOperation) convertOperation).getAmount(), equalTo(EXPECTED_AMOUNT));
     }
 
     @Category({ IntegrationTest.class })
@@ -91,6 +68,10 @@ public class ConvertOperationIT extends BaseTransactionalIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

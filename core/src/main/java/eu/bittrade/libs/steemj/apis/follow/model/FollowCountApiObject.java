@@ -21,6 +21,13 @@ public class FollowCountApiObject {
     private int followingCount;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected FollowCountApiObject() {
+    }
+
+    /**
      * @return The account which the {@link #getFollowerCount()
      *         getFollowerCount()} and {@link #getFollowingCount()
      *         getFollowingCount()} results belong to.

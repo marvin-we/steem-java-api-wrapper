@@ -24,6 +24,13 @@ public class BlogEntry {
     private int entryId;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected BlogEntry() {
+    }
+
+    /**
      * @return The author of the post.
      */
     public AccountName getAuthor() {

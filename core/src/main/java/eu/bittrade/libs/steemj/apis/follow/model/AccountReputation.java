@@ -15,6 +15,13 @@ public class AccountReputation {
     private long reputation;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected AccountReputation() {
+    }
+
+    /**
      * Get the name of the account.
      * 
      * @return The name of the account.

@@ -16,8 +16,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test a Steem "witness update operation" and verify the results against the
- * api.
+ * Test the transformation of the {@link SetResetAccountOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

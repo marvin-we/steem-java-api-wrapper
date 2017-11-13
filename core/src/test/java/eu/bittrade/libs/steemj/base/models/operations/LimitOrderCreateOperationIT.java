@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
@@ -15,11 +14,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "limit order create operation" under the use
@@ -28,15 +24,15 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTest {
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681453;
-    private static final int TRANSACTION_INDEX = 3;
-    private static final int OPERATION_INDEX = 0;
-    private static final Asset EXPECTED_BASE_AMOUNT = new Asset();
-    private static final boolean EXPECTED_FILL_OR_KILL = false;
+
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c8045701050764657a31333337c3850"
             + "700010000000000000003534244000000000a0000000000000003535445454d000000e7c8045700011b69776cf"
             + "d76f1e20da06f40c9df5fcc1c25156b7968b3566655ba39622bd31158798b91b16bc134740051be55e4c678a9f"
             + "a0db60b50fb4ff8f77a26cc4e6ed73c";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dce9c8045701050764657a31333"
+            + "337c3850700010000000000000003534244000000000a0000000000000003535445454d000000e7c8045700011"
+            + "b1b58a0f1bc4cb2b9ad85191ac3111e4bfebfb966b2d45da962b3dff9f848e47b56eb4b5ad81ab90a8eeb921d2"
+            + "8304fcba675a8a672309a2558ea032a45674dfc";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -74,26 +70,6 @@ public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTes
         signedTransaction.setOperations(operations);
 
         sign();
-
-        // Set expected objects.
-        EXPECTED_BASE_AMOUNT.setAmount(41554);
-        EXPECTED_BASE_AMOUNT.setSymbol(AssetSymbolType.SBD);
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingLimitOrderCreateOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
-
-        Operation limitOrderCreateOperation = blockContainingLimitOrderCreateOperation.getTransactions()
-                .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
-
-        assertThat(limitOrderCreateOperation, instanceOf(LimitOrderCreateOperation.class));
-        assertThat(((LimitOrderCreateOperation) limitOrderCreateOperation).getFillOrKill(),
-                equalTo(EXPECTED_FILL_OR_KILL));
-        assertThat(((LimitOrderCreateOperation) limitOrderCreateOperation).getAmountToSell(),
-                equalTo(EXPECTED_BASE_AMOUNT));
     }
 
     @Category({ IntegrationTest.class })
@@ -105,6 +81,10 @@ public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTes
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

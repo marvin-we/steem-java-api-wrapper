@@ -18,7 +18,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test a Steem "delgate vesting shares operation".
+ * Test the transformation of the {@link DelegateVestingSharesOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

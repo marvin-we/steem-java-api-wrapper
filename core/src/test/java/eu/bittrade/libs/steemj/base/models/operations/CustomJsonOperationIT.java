@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,10 +17,7 @@ import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "custom json operation" under the use of real
@@ -30,13 +26,6 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CustomJsonOperationIT extends BaseTransactionalIntegrationTest {
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 14341388;
-    private static final int TRANSACTION_INDEX = 22;
-    private static final int OPERATION_INDEX = 0;
-    private static final String EXPECTED_ID = "follow";
-    private static final String EXPECTED_ACCOUNT = "cryptoriddler";
-    private static final String EXPECTED_JSON = "[\"follow\", {\"what\": [], \"follower\": \"cryptoriddler\", "
-            + "\"following\": \"whatissteem\"}]";
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dc67fce558041200010764657a3133333706666f6c6c6f77"
             + "465b22666f6c6c6f77222c7b22666f6c6c6f776572223a2264657a31333337222c22666f6c6c6f77696e67223a22737465656d6"
             + "a222c2277686174223a5b22626c6f67225d7d5d1200010764657a3133333706666f6c6c6f77425b22666f6c6c6f77222c7b2266"
@@ -47,6 +36,16 @@ public class CustomJsonOperationIT extends BaseTransactionalIntegrationTest {
             + "65656d6a222c227065726d6c696e6b223a22737465656d6a2d76302d342d302d666561747572652d707265766965772d73696d7"
             + "06c69666965642d7472616e73616374696f6e73227d5d00011b24f4e525a759327b710c27ab34176f062b2611507d963064a225"
             + "8619c4c9dd350190b5ebc73ac08dba3f00e9c6ec762205e86fb06d9fe2a9a2800878f7c126e8";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dc71fce558041200010764657a3133333706666f"
+            + "6c6c6f77465b22666f6c6c6f77222c7b22666f6c6c6f776572223a2264657a31333337222c22666f6c6c6f77696e67223a22737"
+            + "465656d6a222c2277686174223a5b22626c6f67225d7d5d1200010764657a3133333706666f6c6c6f77425b22666f6c6c6f7722"
+            + "2c7b22666f6c6c6f776572223a2264657a31333337222c22666f6c6c6f77696e67223a22737465656d6a222c2277686174223a5"
+            + "b22225d7d5d1200010764657a3133333706666f6c6c6f77485b22666f6c6c6f77222c7b22666f6c6c6f776572223a2264657a31"
+            + "333337222c22666f6c6c6f77696e67223a22737465656d6a222c2277686174223a5b2269676e6f7265225d7d5d1200010764657"
+            + "a31333337067265626c6f67755b227265626c6f67222c7b226163636f756e74223a2264657a31333337222c22617574686f7222"
+            + "3a22737465656d6a222c227065726d6c696e6b223a22737465656d6a2d76302d342d302d666561747572652d707265766965772"
+            + "d73696d706c69666965642d7472616e73616374696f6e73227d5d00011c0e678ad549add722ad72c6f03887b4fceb2fbe4f79de"
+            + "9052ce505f3784ceb02c76e49f4f6f5ab7f2bc5a108fa11d51119a5fc21884063a2da6a546cae6866191";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -115,22 +114,6 @@ public class CustomJsonOperationIT extends BaseTransactionalIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingCustomJsonOperationOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
-
-        Operation customJsonOperation = blockContainingCustomJsonOperationOperation.getTransactions()
-                .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
-
-        assertThat(customJsonOperation, instanceOf(CustomJsonOperation.class));
-        assertThat(((CustomJsonOperation) customJsonOperation).getId(), equalTo(EXPECTED_ID));
-        assertThat(((CustomJsonOperation) customJsonOperation).getRequiredPostingAuths().get(0).getName(),
-                equalTo(EXPECTED_ACCOUNT));
-        assertThat(((CustomJsonOperation) customJsonOperation).getJson(), equalTo(EXPECTED_JSON));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
@@ -138,6 +121,10 @@ public class CustomJsonOperationIT extends BaseTransactionalIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

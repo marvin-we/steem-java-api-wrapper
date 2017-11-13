@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.apis.login.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

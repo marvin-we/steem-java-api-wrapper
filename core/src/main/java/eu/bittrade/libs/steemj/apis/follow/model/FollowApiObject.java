@@ -18,6 +18,13 @@ public class FollowApiObject {
     private List<FollowType> what;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected FollowApiObject() {
+    }
+
+    /**
      * @return The account which is following {@link #getFollowing()}.
      */
     public AccountName getFollower() {

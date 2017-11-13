@@ -50,6 +50,13 @@ public class Bucket {
     private long sbdVolume;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected Bucket() {
+    }
+
+    /**
      * @return the id
      */
     public long getId() {

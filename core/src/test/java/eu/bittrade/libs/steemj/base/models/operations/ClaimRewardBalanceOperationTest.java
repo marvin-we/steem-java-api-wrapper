@@ -18,8 +18,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test a Steem "claim rewards balance operation" and verify the results against
- * the api.
+ * Test the transformation of the {@link ClaimRewardBalanceOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

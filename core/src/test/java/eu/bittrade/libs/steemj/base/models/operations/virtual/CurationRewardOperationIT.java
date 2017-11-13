@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseOperationParsingIT;
+import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Permlink;
@@ -23,7 +23,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CurationRewardOperationIT extends BaseOperationParsingIT {
+public class CurationRewardOperationIT extends BaseITForOperationParsing {
     private static final int BLOCK_NUMBER_CONTAINING_OPERATION = 16212111;
     private static final int OPERATION_INDEX = 1;
     private static final String EXPECTED_AUTHOR = "joearnold";

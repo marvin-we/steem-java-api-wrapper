@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.apis.database.models.state;
 
 import java.util.Date;
 import java.util.List;
@@ -6,6 +6,10 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.VoteState;
 
 /**
  * This class represents the Steem "discussion" object.

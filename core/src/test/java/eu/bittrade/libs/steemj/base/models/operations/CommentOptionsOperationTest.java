@@ -19,7 +19,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test the transformation of a Steem "comment options operation".
+ * Test the transformation of the {@link CommentOptionsOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

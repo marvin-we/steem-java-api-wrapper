@@ -7,26 +7,23 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This class represents a Steem "tag_api" object.
+ * This class represents a Steem "tag_api_obj" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class TrendingTag {
+public class Tag {
+    /** The name of the tag. */
     private String name;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("total_children_rshares2")
-    private String totalChildrenRShares2;
     @JsonProperty("total_payouts")
+    /** The total payouts for posts and comments using this tag. */
     private Asset totalPayouts;
     // Original type is "int32_t" so we use long here.
     @JsonProperty("net_votes")
+    /** The number of votes made for posts and comments which used this tag. */
     private long netVotes;
     // Original type is "int32_t" so we use long here.
     @JsonProperty("top_posts")
+    /** The number of posts that made it to a "top post" and used this tag. */
     private long topPosts;
     // Original type is "int32_t" so we use long here.
     private long comments;
@@ -37,7 +34,7 @@ public class TrendingTag {
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
-    private TrendingTag() {
+    private Tag() {
     }
 
     /**

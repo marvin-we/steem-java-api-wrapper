@@ -4,8 +4,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.apis.database.models.state.Comment;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Comment;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
@@ -21,6 +21,13 @@ public class CommentBlogEntry {
     // Original type is uint32_t.
     @JsonProperty("entry_id")
     private int entryId;
+
+    /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected CommentBlogEntry() {
+    }
 
     /**
      * Get the whole content of the blog entry.

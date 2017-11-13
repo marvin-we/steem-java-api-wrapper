@@ -16,7 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.BaseIntegrationTest;
+import eu.bittrade.libs.steemj.BaseIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
@@ -40,7 +40,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class FollowApiIT extends BaseIntegrationTest {
+public class FollowApiIT extends BaseIT {
     private static CommunicationHandler COMMUNICATION_HANDLER;
 
     /**

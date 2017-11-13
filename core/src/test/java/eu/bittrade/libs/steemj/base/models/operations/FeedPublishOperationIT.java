@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
@@ -15,10 +14,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "feed publish operation" under the use of
@@ -27,15 +23,14 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FeedPublishOperationIT extends BaseTransactionalIntegrationTest {
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5716934;
-    private static final int TRANSACTION_INDEX = 4;
-    private static final int OPERATION_INDEX = 0;
-    private static final String EXPECTED_PUBLISHER = "steve-walschot";
-    private static Price EXPECTED_PRICE;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c8045701070764657a31"
             + "33333773000000000000000353424400000000640000000000000003535445454d000000011b1d2"
             + "64143ac5f04d46e563aae4e657100b45a74380e9afaa5c9148a4ec77c0c3b5ef08414d0c210ed3e"
             + "f9eea860686a40a19863389ee618605a980bdb6d01a42c";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dceac80457010707"
+            + "64657a3133333773000000000000000353424400000000640000000000000003535445454d00000"
+            + "0011b2ddd5d7749db3f300e58e05230908e1d4cd74e4d67f1ce9188f1352f4a13484b6b31bb2b7c"
+            + "d45497cdfabd4289f977e850716236ec9bf27b94c6944d72907cef";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -68,29 +63,6 @@ public class FeedPublishOperationIT extends BaseTransactionalIntegrationTest {
         signedTransaction.setOperations(operations);
 
         sign();
-
-        // Set expected objects.
-        Asset expectedBase = new Asset();
-        expectedBase.setAmount(283);
-        expectedBase.setSymbol(AssetSymbolType.SBD);
-        Asset expectedQuote = new Asset();
-        expectedQuote.setAmount(1000);
-        expectedQuote.setSymbol(AssetSymbolType.STEEM);
-
-        EXPECTED_PRICE = new Price(expectedBase, expectedQuote);
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingFeedPublishOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
-
-        Operation feedPublishOperation = blockContainingFeedPublishOperation.getTransactions().get(TRANSACTION_INDEX)
-                .getOperations().get(OPERATION_INDEX);
-
-        assertThat(feedPublishOperation, instanceOf(FeedPublishOperation.class));
-        assertThat(((FeedPublishOperation) feedPublishOperation).getPublisher().getName(), equalTo(EXPECTED_PUBLISHER));
-        assertThat(((FeedPublishOperation) feedPublishOperation).getExchangeRate(), equalTo(EXPECTED_PRICE));
     }
 
     @Category({ IntegrationTest.class })
@@ -102,6 +74,10 @@ public class FeedPublishOperationIT extends BaseTransactionalIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

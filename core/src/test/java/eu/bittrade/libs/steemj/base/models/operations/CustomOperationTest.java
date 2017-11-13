@@ -17,7 +17,7 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test a Steem "custom operation" and verify the results against the api.
+ * Test the transformation of the {@link CustomOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

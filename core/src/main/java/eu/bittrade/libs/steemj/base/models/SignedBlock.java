@@ -10,8 +10,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class SignedBlock extends SignedBlockHeader {
-    // TODO: Original type is vector<signed_transaction> - Do we implement the
-    // signed_transaction object?.
     protected List<SignedTransaction> transactions;
 
     /**

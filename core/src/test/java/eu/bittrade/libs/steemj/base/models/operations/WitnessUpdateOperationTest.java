@@ -17,12 +17,12 @@ import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test a Steem "witness update operation" and verify the results against the
- * api.
+ * Test the transformation of the {@link WitnessUpdateOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -48,7 +48,8 @@ public class WitnessUpdateOperationTest extends BaseTransactionalUnitTest {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        PublicKey blockSigningKey = new PublicKey("STM6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb");
+        PublicKey blockSigningKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
+                + "6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb");
 
         Asset fee = new Asset();
         fee.setAmount(1L);

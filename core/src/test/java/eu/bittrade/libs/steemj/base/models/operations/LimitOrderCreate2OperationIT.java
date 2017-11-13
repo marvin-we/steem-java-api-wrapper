@@ -17,7 +17,6 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
  * Verify the functionality of the "limit order create 2 operation" under the
@@ -26,13 +25,14 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class LimitOrderCreate2OperationIT extends BaseTransactionalIntegrationTest {
-    // private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681456;
-    // private static final int TRANSACTION_INDEX = 0;
-    // private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c8045701150764657a31333337"
             + "bf85070001000000000000000353424400000000010000000000000003534244000000000a00000000000"
             + "00003535445454d000000e7c8045700011b682f18ada39a8194c5408bbd3a7b6185cd85e75f94e1d533f6"
             + "29c76a9ac5a1723257562c699d267f4428b17c682106f846fd973539abb55f7e2c7423cb48af5a";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dce7c8045701150764657a31"
+            + "333337bf85070001000000000000000353424400000000010000000000000003534244000000000a0000000"
+            + "000000003535445454d000000e7c8045700011b13a5bebf929bc3ad5232d4ec558149bfa00c9b3956f0b2d5"
+            + "ca55810d964c681257c941b73bd69c2a9b4c5177145bb9716f6f2f734f1a47ccdd61c1fa8ae28a1e";
 
     /**
      * <b>Attention:</b> This test class requires a valid posting key of the
@@ -79,12 +79,6 @@ public class LimitOrderCreate2OperationIT extends BaseTransactionalIntegrationTe
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException {
-        // TODO
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
@@ -92,6 +86,10 @@ public class LimitOrderCreate2OperationIT extends BaseTransactionalIntegrationTe
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

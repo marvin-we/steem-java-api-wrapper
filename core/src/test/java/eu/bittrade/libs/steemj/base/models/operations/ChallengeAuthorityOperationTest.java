@@ -16,11 +16,11 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test the transformation of a Steem "prove authority operation".
+ * Test the transformation of the {@link ProveAuthorityOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ChallangeAuthorityOperationTest extends BaseTransactionalUnitTest {
+public class ChallengeAuthorityOperationTest extends BaseTransactionalUnitTest {
     final String EXPECTED_BYTE_REPRESENTATION_WITH_OWNER = "1606737465656d6a0764657a3133333701";
     final String EXPECTED_BYTE_REPRESENTATION_WITH_ACTIVE = "1606737465656d6a0764657a3133333700";
     final String EXPECTED_TRANSACTION_HASH = "a572c07078f6f89c93c26df29f5dad2d010f75812ffa20c32a630391b05de545";

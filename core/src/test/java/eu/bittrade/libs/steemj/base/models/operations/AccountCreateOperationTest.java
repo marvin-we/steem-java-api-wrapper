@@ -17,12 +17,12 @@ import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * This is a copy of the Steem Piston test. Have a look at <a href=
- * "https://github.com/steemit/steem-python/blob/master/tests/steem/test_transactions.py">GitHub</a>
+ * Test the transformation of the {@link AccountCreateOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -55,27 +55,31 @@ public class AccountCreateOperationTest extends BaseTransactionalUnitTest {
         Asset fee = new Asset(10000, AssetSymbolType.STEEM);
         AccountName creator = new AccountName("dez1337");
         String jsonMetadata = "";
-        PublicKey memoKey = new PublicKey("STM6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp");
+        PublicKey memoKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
+                + "6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp");
         AccountName newAccountName = new AccountName("steemj");
 
         Authority posting = new Authority();
         posting.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> postingKeyAuth = new HashMap<>();
-        postingKeyAuth.put(new PublicKey("STM8CemMDjdUWSV5wKotEimhK6c4dY7p2PdzC2qM1HpAP8aLtZfE7"), 1);
+        postingKeyAuth.put(new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
+                + "8CemMDjdUWSV5wKotEimhK6c4dY7p2PdzC2qM1HpAP8aLtZfE7"), 1);
         posting.setKeyAuths(postingKeyAuth);
         posting.setWeightThreshold(1);
 
         Authority active = new Authority();
         active.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> activeKeyAuth = new HashMap<>();
-        activeKeyAuth.put(new PublicKey("STM6pbVDAjRFiw6fkiKYCrkz7PFeL7XNAfefrsREwg8MKpJ9VYV9x"), 1);
+        activeKeyAuth.put(new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
+                + "6pbVDAjRFiw6fkiKYCrkz7PFeL7XNAfefrsREwg8MKpJ9VYV9x"), 1);
         active.setKeyAuths(activeKeyAuth);
         active.setWeightThreshold(1);
 
         Authority owner = new Authority();
         owner.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
-        ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
+        ownerKeyAuth.put(new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
+                + "5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
         owner.setKeyAuths(ownerKeyAuth);
         owner.setWeightThreshold(1);
 

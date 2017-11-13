@@ -26,6 +26,13 @@ public class MarketTicker {
     private Asset sbdVolume;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected MarketTicker() {
+    }
+
+    /**
      * @return the latest
      */
     public double getLatest() {

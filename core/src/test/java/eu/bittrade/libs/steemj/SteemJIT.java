@@ -6,14 +6,10 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -30,41 +26,32 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.apis.database.models.state.Discussion;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.AccountVote;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BlockHeader;
-import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
-import eu.bittrade.libs.steemj.base.models.Discussion;
 import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
-import eu.bittrade.libs.steemj.base.models.GlobalProperties;
-import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.base.models.TrendingTag;
-import eu.bittrade.libs.steemj.base.models.Version;
-import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegationOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.TransferOperation;
-import eu.bittrade.libs.steemj.base.models.operations.virtual.ProducerRewardOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -76,7 +63,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 /**
  * @author Anthony Martin
  */
-public class SteemJIT extends BaseIntegrationTest {
+public class SteemJIT extends BaseIT {
     private static final Logger LOGGER = LogManager.getLogger(SteemJIT.class);
     private static final AccountName ACCOUNT = new AccountName("dez1337");
     private static final AccountName ACCOUNT_TWO = new AccountName("randowhale");
@@ -111,56 +98,6 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetBlock() throws Exception {
-        final SignedBlockWithInfo signedBlockWithInfo = steemJ.getBlock(13310401L);
-
-        assertThat(signedBlockWithInfo.getTimestamp().getDateTime(), equalTo("2017-07-01T19:24:42"));
-        assertThat(signedBlockWithInfo.getWitness(), equalTo("riverhead"));
-
-        final SignedBlockWithInfo signedBlockWithInfoWithExtension = steemJ.getBlock(12615532L);
-
-        assertThat(signedBlockWithInfoWithExtension.getTimestamp().getDateTime(),
-                equalTo(new TimePointSec("2017-06-07T15:33:27").getDateTime()));
-        assertThat(signedBlockWithInfoWithExtension.getWitness(), equalTo("dragosroua"));
-
-        BlockHeaderExtensions versionExtension = signedBlockWithInfoWithExtension.getExtensions().get(0);
-        BlockHeaderExtensions hardforkVersionVoteExtension = signedBlockWithInfoWithExtension.getExtensions().get(1);
-
-        assertThat(versionExtension, instanceOf(Version.class));
-        assertThat(hardforkVersionVoteExtension, instanceOf(HardforkVersionVote.class));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetBlockHeader() throws Exception {
-        final BlockHeader blockHeader = steemJ.getBlockHeader(13339001L);
-
-        assertThat(blockHeader.getTimestamp().getDateTime(), equalTo("2017-07-02T19:15:06"));
-        assertThat(blockHeader.getWitness(), equalTo("clayop"));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetOpsInBlock() throws Exception {
-        final List<AppliedOperation> appliedOperationsOnlyVirtual = steemJ.getOpsInBlock(13138393, true);
-
-        assertThat(appliedOperationsOnlyVirtual.size(), equalTo(6));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx(), equalTo(1));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), equalTo(41));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), equalTo(0L));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(ProducerRewardOperation.class));
-
-        final List<AppliedOperation> appliedOperations = steemJ.getOpsInBlock(13138393, false);
-
-        assertThat(appliedOperations.size(), equalTo(51));
-        assertThat(appliedOperations.get(1).getOpInTrx(), equalTo(0));
-        assertThat(appliedOperations.get(1).getTrxInBlock(), equalTo(1));
-        assertThat(appliedOperations.get(1).getVirtualOp(), equalTo(0L));
-        assertThat(appliedOperations.get(1).getOp(), instanceOf(CommentOperation.class));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void testGetAccountCount() throws Exception {
         final int accountCount = steemJ.getAccountCount();
 
@@ -189,7 +126,7 @@ public class SteemJIT extends BaseIntegrationTest {
     @Test
     public void testGetActiveVotes() throws Exception {
         // Get the votes done by the specified account:
-        final List<Vote> votes = steemJ.getAccountVotes(ACCOUNT);
+        final List<AccountVote> votes = steemJ.getAccountVotes(ACCOUNT);
         final List<VoteState> activeVotesForArticle = steemJ.getActiveVotes(ACCOUNT, PERMLINK);
 
         assertNotNull("expect votes", votes);
@@ -255,45 +192,6 @@ public class SteemJIT extends BaseIntegrationTest {
         assertThat(accounts.get(2).getName(), equalTo(new AccountName("baabeetaa")));
         assertThat(accounts.get(0).getMemoKey().getAddressFromPublicKey(),
                 equalTo("STM5qu8gRh39y5AvY3kciA5P4CkRZEfSYbSo5xQKoZsZdDVsyn6fm"));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetActiveWitnesses() throws Exception {
-        final String[] activeWitnesses = steemJ.getActiveWitnesses();
-
-        // The active witness changes from time to time, so we just check if
-        // something is returned.
-        assertThat(activeWitnesses.length, greaterThan(0));
-        assertThat(activeWitnesses[0], not(isEmptyOrNullString()));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetApiByName() throws Exception {
-        final Integer bogus = steemJ.getApiByName("bogus_api");
-        final Integer database = steemJ.getApiByName("database_api");
-        final Integer login = steemJ.getApiByName("login_api");
-        final Integer market_history = steemJ.getApiByName("market_history_api");
-        final Integer follow = steemJ.getApiByName("follow_api");
-
-        assertNull("expect that bogus api does not exist", bogus);
-        assertNotNull("expect that database api does exist", database);
-        assertNotNull("expect that login api does exist", login);
-        assertNotNull("expect that market_history api does exist", market_history);
-        assertNotNull("expect that follow api does exist", follow);
-    }
-
-    @Category(IntegrationTest.class)
-    @Test
-    public void testGetApiByNameForSecuredApi() throws Exception {
-        final Integer database = steemJ.getApiByName("database_api");
-        final Integer networkBroadcast = steemJ.getApiByName("network_broadcast_api");
-        final Integer login = steemJ.getApiByName("login_api");
-
-        assertNotNull("expect that network_node api does exist", database);
-        assertNotNull("expect that network_broadcast api does exist", networkBroadcast);
-        assertNotNull("expect that chain_stats api does exist", login);
     }
 
     @Category({ IntegrationTest.class })
@@ -376,7 +274,7 @@ public class SteemJIT extends BaseIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetDynamicGlobalProperties() throws Exception {
-        final GlobalProperties properties = steemJ.getDynamicGlobalProperties();
+        final DynamicGlobalProperty properties = steemJ.getDynamicGlobalProperties();
 
         assertNotNull("expect properties", properties);
         assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000L));
@@ -450,14 +348,6 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testLogin() throws Exception {
-        final boolean success = steemJ.login(new AccountName("gilligan"), "s.s.minnow");
-
-        assertTrue("expect login to always return success: true", success);
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void testGetLookupAccount() throws Exception {
         final List<String> accounts = steemJ.lookupAccounts(ACCOUNT.getName(), 10);
 
@@ -476,23 +366,6 @@ public class SteemJIT extends BaseIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetMinerQueue() throws Exception {
-        final String[] minerQueue = steemJ.getMinerQueue();
-
-        assertThat("expect the number of miners greater than 0", minerQueue.length, greaterThan(0));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetTrendingTags() throws Exception {
-        final List<TrendingTag> trendingTags = steemJ.getTrendingTags(null, 10);
-
-        assertNotNull("expect trending tags", trendingTags);
-        assertThat("expect trending tags size > 0", trendingTags.size(), greaterThan(0));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void testGetRewardFund() throws Exception {
         final RewardFund rewardFund = steemJ.getRewardFund(RewardFundType.POST);
 
@@ -505,16 +378,6 @@ public class SteemJIT extends BaseIntegrationTest {
         assertThat(rewardFund.getPercentCurationRewards(), notNullValue());
         assertThat(rewardFund.getRecentClaims(), notNullValue());
         assertThat(rewardFund.getRewardBalance(), notNullValue());
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetVersion() throws Exception {
-        final SteemVersionInfo version = steemJ.getVersion();
-
-        assertNotEquals("expect non-empty blockchain version", "", version.getBlockchainVersion());
-        assertNotEquals("expect non-empty fc revision", "", version.getFcRevision());
-        assertNotEquals("expect non-empty steem revision", "", version.getSteemRevision());
     }
 
     @Category({ IntegrationTest.class })
@@ -596,7 +459,7 @@ public class SteemJIT extends BaseIntegrationTest {
         privateKeys
                 .add(new ImmutablePair<>(PrivateKeyType.ACTIVE, "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"));
 
-        CONFIG.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
+        config.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
         Asset steemAmount = new Asset();
         steemAmount.setAmount(1L);

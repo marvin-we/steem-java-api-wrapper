@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Vote {
+public class AccountVote {
     private String authorperm;
     // Original type is uint64_t
     private long weight;
@@ -21,7 +21,7 @@ public class Vote {
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
-    private Vote() {
+    private AccountVote() {
     }
 
     /**

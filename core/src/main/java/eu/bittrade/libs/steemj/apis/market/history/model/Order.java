@@ -15,6 +15,13 @@ public class Order {
     private long sbd;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected Order() {
+    }
+
+    /**
      * @return the price
      */
     public double getPrice() {

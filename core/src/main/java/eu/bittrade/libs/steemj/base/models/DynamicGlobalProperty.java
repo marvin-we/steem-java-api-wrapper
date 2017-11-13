@@ -7,9 +7,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
+ * This class represents the Steem "dynamic_global_property_api_obj" object.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class GlobalProperties {
+public class DynamicGlobalProperty {
     // Original type is id_type which is a uint16_t so we use int here.
     private int id;
     // Original type is uint32_t so we use long here.
@@ -88,7 +90,7 @@ public class GlobalProperties {
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
-    private GlobalProperties() {
+    private DynamicGlobalProperty() {
     }
 
     /**

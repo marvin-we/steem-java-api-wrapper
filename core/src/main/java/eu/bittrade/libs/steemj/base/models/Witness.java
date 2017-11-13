@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.enums.WitnessScheduleType;
 
 /**
- * This class represents a Steem "witness_object" object.
+ * This class represents a Steem "witness_api_object" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

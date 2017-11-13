@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
@@ -15,10 +14,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "comment options operation" under the use of
@@ -27,18 +23,16 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest {
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5716958;
-    private static final int TRANSACTION_INDEX = 2;
-    private static final int OPERATION_INDEX = 2;
-    private static final String EXPECTED_AUTHOR = "rihchie.ebb";
-    private static final String EXPECTED_PERMANENT_LINK = "giving-a-farewell-speech";
-    private static final boolean EXPECTED_VOTES_ALLOWED = true;
-    private static final Asset EXPECTED_ASSET = new Asset();
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcedc8045701130764657a"
             + "3133333728737465656d6a2d76302d322d342d6861732d6265656e2d72656c65617365642d757"
             + "0646174652d3900ca9a3b000000000353424400000000102701010000011c06dfac5938938a83"
             + "85cbc3aec6f27ae22993820349d93b4060af92386305517c0f3c85a04b34b074226b8b5bb6384"
             + "2ee3cb208a52b6c0c01e6b8d0d838a38aba";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dce7c804570113"
+            + "0764657a3133333728737465656d6a2d76302d322d342d6861732d6265656e2d72656c6561736"
+            + "5642d7570646174652d3900ca9a3b000000000353424400000000102701010000011c143d3859"
+            + "8e94f7d74c6e422b296bfbd42d27770b97dd29e660fafe6203f623687adf630ab8823420a299f"
+            + "013b0a083f7d764d6e176b0d1eb33c38d41ce4c32bf";
 
     /**
      * <b>Attention:</b> This test class requires a valid posting key of the
@@ -69,27 +63,6 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
         signedTransaction.setOperations(operations);
 
         sign();
-
-        // Set expected objects.
-        EXPECTED_ASSET.setAmount(1000000000);
-        EXPECTED_ASSET.setSymbol(AssetSymbolType.SBD);
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingCommentOptionsOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
-
-        Operation commentOptionsOperation = blockContainingCommentOptionsOperation.getTransactions()
-                .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
-
-        assertThat(commentOptionsOperation, instanceOf(CommentOptionsOperation.class));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getAllowVotes(),
-                equalTo(EXPECTED_VOTES_ALLOWED));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getPermlink().getLink(),
-                equalTo(EXPECTED_PERMANENT_LINK));
-        assertThat(((CommentOptionsOperation) commentOptionsOperation).getMaxAcceptedPayout(), equalTo(EXPECTED_ASSET));
     }
 
     @Category({ IntegrationTest.class })
@@ -101,6 +74,10 @@ public class CommentOptionsOperationIT extends BaseTransactionalIntegrationTest 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

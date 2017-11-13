@@ -16,7 +16,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test the transformation of a Steem "prove authority operation".
+ * Test the transformation of the {@link ProveAuthorityOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

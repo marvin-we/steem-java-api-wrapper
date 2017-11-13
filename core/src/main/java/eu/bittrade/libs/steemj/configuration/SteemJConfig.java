@@ -20,6 +20,7 @@ import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.AddressPrefixType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 
@@ -41,7 +42,7 @@ public class SteemJConfig {
     private static final String STEEMJ_VERSION = SteemJ.class.getPackage().getImplementationVersion();
     /** The SteemJ App-Name */
     private static final String STEEMJ_NAME = SteemJ.class.getPackage().getImplementationTitle();
-
+    /** The inner {@link SteemJConfig} instance. */
     private static SteemJConfig steemJConfigInstance;
 
     /**
@@ -86,6 +87,7 @@ public class SteemJConfig {
     private String chainId;
     private short steemJWeight;
     private ValidationType validationLevel;
+    private SynchronizationType synchronizationLevel;
 
     /**
      * Default constructor that will set all default values.
@@ -113,6 +115,7 @@ public class SteemJConfig {
         this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
         this.steemJWeight = 250;
         this.validationLevel = ValidationType.ALL;
+        this.synchronizationLevel = SynchronizationType.FULL;
 
         // Fill the key store with the provided accountName and private keys.
         this.defaultAccount = new AccountName(System.getProperty("steemj.default.account", ""));
@@ -128,6 +131,33 @@ public class SteemJConfig {
                 }
             }
         }
+    }
+
+    /**
+     * Get the currently configured <code>synchronizationLevel</code>.
+     * 
+     * The <code>synchronizationLevel</code> defines which values should be
+     * synchronized between this SteemJ instance and the connected node. By
+     * default, SteemJ will synchronize as much as possible.
+     * 
+     * @return The synchronization level.
+     */
+    public SynchronizationType getSynchronizationLevel() {
+        return synchronizationLevel;
+    }
+
+    /**
+     * Override the currently configured <code>synchronizationLevel</code>.
+     * 
+     * The <code>synchronizationLevel</code> defines which values should be
+     * synchronized between this SteemJ instance and the connected node. By
+     * default, SteemJ will synchronize as much as possible.
+     * 
+     * @param synchronizationLevel
+     *            The synchronization level to set.
+     */
+    public void setSynchronizationLevel(SynchronizationType synchronizationLevel) {
+        this.synchronizationLevel = synchronizationLevel;
     }
 
     /**

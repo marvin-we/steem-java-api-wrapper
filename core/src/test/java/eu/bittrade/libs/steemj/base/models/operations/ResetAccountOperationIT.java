@@ -16,7 +16,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 
 /**
  * Verify the functionality of the "reset account operation" under the use of
@@ -29,6 +29,10 @@ public class ResetAccountOperationIT extends BaseTransactionalIntegrationTest {
             + "3333706737465656d6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9e"
             + "a6eedec21de6fa4c4010000011c79f3dfadf424b2f5b7eb5e49b1ea559b1f5f3efec747df108abf7"
             + "5e34313dd15046d7c1645755b215395cc7d8a04b72aabdffbfdcb77bbbe4bd2501aeb453fb2";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dce7c804570125076"
+            + "4657a3133333706737465656d6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b"
+            + "09d9ea6eedec21de6fa4c4010000011b68ddddf7b218924efd6bb4299d878c0baaad59238dea11ea27a"
+            + "5ce4e235d33407f9bffb521ed8f15fc6f23e7445f741c32f3577a7094bf19b729d7e5790d198d";
 
     /**
      * <b>Attention:</b> This test class requires a valid active key of the used
@@ -49,7 +53,8 @@ public class ResetAccountOperationIT extends BaseTransactionalIntegrationTest {
         Authority newOwnerAuthority = new Authority();
         newOwnerAuthority.setAccountAuths(new HashMap<AccountName, Integer>());
         Map<PublicKey, Integer> ownerKeyAuth = new HashMap<>();
-        ownerKeyAuth.put(new PublicKey("STM5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
+        ownerKeyAuth.put(new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
+                + "5jYVokmZHdEpwo5oCG3ES2Ca4VYzy6tM8pWWkGdgVnwo2mFLFq"), 1);
         newOwnerAuthority.setKeyAuths(ownerKeyAuth);
         newOwnerAuthority.setWeightThreshold(1);
 
@@ -66,12 +71,6 @@ public class ResetAccountOperationIT extends BaseTransactionalIntegrationTest {
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException {
-        // TODO: Implement
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
@@ -79,6 +78,10 @@ public class ResetAccountOperationIT extends BaseTransactionalIntegrationTest {
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

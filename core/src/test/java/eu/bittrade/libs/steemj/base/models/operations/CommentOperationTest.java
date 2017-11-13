@@ -17,7 +17,7 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
- * Test a Steem "comment operation" and verify the results against the api.
+ * Test the transformation of the {@link CommentOperation}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

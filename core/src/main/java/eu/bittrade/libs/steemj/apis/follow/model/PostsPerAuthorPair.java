@@ -19,6 +19,13 @@ public class PostsPerAuthorPair {
     private int numberOfPosts;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected PostsPerAuthorPair() {
+    }
+
+    /**
      * Private constructor used by Jackson to serialize a PostsPerAuthorPair
      * object.
      * 

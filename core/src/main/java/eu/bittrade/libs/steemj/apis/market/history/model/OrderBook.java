@@ -15,6 +15,13 @@ public class OrderBook {
     private List<Order> asks;
 
     /**
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
+     */
+    protected OrderBook() {
+    }
+
+    /**
      * @return the bids
      */
     public List<Order> getBids() {

@@ -12,7 +12,6 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 
 /**
  * Verify the functionality of the "prove authority operation" under the use of
@@ -24,6 +23,9 @@ public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest 
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcefc8045702170764657a3133333700170764657a313333370100"
             + "011c4c882be373ff6a4a3d06bd0da932b981ac46bfc4bde38284943dc2685cc2c00a5e8196f22c5b5704cf4fd963cd3a12347306bf9ea"
             + "76e23f99c06ab74c3b8fe51";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dce8c8045702170764657a3133333700170764657a3133"
+            + "33370100011b5d65cce8610ce292cc722fdfe6b20d2aa83f341764ef52bfa4b1e1ae19c69d5c4d845d4dc2fb590b82046e627615314fc"
+            + "60e597b5d22676f094e53452eaabc3b";
 
     /**
      * <b>Attention:</b> This test class requires a valid posting key of the
@@ -56,12 +58,6 @@ public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest 
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException {
-        // TODO
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
@@ -69,6 +65,10 @@ public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest 
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }

@@ -2,7 +2,6 @@ package eu.bittrade.libs.steemj.base.models.operations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.ArrayList;
 
@@ -14,10 +13,7 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
  * Verify the functionality of the "claim reward balance operation" under the
@@ -26,16 +22,16 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ClaimRewardBalanceOperationIT extends BaseTransactionalIntegrationTest {
-    private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 12000608;
-    private static final int TRANSACTION_INDEX = 4;
-    private static final int OPERATION_INDEX = 0;
-    private static final String EXPECTED_ACCOUNT = "lifewordmission";
-    private static final double EXPECTED_VESTS = 60552.750918;
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dceac804570127"
             + "0764657a31333337020000000000000003535445454d0000010000000000000003534"
             + "244000000000200000000000000065645535453000000011c3143bace1dc9ad51e382"
             + "d0a30f6fa7565859154c1e337f30353f643a3af1f27e74095d7c7154bf2c973fe39c1"
             + "99fd1dffefc0986751bee498fd3cda286bafc41";
+    private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "f68585abf4dcfac8"
+            + "045701270764657a31333337020000000000000003535445454d00000100000000000"
+            + "00003534244000000000200000000000000065645535453000000011c1632d5fec5ef"
+            + "4deff18eafeca32ea003a4812d5f76be4e3fe96f5192d43e32037c8d142e746f66cc2"
+            + "246aa1054eea7ead9571efd8496aaa8d35e8aea812aa7a4";
 
     /**
      * <b>Attention:</b> This test class requires a valid posting key of the
@@ -77,22 +73,6 @@ public class ClaimRewardBalanceOperationIT extends BaseTransactionalIntegrationT
 
     @Category({ IntegrationTest.class })
     @Test
-    public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingClaimRewardBalanceOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
-
-        Operation claimRewardBalanceOperation = blockContainingClaimRewardBalanceOperation.getTransactions()
-                .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);
-
-        assertThat(claimRewardBalanceOperation, instanceOf(ClaimRewardBalanceOperation.class));
-        assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getAccount().getName(),
-                equalTo(EXPECTED_ACCOUNT));
-        assertThat(((ClaimRewardBalanceOperation) claimRewardBalanceOperation).getRewardVests().toReal(),
-                equalTo(EXPECTED_VESTS));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
     public void verifyTransaction() throws Exception {
         assertThat(steemJ.verifyAuthority(signedTransaction), equalTo(true));
     }
@@ -100,6 +80,10 @@ public class ClaimRewardBalanceOperationIT extends BaseTransactionalIntegrationT
     @Category({ IntegrationTest.class })
     @Test
     public void getTransactionHex() throws Exception {
-        assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX_TESTNET));
+        } else {
+            assertThat(steemJ.getTransactionHex(signedTransaction), equalTo(EXPECTED_TRANSACTION_HEX));
+        }
     }
 }
