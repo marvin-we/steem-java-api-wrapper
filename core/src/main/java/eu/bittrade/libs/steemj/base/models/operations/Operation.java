@@ -1,5 +1,6 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
@@ -199,6 +201,28 @@ public abstract class Operation implements ByteTransformable, Validatable {
         }
 
         return requiredAuthorities;
+    }
+
+    /**
+     * This method will check if given <code>accountNameToSet</code> is
+     * <code>null</code> and throw an {@link InvalidParameterException} if this
+     * is the case.
+     * 
+     * @param accountNameToSet
+     *            The account name to check.
+     * @param message
+     *            The message of the generated exception.
+     * @return The given <code>accountNameToSet</code> if its not
+     *         <code>null</code>.
+     * @throws InvalidParameterException
+     *             If the <code>from</code> is null.
+     */
+    protected AccountName setIfNotNull(AccountName accountNameToSet, String message) {
+        if (accountNameToSet == null) {
+            throw new InvalidParameterException(message);
+        }
+
+        return accountNameToSet;
     }
 
     @Override
