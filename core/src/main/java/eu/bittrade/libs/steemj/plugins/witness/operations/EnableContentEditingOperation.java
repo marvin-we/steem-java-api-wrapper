@@ -2,6 +2,7 @@ package eu.bittrade.libs.steemj.plugins.witness.operations;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
@@ -20,8 +21,11 @@ public class EnableContentEditingOperation extends CustomJsonOperationPayload {
     @JsonProperty("relock_time")
     private TimePointSec relockTime;
 
-    public EnableContentEditingOperation() {
-
+    @JsonCreator
+    public EnableContentEditingOperation(@JsonProperty("account") AccountName account,
+            @JsonProperty("relock_time") TimePointSec relockTime) {
+        this.setAccount(account);
+        this.setRelockTime(relockTime);
     }
 
     /**
@@ -64,5 +68,4 @@ public class EnableContentEditingOperation extends CustomJsonOperationPayload {
         // TODO Auto-generated method stub
 
     }
-
 }
