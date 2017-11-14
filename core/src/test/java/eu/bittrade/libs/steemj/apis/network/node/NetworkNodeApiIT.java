@@ -47,7 +47,7 @@ public class NetworkNodeApiIT extends BaseIT {
     @Category({ IntegrationTest.class })
     @Ignore
     @Test
-    public void testLogin() throws SteemCommunicationException, SteemResponseException {
+    public void testGetInfo() throws SteemCommunicationException, SteemResponseException {
         NetworkNodeApi.getInfo(COMMUNICATION_HANDLER);
     }
 }
