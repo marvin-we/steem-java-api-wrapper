@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.plugins.witness.operations;
+package eu.bittrade.libs.steemj.plugins.witness.model.operations;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
