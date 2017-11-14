@@ -6,6 +6,7 @@ import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
@@ -20,12 +21,22 @@ public class NetworkBroadcastApi {
     }
 
     /**
-     * Broadcast a transaction on the Steem blockchain.
+     * Broadcast a transaction on the Steem blockchain. This method will
+     * validate the transaction and return immediately. Please notice that this
+     * does not mean that the operation has been accepted and has been
+     * processed. If you want to make sure that this is the case use the
+     * {@link #broadcastTransactionSynchronous(CommunicationHandler, SignedTransaction)}
+     * or the
+     * {@link #broadcastTransactionWithCallback(CommunicationHandler, SignedTransaction)}
+     * method.
      * 
      * @param communicationHandler
-     * 
+     *            A
+     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
+     *            CommunicationHandler} instance that should be used to send the
+     *            request.
      * @param transaction
-     *            A transaction object that has been signed.
+     *            The {@link SignedTransaction} object to broadcast.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -40,14 +51,19 @@ public class NetworkBroadcastApi {
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             In case the provided transaction is not valid.
      */
-    public void broadcastTransaction(CommunicationHandler communicationHandler, SignedTransaction transaction)
-            throws SteemCommunicationException, SteemResponseException {
+    public static void broadcastTransaction(CommunicationHandler communicationHandler, SignedTransaction transaction)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
         requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
 
-        // TODO: transaction.sign();
+        if (transaction.getSignatures() == null || transaction.getSignatures().isEmpty()) {
+            transaction.sign();
+        }
+
         Object[] parameters = { transaction };
         requestObject.setAdditionalParameters(parameters);
 
@@ -57,8 +73,21 @@ public class NetworkBroadcastApi {
     /**
      * 
      */
-    public void broadcastTransactionWithCallback() {
+    public static void broadcastTransactionWithCallback(CommunicationHandler communicationHandler,
+            SignedTransaction transaction)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_WITH_CALLBACK);
+        requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
 
+        if (transaction.getSignatures() == null || transaction.getSignatures().isEmpty()) {
+            transaction.sign();
+        }
+
+        Object[] parameters = { 123, transaction };
+        requestObject.setAdditionalParameters(parameters);
+
+        communicationHandler.performRequest(requestObject, Object.class);
     }
 
     /**
@@ -67,12 +96,21 @@ public class NetworkBroadcastApi {
      * @return Nothing
      * @throws SteemCommunicationException
      */
-    public Boolean broadcastTransactionSynchronous(SignedTransaction transaction) throws SteemCommunicationException {
+    public static Boolean broadcastTransactionSynchronous(CommunicationHandler communicationHandler,
+            SignedTransaction transaction)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
         requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
+
+        if (transaction.getSignatures() == null || transaction.getSignatures().isEmpty()) {
+            transaction.sign();
+        }
+
         Object[] parameters = { transaction };
         requestObject.setAdditionalParameters(parameters);
+
+        communicationHandler.performRequest(requestObject, Object.class);
 
         return null;
     }
