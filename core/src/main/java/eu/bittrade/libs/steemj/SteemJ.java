@@ -76,6 +76,7 @@ import eu.bittrade.libs.steemj.base.models.operations.ClaimRewardBalanceOperatio
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.base.models.operations.DelegateVestingSharesOperation;
 import eu.bittrade.libs.steemj.base.models.operations.DeleteCommentOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.TransferOperation;
@@ -3834,5 +3835,88 @@ public class SteemJ {
         }
 
         return claimOperation;
+    }
+
+    /**
+     * Use this method to delegate Steem Power (Vesting Shares) from the default
+     * account to the <code>delegatee</code> account. The vesting shares are
+     * still owned by the original account, but content voting rights and
+     * bandwidth allocation are transferred to the receiving account. This sets
+     * the delegation to `vesting_shares`, increasing it or decreasing it as
+     * needed. (i.e. a delegation of 0 removes the delegation) When a delegation
+     * is removed the shares are placed in limbo for a week to prevent a satoshi
+     * of VESTS from voting on the same content twice.
+     * 
+     * @param delegatee
+     *            The account that the vesting shares are delegated to.
+     * @param vestingShares
+     *            The amount of vesting shares.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     */
+    public void delegateVestingShares(AccountName delegatee, Asset vestingShares)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        }
+
+        delegateVestingShares(SteemJConfig.getInstance().getDefaultAccount(), delegatee, vestingShares);
+    }
+
+    /**
+     * This method is like the
+     * {@link #delegateVestingShares(AccountName, AccountName, Asset)} method,
+     * but allows you to define the author account separately instead of using
+     * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+     * 
+     * @param delegator
+     *            The account that will delegate the vesting shares.
+     * @param delegatee
+     *            The account that the vesting shares are delegated to.
+     * @param vestingShares
+     *            The amount of vesting shares.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     */
+    public void delegateVestingShares(AccountName delegator, AccountName delegatee, Asset vestingShares)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        DelegateVestingSharesOperation delegateVestingSharesOperation = new DelegateVestingSharesOperation(delegator,
+                delegatee, vestingShares);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(delegateVestingSharesOperation);
+        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+        signedTransaction.sign();
+        this.broadcastTransaction(signedTransaction);
     }
 }
