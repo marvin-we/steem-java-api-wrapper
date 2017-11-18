@@ -3685,6 +3685,8 @@ public class SteemJ {
      * @param assetType
      *            Asset type, see
      *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType}.
+     * @param amount
+     *            The amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
      * @return The TransferOperation broadcast.
