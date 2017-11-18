@@ -86,10 +86,7 @@ public class ProveAuthorityOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setChallenged(AccountName challenged) {
-        if (challenged == null) {
-            throw new InvalidParameterException("An account name needs to be provided.");
-        }
-        this.challenged = challenged;
+        this.challenged = setIfNotNull(challenged, "An account name needs to be provided.");
     }
 
     /**
@@ -116,7 +113,7 @@ public class ProveAuthorityOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedProveAuthorityOperation = new ByteArrayOutputStream()) {
             serializedProveAuthorityOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.PROVE_AUTHORITY_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.PROVE_AUTHORITY_OPERATION.getOrderId()));
             serializedProveAuthorityOperation.write(this.getChallenged().toByteArray());
             serializedProveAuthorityOperation.write(SteemJUtils.transformBooleanToByteArray(this.getRequireOwner()));
 

@@ -9,9 +9,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
  * Verify the functionality of the "prove authority operation" under the use of
@@ -19,7 +21,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest {
+public class ProveAuthorityOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcefc8045702170764657a3133333700170764657a313333370100"
             + "011c4c882be373ff6a4a3d06bd0da932b981ac46bfc4bde38284943dc2685cc2c00a5e8196f22c5b5704cf4fd963cd3a12347306bf9ea"
             + "76e23f99c06ab74c3b8fe51";
@@ -38,7 +40,8 @@ public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest 
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         AccountName challengedAccount = new AccountName("dez1337");
 
@@ -51,9 +54,9 @@ public class ProveAuthorityOperationIT extends BaseTransactionalIntegrationTest 
         operations.add(proveAuthorityOperationWithActiveKey);
         operations.add(proveAuthorityOperationWithOwnerKey);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

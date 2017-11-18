@@ -96,11 +96,7 @@ public class ConvertOperation extends Operation {
      *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
-        if (owner == null) {
-            throw new InvalidParameterException("The owner can't be null.");
-        }
-
-        this.owner = owner;
+        this.owner = setIfNotNull(owner, "The owner can't be null.");
     }
 
     /**
@@ -141,18 +137,14 @@ public class ConvertOperation extends Operation {
      *             is not SBD or the amount is less than 1.
      */
     public void setAmount(Asset amount) {
-        if (amount == null) {
-            throw new InvalidParameterException("The amount to convert can't be null.");
-        }
-
-        this.amount = amount;
+        this.amount = setIfNotNull(amount, "The amount to convert can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedConvertOperation = new ByteArrayOutputStream()) {
             serializedConvertOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CONVERT_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CONVERT_OPERATION.getOrderId()));
             serializedConvertOperation.write(this.getOwner().toByteArray());
             serializedConvertOperation.write(SteemJUtils.transformIntToByteArray((int) this.getRequestId()));
             serializedConvertOperation.write(this.getAmount().toByteArray());

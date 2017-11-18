@@ -11,10 +11,12 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.BaseTransactionalUT;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -23,7 +25,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class FeedPublishOperationTest extends BaseTransactionalUnitTest {
+public class FeedPublishOperationTest extends BaseTransactionalUT {
     final String EXPECTED_BYTE_REPRESENTATION = "070764657a3133333773000000000000000353424400000000"
             + "640000000000000003535445454d0000";
     final String EXPECTED_TRANSACTION_HASH = "9d822ed47ef4f4be6dd337618228a8d225f0a12959769463af1fccc4df70aeb3";
@@ -58,7 +60,9 @@ public class FeedPublishOperationTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(feedPublishOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Override
@@ -72,8 +76,6 @@ public class FeedPublishOperationTest extends BaseTransactionalUnitTest {
     @Test
     public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        sign();
-
         assertThat("The serialized transaction should look like expected.",
                 Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",

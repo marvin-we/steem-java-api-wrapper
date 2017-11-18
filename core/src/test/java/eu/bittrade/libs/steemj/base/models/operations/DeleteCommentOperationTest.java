@@ -11,9 +11,11 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.BaseTransactionalUT;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -21,7 +23,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class DeleteCommentOperationTest extends BaseTransactionalUnitTest {
+public class DeleteCommentOperationTest extends BaseTransactionalUT {
     final String EXPECTED_BYTE_REPRESENTATION = "1107666f6f626172630a72652d666f6f62617264";
     final String EXPECTED_TRANSACTION_HASH = "44bf9b3ec6aa4430ee7d9da3baf9e4d276758fca7fcef00ad433559d4f54155a";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000000"
@@ -47,7 +49,8 @@ public class DeleteCommentOperationTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(deleteCommentOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
     }
 
     @Override
@@ -61,7 +64,7 @@ public class DeleteCommentOperationTest extends BaseTransactionalUnitTest {
     @Test
     public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        sign();
+        signedTransaction.sign();
 
         assertThat("The serialized transaction should look like expected.",
                 Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));

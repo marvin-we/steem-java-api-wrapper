@@ -143,11 +143,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      *             If the <code>who</code> is null.
      */
     public void setWho(AccountName who) {
-        if (who == null) {
-            throw new InvalidParameterException("The who account can't be null.");
-        }
-
-        this.who = who;
+        this.who = setIfNotNull(who, "The who account can't be null.");
     }
 
     /**
@@ -174,8 +170,8 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedEscrowApproveOperation = new ByteArrayOutputStream()) {
-            serializedEscrowApproveOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_APPROVE_OPERATION.ordinal()));
+            serializedEscrowApproveOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_APPROVE_OPERATION.getOrderId()));
             serializedEscrowApproveOperation.write(this.getFrom().toByteArray());
             serializedEscrowApproveOperation.write(this.getTo().toByteArray());
             serializedEscrowApproveOperation.write(this.getAgent().toByteArray());

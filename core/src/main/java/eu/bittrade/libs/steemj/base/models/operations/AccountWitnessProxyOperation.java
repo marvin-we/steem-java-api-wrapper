@@ -71,11 +71,7 @@ public class AccountWitnessProxyOperation extends Operation {
      *             been configured as the proxy.
      */
     public void setAccount(AccountName account) {
-        if (account == null) {
-            throw new InvalidParameterException("The account can't be null.");
-        }
-
-        this.account = account;
+        this.account = setIfNotNull(account, "The account can't be null.");
     }
 
     /**
@@ -108,8 +104,8 @@ public class AccountWitnessProxyOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAccountWitnessProxyOperation = new ByteArrayOutputStream()) {
-            serializedAccountWitnessProxyOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_WITNESS_PROXY_OPERATION.ordinal()));
+            serializedAccountWitnessProxyOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.ACCOUNT_WITNESS_PROXY_OPERATION.getOrderId()));
             serializedAccountWitnessProxyOperation.write(this.getAccount().toByteArray());
             serializedAccountWitnessProxyOperation.write(this.getProxy().toByteArray());
 

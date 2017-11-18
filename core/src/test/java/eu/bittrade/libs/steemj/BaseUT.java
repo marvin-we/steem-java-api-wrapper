@@ -12,7 +12,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public abstract class BaseUnitTest extends BaseTest {
+public abstract class BaseUT extends BaseTest {
     protected static SteemJConfig config;
 
     protected static final String PRIVATE_POSTING_KEY = "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3";

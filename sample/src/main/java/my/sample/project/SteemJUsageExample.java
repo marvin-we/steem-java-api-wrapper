@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.AccountVote;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.Vote;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
@@ -133,7 +133,7 @@ public class SteemJUsageExample {
                     steemJ.getCurrentMedianHistoryPrice().getBase().getAmount());
 
             // Get votes
-            List<Vote> votes = steemJ.getAccountVotes(new AccountName("dez1337"));
+            List<AccountVote> votes = steemJ.getAccountVotes(new AccountName("dez1337"));
             LOGGER.info("The user dez1337 has done {} votes so far.", votes.size());
             LOGGER.info("His last vote has been done on {}.", votes.get(votes.size() - 1).getTime());
             int numberOfAccounts = steemJ.getAccountCount();

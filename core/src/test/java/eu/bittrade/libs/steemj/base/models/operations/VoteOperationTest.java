@@ -11,9 +11,11 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.BaseTransactionalUT;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -21,7 +23,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class VoteOperationTest extends BaseTransactionalUnitTest {
+public class VoteOperationTest extends BaseTransactionalUT {
     final String EXPECTED_BYTE_REPRESENTATION = "000764657a313333370764657a3133333728737465656d6a2d76302d322d342"
             + "d6861732d6265656e2d72656c65617365642d7570646174652d39e803";
     final String EXPECTED_TRANSACTION_HASH = "2c8d2c29eb0ee309df9de900fc65b68f9492a5f54f6c6a6f7a94360e585d5348";
@@ -51,7 +53,9 @@ public class VoteOperationTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Override
@@ -65,9 +69,6 @@ public class VoteOperationTest extends BaseTransactionalUnitTest {
     @Test
     public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        // Sign the transaction.
-        sign();
-
         assertThat("The serialized transaction should look like expected.",
                 Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",

@@ -10,12 +10,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
@@ -25,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class WitnessUpdateOperationIT extends BaseTransactionalIntegrationTest {
+public class WitnessUpdateOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcebc80457010b0764657a313333371c68747470733a2f2f737465656d69742e636f6d2f4064657a31333"
             + "33702e5127bd7d41f01d9981a5a2c2524a60706040bbec8838a39719550ea25071000881300000000000003535445454d0000000001000000010000000000000003535445454"
             + "d000000011c2125f9ad6d2a0a9b5f75ee042f71d44029f361df17be8da017f784b75ebe33152404af3e11c1e2ed853e0e85a58fc9cea4cc9f2d17803766edd5d917a9b21081";
@@ -45,7 +47,8 @@ public class WitnessUpdateOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         PublicKey blockSigningKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
                 + "6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb");
@@ -73,9 +76,10 @@ public class WitnessUpdateOperationIT extends BaseTransactionalIntegrationTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(witnessUpdateOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
 
-        sign();
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

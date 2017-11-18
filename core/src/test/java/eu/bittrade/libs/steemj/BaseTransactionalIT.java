@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -14,13 +14,13 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
-import eu.bittrade.libs.steemj.BaseIT;
-import eu.bittrade.libs.steemj.SteemJ;
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.HttpClientRequestInitializer;
 import eu.bittrade.libs.steemj.enums.AddressPrefixType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public abstract class BaseTransactionalIntegrationTest extends BaseIT {
+public abstract class BaseTransactionalIT extends BaseIT {
     // Test settings can be set as -D Parameters in the argline of the failsave
     // plugin.
     protected static final String MODE_FIELD_NAME = "steemj.test.mode";
@@ -44,24 +44,29 @@ public abstract class BaseTransactionalIntegrationTest extends BaseIT {
     protected static final AccountName DEZ_ACCOUNT_NAME = new AccountName("dez1337");
     protected static final String STEEMJ_PASSWORD = "P8N6sHEJu438dj4dwY9jx9c8deeKpPA6XWCr9aTC5SQ7MiCjMUm";
     protected static final String DEZ_PASSWORD = "P63u9CtiWtWMRU8k4m63Ahek7qRwPJpvwqAjNiQw7ZmDN1AQEen";
-    //
-    protected static String TEST_MODE = System.getProperty(MODE_FIELD_NAME, HTTP_MODE_IDENTIFIER);
-    protected static String TEST_ENDPOINT = System.getProperty(ENDPOINT_FIELD_NAME, TESTNET_ENDPOINT_IDENTIFIER);
+    // Allow to configure the mode and the endpoint as -D parameters during test
+    // execution.
+    protected static String TEST_MODE = System.getProperty(MODE_FIELD_NAME, null);
+    protected static String TEST_ENDPOINT = System.getProperty(ENDPOINT_FIELD_NAME, null);
 
     protected static SignedTransaction signedTransaction;
 
     /**
      * Setup the test environment for transaction related tests.
      */
-    protected static void setupIntegrationTestEnvironmentForTransactionalTests() {
+    protected static void setupIntegrationTestEnvironmentForTransactionalTests(String mode, String endpoint) {
         setupIntegrationTestEnvironment();
 
-        signedTransaction = new SignedTransaction();
-        signedTransaction.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
-        signedTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        signedTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // Add extensions when supported.
-        // signedTransaction.setExtensions(extensions);
+        if (TEST_ENDPOINT == null) {
+            TEST_ENDPOINT = endpoint;
+        }
+        if (TEST_MODE == null) {
+            TEST_MODE = mode;
+        }
+
+        // The expiration date used for tests is way to old in general -
+        // Therefore the validation needs to be disabled.
+        config.setValidationLevel(ValidationType.SKIP_VALIDATION);
 
         try {
             if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {
@@ -173,31 +178,4 @@ public abstract class BaseTransactionalIntegrationTest extends BaseIT {
             }
         }
     }
-
-    /**
-     * This is a workaround as the sign method is not visible in sub packages.
-     * 
-     * @throws SteemInvalidTransactionException
-     *             If something went wrong.
-     */
-    protected static void sign() throws SteemInvalidTransactionException {
-        signedTransaction.sign(true);
-    }
-
-    /**
-     * Verify that a transaction is signed correctly by using the verify
-     * transaction method of a Steem Node.
-     * 
-     * @throws Exception
-     *             If something went wrong.
-     */
-    public abstract void verifyTransaction() throws Exception;
-
-    /**
-     * Verify that a transaction has the expected byte representation.
-     * 
-     * @throws Exception
-     *             If something went wrong.
-     */
-    public abstract void getTransactionHex() throws Exception;
 }

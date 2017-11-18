@@ -84,11 +84,7 @@ public class SetResetAccountOperation extends Operation {
      *             If no account has been provided.
      */
     public void setAccount(AccountName account) {
-        if (account == null) {
-            throw new InvalidParameterException("The account can't be null.");
-        }
-
-        this.account = account;
+        this.account = setIfNotNull(account, "The account can't be null.");
     }
 
     /**
@@ -149,7 +145,7 @@ public class SetResetAccountOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedSetResetAccountOperation = new ByteArrayOutputStream()) {
             serializedSetResetAccountOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.SET_RESET_ACCOUNT_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.SET_RESET_ACCOUNT_OPERATION.getOrderId()));
             serializedSetResetAccountOperation.write(this.getAccount().toByteArray());
             if (this.getCurrentResetAccount() != null) {
                 serializedSetResetAccountOperation.write(this.getCurrentResetAccount().toByteArray());

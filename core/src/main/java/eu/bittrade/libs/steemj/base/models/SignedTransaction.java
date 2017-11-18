@@ -20,13 +20,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.annotations.VisibleForTesting;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
@@ -107,17 +107,6 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     }
 
     /**
-     * <b>This method is only used by JUnit-Tests</b>
-     * 
-     * Create a new signed transaction object.
-     */
-    @VisibleForTesting
-    protected SignedTransaction() {
-        super();
-        this.signatures = new ArrayList<>();
-    }
-
-    /**
      * Get the signatures for this transaction.
      * 
      * @return An array of currently appended signatures.
@@ -145,34 +134,20 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
 
     /**
      *
-     * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
-     * id.
-     *
-     * @param skipValidation
-     *            Define if the validation should be skipped or not.
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
-     */
-    @VisibleForTesting
-    protected void sign(boolean skipValidation) throws SteemInvalidTransactionException {
-        sign(SteemJConfig.getInstance().getChainId(), skipValidation);
-    }
-
-    /**
-     *
-     * Like {@link #sign(String) sign(String)}, but uses the default Steem chain
-     * id.
+     * Like {@link #sign(String) sign(String)}, but uses the
+     * {@link SteemJConfig#getChainId() default chain id}.
      *
      * @throws SteemInvalidTransactionException
      *             If the transaction can not be signed.
      */
     public void sign() throws SteemInvalidTransactionException {
-        sign(SteemJConfig.getInstance().getChainId(), false);
+        sign(SteemJConfig.getInstance().getChainId());
     }
 
     /**
      * Use this method if you want to specify a different chainId than the
-     * default one for STEEM. Otherwise use the {@link #sign() sign()} method.
+     * {@link SteemJConfig#getChainId() default one}. Otherwise use the
+     * {@link #sign() sign()} method.
      * 
      * @param chainId
      *            The chain id that should be used during signing.
@@ -180,22 +155,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *             If the transaction can not be signed.
      */
     public void sign(String chainId) throws SteemInvalidTransactionException {
-        sign(chainId, false);
-    }
-
-    /**
-     * Use this method if you want to specify a different chainId than the
-     * default one for STEEM. Otherwise use the {@link #sign() sign()} method.
-     * 
-     * @param chainId
-     *            The chain id that should be used during signing.
-     * @param skipValidation
-     *            Define if the validation should be skipped or not.
-     * @throws SteemInvalidTransactionException
-     *             If the transaction can not be signed.
-     */
-    protected void sign(String chainId, boolean skipValidation) throws SteemInvalidTransactionException {
-        if (!skipValidation) {
+        if (!SteemJConfig.getInstance().getValidationLevel().equals(ValidationType.SKIP_VALIDATION)) {
             this.validate();
         }
 

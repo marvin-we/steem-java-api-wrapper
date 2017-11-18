@@ -140,11 +140,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the owner is null.
      */
     public void setOwner(AccountName owner) {
-        if (owner == null) {
-            throw new InvalidParameterException("The owner can't be null.");
-        }
-
-        this.owner = owner;
+        this.owner = setIfNotNull(owner, "The owner can't be null.");
     }
 
     /**
@@ -168,11 +164,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the url is null or empty.
      */
     public void setUrl(URL url) {
-        if (url == null || url.toString().isEmpty()) {
-            throw new InvalidParameterException("You need to provide a URL.");
-        }
-
-        this.url = url;
+        this.url = setIfNotNull(url, "You need to provide a URL.");
     }
 
     /**
@@ -194,10 +186,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the blockSigningKey is null.
      */
     public void setBlockSigningKey(PublicKey blockSigningKey) {
-        if (blockSigningKey == null) {
-            throw new InvalidParameterException("You need to provide a block signing key.");
-        }
-        this.blockSigningKey = blockSigningKey;
+        this.blockSigningKey = setIfNotNull(blockSigningKey, "You need to provide a block signing key.");
     }
 
     /**
@@ -218,10 +207,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the properties are null.
      */
     public void setProperties(ChainProperties properties) {
-        if (properties == null) {
-            throw new InvalidParameterException("You need to provide the blockchain properties.");
-        }
-        this.properties = properties;
+        this.properties = setIfNotNull(properties, "You need to provide the blockchain properties.");
     }
 
     /**
@@ -244,17 +230,14 @@ public class WitnessUpdateOperation extends Operation {
      *             If the provided asset object is null.
      */
     public void setFee(Asset fee) {
-        if (fee == null) {
-            throw new InvalidParameterException("The fee can't be null.");
-        }
-        this.fee = fee;
+        this.fee = setIfNotNull(fee, "The fee can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedWitnessUpdateOperation = new ByteArrayOutputStream()) {
-            serializedWitnessUpdateOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.WITNESS_UPDATE_OPERATION.ordinal()));
+            serializedWitnessUpdateOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.WITNESS_UPDATE_OPERATION.getOrderId()));
             serializedWitnessUpdateOperation.write(this.getOwner().toByteArray());
             serializedWitnessUpdateOperation
                     .write(SteemJUtils.transformStringToVarIntByteArray(this.getUrl().toString()));

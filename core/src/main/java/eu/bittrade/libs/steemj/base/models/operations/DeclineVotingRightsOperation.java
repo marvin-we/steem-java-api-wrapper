@@ -69,10 +69,7 @@ public class DeclineVotingRightsOperation extends Operation {
      *             If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
-        if (account == null) {
-            throw new InvalidParameterException("The account can't be null.");
-        }
-        this.account = account;
+        this.account = setIfNotNull(account, "The account can't be null.");
     }
 
     /**
@@ -105,8 +102,8 @@ public class DeclineVotingRightsOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedDeclineVotingRightsOperation = new ByteArrayOutputStream()) {
-            serializedDeclineVotingRightsOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.DECLINE_VOTING_RIGHTS_OPERATION.ordinal()));
+            serializedDeclineVotingRightsOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.DECLINE_VOTING_RIGHTS_OPERATION.getOrderId()));
             serializedDeclineVotingRightsOperation.write(this.getAccount().toByteArray());
             serializedDeclineVotingRightsOperation.write(SteemJUtils.transformBooleanToByteArray(this.getDecline()));
 

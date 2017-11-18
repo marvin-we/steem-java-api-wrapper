@@ -98,11 +98,7 @@ public class AccountWitnessVoteOperation extends Operation {
      *             If the <code>account</code> account is null
      */
     public void setAccount(AccountName account) {
-        if (account == null) {
-            throw new InvalidParameterException("The witness acccount can't be null.");
-        }
-
-        this.account = account;
+        this.account = setIfNotNull(account, "The witness acccount can't be null.");
     }
 
     /**
@@ -123,11 +119,7 @@ public class AccountWitnessVoteOperation extends Operation {
      *             If the <code>witness</code> account is null
      */
     public void setWitness(AccountName witness) {
-        if (witness == null) {
-            throw new InvalidParameterException("The witness acccount can't be null.");
-        }
-
-        this.witness = witness;
+        this.witness = setIfNotNull(witness, "The witness acccount can't be null.");
     }
 
     /**
@@ -152,8 +144,8 @@ public class AccountWitnessVoteOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAccountWitnessVoteOperation = new ByteArrayOutputStream()) {
-            serializedAccountWitnessVoteOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_WITNESS_VOTE_OPERATION.ordinal()));
+            serializedAccountWitnessVoteOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.ACCOUNT_WITNESS_VOTE_OPERATION.getOrderId()));
             serializedAccountWitnessVoteOperation.write(this.getAccount().toByteArray());
             serializedAccountWitnessVoteOperation.write(this.getWitness().toByteArray());
             serializedAccountWitnessVoteOperation.write(SteemJUtils.transformBooleanToByteArray(this.getApprove()));

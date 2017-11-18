@@ -96,11 +96,7 @@ public class CancelTransferFromSavingsOperation extends Operation {
      *             If the from account is null.
      */
     public void setFrom(AccountName from) {
-        if (from == null) {
-            throw new InvalidParameterException("The from acccount can't be null.");
-        }
-
-        this.from = from;
+        this.from = setIfNotNull(from, "The from acccount can't be null.");
     }
 
     /**
@@ -130,7 +126,7 @@ public class CancelTransferFromSavingsOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCancelTransferFromSavingsOperation = new ByteArrayOutputStream()) {
             serializedCancelTransferFromSavingsOperation.write(SteemJUtils
-                    .transformIntToVarIntByteArray(OperationType.CANCEL_TRANSFER_FROM_SAVINGS_OPERATION.ordinal()));
+                    .transformIntToVarIntByteArray(OperationType.CANCEL_TRANSFER_FROM_SAVINGS_OPERATION.getOrderId()));
             serializedCancelTransferFromSavingsOperation.write(this.getFrom().toByteArray());
             serializedCancelTransferFromSavingsOperation
                     .write(SteemJUtils.transformIntToByteArray(this.getRequestId()));

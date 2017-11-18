@@ -11,8 +11,9 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.BaseTransactionalUT;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalUnitTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -21,7 +22,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CustomOperationTest extends BaseTransactionalUnitTest {
+public class CustomOperationTest extends BaseTransactionalUT {
     final String EXPECTED_BYTE_REPRESENTATION = "0f0107666f6f62617263d8101154657374466f72537465656d4a31323321";
     final String EXPECTED_TRANSACTION_HASH = "3b7a65aa65284bb63e090c18327d0b834b7446591433e0abece744e420cc03ae";
     final String EXPECTED_TRANSACTION_SERIALIZATION = "0000000000000000000000000000000000000000000000000000000"
@@ -52,7 +53,9 @@ public class CustomOperationTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Override
@@ -66,8 +69,6 @@ public class CustomOperationTest extends BaseTransactionalUnitTest {
     @Test
     public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
-        sign();
-
         assertThat("The serialized transaction should look like expected.",
                 Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",

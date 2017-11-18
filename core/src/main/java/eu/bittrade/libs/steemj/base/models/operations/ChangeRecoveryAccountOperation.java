@@ -114,11 +114,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
      *             If the <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
-        if (accountToRecover == null) {
-            throw new InvalidParameterException("The account to recover can't be null.");
-        }
-
-        this.accountToRecover = accountToRecover;
+        this.accountToRecover = setIfNotNull(accountToRecover, "The account to recover can't be null.");
     }
 
     /**
@@ -143,11 +139,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
      *             If the <code>newRecoveryAccount</code> is null.
      */
     public void setNewRecoveryAccount(AccountName newRecoveryAccount) {
-        if (newRecoveryAccount == null) {
-            throw new InvalidParameterException("The new recovery account can't be null.");
-        }
-
-        this.newRecoveryAccount = newRecoveryAccount;
+        this.newRecoveryAccount = setIfNotNull(newRecoveryAccount, "The new recovery account can't be null.");
     }
 
     /**
@@ -177,7 +169,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedChangeRecoveryAccountOperation = new ByteArrayOutputStream()) {
             serializedChangeRecoveryAccountOperation.write(SteemJUtils
-                    .transformIntToVarIntByteArray(OperationType.CHANGE_RECOVERY_ACCOUNT_OPERATION.ordinal()));
+                    .transformIntToVarIntByteArray(OperationType.CHANGE_RECOVERY_ACCOUNT_OPERATION.getOrderId()));
             serializedChangeRecoveryAccountOperation.write(this.getAccountToRecover().toByteArray());
             serializedChangeRecoveryAccountOperation.write(this.getNewRecoveryAccount().toByteArray());
 

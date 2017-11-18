@@ -87,11 +87,7 @@ public class DelegateVestingSharesOperation extends Operation {
      *             {@link #getDelegatee()} account.
      */
     public void setDelegator(AccountName delegator) {
-        if (delegator == null) {
-            throw new InvalidParameterException("The delegatee account can't be null.");
-        }
-
-        this.delegator = delegator;
+        this.delegator = setIfNotNull(delegator, "The delegatee account can't be null.");
     }
 
     /**
@@ -113,11 +109,7 @@ public class DelegateVestingSharesOperation extends Operation {
      *             {@link #getDelegator()} account.
      */
     public void setDelegatee(AccountName delegatee) {
-        if (delegatee == null) {
-            throw new InvalidParameterException("The delegatee account can't be null.");
-        }
-
-        this.delegatee = delegatee;
+        this.delegatee = setIfNotNull(delegatee, "The delegatee account can't be null.");
     }
 
     /**
@@ -139,18 +131,14 @@ public class DelegateVestingSharesOperation extends Operation {
      *             symbol is not VESTS or the amount is negative.
      */
     public void setVestingShares(Asset vestingShares) {
-        if (vestingShares == null) {
-            throw new InvalidParameterException("The vesting shares to delegate can't be null.");
-        }
-
-        this.vestingShares = vestingShares;
+        this.vestingShares = setIfNotNull(vestingShares, "The vesting shares to delegate can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedDelegateVestingSharesOperation = new ByteArrayOutputStream()) {
             serializedDelegateVestingSharesOperation.write(SteemJUtils
-                    .transformIntToVarIntByteArray(OperationType.DELEGATE_VESTING_SHARES_OPERATION.ordinal()));
+                    .transformIntToVarIntByteArray(OperationType.DELEGATE_VESTING_SHARES_OPERATION.getOrderId()));
             serializedDelegateVestingSharesOperation.write(this.getDelegator().toByteArray());
             serializedDelegateVestingSharesOperation.write(this.getDelegatee().toByteArray());
             serializedDelegateVestingSharesOperation.write(this.getVestingShares().toByteArray());

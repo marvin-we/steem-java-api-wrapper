@@ -10,10 +10,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
@@ -23,7 +24,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTest {
+public class LimitOrderCreateOperationIT extends BaseTransactionVerificationIT {
 
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c8045701050764657a31333337c3850"
             + "700010000000000000003534244000000000a0000000000000003535445454d000000e7c8045700011b69776cf"
@@ -45,7 +46,8 @@ public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTes
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         Asset amountToSell = new Asset();
         amountToSell.setAmount(1L);
@@ -67,9 +69,9 @@ public class LimitOrderCreateOperationIT extends BaseTransactionalIntegrationTes
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(limitOrderCreateOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

@@ -4,8 +4,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 
 /**
  * Verify the functionality of the "pow operation" under the use of real api
@@ -13,7 +13,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class PowOperationIT extends BaseTransactionalIntegrationTest {
+public class PowOperationIT extends BaseTransactionVerificationIT {
     /**
      * <b>Attention:</b> This test class requires a valid posting key of the
      * used "voter". If no posting key is provided or the posting key is not
@@ -25,7 +25,8 @@ public class PowOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
     }
 
     @Category({ IntegrationTest.class })

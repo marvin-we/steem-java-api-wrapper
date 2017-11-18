@@ -9,10 +9,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
@@ -22,7 +23,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class EscrowTransferOperationIT extends BaseTransactionalIntegrationTest {
+public class EscrowTransferOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "0";
     private static final String EXPECTED_TRANSACTION_HEX_TESTNET = "";
 
@@ -37,7 +38,8 @@ public class EscrowTransferOperationIT extends BaseTransactionalIntegrationTest 
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         AccountName agent = new AccountName("steemj");
         AccountName from = new AccountName("dez1337");
@@ -65,9 +67,9 @@ public class EscrowTransferOperationIT extends BaseTransactionalIntegrationTest 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(escrowTransferOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

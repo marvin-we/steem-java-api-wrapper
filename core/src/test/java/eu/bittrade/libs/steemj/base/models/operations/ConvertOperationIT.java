@@ -9,10 +9,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
 /**
@@ -21,7 +23,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class ConvertOperationIT extends BaseTransactionalIntegrationTest {
+public class ConvertOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dceec8045701080764657a31333337390500"
             + "000100000000000000035342440000000000011b39df7757e8d202e850d45ac9f7de49cce804ed0cb3ace0cbe87"
             + "f34e9be7ee33f4f50c4212e551983a29f6f4827b96432a253400ecef29e468c1b31e33c559f2d";
@@ -40,7 +42,8 @@ public class ConvertOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         AccountName owner = new AccountName("dez1337");
         long requestId = 1337L;
@@ -54,9 +57,9 @@ public class ConvertOperationIT extends BaseTransactionalIntegrationTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(convertOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

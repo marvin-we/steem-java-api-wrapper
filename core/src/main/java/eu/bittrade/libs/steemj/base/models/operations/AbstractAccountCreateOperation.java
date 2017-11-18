@@ -61,11 +61,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      *             than 0.
      */
     public void setFee(Asset fee) {
-        if (fee == null) {
-            throw new InvalidParameterException("The fee can't be null.");
-        }
-
-        this.fee = fee;
+        this.fee = setIfNotNull(fee, "The fee can't be null.");
     }
 
     /**
@@ -87,11 +83,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      *             If the <code>creator</code> is null.
      */
     public void setCreator(AccountName creator) {
-        if (creator == null) {
-            throw new InvalidParameterException("The creator can't be null.");
-        }
-
-        this.creator = creator;
+        this.creator = setIfNotNull(creator, "The creator can't be null.");
     }
 
     /**
@@ -112,11 +104,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      *             If the <code>newAccountName</code> is null.
      */
     public void setNewAccountName(AccountName newAccountName) {
-        if (newAccountName == null) {
-            throw new InvalidParameterException("The new account name can't be null.");
-        }
-
-        this.newAccountName = newAccountName;
+        this.newAccountName = setIfNotNull(newAccountName, "The new account name can't be null.");
     }
 
     /**
@@ -141,11 +129,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      */
     @Override
     public void setOwner(Authority owner) {
-        if (owner == null) {
-            throw new InvalidParameterException("The owner can't be null.");
-        }
-
-        this.owner = owner;
+        this.owner = setIfNotNull(owner, "The owner can't be null.");
     }
 
     /**
@@ -170,11 +154,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      */
     @Override
     public void setActive(Authority active) {
-        if (active == null) {
-            throw new InvalidParameterException("The active can't be null.");
-        }
-
-        this.active = active;
+        this.active = setIfNotNull(active, "The active can't be null.");
     }
 
     /**
@@ -199,11 +179,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      */
     @Override
     public void setPosting(Authority posting) {
-        if (posting == null) {
-            throw new InvalidParameterException("The posting can't be null.");
-        }
-
-        this.posting = posting;
+        this.posting = setIfNotNull(posting, "The posting can't be null.");
     }
 
     /**

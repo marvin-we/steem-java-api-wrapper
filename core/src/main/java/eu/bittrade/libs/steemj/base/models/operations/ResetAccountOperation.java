@@ -81,11 +81,7 @@ public class ResetAccountOperation extends Operation {
      *             If the <code>resetAccount</code> name is null.
      */
     public void setResetAccount(AccountName resetAccount) {
-        if (resetAccount == null) {
-            throw new InvalidParameterException("The reset account can't be null.");
-        }
-
-        this.resetAccount = resetAccount;
+        this.resetAccount = setIfNotNull(resetAccount, "The reset account can't be null.");
     }
 
     /**
@@ -106,10 +102,7 @@ public class ResetAccountOperation extends Operation {
      *             If the <code>accountToReset</code> is null.
      */
     public void setAccountToReset(AccountName accountToReset) {
-        if (accountToReset == null) {
-            throw new InvalidParameterException("The account to reset can't be null.");
-        }
-        this.accountToReset = accountToReset;
+        this.accountToReset = setIfNotNull(accountToReset, "The account to reset can't be null.");
     }
 
     /**
@@ -131,18 +124,14 @@ public class ResetAccountOperation extends Operation {
      *             trivial.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
-        if (newOwnerAuthority == null) {
-            throw new InvalidParameterException("The new owner authority can't be null.");
-        }
-
-        this.newOwnerAuthority = newOwnerAuthority;
+        this.newOwnerAuthority = setIfNotNull(newOwnerAuthority, "The new owner authority can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedResetAccountOperation = new ByteArrayOutputStream()) {
-            serializedResetAccountOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.RESET_ACCOUNT_OPERATION.ordinal()));
+            serializedResetAccountOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.RESET_ACCOUNT_OPERATION.getOrderId()));
             serializedResetAccountOperation.write(this.getResetAccount().toByteArray());
             serializedResetAccountOperation.write(this.getAccountToReset().toByteArray());
             serializedResetAccountOperation.write(this.getNewOwnerAuthority().toByteArray());

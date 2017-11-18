@@ -101,18 +101,14 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
      */
     @Override
     public void setAmount(Asset amount) {
-        if (amount == null) {
-            throw new InvalidParameterException("The amount can't be null.");
-        }
-
-        this.amount = amount;
+        this.amount = setIfNotNull(amount, "The amount can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedTransferToVestingOperation = new ByteArrayOutputStream()) {
-            serializedTransferToVestingOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.TRANSFER_TO_VESTING_OPERATION.ordinal()));
+            serializedTransferToVestingOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.TRANSFER_TO_VESTING_OPERATION.getOrderId()));
             serializedTransferToVestingOperation.write(this.getFrom().toByteArray());
             serializedTransferToVestingOperation.write(this.getTo().toByteArray());
             serializedTransferToVestingOperation.write(this.getAmount().toByteArray());

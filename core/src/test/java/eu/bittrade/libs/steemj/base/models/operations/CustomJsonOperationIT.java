@@ -10,13 +10,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
@@ -25,7 +26,7 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CustomJsonOperationIT extends BaseTransactionalIntegrationTest {
+public class CustomJsonOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dc67fce558041200010764657a3133333706666f6c6c6f77"
             + "465b22666f6c6c6f77222c7b22666f6c6c6f776572223a2264657a31333337222c22666f6c6c6f77696e67223a22737465656d6"
             + "a222c2277686174223a5b22626c6f67225d7d5d1200010764657a3133333706666f6c6c6f77425b22666f6c6c6f77222c7b2266"
@@ -58,7 +59,8 @@ public class CustomJsonOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         // If the default expiration date for all integration tests
         // (2016-04-06T08:29:27UTC) is used, the transaction can't be verified.
@@ -107,9 +109,9 @@ public class CustomJsonOperationIT extends BaseTransactionalIntegrationTest {
         operations.add(customJsonIgnoreOperation);
         operations.add(customJsonReblogOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

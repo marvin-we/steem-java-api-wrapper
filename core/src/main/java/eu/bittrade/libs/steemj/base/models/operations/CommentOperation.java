@@ -201,11 +201,7 @@ public class CommentOperation extends Operation {
      *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
-        if (author == null) {
-            throw new InvalidParameterException("The author can't be null.");
-        }
-
-        this.author = author;
+        this.author = setIfNotNull(author, "The author can't be null.");
     }
 
     /**
@@ -226,11 +222,7 @@ public class CommentOperation extends Operation {
      *             If the <code>permlink</code> is null.
      */
     public void setPermlink(Permlink permlink) {
-        if (permlink == null) {
-            throw new InvalidParameterException("The permlink can't be null.");
-        }
-
-        this.permlink = permlink;
+        this.permlink = setIfNotNull(permlink, "The permlink can't be null.");
     }
 
     /**
@@ -252,11 +244,7 @@ public class CommentOperation extends Operation {
      *             If the <code>parentPermlink</code> is null.
      */
     public void setParentPermlink(Permlink parentPermlink) {
-        if (parentPermlink == null) {
-            throw new InvalidParameterException("The permlink can't be null.");
-        }
-
-        this.parentPermlink = parentPermlink;
+        this.parentPermlink = setIfNotNull(parentPermlink, "The permlink can't be null.");
     }
 
     /**
@@ -335,7 +323,7 @@ public class CommentOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentOperation = new ByteArrayOutputStream()) {
             serializedCommentOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPERATION.getOrderId()));
             serializedCommentOperation.write(this.getParentAuthor().toByteArray());
             serializedCommentOperation.write(this.getParentPermlink().toByteArray());
             serializedCommentOperation.write(this.getAuthor().toByteArray());

@@ -202,11 +202,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setFrom(AccountName from) {
-        if (from == null) {
-            throw new InvalidParameterException("The from account can't be null.");
-        }
-
-        this.from = from;
+        this.from = setIfNotNull(from, "The from account can't be null.");
     }
 
     /**
@@ -220,11 +216,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setTo(AccountName to) {
-        if (to == null) {
-            throw new InvalidParameterException("The to account can't be null.");
-        }
-
-        this.to = to;
+        this.to = setIfNotNull(to, "The to account can't be null.");
     }
 
     /**
@@ -238,11 +230,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setAgent(AccountName agent) {
-        if (agent == null) {
-            throw new InvalidParameterException("The agent can't be null.");
-        }
-
-        this.agent = agent;
+        this.agent = setIfNotNull(agent, "The agent can't be null.");
     }
 
     /**
@@ -266,11 +254,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             both have an amount of 0.
      */
     public void setSbdAmount(Asset sbdAmount) {
-        if (sbdAmount == null) {
-            throw new InvalidParameterException("The sbd amount can't be null.");
-        }
-
-        this.sbdAmount = sbdAmount;
+        this.sbdAmount = setIfNotNull(sbdAmount, "The sbd amount can't be null.");
     }
 
     /**
@@ -294,11 +278,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             both have an amount of 0.
      */
     public void setSteemAmount(Asset steemAmount) {
-        if (steemAmount == null) {
-            throw new InvalidParameterException("The steem amount can't be null.");
-        }
-
-        this.steemAmount = steemAmount;
+        this.steemAmount = setIfNotNull(steemAmount, "The steem amount can't be null.");
     }
 
     /**
@@ -320,11 +300,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             different symbol than STEEM or SBD.
      */
     public void setFee(Asset fee) {
-        if (fee == null) {
-            throw new InvalidParameterException("The fee can't be null.");
-        }
-
-        this.fee = fee;
+        this.fee = setIfNotNull(fee, "The fee can't be null.");
     }
 
     /**
@@ -347,11 +323,8 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             before the {@link #getEscrowExpirationDate()}.
      */
     public void setRatificationDeadlineDate(TimePointSec ratificationDeadlineDate) {
-        if (ratificationDeadlineDate == null) {
-            throw new InvalidParameterException("The ratification deadline date can't be null.");
-        }
-
-        this.ratificationDeadlineDate = ratificationDeadlineDate;
+        this.ratificationDeadlineDate = setIfNotNull(ratificationDeadlineDate,
+                "The ratification deadline date can't be null.");
     }
 
     /**
@@ -374,11 +347,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             the <code>escrowExpirationDate</code>.
      */
     public void setEscrowExpirationDate(TimePointSec escrowExpirationDate) {
-        if (escrowExpirationDate == null) {
-            throw new InvalidParameterException("The escrow expiration date can't be null.");
-        }
-
-        this.escrowExpirationDate = escrowExpirationDate;
+        this.escrowExpirationDate = setIfNotNull(escrowExpirationDate, "The escrow expiration date can't be null.");
     }
 
     /**
@@ -406,7 +375,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedEscrowTransferOperation = new ByteArrayOutputStream()) {
             serializedEscrowTransferOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_TRANSFER_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ESCROW_TRANSFER_OPERATION.getOrderId()));
             serializedEscrowTransferOperation.write(this.getFrom().toByteArray());
             serializedEscrowTransferOperation.write(this.getTo().toByteArray());
             serializedEscrowTransferOperation.write(this.getAgent().toByteArray());

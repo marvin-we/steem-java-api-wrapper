@@ -9,9 +9,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
  * Verify the functionality of the "vote operation" under the use of real api
@@ -19,7 +21,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountWitnessVoteOperationIT extends BaseTransactionalIntegrationTest {
+public class AccountWitnessVoteOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dcebc80457010c0764657a3133"
             + "33370a676f6f642d6b61726d610100011c0bd317625d87f01e838165a689596eff95cb03d3cf2076b"
             + "a670886eb29c2ab3f5155f80e7c52d388c0fbc52e362b9f9b00d3ff7426b9e0168c0281672ad19367";
@@ -38,7 +40,8 @@ public class AccountWitnessVoteOperationIT extends BaseTransactionalIntegrationT
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         AccountName account = new AccountName("dez1337");
         AccountName witness = new AccountName("good-karma");
@@ -48,9 +51,9 @@ public class AccountWitnessVoteOperationIT extends BaseTransactionalIntegrationT
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountWitnessVoteOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

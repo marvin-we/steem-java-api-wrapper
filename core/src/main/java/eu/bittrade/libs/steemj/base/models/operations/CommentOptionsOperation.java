@@ -208,11 +208,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
-        if (author == null) {
-            throw new InvalidParameterException("The author can't be null.");
-        }
-
-        this.author = author;
+        this.author = setIfNotNull(author, "The author can't be null.");
     }
 
     /**
@@ -233,11 +229,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>permlink</code> is null.
      */
     public void setPermlink(Permlink permlink) {
-        if (permlink == null) {
-            throw new InvalidParameterException("The permanent link can't be null.");
-        }
-
-        this.permlink = permlink;
+        this.permlink = setIfNotNull(permlink, "The permanent link can't be null.");
     }
 
     /**
@@ -259,11 +251,7 @@ public class CommentOptionsOperation extends Operation {
      *             different symbol than SBD or the amount is less than 0.
      */
     public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
-        if (maxAcceptedPayout == null) {
-            throw new InvalidParameterException("The maximal accepted payout can't be null.");
-        }
-
-        this.maxAcceptedPayout = maxAcceptedPayout;
+        this.maxAcceptedPayout = setIfNotNull(maxAcceptedPayout, "The maximal accepted payout can't be null.");
     }
 
     /**
@@ -354,7 +342,7 @@ public class CommentOptionsOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCommentOptionsOperation = new ByteArrayOutputStream()) {
             serializedCommentOptionsOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPTIONS_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.COMMENT_OPTIONS_OPERATION.getOrderId()));
             serializedCommentOptionsOperation.write(this.getAuthor().toByteArray());
             serializedCommentOptionsOperation.write(this.getPermlink().toByteArray());
             serializedCommentOptionsOperation.write(this.getMaxAcceptedPayout().toByteArray());

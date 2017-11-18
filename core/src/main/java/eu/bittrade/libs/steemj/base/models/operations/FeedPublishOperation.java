@@ -75,11 +75,7 @@ public class FeedPublishOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setPublisher(AccountName publisher) {
-        if (publisher == null) {
-            throw new InvalidParameterException("The publisher can't be null.");
-        }
-
-        this.publisher = publisher;
+        this.publisher = setIfNotNull(publisher, "The publisher can't be null.");
     }
 
     /**
@@ -100,18 +96,14 @@ public class FeedPublishOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setExchangeRate(Price exchangeRate) {
-        if (exchangeRate == null) {
-            throw new InvalidParameterException("The price feed can't be null");
-        }
-
-        this.exchangeRate = exchangeRate;
+        this.exchangeRate = setIfNotNull(exchangeRate, "The price feed can't be null");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedFeedPublishOperation = new ByteArrayOutputStream()) {
-            serializedFeedPublishOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.FEED_PUBLISH_OPERATION.ordinal()));
+            serializedFeedPublishOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.FEED_PUBLISH_OPERATION.getOrderId()));
             serializedFeedPublishOperation.write(this.getPublisher().toByteArray());
             serializedFeedPublishOperation.write(this.getExchangeRate().toByteArray());
 

@@ -85,11 +85,7 @@ public class ReportOverProductionOperation extends Operation {
      *             If the reporter is not set.
      */
     public void setReporter(AccountName reporter) {
-        if (reporter == null) {
-            throw new InvalidParameterException("The reporter can't be null.");
-        }
-
-        this.reporter = reporter;
+        this.reporter = setIfNotNull(reporter, "The reporter can't be null.");
     }
 
     /**
@@ -113,10 +109,6 @@ public class ReportOverProductionOperation extends Operation {
      *             id than the <code>secondBlock</code>.
      */
     public void setFirstBlock(SignedBlockHeader firstBlock) {
-        if (firstBlock == null) {
-            throw new InvalidParameterException("The provided first block can't be null.");
-        }
-
         /*
          * TODO: Implement additional checks:
          * 
@@ -126,7 +118,7 @@ public class ReportOverProductionOperation extends Operation {
          * Both checks require that the SignedBlockHeader has the signee() and
          * the id().
          */
-        this.firstBlock = firstBlock;
+        this.firstBlock = setIfNotNull(firstBlock, "The provided first block can't be null.");
     }
 
     /**
@@ -150,18 +142,14 @@ public class ReportOverProductionOperation extends Operation {
      *             than the <code>firstBlock</code>.
      */
     public void setSecondBlock(SignedBlockHeader secondBlock) {
-        if (secondBlock == null) {
-            throw new InvalidParameterException("The provided second block can't be null.");
-        }
-
-        this.secondBlock = secondBlock;
+        this.secondBlock = setIfNotNull(secondBlock, "The provided second block can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedReportOverProductionOperation = new ByteArrayOutputStream()) {
             serializedReportOverProductionOperation.write(SteemJUtils
-                    .transformIntToVarIntByteArray(OperationType.REPORT_OVER_PRODUCTION_OPERATION.ordinal()));
+                    .transformIntToVarIntByteArray(OperationType.REPORT_OVER_PRODUCTION_OPERATION.getOrderId()));
             serializedReportOverProductionOperation.write(this.getReporter().toByteArray());
             serializedReportOverProductionOperation.write(this.getFirstBlock().toByteArray());
             serializedReportOverProductionOperation.write(this.getSecondBlock().toByteArray());

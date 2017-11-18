@@ -150,11 +150,7 @@ public class RecoverAccountOperation extends Operation {
      *             If the <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
-        if (accountToRecover == null) {
-            throw new InvalidParameterException("The account to recover can't be null.");
-        }
-
-        this.accountToRecover = accountToRecover;
+        this.accountToRecover = setIfNotNull(accountToRecover, "The account to recover can't be null.");
     }
 
     /**
@@ -182,11 +178,7 @@ public class RecoverAccountOperation extends Operation {
      *             recentOwnerAuhtority, or trivial.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
-        if (newOwnerAuthority == null) {
-            throw new InvalidParameterException("The new owner authority can't be null.");
-        }
-
-        this.newOwnerAuthority = newOwnerAuthority;
+        this.newOwnerAuthority = setIfNotNull(newOwnerAuthority, "The new owner authority can't be null.");
     }
 
     /**
@@ -211,11 +203,7 @@ public class RecoverAccountOperation extends Operation {
      *             the newOwnerAuthority, or trivial.
      */
     public void setRecentOwnerAuthority(Authority recentOwnerAuthority) {
-        if (recentOwnerAuthority == null) {
-            throw new InvalidParameterException("The recent owner authority can't be null.");
-        }
-
-        this.recentOwnerAuthority = recentOwnerAuthority;
+        this.recentOwnerAuthority = setIfNotNull(recentOwnerAuthority, "The recent owner authority can't be null.");
     }
 
     /**
@@ -244,7 +232,7 @@ public class RecoverAccountOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedRecoverAccountOperation = new ByteArrayOutputStream()) {
             serializedRecoverAccountOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.RECOVER_ACCOUNT_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.RECOVER_ACCOUNT_OPERATION.getOrderId()));
             serializedRecoverAccountOperation.write(this.getAccountToRecover().toByteArray());
             serializedRecoverAccountOperation.write(this.getNewOwnerAuthority().toByteArray());
             serializedRecoverAccountOperation.write(this.getRecentOwnerAuthority().toByteArray());

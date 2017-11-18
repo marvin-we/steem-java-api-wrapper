@@ -73,11 +73,7 @@ public class DeleteCommentOperation extends Operation {
      *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
-        if (author == null) {
-            throw new InvalidParameterException("The author can't be null.");
-        }
-
-        this.author = author;
+        this.author = setIfNotNull(author, "The author can't be null.");
     }
 
     /**
@@ -98,18 +94,14 @@ public class DeleteCommentOperation extends Operation {
      *             If the <code>permlink</code> is null.
      */
     public void setPermlink(Permlink permlink) {
-        if (permlink == null) {
-            throw new InvalidParameterException("The permlink can't be null.");
-        }
-
-        this.permlink = permlink;
+        this.permlink = setIfNotNull(permlink, "The permlink can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedDeleteCommentOperation = new ByteArrayOutputStream()) {
-            serializedDeleteCommentOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.DELETE_COMMENT_OPERATION.ordinal()));
+            serializedDeleteCommentOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.DELETE_COMMENT_OPERATION.getOrderId()));
             serializedDeleteCommentOperation.write(this.getAuthor().toByteArray());
             serializedDeleteCommentOperation.write(this.getPermlink().toByteArray());
 

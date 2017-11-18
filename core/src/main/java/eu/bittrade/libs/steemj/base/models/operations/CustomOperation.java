@@ -94,11 +94,7 @@ public class CustomOperation extends Operation {
      *             If less than 1 account name has been provided.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
-        if (requiredAuths == null) {
-            throw new InvalidParameterException("At least on account must be specified.");
-        }
-
-        this.requiredAuths = requiredAuths;
+        this.requiredAuths = setIfNotNull(requiredAuths, "At least on account must be specified.");
     }
 
     /**
@@ -145,7 +141,7 @@ public class CustomOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCustomOperation = new ByteArrayOutputStream()) {
             serializedCustomOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_OPERATION.getOrderId()));
 
             serializedCustomOperation.write(SteemJUtils.transformIntToVarIntByteArray(this.getRequiredAuths().size()));
 

@@ -75,8 +75,8 @@ public class AccountCreateOperation extends AbstractAccountCreateOperation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAccountCreateOperation = new ByteArrayOutputStream()) {
-            serializedAccountCreateOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_CREATE_OPERATION.ordinal()));
+            serializedAccountCreateOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_CREATE_OPERATION.getOrderId()));
             serializedAccountCreateOperation.write(this.getFee().toByteArray());
             serializedAccountCreateOperation.write(this.getCreator().toByteArray());
             serializedAccountCreateOperation.write(this.getNewAccountName().toByteArray());

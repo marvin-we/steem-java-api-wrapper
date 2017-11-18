@@ -94,11 +94,7 @@ public class ChallengeAuthorityOperation extends Operation {
      *             <code>challenged</code> account.
      */
     public void setChallenger(AccountName challenger) {
-        if (challenger == null) {
-            throw new InvalidParameterException("The challenger can't be null");
-        }
-
-        this.challenger = challenger;
+        this.challenger = setIfNotNull(challenger, "The challenger can't be null");
     }
 
     /**
@@ -118,11 +114,7 @@ public class ChallengeAuthorityOperation extends Operation {
      *             <code>challenger</code> account.
      */
     public void setChallenged(AccountName challenged) {
-        if (challenged == null) {
-            throw new InvalidParameterException("The challenged can't be null");
-        }
-
-        this.challenged = challenged;
+        this.challenged = setIfNotNull(challenged, "The challenged can't be null");
     }
 
     /**
@@ -148,8 +140,8 @@ public class ChallengeAuthorityOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedChallengeAuthorityOperation = new ByteArrayOutputStream()) {
-            serializedChallengeAuthorityOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.CHALLENGE_AUTHORITY_OPERATION.ordinal()));
+            serializedChallengeAuthorityOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.CHALLENGE_AUTHORITY_OPERATION.getOrderId()));
             serializedChallengeAuthorityOperation.write(this.getChallenger().toByteArray());
             serializedChallengeAuthorityOperation.write(this.getChallenged().toByteArray());
             serializedChallengeAuthorityOperation

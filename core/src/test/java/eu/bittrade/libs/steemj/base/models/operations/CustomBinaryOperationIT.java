@@ -9,9 +9,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
@@ -20,7 +21,7 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CustomBinaryOperationIT extends BaseTransactionalIntegrationTest {
+public class CustomBinaryOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dc69fce55801230000010764657a31"
             + "33333700096578616d706c6549641154657374466f72537465656d4a3132332100011c42f7ac344c3c543"
             + "96efebd440d384fe0c2e4bc6902d632681e933297f6d886092ed53e7e729327f2d828f988b3fe3d8ae919"
@@ -41,7 +42,8 @@ public class CustomBinaryOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         // If the default expiration date for all integration tests
         // (2016-04-06T08:29:27UTC) is used, the transaction can't be verified.
@@ -60,9 +62,9 @@ public class CustomBinaryOperationIT extends BaseTransactionalIntegrationTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customBinaryOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

@@ -142,11 +142,7 @@ public class RequestAccountRecoveryOperation extends Operation {
      *             If the provided <code>recoveryAccount</code> is null.
      */
     public void setRecoveryAccount(AccountName recoveryAccount) {
-        if (recoveryAccount == null) {
-            throw new InvalidParameterException("The recovery account can't be null.");
-        }
-
-        this.recoveryAccount = recoveryAccount;
+        this.recoveryAccount = setIfNotNull(recoveryAccount, "The recovery account can't be null.");
     }
 
     /**
@@ -167,11 +163,7 @@ public class RequestAccountRecoveryOperation extends Operation {
      *             If the provided <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
-        if (accountToRecover == null) {
-            throw new InvalidParameterException("The account to recover can't be null.");
-        }
-
-        this.accountToRecover = accountToRecover;
+        this.accountToRecover = setIfNotNull(accountToRecover, "The account to recover can't be null.");
     }
 
     /**
@@ -196,11 +188,7 @@ public class RequestAccountRecoveryOperation extends Operation {
      *             If the provided <code>newOwnerAuthority</code> is null.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
-        if (newOwnerAuthority == null) {
-            throw new InvalidParameterException("The new owner authority can't be null.");
-        }
-
-        this.newOwnerAuthority = newOwnerAuthority;
+        this.newOwnerAuthority = setIfNotNull(newOwnerAuthority, "The new owner authority can't be null.");
     }
 
     /**
@@ -230,7 +218,7 @@ public class RequestAccountRecoveryOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedRequestAccountRecoveryOperation = new ByteArrayOutputStream()) {
             serializedRequestAccountRecoveryOperation.write(SteemJUtils
-                    .transformIntToVarIntByteArray(OperationType.REQUEST_ACCOUNT_RECOVERY_OPERATION.ordinal()));
+                    .transformIntToVarIntByteArray(OperationType.REQUEST_ACCOUNT_RECOVERY_OPERATION.getOrderId()));
             serializedRequestAccountRecoveryOperation.write(this.getRecoveryAccount().toByteArray());
             serializedRequestAccountRecoveryOperation.write(this.getAccountToRecover().toByteArray());
             serializedRequestAccountRecoveryOperation.write(this.getNewOwnerAuthority().toByteArray());

@@ -11,11 +11,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 
 /**
@@ -24,7 +26,7 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountUpdateOperationIT extends BaseTransactionalIntegrationTest {
+public class AccountUpdateOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce7c80457010a0764657a31333337010100000000010245afe8ba"
             + "78a2023ef69af6d3ecbbf26e37f5f5b9c1a8b37f80f4a1b761a75e590100010100000000010309b5f14e6ca97187ae2a2cdf4c6e7b15b"
             + "5a434bf53ffcea6642f28e1aa5336c101000101000000000102a2a9e8a0ec260cfef0e7708d88a99f90809db2a61ea2a87dddb062d5f5"
@@ -48,7 +50,8 @@ public class AccountUpdateOperationIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         AccountName account = new AccountName("dez1337");
         PublicKey memoKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
@@ -86,9 +89,9 @@ public class AccountUpdateOperationIT extends BaseTransactionalIntegrationTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountUpdateOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

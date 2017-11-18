@@ -58,11 +58,7 @@ abstract class AbstractEscrowOperation extends Operation {
      *             If the <code>from</code> is null.
      */
     public void setFrom(AccountName from) {
-        if (from == null) {
-            throw new InvalidParameterException("The from account can't be null.");
-        }
-
-        this.from = from;
+        this.from = setIfNotNull(from, "The from account can't be null.");
     }
 
     /**
@@ -83,11 +79,7 @@ abstract class AbstractEscrowOperation extends Operation {
      *             If the <code>to</code> is null.
      */
     public void setTo(AccountName to) {
-        if (to == null) {
-            throw new InvalidParameterException("The to account can't be null.");
-        }
-
-        this.to = to;
+        this.to = setIfNotNull(to, "The to account can't be null.");
     }
 
     /**
@@ -108,11 +100,7 @@ abstract class AbstractEscrowOperation extends Operation {
      *             If the <code>agent</code> is null.
      */
     public void setAgent(AccountName agent) {
-        if (agent == null) {
-            throw new InvalidParameterException("The agent can't be null.");
-        }
-
-        this.agent = agent;
+        this.agent = setIfNotNull(agent, "The agent can't be null.");
     }
 
     /**

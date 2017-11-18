@@ -6,15 +6,16 @@ import static org.hamcrest.Matchers.equalTo;
 import java.util.ArrayList;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionBroadcastIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -30,7 +31,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class NetworkBroadcastApiIT extends BaseTransactionalIntegrationTest {
+public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
     private static CommunicationHandler COMMUNICATION_HANDLER;
 
     /**
@@ -41,7 +42,7 @@ public class NetworkBroadcastApiIT extends BaseTransactionalIntegrationTest {
      */
     @BeforeClass
     public static void init() throws SteemCommunicationException {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionBroadcastTests(HTTP_MODE_IDENTIFIER, TESTNET_ENDPOINT_IDENTIFIER);
 
         COMMUNICATION_HANDLER = new CommunicationHandler();
     }
@@ -74,25 +75,12 @@ public class NetworkBroadcastApiIT extends BaseTransactionalIntegrationTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOptionsOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
 
         NetworkBroadcastApi.broadcastTransactionSynchronous(COMMUNICATION_HANDLER, signedTransaction);
         NetworkBroadcastApi.broadcastTransactionWithCallback(COMMUNICATION_HANDLER, signedTransaction);
 
         assertThat(1, equalTo(2));
-    }
-
-    @Override
-    public void verifyTransaction() throws Exception {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void getTransactionHex() throws Exception {
-        // TODO Auto-generated method stub
-
     }
 }

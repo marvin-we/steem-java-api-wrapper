@@ -7,7 +7,7 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
+import eu.bittrade.libs.steemj.BaseUT;
 
 /**
  * Test the PublicKey object.
@@ -15,7 +15,7 @@ import eu.bittrade.libs.steemj.BaseUnitTest;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  *
  */
-public class PublicKeyTest extends BaseUnitTest {
+public class PublicKeyTest extends BaseUT {
     private static final String ADDRESS = "BTS6UtYWWs3rkZGV8JA86qrgkG6tyFksgECefKE1MiH4HkLD8PFGL";
     private static final String ANOTHER_ADDRESS = "BTS8YAMLtNcnqGNd3fx28NP3WoyuqNtzxXpwXTkZjbfe9scBmSyGT";
     private static final String EXPECTED_BYTE_REPRESENTATION = "02d1ce1cefe421600c23427e2d8d97f3dacf77b2395d79e0ea6be38a1a34dad714";

@@ -84,10 +84,7 @@ public class WithdrawVestingOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setAccount(AccountName account) {
-        if (account == null) {
-            throw new InvalidParameterException("An account name needs to be provided.");
-        }
-        this.account = account;
+        this.account = setIfNotNull(account, "An account name needs to be provided.");
     }
 
     /**
@@ -109,17 +106,14 @@ public class WithdrawVestingOperation extends Operation {
      *             If the asset type is null.
      */
     public void setVestingShares(Asset vestingShares) {
-        if (vestingShares == null) {
-            throw new InvalidParameterException("The vesting shares can't be null.");
-        }
-        this.vestingShares = vestingShares;
+        this.vestingShares = setIfNotNull(vestingShares, "The vesting shares can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedWithdrawVestingOperation = new ByteArrayOutputStream()) {
             serializedWithdrawVestingOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.WITHDRAW_VESTING_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.WITHDRAW_VESTING_OPERATION.getOrderId()));
             serializedWithdrawVestingOperation.write(this.getAccount().toByteArray());
             serializedWithdrawVestingOperation.write(this.getVestingShares().toByteArray());
 

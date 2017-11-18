@@ -1,8 +1,8 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj;
 
 import java.io.UnsupportedEncodingException;
 
-import eu.bittrade.libs.steemj.BaseUnitTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -12,7 +12,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public abstract class BaseTransactionalUnitTest extends BaseUnitTest {
+public abstract class BaseTransactionalUT extends BaseUT {
     protected static SignedTransaction signedTransaction;
 
     /**
@@ -20,23 +20,6 @@ public abstract class BaseTransactionalUnitTest extends BaseUnitTest {
      */
     protected static void setupUnitTestEnvironmentForTransactionalTests() {
         setupUnitTestEnvironment();
-
-        signedTransaction = new SignedTransaction();
-        signedTransaction.setExpirationDate(new TimePointSec(EXPIRATION_DATE));
-        signedTransaction.setRefBlockNum(REF_BLOCK_NUM);
-        signedTransaction.setRefBlockPrefix(REF_BLOCK_PREFIX);
-        // Add extensions when supported.
-        // signedTransaction.setExtensions(extensions);
-    }
-
-    /**
-     * This is a workaround as the sign method is not visible in sub packages.
-     * 
-     * @throws SteemInvalidTransactionException
-     *             If something went wrong.
-     */
-    protected static void sign() throws SteemInvalidTransactionException {
-        signedTransaction.sign(true);
     }
 
     /**

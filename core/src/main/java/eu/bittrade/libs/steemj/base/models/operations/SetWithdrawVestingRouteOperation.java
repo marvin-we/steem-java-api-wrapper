@@ -111,11 +111,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      *             If the <code>fromAccount</code> is null.
      */
     public void setFromAccount(AccountName fromAccount) {
-        if (fromAccount == null) {
-            throw new InvalidParameterException("The fromAccount can't be null.");
-        }
-
-        this.fromAccount = fromAccount;
+        this.fromAccount = setIfNotNull(fromAccount, "The fromAccount can't be null.");
     }
 
     /**
@@ -136,11 +132,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      *             If the <code>toAccount</code> is null.
      */
     public void setToAccount(AccountName toAccount) {
-        if (toAccount == null) {
-            throw new InvalidParameterException("The toAccount can't be null.");
-        }
-
-        this.toAccount = toAccount;
+        this.toAccount = setIfNotNull(toAccount, "The toAccount can't be null.");
     }
 
     /**
@@ -194,7 +186,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedSetWithdrawVestingRouteOperation = new ByteArrayOutputStream()) {
             serializedSetWithdrawVestingRouteOperation.write(SteemJUtils
-                    .transformIntToVarIntByteArray(OperationType.SET_WITHDRAW_VESTING_ROUTE_OPERATION.ordinal()));
+                    .transformIntToVarIntByteArray(OperationType.SET_WITHDRAW_VESTING_ROUTE_OPERATION.getOrderId()));
             serializedSetWithdrawVestingRouteOperation.write(this.getFromAccount().toByteArray());
             serializedSetWithdrawVestingRouteOperation.write(this.getToAccount().toByteArray());
             serializedSetWithdrawVestingRouteOperation.write(SteemJUtils.transformShortToByteArray(this.getPercent()));

@@ -146,11 +146,7 @@ public class CustomJsonOperation extends Operation {
      *             provided.
      */
     public void setId(String id) {
-        if (id == null) {
-            throw new InvalidParameterException("An ID is required.");
-        }
-
-        this.id = id;
+        this.id = setIfNotNull(id, "An ID is required.");
     }
 
     /**
@@ -176,7 +172,7 @@ public class CustomJsonOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCustomJsonOperation = new ByteArrayOutputStream()) {
             serializedCustomJsonOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_JSON_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_JSON_OPERATION.getOrderId()));
 
             serializedCustomJsonOperation
                     .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredAuths().size()));

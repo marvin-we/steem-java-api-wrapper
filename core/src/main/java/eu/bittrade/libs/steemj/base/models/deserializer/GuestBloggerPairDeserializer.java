@@ -24,14 +24,14 @@ public class GuestBloggerPairDeserializer extends JsonDeserializer<List<Pair<Acc
     public List<Pair<AccountName, Long>> deserialize(JsonParser jsonParser,
             DeserializationContext deserializationContext) throws IOException {
 
-        List<Pair<AccountName, Long>>  result = new ArrayList<>();
+        List<Pair<AccountName, Long>> result = new ArrayList<>();
 
         ObjectCodec codec = jsonParser.getCodec();
         TreeNode rootNode = codec.readTree(jsonParser);
 
         if (rootNode.isArray()) {
             for (JsonNode node : (ArrayNode) rootNode) {
-                //result.put((node.get(0)).asText(), (node.get(0)).asInt());
+                // result.put((node.get(0)).asText(), (node.get(0)).asInt());
             }
 
             return result;

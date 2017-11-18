@@ -22,7 +22,7 @@ import eu.bittrade.libs.steemj.interfaces.Validatable;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_ARRAY)
 @JsonSubTypes({ @Type(value = FollowOperation.class, name = "follow"),
         @Type(value = ReblogOperation.class, name = "reblog") })
-public abstract class CustomJsonOperationPayload implements Validatable {
+public abstract class CustomJsonOperationPayload extends BaseOperation implements Validatable {
     /**
      * Transform the operation into its json representation.
      * 

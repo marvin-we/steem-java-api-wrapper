@@ -133,11 +133,7 @@ public class VoteOperation extends Operation {
      *             If no voter is provided.
      */
     public void setVoter(AccountName voter) {
-        if (voter == null) {
-            throw new InvalidParameterException("An voter needs to be provided.");
-        }
-
-        this.voter = voter;
+        this.voter = setIfNotNull(voter, "An voter needs to be provided.");
     }
 
     /**
@@ -149,11 +145,7 @@ public class VoteOperation extends Operation {
      *             If no author is provided.
      */
     public void setAuthor(AccountName author) {
-        if (author == null) {
-            throw new InvalidParameterException("An author needs to be provided.");
-        }
-
-        this.author = author;
+        this.author = setIfNotNull(author, "An author needs to be provided.");
     }
 
     /**
@@ -166,10 +158,7 @@ public class VoteOperation extends Operation {
      *             If no permlink has been provided.
      */
     public void setPermlink(Permlink permlink) {
-        if (permlink == null) {
-            throw new InvalidParameterException("A permlink needs to be provided.");
-        }
-        this.permlink = permlink;
+        this.permlink = setIfNotNull(permlink, "A permlink needs to be provided.");
     }
 
     /**
@@ -189,7 +178,7 @@ public class VoteOperation extends Operation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedVoteOperation = new ByteArrayOutputStream()) {
             serializedVoteOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.ordinal()));
+                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.VOTE_OPERATION.getOrderId()));
             serializedVoteOperation.write(this.getVoter().toByteArray());
             serializedVoteOperation.write(this.getAuthor().toByteArray());
             serializedVoteOperation.write(this.getPermlink().toByteArray());

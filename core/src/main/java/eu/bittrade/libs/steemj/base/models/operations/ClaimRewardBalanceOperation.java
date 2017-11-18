@@ -85,11 +85,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      *             If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
-        if (account == null) {
-            throw new InvalidParameterException("The account can't be null.");
-        }
-
-        this.account = account;
+        this.account = setIfNotNull(account, "The account can't be null.");
     }
 
     /**
@@ -187,8 +183,8 @@ public class ClaimRewardBalanceOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedClaimRewardOperation = new ByteArrayOutputStream()) {
-            serializedClaimRewardOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.ordinal()));
+            serializedClaimRewardOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.CLAIM_REWARD_BALANCE_OPERATION.getOrderId()));
             serializedClaimRewardOperation.write(this.getAccount().toByteArray());
             serializedClaimRewardOperation.write(this.getRewardSteem().toByteArray());
             serializedClaimRewardOperation.write(this.getRewardSbd().toByteArray());

@@ -58,11 +58,7 @@ abstract class AbstractTransferOperation extends Operation {
      *             If the <code>from</code> account is null.
      */
     public void setFrom(AccountName from) {
-        if (from == null) {
-            throw new InvalidParameterException("The from account can't be null.");
-        }
-
-        this.from = from;
+        this.from = setIfNotNull(from, "The from account can't be null.");
     }
 
     /**
@@ -86,11 +82,7 @@ abstract class AbstractTransferOperation extends Operation {
      *             If the <code>to</code> account is null.
      */
     public void setTo(AccountName to) {
-        if (to == null) {
-            throw new InvalidParameterException("The to account can't be null.");
-        }
-
-        this.to = to;
+        this.to = setIfNotNull(to, "The to account can't be null.");
     }
 
     /**
@@ -111,11 +103,7 @@ abstract class AbstractTransferOperation extends Operation {
      *             If the <code>amount</code> is null.
      */
     public void setAmount(Asset amount) {
-        if (amount == null) {
-            throw new InvalidParameterException("The amount can't be null.");
-        }
-
-        this.amount = amount;
+        this.amount = setIfNotNull(amount, "The amount can't be null.");
     }
 
     @Override

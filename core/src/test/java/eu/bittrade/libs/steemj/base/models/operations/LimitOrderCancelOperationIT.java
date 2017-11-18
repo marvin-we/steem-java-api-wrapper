@@ -10,9 +10,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 
 /**
  * Verify the functionality of the "limit order cancel operation" under the use
@@ -20,7 +22,7 @@ import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class LimitOrderCancelOperationIT extends BaseTransactionalIntegrationTest {
+public class LimitOrderCancelOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c8045701060764657a313333372"
             + "04e000000011b1044e4094a14f65d84a8da327d5fec0c740ce4f39b892105786686911eac09051373042e9"
             + "6fce01763a9cb2a004019dc38b278e8fae12f86198f60e28c981f2c";
@@ -39,7 +41,8 @@ public class LimitOrderCancelOperationIT extends BaseTransactionalIntegrationTes
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         UInteger orderId = UInteger.valueOf(20000);
         AccountName owner = new AccountName("dez1337");
@@ -49,9 +52,9 @@ public class LimitOrderCancelOperationIT extends BaseTransactionalIntegrationTes
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(limitOrderCancelOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

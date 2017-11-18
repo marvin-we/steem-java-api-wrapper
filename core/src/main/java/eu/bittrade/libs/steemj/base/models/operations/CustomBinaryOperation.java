@@ -201,11 +201,7 @@ public class CustomBinaryOperation extends Operation {
      *             If the <code>id</code> is null.
      */
     public void setId(String id) {
-        if (id == null) {
-            throw new InvalidParameterException("The id can't be null.");
-        }
-
-        this.id = id;
+        this.id = setIfNotNull(id, "The id can't be null.");
     }
 
     /**
@@ -232,8 +228,8 @@ public class CustomBinaryOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedCustomBinaryOperation = new ByteArrayOutputStream()) {
-            serializedCustomBinaryOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_BINARY_OPERATION.ordinal()));
+            serializedCustomBinaryOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.CUSTOM_BINARY_OPERATION.getOrderId()));
 
             serializedCustomBinaryOperation
                     .write(SteemJUtils.transformLongToVarIntByteArray(this.getRequiredOwnerAuths().size()));

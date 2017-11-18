@@ -11,12 +11,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
@@ -26,7 +28,7 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AccountCreateWithDelegationOperationIT extends BaseTransactionalIntegrationTest {
+public class AccountCreateWithDelegationOperationIT extends BaseTransactionVerificationIT {
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce9c804570129f4010000"
             + "0000000003535445454d00001f6900312400000006564553545300000764657a3133333706737"
             + "465656d6a010000000001026f6231b8ed1c5e964b42967759757f8bb879d68e7b09d9ea6eedec"
@@ -55,7 +57,8 @@ public class AccountCreateWithDelegationOperationIT extends BaseTransactionalInt
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         Asset fee = new Asset(500, AssetSymbolType.STEEM);
         Asset delegation = new Asset(155440933151L, AssetSymbolType.VESTS);
@@ -95,9 +98,9 @@ public class AccountCreateWithDelegationOperationIT extends BaseTransactionalInt
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(accountCreateWithDelegationOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

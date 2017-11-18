@@ -178,18 +178,14 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
      *             If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
-        if (account == null) {
-            throw new InvalidParameterException("The account can't be null.");
-        }
-
-        this.account = account;
+        this.account = setIfNotNull(account, "The account can't be null.");
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAccountUpdateOperation = new ByteArrayOutputStream()) {
-            serializedAccountUpdateOperation
-                    .write(SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_UPDATE_OPERATION.ordinal()));
+            serializedAccountUpdateOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.ACCOUNT_UPDATE_OPERATION.getOrderId()));
             serializedAccountUpdateOperation.write(this.getAccount().toByteArray());
 
             // Handle optional values.

@@ -12,10 +12,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.BaseTransactionalIntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 
 /**
@@ -24,7 +26,7 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class CommentOperationEncodingIT extends BaseTransactionalIntegrationTest {
+public class CommentOperationEncodingIT extends BaseTransactionVerificationIT {
     private static final Charset ORIGINAL_CHARSET_BEFORE_TEST = SteemJConfig.getInstance().getEncodingCharset();
 
     private static final String EXPECTED_TRANSACTION_HEX = "f68585abf4dce8c8045701010764657a3133333728737465656d6a2d76302d322d342d6861732d62656"
@@ -85,7 +87,8 @@ public class CommentOperationEncodingIT extends BaseTransactionalIntegrationTest
      */
     @BeforeClass()
     public static void prepareTestClass() throws Exception {
-        setupIntegrationTestEnvironmentForTransactionalTests();
+        setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
+                STEEMNET_ENDPOINT_IDENTIFIER);
 
         SteemJConfig.getInstance().setEncodingCharset(StandardCharsets.US_ASCII);
 
@@ -116,9 +119,9 @@ public class CommentOperationEncodingIT extends BaseTransactionalIntegrationTest
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOperation);
 
-        signedTransaction.setOperations(operations);
-
-        sign();
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
+        signedTransaction.sign();
     }
 
     @Category({ IntegrationTest.class })

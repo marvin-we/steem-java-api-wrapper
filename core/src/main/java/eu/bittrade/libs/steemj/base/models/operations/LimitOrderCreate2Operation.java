@@ -145,11 +145,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
-        if (owner == null) {
-            throw new InvalidParameterException("The provided owner can't be null.");
-        }
-
-        this.owner = owner;
+        this.owner = setIfNotNull(owner, "The provided owner can't be null.");
     }
 
     /**
@@ -171,11 +167,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
-        if (orderId == null) {
-            throw new InvalidParameterException("The provided order id can't be null.");
-        }
-
-        this.orderId = orderId;
+        this.orderId = setIfNotNull(orderId, "The provided order id can't be null.");
     }
 
     /**
@@ -196,11 +188,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>amountToSell</code> is null.
      */
     public void setAmountToSell(Asset amountToSell) {
-        if (amountToSell == null) {
-            throw new InvalidParameterException("The amount to sell can't be null.");
-        }
-
-        this.amountToSell = amountToSell;
+        this.amountToSell = setIfNotNull(amountToSell, "The amount to sell can't be null.");
     }
 
     /**
@@ -252,11 +240,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>exchangeRate</code> is null.
      */
     public void setExchangeRate(Price exchangeRate) {
-        if (exchangeRate == null) {
-            throw new InvalidParameterException("The provided exchange rate can't be null.");
-        }
-
-        this.exchangeRate = exchangeRate;
+        this.exchangeRate = setIfNotNull(exchangeRate, "The provided exchange rate can't be null.");
     }
 
     /**
@@ -285,8 +269,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedLimitOrderCreate2Operation = new ByteArrayOutputStream()) {
-            serializedLimitOrderCreate2Operation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE2_OPERATION.ordinal()));
+            serializedLimitOrderCreate2Operation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE2_OPERATION.getOrderId()));
             serializedLimitOrderCreate2Operation.write(this.getOwner().toByteArray());
             serializedLimitOrderCreate2Operation
                     .write(SteemJUtils.transformIntToByteArray(this.getOrderId().intValue()));

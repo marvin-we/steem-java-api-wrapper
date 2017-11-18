@@ -12,6 +12,7 @@ import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.libs.steemj.BaseTransactionalUT;
 import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
@@ -27,7 +28,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  *
  */
-public class SginedTransactionTest extends BaseTransactionalUnitTest {
+public class SginedTransactionTest extends BaseTransactionalUT {
     private static VoteOperation voteOperation;
     private static CustomJsonOperation customJsonOperation;
 
@@ -75,7 +76,8 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
 
         // Use 'toByteArray("")' so no chainId will be added.
         assertThat(Utils.HEX.encode(signedTransaction.toByteArray("")), equalTo(EXPECTED_BYTE_REPRESENTATION));
@@ -98,7 +100,8 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
 
         assertThat(signedTransaction.getRequiredSignatureKeys().size(), equalTo(1));
         assertThat(signedTransaction.getRequiredSignatureKeys().get(0), equalTo(SteemJConfig.getInstance()
@@ -116,7 +119,8 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customJsonOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
 
         assertThat(signedTransaction.getRequiredSignatureKeys().size(), equalTo(1));
         assertThat(signedTransaction.getRequiredSignatureKeys().get(0), equalTo(SteemJConfig.getInstance()
@@ -141,7 +145,8 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
 
         assertThat(Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
@@ -163,7 +168,8 @@ public class SginedTransactionTest extends BaseTransactionalUnitTest {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(voteOperation);
 
-        signedTransaction.setOperations(operations);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
+                operations, null);
 
         assertThat(Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
                 equalTo(EXPECTED_HASH));

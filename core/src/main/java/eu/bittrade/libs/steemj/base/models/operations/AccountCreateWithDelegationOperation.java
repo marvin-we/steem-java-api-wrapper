@@ -117,11 +117,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      *             than 0.
      */
     public void setDelegation(Asset delegation) {
-        if (delegation == null) {
-            throw new InvalidParameterException("The delegation can't be null.");
-        }
-
-        this.delegation = delegation;
+        this.delegation = setIfNotNull(delegation, "The delegation can't be null.");
     }
 
     /**
@@ -150,8 +146,8 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAccountCreateWithDelegationOperation = new ByteArrayOutputStream()) {
-            serializedAccountCreateWithDelegationOperation.write(SteemJUtils
-                    .transformIntToVarIntByteArray(OperationType.ACCOUNT_CREATE_WITH_DELEGATION_OPERATION.ordinal()));
+            serializedAccountCreateWithDelegationOperation.write(SteemJUtils.transformIntToVarIntByteArray(
+                    OperationType.ACCOUNT_CREATE_WITH_DELEGATION_OPERATION.getOrderId()));
             serializedAccountCreateWithDelegationOperation.write(this.getFee().toByteArray());
             serializedAccountCreateWithDelegationOperation.write(this.getDelegation().toByteArray());
             serializedAccountCreateWithDelegationOperation.write(this.getCreator().toByteArray());

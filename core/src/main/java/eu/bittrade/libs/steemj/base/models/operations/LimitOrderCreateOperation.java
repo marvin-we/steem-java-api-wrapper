@@ -136,11 +136,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
-        if (owner == null) {
-            throw new InvalidParameterException("The provided owner can't be null.");
-        }
-
-        this.owner = owner;
+        this.owner = setIfNotNull(owner, "The provided owner can't be null.");
     }
 
     /**
@@ -162,11 +158,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
-        if (orderId == null) {
-            throw new InvalidParameterException("The provided order id can't be null.");
-        }
-
-        this.orderId = orderId;
+        this.orderId = setIfNotNull(orderId, "The provided order id can't be null.");
     }
 
     /**
@@ -187,11 +179,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>amountToSell</code> is null.
      */
     public void setAmountToSell(Asset amountToSell) {
-        if (amountToSell == null) {
-            throw new InvalidParameterException("The amount to sell owner can't be null.");
-        }
-
-        this.amountToSell = amountToSell;
+        this.amountToSell = setIfNotNull(amountToSell, "The amount to sell owner can't be null.");
     }
 
     /**
@@ -213,11 +201,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>minToReceive</code> is null.
      */
     public void setMinToReceive(Asset minToReceive) {
-        if (minToReceive == null) {
-            throw new InvalidParameterException("The min to receive owner can't be null.");
-        }
-
-        this.minToReceive = minToReceive;
+        this.minToReceive = setIfNotNull(minToReceive, "The min to receive owner can't be null.");
     }
 
     /**
@@ -278,7 +262,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedLimitOrderCreateOperation = new ByteArrayOutputStream()) {
             serializedLimitOrderCreateOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE_OPERATION.ordinal()));
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.LIMIT_ORDER_CREATE_OPERATION.getOrderId()));
             serializedLimitOrderCreateOperation.write(this.getOwner().toByteArray());
             serializedLimitOrderCreateOperation
                     .write(SteemJUtils.transformIntToByteArray(this.getOrderId().intValue()));
