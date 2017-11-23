@@ -9,7 +9,7 @@ This project allows you to easily access data stored in the Steem blockchain. Th
 # Communication
 - Please contact me at the [Discord Java Channel](https://discord.gg/fsJjr3Q)
 - Or directly on [Steemit.com](https://steemit.com/@dez1337)
-- Beside that you can also create an [Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues) here at GitHub
+- Beside that you can also create an [Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues) here at GitHub.
 
 # Contributors
 - [philip-healy](https://github.com/philip-healy) took care of the "simplified operations".
