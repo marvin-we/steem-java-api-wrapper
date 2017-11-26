@@ -165,7 +165,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
             Sha256Hash messageAsHash;
             while (!isCanonical) {
                 try {
-                    messageAsHash = Sha256Hash.wrap(Sha256Hash.hash(this.toByteArray(chainId)));
+                    messageAsHash = Sha256Hash.of(this.toByteArray(chainId));
                 } catch (SteemInvalidTransactionException e) {
                     throw new SteemInvalidTransactionException(
                             "The required encoding is not supported by your platform.", e);
