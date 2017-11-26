@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -151,8 +151,9 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, long escrowId, Asset fee,
             TimePointSec ratificationDeadlineDate, TimePointSec escrowExpirationDate, String jsonMeta) {
-        this(from, to, agent, escrowId, new Asset(0, AssetSymbolType.SBD), new Asset(0, AssetSymbolType.STEEM), fee,
-                ratificationDeadlineDate, escrowExpirationDate, jsonMeta);
+        this(from, to, agent, escrowId, new Asset(0, SteemJConfig.getInstance().getDollarSymbol()),
+                new Asset(0, SteemJConfig.getInstance().getTokenSymbol()), fee, ratificationDeadlineDate,
+                escrowExpirationDate, jsonMeta);
     }
 
     /**
@@ -411,12 +412,12 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
                     throw new InvalidParameterException("The steem amount cannot be negative.");
                 } else if (sbdAmount.getAmount() + steemAmount.getAmount() < 0) {
                     throw new InvalidParameterException("An escrow must release a non-zero amount.");
-                } else if (!fee.getSymbol().equals(AssetSymbolType.STEEM)
-                        && !fee.getSymbol().equals(AssetSymbolType.SBD)) {
+                } else if (!fee.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())
+                        && !fee.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The fee must be STEEM or SBD.");
-                } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                } else if (!sbdAmount.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The sbd amount must contain SBD.");
-                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.STEEM)) {
+                } else if (!steemAmount.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())) {
                     throw new InvalidParameterException("The steem amount must contain STEEM.");
                 }
             }

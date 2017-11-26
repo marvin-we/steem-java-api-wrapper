@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -216,15 +216,15 @@ public class ClaimRewardBalanceOperation extends Operation {
             }
 
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
-                if (!rewardSbd.getSymbol().equals(AssetSymbolType.SBD)) {
+                if (!rewardSbd.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The SBD reward must be of symbol type SBD.");
                 } else if (rewardSbd.getAmount() < 0) {
                     throw new InvalidParameterException("Cannot claim a negative SBD amount");
-                } else if (!rewardVests.getSymbol().equals(AssetSymbolType.VESTS)) {
+                } else if (!rewardVests.getSymbol().equals(SteemJConfig.getInstance().getVestsSymbol())) {
                     throw new InvalidParameterException("The VESTS reward must be of symbol type VESTS.");
                 } else if (rewardVests.getAmount() < 0) {
                     throw new InvalidParameterException("Cannot claim a negative VESTS amount");
-                } else if (!rewardSteem.getSymbol().equals(AssetSymbolType.STEEM)) {
+                } else if (!rewardSteem.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())) {
                     throw new InvalidParameterException("The STEEM reward must be of symbol type STEEM.");
                 } else if (rewardSteem.getAmount() < 0) {
                     throw new InvalidParameterException("Cannot claim a negative STEEM amount");

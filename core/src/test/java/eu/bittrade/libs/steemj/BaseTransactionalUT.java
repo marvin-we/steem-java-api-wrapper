@@ -3,6 +3,8 @@ package eu.bittrade.libs.steemj;
 import java.io.UnsupportedEncodingException;
 
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
 /**
@@ -20,6 +22,8 @@ public abstract class BaseTransactionalUT extends BaseUT {
      */
     protected static void setupUnitTestEnvironmentForTransactionalTests() {
         setupUnitTestEnvironment();
+
+        SteemJConfig.getInstance().setValidationLevel(ValidationType.SKIP_VALIDATION);
     }
 
     /**

@@ -14,7 +14,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -299,10 +299,11 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
                 throw new InvalidParameterException("The sell asset must be the base of the price.");
             } else if (exchangeRate.multiply(amountToSell).getAmount() <= 0) {
                 throw new InvalidParameterException("The Amount to sell cannot round to 0 when traded.");
-            } else if (!((amountToSell.getSymbol().equals(AssetSymbolType.STEEM)
-                    && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.SBD))
-                    || (amountToSell.getSymbol().equals(AssetSymbolType.SBD)
-                            && this.getExchangeRate().getQuote().getSymbol().equals(AssetSymbolType.STEEM)))) {
+            } else if (!((amountToSell.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol()) && this
+                    .getExchangeRate().getQuote().getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol()))
+                    || (amountToSell.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())
+                            && this.getExchangeRate().getQuote().getSymbol()
+                                    .equals(SteemJConfig.getInstance().getTokenSymbol())))) {
                 throw new InvalidParameterException("Limit order must be for the STEEM:SBD market.");
             }
         }

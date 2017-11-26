@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -129,10 +129,11 @@ public class FeedPublishOperation extends Operation {
     public void validate(ValidationType validationType) {
         if (!ValidationType.SKIP_VALIDATION.equals(validationType)
                 && (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType))
-                && (!(exchangeRate.getBase().getSymbol().equals(AssetSymbolType.STEEM)
-                        && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.SBD)
-                        || exchangeRate.getBase().getSymbol().equals(AssetSymbolType.SBD)
-                                && exchangeRate.getQuote().getSymbol().equals(AssetSymbolType.STEEM)))) {
+                && (!(exchangeRate.getBase().getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())
+                        && exchangeRate.getQuote().getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())
+                        || exchangeRate.getBase().getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())
+                                && exchangeRate.getQuote().getSymbol()
+                                        .equals(SteemJConfig.getInstance().getTokenSymbol())))) {
             throw new InvalidParameterException("The Price feed must be a STEEM/SBD price.");
         }
     }

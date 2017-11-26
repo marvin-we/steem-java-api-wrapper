@@ -9,7 +9,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
@@ -216,7 +216,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
             super.validate(validationType);
 
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
-                if (!fee.getSymbol().equals(AssetSymbolType.STEEM)) {
+                if (!fee.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())) {
                     throw new InvalidParameterException("The fee must be paid in STEEM.");
                 } else if (fee.getAmount() < 0) {
                     throw new InvalidParameterException("The fee must be a postive amount.");

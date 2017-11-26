@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -139,7 +139,7 @@ public class WithdrawVestingOperation extends Operation {
     public void validate(ValidationType validationType) {
         if ((!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
                 && !ValidationType.SKIP_VALIDATION.equals(validationType))
-                && (!AssetSymbolType.VESTS.equals(this.getVestingShares().getSymbol()))) {
+                && (!SteemJConfig.getInstance().getVestsSymbol().equals(this.getVestingShares().getSymbol()))) {
             throw new InvalidParameterException("The vesting shares needs to be provided in VESTS.");
         }
     }

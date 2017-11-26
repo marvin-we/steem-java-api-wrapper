@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -165,7 +165,7 @@ public class DelegateVestingSharesOperation extends Operation {
     public void validate(ValidationType validationType) {
         if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
-                if (!vestingShares.getSymbol().equals(AssetSymbolType.VESTS)) {
+                if (!vestingShares.getSymbol().equals(SteemJConfig.getInstance().getVestsSymbol())) {
                     throw new InvalidParameterException("Can only delegate VESTS.");
                 } else if (vestingShares.getAmount() <= 0) {
                     throw new InvalidParameterException("Can't delegate a negative amount of VESTS.");

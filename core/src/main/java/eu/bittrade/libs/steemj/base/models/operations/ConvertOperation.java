@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -171,7 +171,7 @@ public class ConvertOperation extends Operation {
     public void validate(ValidationType validationType) {
         if (!ValidationType.SKIP_VALIDATION.equals(validationType)
                 && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
-            if (!amount.getSymbol().equals(AssetSymbolType.SBD)) {
+            if (!amount.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                 // Only allow conversion from SBD to STEEM, allowing the
                 // opposite can enable traders to abuse market fluxuations
                 // through converting large quantities without moving the price.

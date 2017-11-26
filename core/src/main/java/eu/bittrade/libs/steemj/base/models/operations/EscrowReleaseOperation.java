@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -94,8 +94,8 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      */
     public EscrowReleaseOperation(AccountName from, AccountName to, AccountName agent, long escrowId, AccountName who,
             AccountName receiver) {
-        this(from, to, agent, escrowId, who, receiver, new Asset(0, AssetSymbolType.SBD),
-                new Asset(0, AssetSymbolType.STEEM));
+        this(from, to, agent, escrowId, who, receiver, new Asset(0, SteemJConfig.getInstance().getDollarSymbol()),
+                new Asset(0, SteemJConfig.getInstance().getTokenSymbol()));
     }
 
     /**
@@ -289,11 +289,11 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
                 if (steemAmount.getAmount() < 0) {
                     throw new InvalidParameterException("The steem amount cannot be negative.");
-                } else if (!steemAmount.getSymbol().equals(AssetSymbolType.STEEM)) {
+                } else if (!steemAmount.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())) {
                     throw new InvalidParameterException("The steem amount must contain STEEM.");
                 } else if (sbdAmount.getAmount() < 0) {
                     throw new InvalidParameterException("The sbd amount cannot be negative.");
-                } else if (!sbdAmount.getSymbol().equals(AssetSymbolType.SBD)) {
+                } else if (!sbdAmount.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The sbd amount must contain SBD.");
                 } else if (sbdAmount.getAmount() + steemAmount.getAmount() < 0) {
                     throw new InvalidParameterException("An escrow must release a non-zero amount.");

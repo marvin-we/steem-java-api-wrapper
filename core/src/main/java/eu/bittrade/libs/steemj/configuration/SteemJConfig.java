@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.AddressPrefixType;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -88,6 +89,9 @@ public class SteemJConfig {
     private short steemJWeight;
     private ValidationType validationLevel;
     private SynchronizationType synchronizationLevel;
+    private AssetSymbolType dollarSymbol;
+    private AssetSymbolType tokenSymbol;
+    private AssetSymbolType vestsSymbol;
 
     /**
      * Default constructor that will set all default values.
@@ -116,6 +120,9 @@ public class SteemJConfig {
         this.steemJWeight = 250;
         this.validationLevel = ValidationType.ALL;
         this.synchronizationLevel = SynchronizationType.FULL;
+        this.dollarSymbol = AssetSymbolType.SBD;
+        this.tokenSymbol = AssetSymbolType.STEEM;
+        this.vestsSymbol = AssetSymbolType.VESTS;
 
         // Fill the key store with the provided accountName and private keys.
         this.defaultAccount = new AccountName(System.getProperty("steemj.default.account", ""));
@@ -554,6 +561,71 @@ public class SteemJConfig {
      */
     public ValidationType getValidationLevel() {
         return validationLevel;
+    }
+
+    /**
+     * Get the currently configured {@link AssetSymbolType} for dollars (e.g.
+     * SBD). The configured symbol type is used to validate VESTS fields of
+     * operations.
+     * 
+     * @return The currently configured {@link AssetSymbolType} for dollars.
+     */
+    public AssetSymbolType getDollarSymbol() {
+        return dollarSymbol;
+    }
+
+    /**
+     * Override the default <code>dollarSymbol</code>. The configured symbol
+     * type is used to validate VESTS fields of operations.
+     * 
+     * @param dollarSymbol
+     *            The {@link AssetSymbolType} for dollars to set.
+     */
+    public void setDollarSymbol(AssetSymbolType dollarSymbol) {
+        this.dollarSymbol = dollarSymbol;
+    }
+
+    /**
+     * Get the currently configured {@link AssetSymbolType} for tokens (e.g.
+     * STEEM). The configured symbol type is used to validate VESTS fields of
+     * operations.
+     * 
+     * @return The currently configured {@link AssetSymbolType} for tokens.
+     */
+    public AssetSymbolType getTokenSymbol() {
+        return tokenSymbol;
+    }
+
+    /**
+     * Override the default <code>tokenSymbol</code>. The configured symbol type
+     * is used to validate token fields of operations.
+     * 
+     * @param tokenSymbol
+     *            The {@link AssetSymbolType} for tokens to set.
+     */
+    public void setTokenSymbol(AssetSymbolType tokenSymbol) {
+        this.tokenSymbol = tokenSymbol;
+    }
+
+    /**
+     * Get the currently configured {@link AssetSymbolType} for VESTS. The
+     * configured symbol type is used to validate VESTS fields of operations.
+     * 
+     * @return The currently configured {@link AssetSymbolType} for VESTS.
+     */
+    public AssetSymbolType getVestsSymbol() {
+        return vestsSymbol;
+    }
+
+    /**
+     * Override the default <code>vestsSymbol</code>. The configured symbol type
+     * is used to validate VESTS fields of operations.
+     * 
+     * @param vestsSymbol
+     *            The {@link AssetSymbolType} for VESTS to set.
+     */
+    public void setVestsSymbol(AssetSymbolType vestsSymbol) {
+        this.vestsSymbol = vestsSymbol;
     }
 
     /**

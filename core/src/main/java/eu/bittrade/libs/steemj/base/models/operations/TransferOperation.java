@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -119,7 +119,7 @@ public class TransferOperation extends AbstractTransferOperation {
             super.validate(validationType);
 
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
-                if (amount.getSymbol().equals(AssetSymbolType.VESTS)) {
+                if (amount.getSymbol().equals(SteemJConfig.getInstance().getVestsSymbol())) {
                     throw new InvalidParameterException("Transfering Steem Power (VESTS) is not allowed.");
                 } else if (amount.getAmount() <= 0) {
                     throw new InvalidParameterException("Must transfer a nonzero amount.");

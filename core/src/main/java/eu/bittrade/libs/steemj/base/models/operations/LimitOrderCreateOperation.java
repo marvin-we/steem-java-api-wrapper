@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -287,8 +287,10 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     public void validate(ValidationType validationType) {
         if (!ValidationType.SKIP_VALIDATION.equals(validationType)
                 && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
-                && (!AssetSymbolType.STEEM.equals(amountToSell) && AssetSymbolType.SBD.equals(minToReceive))
-                || (AssetSymbolType.SBD.equals(amountToSell) && AssetSymbolType.STEEM.equals(minToReceive))) {
+                && (!SteemJConfig.getInstance().getTokenSymbol().equals(amountToSell)
+                        && SteemJConfig.getInstance().getDollarSymbol().equals(minToReceive))
+                || (SteemJConfig.getInstance().getDollarSymbol().equals(amountToSell)
+                        && SteemJConfig.getInstance().getTokenSymbol().equals(minToReceive))) {
             // TODO: (amount_to_sell / min_to_receive).validate();
             throw new InvalidParameterException("Limit order must be for the STEEM:SBD market.");
         }

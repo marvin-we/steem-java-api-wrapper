@@ -16,7 +16,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -125,7 +125,8 @@ public class CommentOptionsOperation extends Operation {
      */
     public CommentOptionsOperation(AccountName author, Permlink permlink, short percentSteemDollars,
             List<CommentOptionsExtension> extensions) {
-        this(author, permlink, new Asset(1000000000, AssetSymbolType.SBD), percentSteemDollars, true, true, extensions);
+        this(author, permlink, new Asset(1000000000, SteemJConfig.getInstance().getDollarSymbol()), percentSteemDollars,
+                true, true, extensions);
     }
 
     /**
@@ -381,7 +382,7 @@ public class CommentOptionsOperation extends Operation {
     public void validate(ValidationType validationType) {
         if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
-                if (!maxAcceptedPayout.getSymbol().equals(AssetSymbolType.SBD)) {
+                if (!maxAcceptedPayout.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The maximal accepted payout must be in SBD.");
                 } else if (maxAcceptedPayout.getAmount() < 0) {
                     throw new InvalidParameterException("Cannot accept less than 0 payout.");

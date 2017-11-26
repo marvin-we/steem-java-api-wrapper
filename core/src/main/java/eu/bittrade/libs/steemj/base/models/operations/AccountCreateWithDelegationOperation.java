@@ -16,7 +16,7 @@ import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -183,7 +183,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
             super.validate(validationType);
 
             if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
-                if (!delegation.getSymbol().equals(AssetSymbolType.VESTS)) {
+                if (!delegation.getSymbol().equals(SteemJConfig.getInstance().getVestsSymbol())) {
                     throw new InvalidParameterException("The delegation must have the symbol type VESTS.");
                 } else if (delegation.getAmount() < 0) {
                     throw new InvalidParameterException("The delegation must be a postive amount.");

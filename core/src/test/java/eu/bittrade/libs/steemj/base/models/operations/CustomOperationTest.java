@@ -40,8 +40,6 @@ public class CustomOperationTest extends BaseTransactionalUT {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        signedTransaction.setExpirationDate(new TimePointSec("2017-04-06T08:29:27UTC"));
-
         ArrayList<AccountName> requiredAuths = new ArrayList<>();
         requiredAuths.add(new AccountName("foobarc"));
 
@@ -53,8 +51,8 @@ public class CustomOperationTest extends BaseTransactionalUT {
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(customOperation);
 
-        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
-                operations, null);
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX,
+                new TimePointSec("2017-04-06T08:29:27UTC"), operations, null);
         signedTransaction.sign();
     }
 

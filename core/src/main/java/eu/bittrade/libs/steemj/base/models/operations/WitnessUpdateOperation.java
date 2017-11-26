@@ -15,7 +15,7 @@ import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -109,7 +109,7 @@ public class WitnessUpdateOperation extends Operation {
         this.setBlockSigningKey(blockSigningKey);
         this.setFee(fee);
 
-        Asset accountCreationFee = new Asset(1, AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(1, SteemJConfig.getInstance().getTokenSymbol());
         long maximumBlockSize = 131072;
         int sdbInterestRate = 1000;
         ChainProperties chainProperties = new ChainProperties(accountCreationFee, maximumBlockSize, sdbInterestRate);
@@ -267,7 +267,8 @@ public class WitnessUpdateOperation extends Operation {
     public void validate(ValidationType validationType) {
         if ((!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
                 && !ValidationType.SKIP_VALIDATION.equals(validationType))
-                && (this.getFee().getAmount() < 0 || !AssetSymbolType.STEEM.equals(this.getFee().getSymbol()))) {
+                && (this.getFee().getAmount() < 0
+                        || !SteemJConfig.getInstance().getTokenSymbol().equals(this.getFee().getSymbol()))) {
             throw new InvalidParameterException("The fee needs to be a positive amount of STEEM.");
         }
     }
