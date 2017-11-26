@@ -62,11 +62,6 @@ public class CustomJsonOperationIT extends BaseTransactionVerificationIT {
         setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
                 STEEMNET_ENDPOINT_IDENTIFIER);
 
-        // If the default expiration date for all integration tests
-        // (2016-04-06T08:29:27UTC) is used, the transaction can't be verified.
-        // As a workaround new date is set that is not that far in the past.
-        signedTransaction.setExpirationDate(new TimePointSec("2017-04-06T08:29:27UTC"));
-
         ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
         requiredPostingAuths.add(new AccountName("dez1337"));
 
@@ -109,8 +104,11 @@ public class CustomJsonOperationIT extends BaseTransactionVerificationIT {
         operations.add(customJsonIgnoreOperation);
         operations.add(customJsonReblogOperation);
 
-        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
-                operations, null);
+        // If the default expiration date for all integration tests
+        // (2016-04-06T08:29:27UTC) is used, the transaction can't be verified.
+        // As a workaround new date is set that is not that far in the past.
+        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX,
+                new TimePointSec("2017-04-06T08:29:27UTC"), operations, null);
         signedTransaction.sign();
     }
 
