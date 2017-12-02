@@ -152,7 +152,7 @@ public class SteemJ {
                 || SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.APIS_ONLY)) {
             for (SteemApiType steemApi : SteemApiType.values()) {
                 if (getApiByName(steemApi.toString().toLowerCase()) == null) {
-                    LOGGER.warn("The {} is not published by the configured node.", steemApi);
+                    LOGGER.debug("The {} is not published by the configured node.", steemApi);
                 }
             }
         }
