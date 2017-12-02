@@ -2864,6 +2864,10 @@ public class SteemJ {
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
      * configured in the {@link SteemJConfig#getPrivateKeyStorage()
      * PrivateKeyStorage}.</li>
+     * <li>In case the {@link SteemJConfig#getSteemJWeight() SteemJWeight} is
+     * set to a positive value this method will add a comment options operation.
+     * Due to this, the {@link SteemJConfig#getSteemJWeight() SteemJWeight}
+     * percentage will be paid to the SteemJ account.</li>
      * <li>This method will automatically use the
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
      * that will publish the post - If no default account has been provided,
@@ -3027,7 +3031,11 @@ public class SteemJ {
      * create comment operation the private posting key of the
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
      * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.</li>
+     * PrivateKeyStorage}.</li> *
+     * <li>In case the {@link SteemJConfig#getSteemJWeight() SteemJWeight} is
+     * set to a positive value this method will add a comment options operation.
+     * Due to this, the {@link SteemJConfig#getSteemJWeight() SteemJWeight}
+     * percentage will be paid to the SteemJ account.</li>
      * <li>This method will automatically use the
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
      * that will publish the comment - If no default account has been provided,
