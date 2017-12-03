@@ -88,11 +88,11 @@ public class Comment {
     @JsonProperty("percent_steem_dollars")
     private short percentSteemDollars;
     @JsonProperty("allow_replies")
-    private Boolean allowReplies;
+    private boolean allowReplies;
     @JsonProperty("allow_votes")
-    private Boolean allowVotes;
+    private boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
-    private Boolean allowCurationRewards;
+    private boolean allowCurationRewards;
     // TODO: Fix type
     // bip::vector< beneficiary_route_type, allocator< beneficiary_route_type >
     // > beneficiaries;
@@ -332,21 +332,21 @@ public class Comment {
     /**
      * @return the allowReplies
      */
-    public Boolean getAllowReplies() {
+    public boolean getAllowReplies() {
         return allowReplies;
     }
 
     /**
      * @return the allowVotes
      */
-    public Boolean getAllowVotes() {
+    public boolean getAllowVotes() {
         return allowVotes;
     }
 
     /**
      * @return the allowCurationRewards
      */
-    public Boolean getAllowCurationRewards() {
+    public boolean getAllowCurationRewards() {
         return allowCurationRewards;
     }
 

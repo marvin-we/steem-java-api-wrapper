@@ -33,7 +33,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
     @JsonProperty("percent")
     private int percent;
     @JsonProperty("auto_vest")
-    private Boolean autoVest;
+    private boolean autoVest;
 
     /**
      * Create a new set withdraw vesting route operation.
@@ -62,7 +62,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
     @JsonCreator
     public SetWithdrawVestingRouteOperation(@JsonProperty("from_account") AccountName fromAccount,
             @JsonProperty("to_account") AccountName toAccount, @JsonProperty("percent") int percent,
-            @JsonProperty("auto_vest") Boolean autoVest) {
+            @JsonProperty("auto_vest") boolean autoVest) {
         super(false);
 
         this.setFromAccount(fromAccount);
@@ -73,7 +73,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
 
     /**
      * Like
-     * {@link #SetWithdrawVestingRouteOperation(AccountName, AccountName, int, Boolean)},
+     * {@link #SetWithdrawVestingRouteOperation(AccountName, AccountName, int, boolean)},
      * but will automatically use the default values (<code>percent=0</code> and
      * <code>autoVest=false</code>).
      * 
@@ -87,7 +87,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      *             If one of the arguments does not fulfill the requirements.
      */
     public SetWithdrawVestingRouteOperation(AccountName fromAccount, AccountName toAccount) {
-        this(fromAccount, toAccount, 0, Boolean.FALSE);
+        this(fromAccount, toAccount, 0, false);
     }
 
     /**
@@ -164,7 +164,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      * 
      * @return True if the funds should be reinvested or false if not.
      */
-    public Boolean getAutoVest() {
+    public boolean getAutoVest() {
         return autoVest;
     }
 

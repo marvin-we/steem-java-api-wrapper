@@ -26,7 +26,7 @@ public class DeclineVotingRightsOperation extends Operation {
     @JsonProperty("account")
     private AccountName account;
     @JsonProperty("decline")
-    private Boolean decline;
+    private boolean decline;
 
     /**
      * Create a new decline voting rights operation. Use this operation with
@@ -38,12 +38,12 @@ public class DeclineVotingRightsOperation extends Operation {
      *            {@link #setAccount(AccountName)}).
      * @param decline
      *            Define if the voting rights should be declined or not (see
-     *            {@link #setDecline(Boolean)}).
+     *            {@link #setDecline(boolean)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
     public DeclineVotingRightsOperation(@JsonProperty("account") AccountName account,
-            @JsonProperty("decline") Boolean decline) {
+            @JsonProperty("decline") boolean decline) {
         super(false);
 
         this.setAccount(account);
@@ -79,7 +79,7 @@ public class DeclineVotingRightsOperation extends Operation {
      * @return The information if the {@link #getAccount() account} decline its
      *         voting rights or not.
      */
-    public Boolean getDecline() {
+    public boolean getDecline() {
         return decline;
     }
 
@@ -91,12 +91,8 @@ public class DeclineVotingRightsOperation extends Operation {
      *            The information if the {@link #getAccount() account} decline
      *            its voting rights or not.
      */
-    public void setDecline(Boolean decline) {
-        if (decline == null) {
-            this.decline = false;
-        } else {
-            this.decline = decline;
-        }
+    public void setDecline(boolean decline) {
+        this.decline = decline;
     }
 
     @Override

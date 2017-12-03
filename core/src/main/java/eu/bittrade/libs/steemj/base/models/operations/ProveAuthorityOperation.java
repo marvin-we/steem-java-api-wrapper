@@ -27,7 +27,7 @@ public class ProveAuthorityOperation extends Operation {
     @JsonProperty("challenged")
     private AccountName challenged;
     @JsonProperty("require_owner")
-    private Boolean requireOwner;
+    private boolean requireOwner;
 
     /**
      * Create a new prove authority operation.
@@ -43,7 +43,7 @@ public class ProveAuthorityOperation extends Operation {
      */
     @JsonCreator
     public ProveAuthorityOperation(@JsonProperty("challenged") AccountName challenged,
-            @JsonProperty("require_owner") Boolean requireOwner) {
+            @JsonProperty("require_owner") boolean requireOwner) {
         super(false);
 
         this.setChallenged(challenged);
@@ -93,7 +93,7 @@ public class ProveAuthorityOperation extends Operation {
      * @return <code>true</code> if the owner key should be used to sign this
      *         operation, or false, if the active key is sufficient.
      */
-    public Boolean getRequireOwner() {
+    public boolean getRequireOwner() {
         return requireOwner;
     }
 

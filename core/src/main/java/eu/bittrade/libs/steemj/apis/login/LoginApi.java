@@ -57,7 +57,7 @@ public class LoginApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static Boolean login(CommunicationHandler communicationHandler, AccountName accountName, String password)
+    public static boolean login(CommunicationHandler communicationHandler, AccountName accountName, String password)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.LOGIN);

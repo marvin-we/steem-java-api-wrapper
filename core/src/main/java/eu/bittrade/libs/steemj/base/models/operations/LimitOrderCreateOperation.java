@@ -31,7 +31,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     @JsonProperty("min_to_receive")
     private Asset minToReceive;
     @JsonProperty("fill_or_kill")
-    private Boolean fillOrKill;
+    private boolean fillOrKill;
     @JsonProperty("expiration")
     private TimePointSec expirationDate;
 
@@ -50,7 +50,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *            {@link #setMinToReceive(Asset)}).
      * @param fillOrKill
      *            Define if this order is a fill or kill order (see
-     *            {@link #setFillOrKill(Boolean)}).
+     *            {@link #setFillOrKill(boolean)}).
      * @param expirationDate
      *            Define how long this order is valid (see
      *            {@link #setExpirationDate(TimePointSec)}).
@@ -59,7 +59,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      */
     public LimitOrderCreateOperation(@JsonProperty("owner") AccountName owner,
             @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") Asset amountToSell,
-            @JsonProperty("min_to_receive") Asset minToReceive, @JsonProperty("fill_or_kill") Boolean fillOrKill,
+            @JsonProperty("min_to_receive") Asset minToReceive, @JsonProperty("fill_or_kill") boolean fillOrKill,
             @JsonProperty("expiration") TimePointSec expirationDate) {
         super(false);
 
@@ -213,7 +213,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @return <code>true</code> if this order was a fill or kill order,
      *         otherwise <code>false</code>.
      */
-    public Boolean getFillOrKill() {
+    public boolean getFillOrKill() {
         return fillOrKill;
     }
 
@@ -227,12 +227,8 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *            <code>true</code> if this order is a fill or kill order,
      *            otherwise <code>false</code>.
      */
-    public void setFillOrKill(Boolean fillOrKill) {
-        if (fillOrKill == null) {
-            this.fillOrKill = false;
-        } else {
-            this.fillOrKill = fillOrKill;
-        }
+    public void setFillOrKill(boolean fillOrKill) {
+        this.fillOrKill = fillOrKill;
     }
 
     /**

@@ -27,7 +27,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     @JsonProperty("who")
     private AccountName who;
     @JsonProperty("approve")
-    private Boolean approve;
+    private boolean approve;
 
     /**
      * Create a new escrow approve operation.
@@ -61,7 +61,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     @JsonCreator
     public EscrowApproveOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
             @JsonProperty("agent") AccountName agent, @JsonProperty("escrow_id") long escrowId,
-            @JsonProperty("who") AccountName who, @JsonProperty("approve") Boolean approve) {
+            @JsonProperty("who") AccountName who, @JsonProperty("approve") boolean approve) {
         super(false);
 
         this.setFrom(from);
@@ -152,7 +152,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      * 
      * @return True if the operation has been approved or false if not.
      */
-    public Boolean getApprove() {
+    public boolean getApprove() {
         return approve;
     }
 

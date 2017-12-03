@@ -31,7 +31,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
     @JsonProperty("amount_to_sell")
     private Asset amountToSell;
     @JsonProperty("fill_or_kill")
-    private Boolean fillOrKill;
+    private boolean fillOrKill;
     @JsonProperty("exchange_rate")
     private Price exchangeRate;
     @JsonProperty("expiration")
@@ -54,7 +54,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The amount to sell (see {@link #setAmountToSell(Asset)}).
      * @param fillOrKill
      *            Define if this order is a "fillOrKill" order (see
-     *            {@link #setFillOrKill(Boolean)}).
+     *            {@link #setFillOrKill(boolean)}).
      * @param exchangeRate
      *            The exchange rate to set (see
      *            {@link #setExchangeRate(Price)}).
@@ -67,7 +67,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
     @JsonCreator
     public LimitOrderCreate2Operation(@JsonProperty("owner") AccountName owner,
             @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") Asset amountToSell,
-            @JsonProperty("fill_or_kill") Boolean fillOrKill, @JsonProperty("exchange_rate") Price exchangeRate,
+            @JsonProperty("fill_or_kill") boolean fillOrKill, @JsonProperty("exchange_rate") Price exchangeRate,
             @JsonProperty("expiration") TimePointSec expirationDate) {
         super(false);
 
@@ -81,7 +81,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
 
     /**
      * Like
-     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, Asset, Boolean, Price, TimePointSec)},
+     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, Asset, boolean, Price, TimePointSec)},
      * but this constructor applies default values for the
      * <code>fillOrKill</code> and the <code>expirationDate</code> parameters.
      * The <code>fillOrKill</code> parameter is set to false and the
@@ -200,7 +200,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * @return <code>true</code> if this order was a fill or kill order,
      *         otherwise <code>false</code>.
      */
-    public Boolean getFillOrKill() {
+    public boolean getFillOrKill() {
         return fillOrKill;
     }
 
@@ -214,12 +214,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            <code>true</code> if this order is a fill or kill order,
      *            otherwise <code>false</code>.
      */
-    public void setFillOrKill(Boolean fillOrKill) {
-        if (fillOrKill == null) {
-            this.fillOrKill = false;
-        } else {
-            this.fillOrKill = fillOrKill;
-        }
+    public void setFillOrKill(boolean fillOrKill) {
+        this.fillOrKill = fillOrKill;
     }
 
     /**

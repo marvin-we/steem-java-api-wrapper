@@ -287,7 +287,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Boolean login(AccountName accountName, String password)
+    public boolean login(AccountName accountName, String password)
             throws SteemCommunicationException, SteemResponseException {
         return LoginApi.login(communicationHandler, accountName, password);
     }
@@ -1566,36 +1566,6 @@ public class SteemJ {
     }
 
     /**
-     * Login under the use of the credentials which are stored in the config
-     * object.
-     * 
-     * <p>
-     * <b>Notice:</b> The login method is only needed to access protected apis.
-     * For some apis like the broadcast_api a call of this method with empty
-     * strings can be enough to access them.
-     * 
-     * @return true if the login was successful. False otherwise.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public Boolean login() throws SteemCommunicationException, SteemResponseException {
-        return login(SteemJConfig.getInstance().getApiUsername(),
-                String.valueOf(SteemJConfig.getInstance().getApiPassword()));
-    }
-
-    /**
      * Search for accounts.
      * 
      * @param pattern
@@ -1686,7 +1656,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public Boolean verifyAuthority(SignedTransaction signedTransaction)
+    public boolean verifyAuthority(SignedTransaction signedTransaction)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.VERIFY_AUTHORITY);

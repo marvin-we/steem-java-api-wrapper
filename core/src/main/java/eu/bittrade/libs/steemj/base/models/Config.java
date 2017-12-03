@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class Config {
     @JsonProperty("IS_TEST_NET")
-    private Boolean isTestNet;
+    private boolean isTestNet;
     /**
      * @deprecated Has been removed with HF 19. Depending on the version of the
      *             used Steem Node the value of this field may be null.
@@ -404,7 +404,7 @@ public class Config {
     /**
      * @return the isTestNet
      */
-    public Boolean getIsTestNet() {
+    public boolean getIsTestNet() {
         return isTestNet;
     }
 
