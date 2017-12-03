@@ -49,19 +49,12 @@ public class LimitOrderCreate2OperationIT extends BaseTransactionVerificationIT 
         setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
                 STEEMNET_ENDPOINT_IDENTIFIER);
 
-        Asset base = new Asset();
-        base.setAmount(1L);
-        base.setSymbol(AssetSymbolType.SBD);
-
-        Asset quote = new Asset();
-        quote.setAmount(10L);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(1L, AssetSymbolType.SBD);
+        Asset quote = new Asset(10L, AssetSymbolType.STEEM);
 
         Price exchangeRate = new Price(base, quote);
 
-        Asset amountToSell = new Asset();
-        amountToSell.setAmount(1L);
-        amountToSell.setSymbol(AssetSymbolType.SBD);
+        Asset amountToSell = new Asset(1L, AssetSymbolType.SBD);
 
         TimePointSec expirationDate = new TimePointSec(EXPIRATION_DATE);
         boolean fillOrKill = false;

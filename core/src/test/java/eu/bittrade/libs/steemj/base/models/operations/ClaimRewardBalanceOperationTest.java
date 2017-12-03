@@ -46,17 +46,9 @@ public class ClaimRewardBalanceOperationTest extends BaseTransactionalUT {
 
         AccountName account = new AccountName("steemj");
 
-        Asset sbdReward = new Asset();
-        sbdReward.setAmount(1L);
-        sbdReward.setSymbol(AssetSymbolType.SBD);
-
-        Asset steemReward = new Asset();
-        steemReward.setAmount(2L);
-        steemReward.setSymbol(AssetSymbolType.STEEM);
-
-        Asset vestsReward = new Asset();
-        vestsReward.setAmount(3L);
-        vestsReward.setSymbol(AssetSymbolType.VESTS);
+        Asset sbdReward = new Asset(1L, AssetSymbolType.SBD);
+        Asset steemReward = new Asset(2L, AssetSymbolType.STEEM);
+        Asset vestsReward = new Asset(3L, AssetSymbolType.VESTS);
 
         claimRewardBalanceOperation = new ClaimRewardBalanceOperation(account, steemReward, sbdReward, vestsReward);
 

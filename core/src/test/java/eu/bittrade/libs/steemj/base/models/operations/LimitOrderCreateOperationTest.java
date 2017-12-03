@@ -43,16 +43,12 @@ public class LimitOrderCreateOperationTest extends BaseTransactionalUT {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        Asset amountToSell = new Asset();
-        amountToSell.setAmount(1L);
-        amountToSell.setSymbol(AssetSymbolType.SBD);
+        Asset amountToSell = new Asset(1L, AssetSymbolType.SBD);
 
         TimePointSec expirationDate = new TimePointSec(EXPIRATION_DATE);
         boolean fillOrKill = false;
 
-        Asset minToReceive = new Asset();
-        minToReceive.setAmount(10L);
-        minToReceive.setSymbol(AssetSymbolType.STEEM);
+        Asset minToReceive = new Asset(10L, AssetSymbolType.STEEM);
 
         UInteger orderId = UInteger.valueOf(492995);
         AccountName owner = new AccountName("dez1337");

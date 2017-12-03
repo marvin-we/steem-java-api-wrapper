@@ -50,9 +50,7 @@ public class TransferOperationIT extends BaseTransactionVerificationIT {
         AccountName from = new AccountName("dez1337");
         AccountName to = new AccountName("steemj");
 
-        Asset amount = new Asset();
-        amount.setAmount(1L);
-        amount.setSymbol(AssetSymbolType.STEEM);
+        Asset amount = new Asset(1L, AssetSymbolType.STEEM);
 
         String memo = "Test 4 SteemJ 0.2.2";
 

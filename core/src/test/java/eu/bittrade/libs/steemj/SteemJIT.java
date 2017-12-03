@@ -461,9 +461,7 @@ public class SteemJIT extends BaseIT {
 
         config.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
-        Asset steemAmount = new Asset();
-        steemAmount.setAmount(1L);
-        steemAmount.setSymbol(AssetSymbolType.STEEM);
+        Asset steemAmount = new Asset(1L, AssetSymbolType.STEEM);
 
         AccountName from = new AccountName("dez1337");
         AccountName to = new AccountName("steemj");

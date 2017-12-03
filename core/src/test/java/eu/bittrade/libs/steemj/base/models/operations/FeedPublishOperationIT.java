@@ -49,12 +49,8 @@ public class FeedPublishOperationIT extends BaseTransactionVerificationIT {
                 STEEMNET_ENDPOINT_IDENTIFIER);
 
         // 1 STEEM = 1.15 SBD
-        Asset base = new Asset();
-        base.setAmount(115);
-        base.setSymbol(AssetSymbolType.SBD);
-        Asset quote = new Asset();
-        quote.setAmount(100);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(115, AssetSymbolType.SBD);
+        Asset quote = new Asset(100, AssetSymbolType.STEEM);
 
         Price exchangeRate = new Price(base, quote);
         AccountName publisher = new AccountName("dez1337");

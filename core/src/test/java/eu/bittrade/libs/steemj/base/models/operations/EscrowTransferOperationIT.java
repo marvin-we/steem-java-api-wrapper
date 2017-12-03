@@ -49,17 +49,9 @@ public class EscrowTransferOperationIT extends BaseTransactionVerificationIT {
         TimePointSec ratificationDeadlineDate = new TimePointSec(1506966866);
         String jsonMeta = "";
 
-        Asset sbdAmount = new Asset();
-        sbdAmount.setAmount(1L);
-        sbdAmount.setSymbol(AssetSymbolType.SBD);
-
-        Asset steemAmount = new Asset();
-        steemAmount.setAmount(10L);
-        steemAmount.setSymbol(AssetSymbolType.STEEM);
-
-        Asset fee = new Asset();
-        fee.setAmount(1L);
-        fee.setSymbol(AssetSymbolType.STEEM);
+        Asset sbdAmount = new Asset(1L, AssetSymbolType.SBD);
+        Asset steemAmount = new Asset(10L, AssetSymbolType.STEEM);
+        Asset fee = new Asset(1L, AssetSymbolType.STEEM);
 
         EscrowTransferOperation escrowTransferOperation = new EscrowTransferOperation(from, to, agent, escrowId,
                 sbdAmount, steemAmount, fee, ratificationDeadlineDate, escrowExpirationDate, jsonMeta);

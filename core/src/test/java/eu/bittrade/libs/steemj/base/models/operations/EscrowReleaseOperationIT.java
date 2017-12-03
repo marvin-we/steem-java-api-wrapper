@@ -56,13 +56,8 @@ public class EscrowReleaseOperationIT extends BaseTransactionVerificationIT {
         AccountName receiver = new AccountName("dez1337");
         long escrowId = 34;
 
-        Asset sbdAmount = new Asset();
-        sbdAmount.setAmount(1L);
-        sbdAmount.setSymbol(AssetSymbolType.SBD);
-
-        Asset steemAmount = new Asset();
-        steemAmount.setAmount(10L);
-        steemAmount.setSymbol(AssetSymbolType.STEEM);
+        Asset sbdAmount = new Asset(1L, AssetSymbolType.SBD);
+        Asset steemAmount = new Asset(10L, AssetSymbolType.STEEM);
 
         EscrowReleaseOperation escrowReleaseOperation = new EscrowReleaseOperation(from, to, agent, escrowId, who,
                 receiver, sbdAmount, steemAmount);

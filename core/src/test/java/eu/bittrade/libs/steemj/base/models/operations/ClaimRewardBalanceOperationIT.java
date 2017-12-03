@@ -51,17 +51,9 @@ public class ClaimRewardBalanceOperationIT extends BaseTransactionVerificationIT
 
         AccountName account = new AccountName("dez1337");
 
-        Asset rewardSbd = new Asset();
-        rewardSbd.setAmount(1);
-        rewardSbd.setSymbol(AssetSymbolType.SBD);
-
-        Asset rewardSteem = new Asset();
-        rewardSteem.setAmount(2);
-        rewardSteem.setSymbol(AssetSymbolType.STEEM);
-
-        Asset rewardVests = new Asset();
-        rewardVests.setAmount(2);
-        rewardVests.setSymbol(AssetSymbolType.VESTS);
+        Asset rewardSbd = new Asset(1, AssetSymbolType.SBD);
+        Asset rewardSteem = new Asset(2, AssetSymbolType.STEEM);
+        Asset rewardVests = new Asset(2, AssetSymbolType.VESTS);
 
         ClaimRewardBalanceOperation claimRewardBalanceOperation = new ClaimRewardBalanceOperation(account, rewardSteem,
                 rewardSbd, rewardVests);

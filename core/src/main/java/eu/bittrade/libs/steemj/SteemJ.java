@@ -3636,11 +3636,12 @@ public class SteemJ {
     }
 
     /**
-     * Transfer currency from default account to recipient. Amount is
-     * automatically converted from normalized representation to base
+     * Transfer the currency of your choice from
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} to recipient.
+     * Amount is automatically converted from normalized representation to base
      * representation. For example, to transfer 1.00 SBD to another account,
      * simply use:
-     * <code>SteemJ.transfer(new AccountName("accountb"), AssetSymbolType.SBD, 1.0, "My memo");</code>
+     * <code>SteemJ.transfer(new AccountName("accountb"), new Asset(1.0, AssetSymbolType.SBD), "My memo");</code>
      *
      * <b>Attention</b>
      * <ul>
@@ -3655,20 +3656,18 @@ public class SteemJ {
      * transfer from. If no default account has been provided, this method will
      * throw an error. If you do not want to configure the following account as
      * a default account, please use the
-     * {@link #transfer(AccountName, AccountName, AssetSymbolType, double, String)}
-     * method and provide the <code>from</code> account separately.</li>
+     * {@link #transfer(AccountName, AccountName, Asset, String)} method and
+     * provide the <code>from</code> account separately.</li>
      * </ul>
      *
      * @param to
      *            The account name of the account the
      *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
      *            transfer currency to.
-     * @param assetType
-     *            Asset type, see
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType}.
      * @param amount
-     *            Normalized amount of asset to transfer. For example, use 1.0
-     *            to transfer 1 SBD.
+     *            An {@link Asset} object containing the Asset type (see
+     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType} and the
+     *            amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
      * @return The TransferOperation broadcast.
@@ -3692,13 +3691,13 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public TransferOperation transfer(AccountName to, AssetSymbolType assetType, double amount, String memo)
+    public TransferOperation transfer(AccountName to, Asset amount, String memo)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return transfer(SteemJConfig.getInstance().getDefaultAccount(), to, assetType, amount, memo);
+        return transfer(SteemJConfig.getInstance().getDefaultAccount(), to, amount, memo);
     }
 
     /**
@@ -3719,11 +3718,10 @@ public class SteemJ {
      *            The account from which to transfer currency.
      * @param to
      *            The account to which to transfer currency.
-     * @param assetType
-     *            Asset type, see
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType}.
      * @param amount
-     *            The amount to transfer.
+     *            An {@link Asset} object containing the Asset type (see
+     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType} and the
+     *            amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
      * @return The TransferOperation broadcast.
@@ -3747,19 +3745,9 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public TransferOperation transfer(AccountName from, AccountName to, AssetSymbolType assetType, double amount,
-            String memo) throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        // Convert amount to long asset value. Conversion factor depends on
-        // asset type
-        Asset asset = new Asset();
-        asset.setSymbol(assetType);
-        asset.setAmount(Double.valueOf(amount * Math.pow(10.0, asset.getPrecision())).longValue());
-        if (!asset.toReal().equals(amount)) {
-            throw new IllegalStateException("Amount conversion mismatch: " + amount + " -> " + asset.toReal());
-        }
-
-        // Create & broadcast transfer operation
-        TransferOperation transferOperation = new TransferOperation(from, to, asset, memo);
+    public TransferOperation transfer(AccountName from, AccountName to, Asset amount, String memo)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        TransferOperation transferOperation = new TransferOperation(from, to, amount, memo);
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(transferOperation);
         DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();

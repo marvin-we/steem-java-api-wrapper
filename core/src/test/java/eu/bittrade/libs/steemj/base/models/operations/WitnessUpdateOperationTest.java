@@ -53,15 +53,11 @@ public class WitnessUpdateOperationTest extends BaseTransactionalUT {
         PublicKey blockSigningKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
                 + "6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb");
 
-        Asset fee = new Asset();
-        fee.setAmount(1L);
-        fee.setSymbol(AssetSymbolType.STEEM);
+        Asset fee = new Asset(1L, AssetSymbolType.STEEM);
 
         AccountName owner = new AccountName("dez1337");
 
-        Asset accountCreationFee = new Asset();
-        accountCreationFee.setAmount(5000L);
-        accountCreationFee.setSymbol(AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(5000L, AssetSymbolType.STEEM);
 
         long maximumBlockSize = 65536;
         int sbdInterestRate = 0;

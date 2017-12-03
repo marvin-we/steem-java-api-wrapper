@@ -47,9 +47,7 @@ public class WithdrawVestingOperationIT extends BaseTransactionVerificationIT {
 
         AccountName account = new AccountName("dez1337");
 
-        Asset vestingShares = new Asset();
-        vestingShares.setAmount(1000);
-        vestingShares.setSymbol(AssetSymbolType.VESTS);
+        Asset vestingShares = new Asset(1000, AssetSymbolType.VESTS);
 
         WithdrawVestingOperation withdrawVestingOperation = new WithdrawVestingOperation(account, vestingShares);
 

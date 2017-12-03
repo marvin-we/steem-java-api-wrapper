@@ -46,19 +46,12 @@ public class LimitOrderCreate2OperationTest extends BaseTransactionalUT {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        Asset base = new Asset();
-        base.setAmount(1L);
-        base.setSymbol(AssetSymbolType.SBD);
-
-        Asset quote = new Asset();
-        quote.setAmount(10L);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(1L, AssetSymbolType.SBD);
+        Asset quote = new Asset(10L, AssetSymbolType.STEEM);
 
         Price exchangeRate = new Price(base, quote);
 
-        Asset amountToSell = new Asset();
-        amountToSell.setAmount(1L);
-        amountToSell.setSymbol(AssetSymbolType.SBD);
+        Asset amountToSell = new Asset(1L, AssetSymbolType.SBD);
 
         TimePointSec expirationDate = new TimePointSec(EXPIRATION_DATE);
         boolean fillOrKill = false;

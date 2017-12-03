@@ -29,12 +29,8 @@ public class PriceTest {
      */
     @Test
     public void testPriceToByteArray() throws Exception {
-        Asset base = new Asset();
-        base.setAmount(115);
-        base.setSymbol(AssetSymbolType.SBD);
-        Asset quote = new Asset();
-        quote.setAmount(100);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(115, AssetSymbolType.SBD);
+        Asset quote = new Asset(100, AssetSymbolType.STEEM);
 
         Price price = new Price(base, quote);
 
@@ -48,30 +44,18 @@ public class PriceTest {
      */
     @Test
     public void testPriceEqualsMethod() {
-        Asset base = new Asset();
-        base.setAmount(115);
-        base.setSymbol(AssetSymbolType.SBD);
-        Asset quote = new Asset();
-        quote.setAmount(100);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(115, AssetSymbolType.SBD);
+        Asset quote = new Asset(100, AssetSymbolType.STEEM);
 
         Price price = new Price(base, quote);
 
-        Asset anotherBase = new Asset();
-        anotherBase.setAmount(115);
-        anotherBase.setSymbol(AssetSymbolType.SBD);
-        Asset anotherQuote = new Asset();
-        anotherQuote.setAmount(100);
-        anotherQuote.setSymbol(AssetSymbolType.STEEM);
+        Asset anotherBase = new Asset(115, AssetSymbolType.SBD);
+        Asset anotherQuote = new Asset(100, AssetSymbolType.STEEM);
 
         Price anotherPrice = new Price(anotherBase, anotherQuote);
 
-        Asset defferentBase = new Asset();
-        defferentBase.setAmount(115);
-        defferentBase.setSymbol(AssetSymbolType.SBD);
-        Asset differentQuote = new Asset();
-        differentQuote.setAmount(1230);
-        differentQuote.setSymbol(AssetSymbolType.STEEM);
+        Asset defferentBase = new Asset(115, AssetSymbolType.SBD);
+        Asset differentQuote = new Asset(1230, AssetSymbolType.STEEM);
 
         Price differentPrice = new Price(defferentBase, differentQuote);
 
@@ -86,12 +70,10 @@ public class PriceTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testPriceValidationNegativeBaseAsset() {
-        Asset base = new Asset();
+        Asset base = new Asset(-1, AssetSymbolType.SBD);
         base.setAmount(-1);
         base.setSymbol(AssetSymbolType.SBD);
-        Asset quote = new Asset();
-        quote.setAmount(100);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset quote = new Asset(100, AssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
@@ -103,12 +85,8 @@ public class PriceTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testPriceValidationNegativeQuoteAsset() {
-        Asset base = new Asset();
-        base.setAmount(115);
-        base.setSymbol(AssetSymbolType.SBD);
-        Asset quote = new Asset();
-        quote.setAmount(-1);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(115, AssetSymbolType.SBD);
+        Asset quote = new Asset(-1, AssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
@@ -120,12 +98,8 @@ public class PriceTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testPriceValidationNegativeSameSymbols() {
-        Asset base = new Asset();
-        base.setAmount(115);
-        base.setSymbol(AssetSymbolType.STEEM);
-        Asset quote = new Asset();
-        quote.setAmount(100);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(115, AssetSymbolType.STEEM);
+        Asset quote = new Asset(100, AssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
@@ -137,12 +111,8 @@ public class PriceTest {
      */
     @Test
     public void testPriceValidation() {
-        Asset base = new Asset();
-        base.setAmount(115);
-        base.setSymbol(AssetSymbolType.SBD);
-        Asset quote = new Asset();
-        quote.setAmount(100);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(115, AssetSymbolType.SBD);
+        Asset quote = new Asset(100, AssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
@@ -152,19 +122,12 @@ public class PriceTest {
      */
     @Test
     public void testMultiply() {
-        Asset base = new Asset();
-        base.setAmount(50L);
-        base.setSymbol(AssetSymbolType.SBD);
-
-        Asset quote = new Asset();
-        quote.setAmount(100L);
-        quote.setSymbol(AssetSymbolType.STEEM);
+        Asset base = new Asset(50L, AssetSymbolType.SBD);
+        Asset quote = new Asset(100L, AssetSymbolType.STEEM);
 
         Price exchangeRate = new Price(base, quote);
 
-        Asset amountToSell = new Asset();
-        amountToSell.setAmount(2L);
-        amountToSell.setSymbol(AssetSymbolType.SBD);
+        Asset amountToSell = new Asset(2L, AssetSymbolType.SBD);
 
         assertTrue(exchangeRate.multiply(amountToSell).getAmount().equals(4L));
         assertTrue(exchangeRate.multiply(amountToSell).getSymbol().equals(AssetSymbolType.STEEM));

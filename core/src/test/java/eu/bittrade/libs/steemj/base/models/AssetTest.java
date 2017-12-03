@@ -34,9 +34,7 @@ public class AssetTest {
      */
     @Test
     public void testVestsAssetToByteArray() throws Exception {
-        Asset vestsAsset = new Asset();
-        vestsAsset.setSymbol(AssetSymbolType.VESTS);
-        vestsAsset.setAmount(1230);
+        Asset vestsAsset = new Asset(1230, AssetSymbolType.VESTS);
 
         assertThat(vestsAsset.getPrecision(), equalTo(6));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -52,9 +50,7 @@ public class AssetTest {
      */
     @Test
     public void testSteemAssetToByteArray() throws Exception {
-        Asset steemAsset = new Asset();
-        steemAsset.setSymbol(AssetSymbolType.STEEM);
-        steemAsset.setAmount(123000);
+        Asset steemAsset = new Asset(123000, AssetSymbolType.STEEM);
 
         assertThat(steemAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -70,9 +66,7 @@ public class AssetTest {
      */
     @Test
     public void testSbdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset();
-        sbdAsset.setSymbol(AssetSymbolType.SBD);
-        sbdAsset.setAmount(123);
+        Asset sbdAsset = new Asset(123, AssetSymbolType.SBD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -88,9 +82,7 @@ public class AssetTest {
      */
     @Test
     public void testStmdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset();
-        sbdAsset.setSymbol(AssetSymbolType.STMD);
-        sbdAsset.setAmount(56844);
+        Asset sbdAsset = new Asset(56844, AssetSymbolType.STMD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -106,9 +98,7 @@ public class AssetTest {
      */
     @Test
     public void testTestsAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset();
-        sbdAsset.setSymbol(AssetSymbolType.TESTS);
-        sbdAsset.setAmount(36741);
+        Asset sbdAsset = new Asset(36741, AssetSymbolType.TESTS);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -124,9 +114,7 @@ public class AssetTest {
      */
     @Test
     public void testTbdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset();
-        sbdAsset.setSymbol(AssetSymbolType.TBD);
-        sbdAsset.setAmount(4547);
+        Asset sbdAsset = new Asset(4547, AssetSymbolType.TBD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -142,9 +130,7 @@ public class AssetTest {
      */
     @Test
     public void testTstdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset();
-        sbdAsset.setSymbol(AssetSymbolType.TSTD);
-        sbdAsset.setAmount(78945214);
+        Asset sbdAsset = new Asset(78945214, AssetSymbolType.TSTD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -157,18 +143,11 @@ public class AssetTest {
      */
     @Test
     public void testAssetEqualsMethod() {
+        Asset asset = new Asset(115, AssetSymbolType.SBD);
 
-        Asset asset = new Asset();
-        asset.setAmount(115);
-        asset.setSymbol(AssetSymbolType.SBD);
+        Asset sameAsset = new Asset(0.115, AssetSymbolType.SBD);
 
-        Asset sameAsset = new Asset();
-        sameAsset.setAmount(115);
-        sameAsset.setSymbol(AssetSymbolType.SBD);
-
-        Asset differentAsset = new Asset();
-        differentAsset.setAmount(100);
-        differentAsset.setSymbol(AssetSymbolType.STEEM);
+        Asset differentAsset = new Asset(100, AssetSymbolType.STEEM);
 
         assertThat(asset.equals(sameAsset), equalTo(true));
         assertThat(sameAsset.equals(differentAsset), equalTo(false));

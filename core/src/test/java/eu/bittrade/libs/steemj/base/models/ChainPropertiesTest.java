@@ -26,9 +26,7 @@ public class ChainPropertiesTest {
      */
     @Test
     public void testSteemChainPropertiesToByteArray() throws Exception {
-        Asset accountCreationFee = new Asset();
-        accountCreationFee.setAmount(5000);
-        accountCreationFee.setSymbol(AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
 
         long maximumBlockSize = 65536;
         int sbdInterestRate = 0;
@@ -46,9 +44,7 @@ public class ChainPropertiesTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testChainPropertiesValidationInterestRate() {
-        Asset accountCreationFee = new Asset();
-        accountCreationFee.setAmount(5000);
-        accountCreationFee.setSymbol(AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
 
         long maximumBlockSize = 65570;
         int sbdInterestRate = -1;
@@ -62,9 +58,7 @@ public class ChainPropertiesTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testChainPropertiesValidationBlockSize() {
-        Asset accountCreationFee = new Asset();
-        accountCreationFee.setAmount(5000);
-        accountCreationFee.setSymbol(AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
 
         long maximumBlockSize = 5215;
         int sbdInterestRate = 0;
@@ -78,9 +72,7 @@ public class ChainPropertiesTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testChainPropertiesValidationAccountCreationFee() {
-        Asset accountCreationFee = new Asset();
-        accountCreationFee.setAmount(-1);
-        accountCreationFee.setSymbol(AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
 
         long maximumBlockSize = 65535;
         int sbdInterestRate = 5;
@@ -99,9 +91,7 @@ public class ChainPropertiesTest {
         new AccountName("dez");
         new AccountName("dez1337-steemj");
 
-        Asset accountCreationFee = new Asset();
-        accountCreationFee.setAmount(3);
-        accountCreationFee.setSymbol(AssetSymbolType.STEEM);
+        Asset accountCreationFee = new Asset(3, AssetSymbolType.STEEM);
 
         long maximumBlockSize = 65536;
         int sbdInterestRate = 5;

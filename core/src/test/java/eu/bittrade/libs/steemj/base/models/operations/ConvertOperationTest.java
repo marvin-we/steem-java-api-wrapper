@@ -45,9 +45,7 @@ public class ConvertOperationTest extends BaseTransactionalUT {
         AccountName owner = new AccountName("dez1337");
         long requestId = 1337L;
 
-        Asset amount = new Asset();
-        amount.setAmount(1L);
-        amount.setSymbol(AssetSymbolType.SBD);
+        Asset amount = new Asset(1L, AssetSymbolType.SBD);
 
         convertOperation = new ConvertOperation(owner, requestId, amount);
 

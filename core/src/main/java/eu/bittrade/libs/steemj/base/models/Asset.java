@@ -33,10 +33,18 @@ public class Asset implements ByteTransformable {
     private byte precision;
 
     /**
-     * Create an empty Asset object.
+     * Create a new asset object by providing all required fields.
+     * 
+     * @param amount
+     *            The amount.
+     * @param symbol
+     *            One type of
+     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
+     *            AssetSymbolType}.
      */
-    public Asset() {
-
+    public Asset(double amount, AssetSymbolType symbol) {
+        this.setSymbol(symbol);
+        this.setAmount(amount);
     }
 
     /**
@@ -50,8 +58,8 @@ public class Asset implements ByteTransformable {
      *            AssetSymbolType}.
      */
     public Asset(long amount, AssetSymbolType symbol) {
-        this.setAmount(amount);
         this.setSymbol(symbol);
+        this.setAmount(amount);
     }
 
     /**
@@ -90,6 +98,16 @@ public class Asset implements ByteTransformable {
      */
     public void setAmount(long amount) {
         this.amount = amount;
+    }
+
+    /**
+     * Set the amount of this asset.
+     * 
+     * @param amount
+     *            The amount.
+     */
+    public void setAmount(double amount) {
+        this.amount = (long) (amount * Math.pow(10.0, this.getPrecision()));
     }
 
     /**

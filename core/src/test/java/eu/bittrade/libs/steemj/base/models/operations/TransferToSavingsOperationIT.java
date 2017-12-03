@@ -51,9 +51,7 @@ public class TransferToSavingsOperationIT extends BaseTransactionVerificationIT 
         AccountName to = new AccountName("steemj");
         String memo = "";
 
-        Asset amount = new Asset();
-        amount.setAmount(56660L);
-        amount.setSymbol(AssetSymbolType.STEEM);
+        Asset amount = new Asset(56660L, AssetSymbolType.STEEM);
 
         TransferToSavingsOperation transferFromSavingsOperation = new TransferToSavingsOperation(from, to, amount,
                 memo);

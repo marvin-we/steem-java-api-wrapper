@@ -44,9 +44,7 @@ public class WithdrawVestingOperationTest extends BaseTransactionalUT {
 
         AccountName account = new AccountName("dez1337");
 
-        Asset vestingShares = new Asset();
-        vestingShares.setAmount(1000);
-        vestingShares.setSymbol(AssetSymbolType.VESTS);
+        Asset vestingShares = new Asset(1000, AssetSymbolType.VESTS);
 
         withdrawVestingOperation = new WithdrawVestingOperation(account, vestingShares);
 

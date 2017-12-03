@@ -41,12 +41,8 @@ public class FeedPublishOperationParsingIT extends BaseITForOperationParsing {
         setupIntegrationTestEnvironment();
 
         // Set expected objects.
-        Asset expectedBase = new Asset();
-        expectedBase.setAmount(283);
-        expectedBase.setSymbol(AssetSymbolType.SBD);
-        Asset expectedQuote = new Asset();
-        expectedQuote.setAmount(1000);
-        expectedQuote.setSymbol(AssetSymbolType.STEEM);
+        Asset expectedBase = new Asset(283, AssetSymbolType.SBD);
+        Asset expectedQuote = new Asset(1000, AssetSymbolType.STEEM);
 
         EXPECTED_PRICE = new Price(expectedBase, expectedQuote);
     }

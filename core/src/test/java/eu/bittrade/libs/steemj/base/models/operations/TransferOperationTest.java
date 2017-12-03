@@ -47,13 +47,8 @@ public class TransferOperationTest extends BaseTransactionalUT {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        Asset sbdAmount = new Asset();
-        sbdAmount.setAmount(1L);
-        sbdAmount.setSymbol(AssetSymbolType.SBD);
-
-        Asset steemAmount = new Asset();
-        steemAmount.setAmount(1L);
-        steemAmount.setSymbol(AssetSymbolType.STEEM);
+        Asset sbdAmount = new Asset(1L, AssetSymbolType.SBD);
+        Asset steemAmount = new Asset(1L, AssetSymbolType.STEEM);
 
         AccountName from = new AccountName("dez1337");
         AccountName to = new AccountName("steemj");

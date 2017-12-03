@@ -52,9 +52,7 @@ public class TransferFromSavingsOperationIT extends BaseTransactionVerificationI
         String memo = "";
         long requestId = 587;
 
-        Asset amount = new Asset();
-        amount.setAmount(56660L);
-        amount.setSymbol(AssetSymbolType.STEEM);
+        Asset amount = new Asset(56660L, AssetSymbolType.STEEM);
 
         TransferFromSavingsOperation transferFromSavingsOperation = new TransferFromSavingsOperation(from, to, amount,
                 requestId, memo);
