@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.apis.network.broadcast.model;
+package eu.bittrade.libs.steemj.plugins.network.broadcast.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

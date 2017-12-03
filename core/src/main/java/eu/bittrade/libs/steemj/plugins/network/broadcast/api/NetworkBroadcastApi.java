@@ -1,6 +1,5 @@
-package eu.bittrade.libs.steemj.apis.network.broadcast;
+package eu.bittrade.libs.steemj.plugins.network.broadcast.api;
 
-import eu.bittrade.libs.steemj.apis.network.broadcast.model.BroadcastTransactionSynchronousReturn;
 import eu.bittrade.libs.steemj.base.models.SignedBlock;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -10,6 +9,7 @@ import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.network.broadcast.model.BroadcastTransactionSynchronousReturn;
 
 /**
  * This class implements the network broadcast api which is required to send

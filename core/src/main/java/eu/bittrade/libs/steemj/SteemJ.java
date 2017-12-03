@@ -65,6 +65,7 @@ import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.steemj.base.models.SignedBlock;
 import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.Tag;
@@ -96,6 +97,8 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
+import eu.bittrade.libs.steemj.plugins.network.broadcast.api.NetworkBroadcastApi;
+import eu.bittrade.libs.steemj.plugins.network.broadcast.model.BroadcastTransactionSynchronousReturn;
 import eu.bittrade.libs.steemj.util.CondenserUtils;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -163,10 +166,73 @@ public class SteemJ {
     // #########################################################################
 
     /**
-     * Broadcast a transaction on the Steem blockchain.
+     * Broadcast a transaction on the Steem blockchain. This method will
+     * validate the transaction and return immediately. Please notice that this
+     * does not mean that the operation has been accepted and has been
+     * processed. If you want to make sure that this is the case use the
+     * {@link #broadcastTransactionSynchronous(SignedTransaction)} method.
      * 
      * @param transaction
-     *            A transaction object that has been signed.
+     *            The {@link SignedTransaction} object to broadcast.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             In case the provided transaction is not valid.
+     */
+    public void broadcastTransaction(SignedTransaction transaction)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        NetworkBroadcastApi.broadcastTransaction(communicationHandler, transaction);
+    }
+
+    /**
+     * Broadcast a transaction on the Steem blockchain. This method will
+     * validate the transaction and return after it has been accepted and
+     * applied.
+     * 
+     * @param transaction
+     *            The {@link SignedTransaction} object to broadcast.
+     * @return A {@link BroadcastTransactionSynchronousReturn} object providing
+     *         information about the block in which the transaction has been
+     *         applied.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             In case the provided transaction is not valid.
+     */
+    public BroadcastTransactionSynchronousReturn broadcastTransactionSynchronous(SignedTransaction transaction)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        return NetworkBroadcastApi.broadcastTransactionSynchronous(communicationHandler, transaction);
+    }
+
+    /**
+     * Broadcast a whole block.
+     * 
+     * @param signedBlock
+     *            The {@link SignedBlock} object to broadcast.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -182,16 +248,8 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public void broadcastTransaction(SignedTransaction transaction)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
-        requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
-
-        Object[] parameters = { transaction };
-        requestObject.setAdditionalParameters(parameters);
-
-        communicationHandler.performRequest(requestObject, Object.class);
+    public void broadcastBlock(SignedBlock signedBlock) throws SteemCommunicationException, SteemResponseException {
+        NetworkBroadcastApi.broadcastBlock(communicationHandler, signedBlock);
     }
 
     // #########################################################################

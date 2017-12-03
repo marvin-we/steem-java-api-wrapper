@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.apis.network.broadcast;
+package eu.bittrade.libs.steemj.plugins.network.broadcast.api;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -19,7 +19,6 @@ import eu.bittrade.libs.steemj.BaseTransactionalIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
-import eu.bittrade.libs.steemj.apis.network.broadcast.model.BroadcastTransactionSynchronousReturn;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
@@ -29,10 +28,12 @@ import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.network.broadcast.api.NetworkBroadcastApi;
+import eu.bittrade.libs.steemj.plugins.network.broadcast.model.BroadcastTransactionSynchronousReturn;
 
 /**
  * This class contains all test connected to the
- * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi
+ * {@link eu.bittrade.libs.steemj.plugins.network.broadcast.api.NetworkBroadcastApi
  * NetworkBroadcastApi}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -55,7 +56,7 @@ public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi#broadcastTransactionSynchronous(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
+     * {@link eu.bittrade.libs.steemj.plugins.network.broadcast.api.NetworkBroadcastApi#broadcastTransactionSynchronous(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -98,7 +99,7 @@ public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi#broadcastTransaction(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
+     * {@link eu.bittrade.libs.steemj.plugins.network.broadcast.api.NetworkBroadcastApi#broadcastTransaction(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -135,7 +136,7 @@ public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi#broadcastBlock(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedBlock)}
+     * {@link eu.bittrade.libs.steemj.plugins.network.broadcast.api.NetworkBroadcastApi#broadcastBlock(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedBlock)}
      * method.
      * 
      * @throws SteemCommunicationException
