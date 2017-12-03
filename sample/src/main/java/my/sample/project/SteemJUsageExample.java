@@ -12,11 +12,13 @@ import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AccountVote;
 import eu.bittrade.libs.steemj.base.models.AppliedOperation;
+import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -123,6 +125,21 @@ public class SteemJUsageExample {
              * Delete the newly created post.
              */
             steemJ.deletePostOrComment(myNewPost.getParentPermlink());
+            
+            /*
+             * Let the default account transfer 1.0 SBD to @dez1337.
+             */
+            steemJ.transfer(new AccountName("dez1337"), AssetSymbolType.STEEM, 1.0, "Hello @dez1337 - I've send you one STEEM.");
+            
+            /*
+             * Let the default account delegate 10.0 VESTS to @dez1337.
+             */
+            steemJ.delegateVestingShares(new AccountName("dez1337"), new Asset(10L, AssetSymbolType.VESTS));
+            
+            /*
+             * Claim the rewards of the default account.
+             */
+            steemJ.claimRewards();
 
             // #########################################################################
             // ## EXECUTE READ OPERATIONS AGAINS THE NDOE ##############################
