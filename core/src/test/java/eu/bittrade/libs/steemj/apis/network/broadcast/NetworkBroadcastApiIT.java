@@ -1,25 +1,31 @@
 package eu.bittrade.libs.steemj.apis.network.broadcast;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseTransactionBroadcastIT;
+import eu.bittrade.libs.steemj.BaseTransactionalIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
+import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.apis.network.broadcast.model.BroadcastTransactionSynchronousReturn;
 import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -49,7 +55,7 @@ public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi#broadcastTransactionWithCallback(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
+     * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi#broadcastTransactionSynchronous(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -57,30 +63,92 @@ public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
      * @throws SteemResponseException
      *             If the response is an error.
      * @throws SteemInvalidTransactionException
+     *             If the transaction is not valid.
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testBroadcastTransactionWithCallback()
+    public void testBroadcastTransactionSynchronous()
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        AccountName author = new AccountName("dez1337");
-        Permlink permlink = new Permlink("steemj-v0-2-4-has-been-released-update-9");
-        boolean allowVotes = true;
-        boolean allowCurationRewards = true;
-        short percentSteemDollars = (short) 10000;
-        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
+        ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
+        requiredPostingAuths.add(BaseTransactionalIT.DEZ_ACCOUNT_NAME);
 
-        CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink,
-                maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
+        String id = "follow";
+        String json = (new FollowOperation(BaseTransactionalIT.DEZ_ACCOUNT_NAME,
+                BaseTransactionalIT.STEEMJ_ACCOUNT_NAME, Arrays.asList(FollowType.BLOG))).toJson();
+
+        CustomJsonOperation customJsonOperation = new CustomJsonOperation(null, requiredPostingAuths, id, json);
 
         ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(commentOptionsOperation);
+        operations.add(customJsonOperation);
 
-        signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
-                operations, null);
+        DynamicGlobalProperty globalProperties = steemJ.getDynamicGlobalProperties();
 
-        NetworkBroadcastApi.broadcastTransactionSynchronous(COMMUNICATION_HANDLER, signedTransaction);
-        NetworkBroadcastApi.broadcastTransactionWithCallback(COMMUNICATION_HANDLER, signedTransaction);
+        signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations, null);
 
-        assertThat(1, equalTo(2));
+        signedTransaction.sign();
+
+        BroadcastTransactionSynchronousReturn result = NetworkBroadcastApi
+                .broadcastTransactionSynchronous(COMMUNICATION_HANDLER, signedTransaction);
+
+        assertThat(result.getBlockNum(), greaterThan(0));
+        assertThat(result.getTrxNum(), greaterThanOrEqualTo(0));
+        assertThat(result.getId().toString(), not(isEmptyOrNullString()));
+        assertFalse(result.isExpired());
+    }
+
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi#broadcastTransaction(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
+     * @throws SteemInvalidTransactionException
+     *             If the transaction is not valid.
+     */
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testBroadcastTransaction()
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
+        requiredPostingAuths.add(BaseTransactionalIT.STEEMJ_ACCOUNT_NAME);
+
+        String id = "follow";
+        String json = (new FollowOperation(BaseTransactionalIT.STEEMJ_ACCOUNT_NAME,
+                BaseTransactionalIT.DEZ_ACCOUNT_NAME, Arrays.asList(FollowType.BLOG))).toJson();
+
+        CustomJsonOperation customJsonOperation = new CustomJsonOperation(null, requiredPostingAuths, id, json);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(customJsonOperation);
+
+        DynamicGlobalProperty globalProperties = steemJ.getDynamicGlobalProperties();
+
+        signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations, null);
+
+        signedTransaction.sign();
+
+        NetworkBroadcastApi.broadcastTransaction(COMMUNICATION_HANDLER, signedTransaction);
+    }
+
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.apis.network.broadcast.NetworkBroadcastApi#broadcastBlock(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedBlock)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
+     * @throws SteemInvalidTransactionException
+     *             If the transaction is not valid.
+     */
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testBroadcastBlock()
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        // TODO: Implement.
     }
 }
