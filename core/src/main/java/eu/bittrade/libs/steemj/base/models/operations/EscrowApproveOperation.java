@@ -74,7 +74,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
 
     /**
      * Like
-     * {@link #EscrowApproveOperation(AccountName, AccountName, AccountName, long, AccountName, Boolean)},
+     * {@link #EscrowApproveOperation(AccountName, AccountName, AccountName, long, AccountName, boolean)},
      * will automatically approve the operation.
      * 
      * @param from
@@ -101,7 +101,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
 
     /**
      * Like
-     * {@link #EscrowApproveOperation(AccountName, AccountName, AccountName, long, AccountName, Boolean)},
+     * {@link #EscrowApproveOperation(AccountName, AccountName, AccountName, long, AccountName, boolean)},
      * but sets the <code>escrowId</code> to its default value (30) and will
      * automatically approve the operation.
      * 

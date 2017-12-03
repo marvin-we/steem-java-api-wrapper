@@ -3059,7 +3059,7 @@ public class SteemJ {
      * create comment operation the private posting key of the
      * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
      * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.</li> *
+     * PrivateKeyStorage}.</li>
      * <li>In case the {@link SteemJConfig#getSteemJWeight() SteemJWeight} is
      * set to a positive value this method will add a comment options operation.
      * Due to this, the {@link SteemJConfig#getSteemJWeight() SteemJWeight}
