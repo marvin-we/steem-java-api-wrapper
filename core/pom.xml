@@ -169,6 +169,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<jooq.version>0.9.1</jooq.version>
 		<bitcoinj.version>0.14.5</bitcoinj.version>
@@ -177,10 +178,10 @@
 		<hamcrest.date.version>2.0.4</hamcrest.date.version>
 		<tyrus.client.version>1.13.1</tyrus.client.version>
 		<jackson.version>2.9.2</jackson.version>
-		<apache.commons.lang.version>3.6</apache.commons.lang.version>
+		<apache.commons.lang.version>3.7</apache.commons.lang.version>
 		<apache.commons.io.version>2.6</apache.commons.io.version>
 		<slf4j.version>1.7.25</slf4j.version>
-		<log4j.version>2.9.1</log4j.version>
+		<log4j.version>2.10.0</log4j.version>
 		<google.http.client.version>1.23.0</google.http.client.version>
 	</properties>
 </project>

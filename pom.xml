@@ -16,6 +16,10 @@
 		<module>sample</module>
 	</modules>
 
+	<prerequisites>
+		<maven>3.3.9</maven>
+	</prerequisites>
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -73,7 +77,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.10.4</version>
+						<version>3.0.0-M1</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -108,7 +112,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
-					<version>3.0.0</version>
+					<version>3.1.0</version>
 					<configuration>
 						<archive>
 							<manifest>
@@ -135,12 +139,12 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>2.20</version>
+					<version>2.20.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.20</version>
+					<version>2.20.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -148,7 +152,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.0</version>
+				<version>3.7.0</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -157,7 +161,7 @@
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.4.0.905</version>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -212,6 +216,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<sonar.host.url>http://localhost:9000</sonar.host.url>
 		<java.version>1.7</java.version>
