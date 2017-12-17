@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bitcoinj.core.Utils;
 import org.joou.UShort;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -151,7 +151,7 @@ public class CustomOperation extends Operation {
 
             serializedCustomOperation.write(SteemJUtils.transformShortToByteArray(this.getId().shortValue()));
 
-            byte[] decodedData = Utils.HEX.decode(this.getData());
+            byte[] decodedData = CryptoUtils.HEX.decode(this.getData());
             serializedCustomOperation.write(SteemJUtils.transformIntToVarIntByteArray(decodedData.length));
             serializedCustomOperation.write(decodedData);
 

@@ -5,8 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.security.InvalidParameterException;
 
-import org.bitcoinj.core.Utils;
 import org.junit.Test;
+
+import eu.bittrade.crypto.core.CryptoUtils;
 
 /**
  * Test the AccountName object.
@@ -30,7 +31,7 @@ public class AccountNameTest {
         AccountName myAccount = new AccountName("dez1337");
 
         assertThat("Expect that the accountName object has the given byte representation.",
-                Utils.HEX.encode(myAccount.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(myAccount.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     /**

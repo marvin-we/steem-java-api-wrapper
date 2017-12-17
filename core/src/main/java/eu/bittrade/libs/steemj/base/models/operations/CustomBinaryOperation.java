@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bitcoinj.core.Utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -261,7 +261,7 @@ public class CustomBinaryOperation extends Operation {
 
             serializedCustomBinaryOperation.write(SteemJUtils.transformStringToVarIntByteArray(this.getId()));
 
-            byte[] decodedData = Utils.HEX.decode(this.getData());
+            byte[] decodedData = CryptoUtils.HEX.decode(this.getData());
             serializedCustomBinaryOperation.write(SteemJUtils.transformIntToVarIntByteArray(decodedData.length));
             serializedCustomBinaryOperation.write(decodedData);
 

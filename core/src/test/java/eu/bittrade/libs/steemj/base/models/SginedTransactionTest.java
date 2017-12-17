@@ -7,11 +7,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.crypto.core.CryptoUtils;
+import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.BaseTransactionalUT;
 import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
@@ -80,12 +80,11 @@ public class SginedTransactionTest extends BaseTransactionalUT {
                 operations, null);
 
         // Use 'toByteArray("")' so no chainId will be added.
-        assertThat(Utils.HEX.encode(signedTransaction.toByteArray("")), equalTo(EXPECTED_BYTE_REPRESENTATION));
+        assertThat(CryptoUtils.HEX.encode(signedTransaction.toByteArray("")), equalTo(EXPECTED_BYTE_REPRESENTATION));
 
         byte[] transactionAsByteArrayWithDefaultChainId = signedTransaction.toByteArray();
-        assertThat(Utils.HEX.encode(transactionAsByteArrayWithDefaultChainId), equalTo(EXPECTED_RESULT));
-        assertThat(
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(transactionAsByteArrayWithDefaultChainId)).getBytes()),
+        assertThat(CryptoUtils.HEX.encode(transactionAsByteArrayWithDefaultChainId), equalTo(EXPECTED_RESULT));
+        assertThat(CryptoUtils.HEX.encode(Sha256Hash.of(transactionAsByteArrayWithDefaultChainId).getBytes()),
                 equalTo(EXPECTED_HASH));
     }
 
@@ -148,7 +147,7 @@ public class SginedTransactionTest extends BaseTransactionalUT {
         signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
                 operations, null);
 
-        assertThat(Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+        assertThat(CryptoUtils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     /**
@@ -171,7 +170,7 @@ public class SginedTransactionTest extends BaseTransactionalUT {
         signedTransaction = new SignedTransaction(REF_BLOCK_NUM, REF_BLOCK_PREFIX, new TimePointSec(EXPIRATION_DATE),
                 operations, null);
 
-        assertThat(Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
+        assertThat(CryptoUtils.HEX.encode(Sha256Hash.of(signedTransaction.toByteArray()).getBytes()),
                 equalTo(EXPECTED_HASH));
     }
 }

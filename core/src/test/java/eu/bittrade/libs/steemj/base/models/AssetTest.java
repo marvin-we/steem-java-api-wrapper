@@ -3,9 +3,9 @@ package eu.bittrade.libs.steemj.base.models;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import org.bitcoinj.core.Utils;
 import org.junit.Test;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
 /**
@@ -38,7 +38,7 @@ public class AssetTest {
 
         assertThat(vestsAsset.getPrecision(), equalTo(6));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(vestsAsset.toByteArray()), equalTo(EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(vestsAsset.toByteArray()), equalTo(EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION));
     }
 
     /**
@@ -54,7 +54,7 @@ public class AssetTest {
 
         assertThat(steemAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(steemAsset.toByteArray()), equalTo(EXPECTED_STEEM_ASSET_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(steemAsset.toByteArray()), equalTo(EXPECTED_STEEM_ASSET_BYTE_REPRESENTATION));
     }
 
     /**
@@ -70,7 +70,7 @@ public class AssetTest {
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_SBD_ASSET_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_SBD_ASSET_BYTE_REPRESENTATION));
     }
 
     /**
@@ -86,7 +86,7 @@ public class AssetTest {
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_STMD_ASSET_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_STMD_ASSET_BYTE_REPRESENTATION));
     }
 
     /**
@@ -102,7 +102,7 @@ public class AssetTest {
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TESTS_ASSET_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TESTS_ASSET_BYTE_REPRESENTATION));
     }
 
     /**
@@ -118,7 +118,7 @@ public class AssetTest {
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TBD_ASSET_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TBD_ASSET_BYTE_REPRESENTATION));
     }
 
     /**
@@ -134,7 +134,7 @@ public class AssetTest {
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(sbdAsset.toByteArray()), equalTo(EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION));
     }
 
     /**

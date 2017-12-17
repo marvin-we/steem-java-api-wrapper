@@ -3,10 +3,10 @@ package eu.bittrade.libs.steemj.base.models;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.BaseUT;
 
 /**
@@ -43,7 +43,7 @@ public class PublicKeyTest extends BaseUT {
      */
     @Test
     public void testPublicKeyFromAddress() throws Exception {
-        assertThat(Utils.HEX.encode(publicKey.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+        assertThat(CryptoUtils.HEX.encode(publicKey.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     /**

@@ -8,8 +8,8 @@ import java.security.Security;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bitcoinj.core.ECKey;
 
+import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;

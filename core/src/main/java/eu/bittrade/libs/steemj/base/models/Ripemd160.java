@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import org.bitcoinj.core.Utils;
 import org.joou.UInteger;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 
@@ -50,7 +50,7 @@ public abstract class Ripemd160 implements ByteTransformable, Serializable {
      * @return The wrapped hash value in its long representation.
      */
     public UInteger getHashValue() {
-        return UInteger.valueOf(Utils.readUint32(hashValue, 4));
+        return UInteger.valueOf(CryptoUtils.readUint32(hashValue, 4));
     }
 
     /**
@@ -70,7 +70,7 @@ public abstract class Ripemd160 implements ByteTransformable, Serializable {
      *            The hash to wrap.
      */
     public void setHashValue(String hashValue) {
-        this.hashValue = Utils.HEX.decode(hashValue);
+        this.hashValue = CryptoUtils.HEX.decode(hashValue);
     }
 
     @Override
@@ -80,6 +80,6 @@ public abstract class Ripemd160 implements ByteTransformable, Serializable {
 
     @Override
     public String toString() {
-        return Utils.HEX.encode(this.hashValue);
+        return CryptoUtils.HEX.encode(this.hashValue);
     }
 }

@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-import org.bitcoinj.core.NetworkParameters;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -53,20 +52,17 @@ public class SteemJConfigTest {
 
         AccountName accountName = SteemJConfig.getInstance().getPrivateKeyStorage().getAccounts().get(0);
         assertThat(accountName, equalTo(new AccountName(STEEMJ_KEY_ACCOUNTNAME)));
-        assertThat(SteemJConfig.getInstance().getPrivateKeyStorage()
-                .getKeyForAccount(PrivateKeyType.POSTING, accountName).decompress()
-                .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
+        assertThat(
+                SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.POSTING, accountName)
+                        .decompress().getPrivateKeyEncoded(128).toBase58(),
                 equalTo(STEEMJ_KEY_POSTING));
         assertThat(SteemJConfig.getInstance().getPrivateKeyStorage()
-                .getKeyForAccount(PrivateKeyType.ACTIVE, accountName).decompress()
-                .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
+                .getKeyForAccount(PrivateKeyType.ACTIVE, accountName).decompress().getPrivateKeyEncoded(128).toBase58(),
                 equalTo(STEEMJ_KEY_ACTIVE));
         assertThat(SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.OWNER, accountName)
-                .decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
-                equalTo(STEEMJ_KEY_OWNER));
+                .decompress().getPrivateKeyEncoded(128).toBase58(), equalTo(STEEMJ_KEY_OWNER));
         assertThat(SteemJConfig.getInstance().getPrivateKeyStorage().getKeyForAccount(PrivateKeyType.MEMO, accountName)
-                .decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET)).toBase58(),
-                equalTo(STEEMJ_KEY_MEMO));
+                .decompress().getPrivateKeyEncoded(128).toBase58(), equalTo(STEEMJ_KEY_MEMO));
     }
 
     /**

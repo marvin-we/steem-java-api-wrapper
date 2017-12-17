@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bitcoinj.core.Utils;
 import org.joou.UInteger;
 import org.joou.UShort;
 import org.slf4j.Logger;
@@ -20,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -229,7 +229,7 @@ public class Transaction implements Serializable {
      *            The String representation of the ref block prefix.
      */
     public void setRefBlockPrefix(String refBlockPrefix) {
-        this.refBlockPrefix = UInteger.valueOf(Utils.readUint32(Utils.HEX.decode(refBlockPrefix), 4));
+        this.refBlockPrefix = UInteger.valueOf(CryptoUtils.readUint32(CryptoUtils.HEX.decode(refBlockPrefix), 4));
     }
 
     /**

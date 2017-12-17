@@ -10,19 +10,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.ECKey.ECDSASignature;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Utils;
 import org.joou.UInteger;
 import org.joou.UShort;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongycastle.util.encoders.Base64;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.crypto.core.CryptoUtils;
+import eu.bittrade.crypto.core.ECKey;
+import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
@@ -171,21 +171,14 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                             "The required encoding is not supported by your platform.", e);
                 }
 
-                ECDSASignature signature = requiredPrivateKey.sign(messageAsHash);
+                String signature = requiredPrivateKey.signMessage(messageAsHash);
+                byte[] signatureAsByteArray = Base64.decode(signature);
 
-                /*
-                 * Use 0 as the key type until the signature is canonical as the
-                 * key type does not effect the canonical test. The correct key
-                 * type will be tested later on. This technique improves the
-                 * performance (thanks to ray66rus).
-                 */
-                if (isCanonical(SteemJUtils.createSignedTransaction(0, signature, requiredPrivateKey))) {
+                if (isCanonical(signatureAsByteArray)) {
                     this.getExpirationDate().setDateTime(this.getExpirationDate().getDateTimeAsTimestamp() + 1);
                 } else {
                     isCanonical = true;
-                    int keyType = SteemJUtils.getKeyType(signature, messageAsHash, requiredPrivateKey);
-                    this.signatures.add(Utils.HEX
-                            .encode(SteemJUtils.createSignedTransaction(keyType, signature, requiredPrivateKey)));
+                    this.signatures.add(CryptoUtils.HEX.encode(signatureAsByteArray));
                 }
             }
         }
@@ -283,7 +276,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
     protected byte[] toByteArray(String chainId) throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedTransaction = new ByteArrayOutputStream()) {
             if (chainId != null && !chainId.isEmpty()) {
-                serializedTransaction.write(Utils.HEX.decode(chainId));
+                serializedTransaction.write(CryptoUtils.HEX.decode(chainId));
             }
             serializedTransaction.write(SteemJUtils.transformShortToByteArray(this.getRefBlockNum().shortValue()));
             serializedTransaction.write(SteemJUtils.transformIntToByteArray(this.getRefBlockPrefix().intValue()));

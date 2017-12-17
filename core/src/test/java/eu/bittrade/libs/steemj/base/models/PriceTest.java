@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.security.InvalidParameterException;
 
-import org.bitcoinj.core.Utils;
 import org.junit.Test;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
 /**
@@ -35,7 +35,7 @@ public class PriceTest {
         Price price = new Price(base, quote);
 
         assertThat("Expect that the price object has the given byte representation.",
-                Utils.HEX.encode(price.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(price.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     /**
