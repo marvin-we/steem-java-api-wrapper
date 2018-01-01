@@ -327,4 +327,33 @@ public class SteemJUtils {
 
         return objectToSet;
     }
+
+    /**
+     * Like {@link #setIfNotNull(Object, String, Object)}, but the generated
+     * exception will contain a static text.
+     * 
+     * @param <T>
+     *            The type of the <code>objectToSet</code>.
+     * @param objectToSet
+     *            The object to check.
+     * @param defaultValue
+     *            The default value to apply in case the
+     *            <code>objectToSet</code> is <code>null</code>.
+     * @return The given <code>objectToSet</code> if its not <code>null</code>.
+     *         Otherwise the <code>defaultValue</code> will be returned.
+     * @throws InvalidParameterException
+     *             If the <code>objectToSet</code> is <code>null</code> and, in
+     *             addition, no <code>defaultValue</code> has been provided.
+     */
+    public static <T> T setIfNotNull(T objectToSet, @Nullable T defaultValue) {
+        if (objectToSet == null) {
+            if (defaultValue != null) {
+                return defaultValue;
+            }
+
+            throw new InvalidParameterException("Both, the objectToSet and the default value are null.");
+        }
+
+        return objectToSet;
+    }
 }
