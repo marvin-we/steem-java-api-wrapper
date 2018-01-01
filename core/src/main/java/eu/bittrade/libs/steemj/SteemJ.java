@@ -21,39 +21,15 @@ import com.google.common.collect.Lists;
 
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.Sha256Hash;
-import eu.bittrade.libs.steemj.apis.database.DatabaseApi;
-import eu.bittrade.libs.steemj.apis.database.models.state.Discussion;
-import eu.bittrade.libs.steemj.apis.database.models.state.State;
-import eu.bittrade.libs.steemj.apis.follow.FollowApi;
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.model.AccountReputation;
-import eu.bittrade.libs.steemj.apis.follow.model.BlogEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.CommentBlogEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.CommentFeedEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.FeedEntry;
-import eu.bittrade.libs.steemj.apis.follow.model.FollowApiObject;
-import eu.bittrade.libs.steemj.apis.follow.model.FollowCountApiObject;
-import eu.bittrade.libs.steemj.apis.follow.model.PostsPerAuthorPair;
-import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
-import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.apis.login.LoginApi;
 import eu.bittrade.libs.steemj.apis.login.models.SteemVersionInfo;
-import eu.bittrade.libs.steemj.apis.market.history.MarketHistoryApi;
-import eu.bittrade.libs.steemj.apis.market.history.model.Bucket;
-import eu.bittrade.libs.steemj.apis.market.history.model.MarketTicker;
-import eu.bittrade.libs.steemj.apis.market.history.model.MarketTrade;
-import eu.bittrade.libs.steemj.apis.market.history.model.MarketVolume;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AccountVote;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
-import eu.bittrade.libs.steemj.base.models.BlockHeader;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.Config;
-import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
 import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
@@ -62,11 +38,8 @@ import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedBlock;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.Tag;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
@@ -87,18 +60,47 @@ import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
-import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
-import eu.bittrade.libs.steemj.plugins.network.broadcast.api.NetworkBroadcastApi;
-import eu.bittrade.libs.steemj.plugins.network.broadcast.model.BroadcastTransactionSynchronousReturn;
+import eu.bittrade.libs.steemj.plugins.apis.account.by.key.AccountByKeyApi;
+import eu.bittrade.libs.steemj.plugins.apis.account.by.key.models.GetKeyReferencesArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
+import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.state.Discussion;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.state.State;
+import eu.bittrade.libs.steemj.plugins.apis.follow.FollowApi;
+import eu.bittrade.libs.steemj.plugins.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.AccountReputation;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.BlogEntry;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.CommentBlogEntry;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.CommentFeedEntry;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.FeedEntry;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.FollowApiObject;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.FollowCountApiObject;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.PostsPerAuthorPair;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.ReblogOperation;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.MarketHistoryApi;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.Bucket;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTicker;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTrade;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketVolume;
+import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadcastApi;
+import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.models.BroadcastTransactionSynchronousReturn;
+import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.BlockHeader;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
+import eu.bittrade.libs.steemj.protocol.SignedBlock;
 import eu.bittrade.libs.steemj.util.CondenserUtils;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -138,27 +140,37 @@ public class SteemJ {
      */
     public SteemJ() throws SteemCommunicationException, SteemResponseException {
         this.communicationHandler = new CommunicationHandler();
+    }
 
-        if (!("").equals(String.valueOf(SteemJConfig.getInstance().getApiPassword()))
-                && !SteemJConfig.getInstance().getApiUsername().isEmpty()) {
+    // #########################################################################
+    // ## ACCOUNT BY KEY API ###################################################
+    // #########################################################################
 
-            LOGGER.info("Credentials have been provided - Trying to login.");
-            if (login(SteemJConfig.getInstance().getApiUsername(),
-                    String.valueOf(SteemJConfig.getInstance().getApiPassword()))) {
-                LOGGER.info("Login successful.");
-            } else {
-                LOGGER.error("Login failed.");
-            }
-        }
-
-        if (SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.FULL)
-                || SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.APIS_ONLY)) {
-            for (SteemApiType steemApi : SteemApiType.values()) {
-                if (getApiByName(steemApi.toString().toLowerCase()) == null) {
-                    LOGGER.debug("The {} is not published by the configured node.", steemApi);
-                }
-            }
-        }
+    /**
+     * Search for users under the use of their public key(s).
+     * 
+     * @param publicKeys
+     *            An array containing one or more public keys.
+     * @return A list of arrays containing the matching account names.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<AccountName> getKeyReferences(List<PublicKey> publicKeys)
+            throws SteemCommunicationException, SteemResponseException {
+        return AccountByKeyApi.getKeyReferences(communicationHandler, new GetKeyReferencesArgs(publicKeys))
+                .getAccounts();
     }
 
     // #########################################################################
@@ -250,73 +262,6 @@ public class SteemJ {
      */
     public void broadcastBlock(SignedBlock signedBlock) throws SteemCommunicationException, SteemResponseException {
         NetworkBroadcastApi.broadcastBlock(communicationHandler, signedBlock);
-    }
-
-    // #########################################################################
-    // ## LOGIN API ############################################################
-    // #########################################################################
-
-    /**
-     * Use this method to authenticate to the RPC server.
-     * 
-     * <p>
-     * When setting up a Steem Node the operator has the possibility to protect
-     * specific APIs with a user name and a password. Requests to secured
-     * API-Endpoints require a login before being accessed. This can be achieved
-     * by using this method.
-     * </p>
-     * 
-     * @param accountName
-     *            The user name used to login.
-     * @param password
-     *            The password that belongs to the <code>accountName</code>.
-     * @return <code>true</code> if the login was successful, otherwise
-     *         <code>false</code>.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public boolean login(AccountName accountName, String password)
-            throws SteemCommunicationException, SteemResponseException {
-        return LoginApi.login(communicationHandler, accountName, password);
-    }
-
-    /**
-     * Use this method to receive the ID of an API or <code>null</code> if an
-     * API with the <code>apiName</code> does not exist or is disabled.
-     * 
-     * @param apiName
-     *            The name of the API.
-     * @return The ID for the given API name or <code>null</code>, if the API is
-     *         not active or does not exist.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public Integer getApiByName(String apiName) throws SteemCommunicationException, SteemResponseException {
-        return LoginApi.getApiByName(communicationHandler, apiName);
     }
 
     /**
@@ -527,7 +472,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public SignedBlockWithInfo getBlock(long blockNumber) throws SteemCommunicationException, SteemResponseException {
+    public ExtendedSignedBlock getBlock(long blockNumber) throws SteemCommunicationException, SteemResponseException {
         return DatabaseApi.getBlock(communicationHandler, blockNumber);
     }
 
@@ -661,7 +606,7 @@ public class SteemJ {
                     }));
         }
 
-        return accountActivities;
+        return accountActivities;asd
     }
 
     /**
@@ -819,7 +764,7 @@ public class SteemJ {
     public Config getConfig() throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CONFIG);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        requestObject.setSteemApi(SteemApiType.CONDENSER_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
@@ -1129,38 +1074,6 @@ public class SteemJ {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, String.class).get(0);
-    }
-
-    /**
-     * Search for users under the use of their public key(s).
-     * 
-     * @param publicKeys
-     *            An array containing one or more public keys.
-     * @return A list of arrays containing the matching account names.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public List<String[]> getKeyReferences(String[] publicKeys)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
-        requestObject.setSteemApi(SteemApiType.ACCOUNT_BY_KEY_API);
-        Object[] parameters = { publicKeys };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String[].class);
     }
 
     /**
@@ -1964,7 +1877,7 @@ public class SteemJ {
      * @param limit
      *            The number of results.
      * @return A list of
-     *         {@link eu.bittrade.libs.steemj.apis.follow.model.AccountReputation
+     *         {@link eu.bittrade.libs.steemj.plugins.apis.follow.model.AccountReputation
      *         AccountReputation}.
      * @throws SteemCommunicationException
      *             <ul>
@@ -2120,7 +2033,7 @@ public class SteemJ {
      * @throws InvalidParameterException
      *             If the limit is less than 0 or greater than 500.
      */
-    public eu.bittrade.libs.steemj.apis.market.history.model.OrderBook getOrderBookUsingMarketApi(short limit)
+    public eu.bittrade.libs.steemj.plugins.apis.market.history.model.OrderBook getOrderBookUsingMarketApi(short limit)
             throws SteemCommunicationException, SteemResponseException {
         return MarketHistoryApi.getOrderBook(communicationHandler, limit);
     }
@@ -2200,7 +2113,7 @@ public class SteemJ {
      * @param end
      *            The end time to get market history.
      * @return A list of market history
-     *         {@link eu.bittrade.libs.steemj.apis.market.history.model.Bucket
+     *         {@link eu.bittrade.libs.steemj.plugins.apis.market.history.model.Bucket
      *         Bucket}s.
      * @throws SteemCommunicationException
      *             <ul>
@@ -2243,6 +2156,22 @@ public class SteemJ {
      */
     public List<Integer> getMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseException {
         return MarketHistoryApi.getMarketHistoryBuckets(communicationHandler);
+    }
+
+    // #########################################################################
+    // ## TAGS API #############################################################
+    // #########################################################################
+
+    // #########################################################################
+    // ## WITNESS API ##########################################################
+    // #########################################################################
+
+    public List<Integer> getAccountBandwidth() throws SteemCommunicationException, SteemResponseException {
+        return WitnessApi.getAccountBandwidth(communicationHandler, getAccountBandwidthArgs);
+    }
+
+    public List<Integer> getMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseException {
+        return WitnessApi.getReserveRatio(communicationHandler);
     }
 
     // #########################################################################
