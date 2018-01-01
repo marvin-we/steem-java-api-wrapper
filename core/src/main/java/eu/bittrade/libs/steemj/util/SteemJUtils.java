@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -262,5 +263,28 @@ public class SteemJUtils {
             currentPrivateKey = currentPrivateKey.decompress();
         }
         return currentPrivateKey.getPrivateKeyEncoded(128).toBase58();
+    }
+    
+    /**
+     * This method will check if given <code>objectToSet</code> is
+     * <code>null</code> and throw an {@link InvalidParameterException} if this
+     * is the case.
+     * 
+     * @param <T>
+     *            The type of the <code>objectToSet</code>.
+     * @param objectToSet
+     *            The object to check.
+     * @param message
+     *            The message of the generated exception.
+     * @return The given <code>objectToSet</code> if its not <code>null</code>.
+     * @throws InvalidParameterException
+     *             If the <code>objectToSet</code> is <code>null</code>.
+     */
+    protected <T> T setIfNotNull(T objectToSet, String message) {
+        if (objectToSet == null) {
+            throw new InvalidParameterException(message);
+        }
+
+        return objectToSet;
     }
 }
