@@ -3099,7 +3099,7 @@ public class SteemJ {
 
         // Generate the permanent link by adding the current timestamp and a
         // UUID.
-        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
+        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName().replaceAll("\\.", "") + "-"
                 + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
                 + UUID.randomUUID().toString() + "uid");
 
