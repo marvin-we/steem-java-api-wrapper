@@ -15,6 +15,8 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
+import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * This class tests if the {@link CommentOptionsOperation} can be parsed

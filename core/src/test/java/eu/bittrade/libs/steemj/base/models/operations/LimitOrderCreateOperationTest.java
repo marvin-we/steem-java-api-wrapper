@@ -19,6 +19,8 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.LimitOrderCreateOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Test the transformation of the {@link LimitOrderCreateOperation}.

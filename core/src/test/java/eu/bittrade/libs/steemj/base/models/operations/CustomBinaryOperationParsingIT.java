@@ -8,6 +8,7 @@ import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.protocol.operations.CustomBinaryOperation;
 
 /**
  * This class tests if the {@link CustomBinaryOperation} can be parsed

@@ -19,6 +19,8 @@ import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Test if the "comment operation" can handle different encoding types under the

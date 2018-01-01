@@ -19,6 +19,8 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.RequestAccountRecoveryOperation;
 
 /**
  * Verify the functionality of the "request account recovery operation" under

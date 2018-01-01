@@ -14,6 +14,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.EscrowDisputeOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Verify the functionality of the "escrow dispute operation" under the use of

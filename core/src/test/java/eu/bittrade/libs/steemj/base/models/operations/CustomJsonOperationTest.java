@@ -19,6 +19,8 @@ import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Test the transformation of the {@link CustomJsonOperation}.

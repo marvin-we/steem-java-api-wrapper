@@ -21,6 +21,8 @@ import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
+import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Verify the functionality of the "account create operation" under the use of

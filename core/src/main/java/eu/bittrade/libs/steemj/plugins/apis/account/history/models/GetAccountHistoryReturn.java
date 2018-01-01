@@ -7,7 +7,7 @@ import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * This class implements the Steem "get_account_history_return" object.

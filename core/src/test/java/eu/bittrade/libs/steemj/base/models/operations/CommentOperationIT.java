@@ -15,6 +15,8 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Verify the functionality of the "comment operation" under the use of real api

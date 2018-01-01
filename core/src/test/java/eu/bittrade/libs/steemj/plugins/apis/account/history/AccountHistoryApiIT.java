@@ -19,9 +19,6 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
 import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
 import eu.bittrade.libs.steemj.base.models.Version;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegationOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -35,6 +32,9 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.TransactionId;
+import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.protocol.operations.AccountCreateWithDelegationOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * This class contains all test connected to the

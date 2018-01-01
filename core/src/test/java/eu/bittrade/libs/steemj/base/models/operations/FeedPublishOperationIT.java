@@ -17,6 +17,8 @@ import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.FeedPublishOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Verify the functionality of the "feed publish operation" under the use of

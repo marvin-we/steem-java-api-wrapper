@@ -1,8 +1,10 @@
 package eu.bittrade.libs.steemj.plugins.apis.account.history.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi;

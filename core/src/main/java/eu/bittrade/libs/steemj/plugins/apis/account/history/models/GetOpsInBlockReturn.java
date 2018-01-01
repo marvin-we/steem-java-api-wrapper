@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * This class implements the Steem "get_ops_in_block_return" object.

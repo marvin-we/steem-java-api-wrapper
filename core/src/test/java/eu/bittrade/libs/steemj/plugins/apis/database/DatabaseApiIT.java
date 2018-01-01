@@ -21,8 +21,6 @@ import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
 import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
 import eu.bittrade.libs.steemj.base.models.Tag;
 import eu.bittrade.libs.steemj.base.models.Version;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.virtual.ProducerRewardOperation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
@@ -33,6 +31,8 @@ import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
+import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
 
 /**
  * This class contains all test connected to the

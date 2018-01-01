@@ -16,6 +16,8 @@ import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Verify the functionality of the "claim reward balance operation" under the

@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import eu.bittrade.libs.steemj.protocol.operations.RequestAccountRecoveryOperation;
+
 /**
  * Test the transformation of the {@link RequestAccountRecoveryOperation}.
  * 

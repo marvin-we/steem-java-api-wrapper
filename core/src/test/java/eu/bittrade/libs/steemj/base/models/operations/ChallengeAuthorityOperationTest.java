@@ -16,6 +16,9 @@ import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.ChallengeAuthorityOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.ProveAuthorityOperation;
 
 /**
  * Test the transformation of the {@link ProveAuthorityOperation}.

@@ -22,6 +22,8 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.WitnessUpdateOperation;
 
 /**
  * Test the transformation of the {@link WitnessUpdateOperation}.

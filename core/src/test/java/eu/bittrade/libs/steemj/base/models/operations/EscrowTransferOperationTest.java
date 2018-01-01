@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import eu.bittrade.libs.steemj.protocol.operations.EscrowTransferOperation;
+
 /**
  * Test the transformation of the {@link EscrowTransferOperation}.
  * 

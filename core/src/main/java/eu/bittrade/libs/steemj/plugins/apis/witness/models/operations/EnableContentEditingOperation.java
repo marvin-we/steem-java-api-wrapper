@@ -7,11 +7,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperationPayload;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperationPayload;
 
 /**
  * This class represents the Steem "enable_content_editing_operation" object.

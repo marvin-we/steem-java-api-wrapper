@@ -19,8 +19,6 @@ import eu.bittrade.libs.steemj.BaseTransactionalIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -31,6 +29,8 @@ import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadca
 import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.models.BroadcastTransactionSynchronousReturn;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.SignedBlock;
+import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * This class contains all test connected to the

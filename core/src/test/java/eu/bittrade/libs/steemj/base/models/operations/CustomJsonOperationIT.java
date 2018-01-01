@@ -19,6 +19,8 @@ import eu.bittrade.libs.steemj.plugins.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * Verify the functionality of the "custom json operation" under the use of real
