@@ -126,4 +126,21 @@ public class CondenserUtils {
 
         return jsonMetadata.toString();
     }
+
+    /**
+     * Create a permlink string from the given <code>title</code>:
+     * <ol>
+     * <li>The title is trimmed and converted to lowercase</li>
+     * <li>Spaces are converted to hyphens</li>
+     * <li>Disallowed characters are removed</li>
+     * <li>Contiguous hyphens are replaced with a single hyphen</li>
+     * </ol>
+     *
+     * @param title
+     *            The string to convert
+     * @return The generated permlink
+     */
+    public static String createPermlinkString(String title) {
+        return title.trim().toLowerCase().replaceAll(" ", "-").replaceAll("[^a-z0-9-]+", "").replaceAll("-+", "-");
+    }
 }
