@@ -18,9 +18,9 @@ import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 
 /**
- * Due to FasterXML/jackson-databind#1152 it is not possible to parse Maps in an
- * Array Format with Jackson out of the box. Therefore this custom Deserializer
- * is required.
+ * Due to Issue #1152 of the FasterXML/jackson-databind project, it is not
+ * possible to parse Maps in an Array Format with Jackson out of the box.
+ * Therefore this custom deserializer is required.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

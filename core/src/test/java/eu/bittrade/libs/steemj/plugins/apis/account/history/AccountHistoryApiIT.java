@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.joou.UInteger;
@@ -25,13 +26,13 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetTransactionArgs;
 import eu.bittrade.libs.steemj.plugins.apis.block.BlockApi;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockArgs;
-import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockHeaderArgs;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
-import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.TransactionId;
 import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.protocol.operations.AccountCreateWithDelegationOperation;
@@ -72,25 +73,12 @@ public class AccountHistoryApiIT extends BaseIT {
      */
     @Category({ IntegrationTest.class })
     @Test
-    public void testGetBlock() throws SteemCommunicationException, SteemResponseException {
-        final ExtendedSignedBlock signedBlockWithInfo = BlockApi
-                .getBlock(COMMUNICATION_HANDLER, new GetBlockArgs(UInteger.valueOf(13310401))).getBlock().get();
+    public void testGetOpsInBlock() throws SteemCommunicationException, SteemResponseException {
+        final ArrayList<Operation> operations = AccountHistoryApi
+                .getOpsInBlock(COMMUNICATION_HANDLER, new GetOpsInBlockArgs(UInteger.valueOf(13310401), true)).getOperations();
 
-        assertThat(signedBlockWithInfo.getTimestamp().getDateTime(), equalTo("2017-07-01T19:24:42"));
-        assertThat(signedBlockWithInfo.getWitness(), equalTo(new AccountName("riverhead")));
-
-        final ExtendedSignedBlock signedBlockWithInfoWithExtension = BlockApi
-                .getBlock(COMMUNICATION_HANDLER, new GetBlockArgs(UInteger.valueOf(12615532))).getBlock().get();
-
-        assertThat(signedBlockWithInfoWithExtension.getTimestamp().getDateTime(),
-                equalTo(new TimePointSec("2017-06-07T15:33:27").getDateTime()));
-        assertThat(signedBlockWithInfoWithExtension.getWitness(), equalTo(new AccountName("dragosroua")));
-
-        BlockHeaderExtensions versionExtension = signedBlockWithInfoWithExtension.getExtensions().get(0);
-        BlockHeaderExtensions hardforkVersionVoteExtension = signedBlockWithInfoWithExtension.getExtensions().get(1);
-
-        assertThat(versionExtension, instanceOf(Version.class));
-        assertThat(hardforkVersionVoteExtension, instanceOf(HardforkVersionVote.class));
+        //assertThat(signedBlockWithInfo.getTimestamp().getDateTime(), equalTo("2017-07-01T19:24:42"));
+        //assertThat(signedBlockWithInfo.getWitness(), equalTo(new AccountName("riverhead")));
     }
 
     /**
@@ -108,7 +96,7 @@ public class AccountHistoryApiIT extends BaseIT {
     public void testGetTransaction() throws SteemCommunicationException, SteemResponseException {
         // TODO: Check also null case of optional
         final AnnotatedSignedTransaction annotatedSignedTransaction = AccountHistoryApi
-                .getTransaction(COMMUNICATION_HANDLER, new TransactionId("bd8069e6544f658da560b72e93b605dfe2cb0aaf"));
+                .getTransaction(COMMUNICATION_HANDLER, new GetTransactionArgs(new TransactionId("bd8069e6544f658da560b72e93b605dfe2cb0aaf")));
 
         //assertThat(annotatedSignedTransaction.getTimestamp().getDateTime(), equalTo("2017-07-02T19:15:06"));
         //assertThat(blockHeader.getWitness(), equalTo(new AccountName("clayop")));
