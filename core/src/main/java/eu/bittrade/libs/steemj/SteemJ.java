@@ -6,22 +6,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.joou.UInteger;
+import org.joou.ULong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.Sha256Hash;
-import eu.bittrade.libs.steemj.apis.login.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.AccountVote;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
@@ -59,8 +59,14 @@ import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.AccountByKeyApi;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.models.GetKeyReferencesArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockArgs;
+import eu.bittrade.libs.steemj.plugins.apis.block.BlockApi;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockArgs;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockHeaderArgs;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.state.Discussion;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.state.State;
@@ -170,31 +176,23 @@ public class SteemJ {
         return AccountByKeyApi.getKeyReferences(communicationHandler, new GetKeyReferencesArgs(publicKeys))
                 .getAccounts();
     }
-    
+
     // #########################################################################
     // ## ACCOUNT HISTORY API ##################################################
     // #########################################################################
 
     /**
-     * Use this method to get detailed values and metrics for tags. The methods
-     * accepts a String as a search pattern and a number to limit the results.
+     * Get a sequence of operations included/generated within a particular
+     * block.
      * 
-     * <b>Example</b>
-     * <p>
-     * <code>getTrendingTags(communicationHandler, "steem", 2);</code> <br>
-     * Will return two tags whose name has the biggest match with the String
-     * "steem". An example response could contain the metrics and values for the
-     * tag "steem" and "steemit", while "steem" would be the first entry in the
-     * list as it has a bigger match than "steemit".
-     * </p>
-     * 
-     * @param firstTagPattern
-     *            The search pattern used to build the resulting list of tags.
-     * @param limit
-     *            The maximum number of results.
-     * @return A list of the tags. The first entry in the list is the tag that
-     *         has the biggest match with the <code>firstTagPattern</code>.
-     *         while the last tag in the last has the smallest match.
+     * @param blockNumber
+     *            Height of the block whose generated virtual operations should
+     *            be returned.
+     * @param onlyVirtual
+     *            Define if only virtual operations should be returned
+     *            (<code>true</code>) or not (<code>false</code>).
+     * @return A sequence of operations included/generated within a particular
+     *         block.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -210,9 +208,110 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Tag> getTrendingTags(String firstTagPattern, int limit)
+    public ArrayList<Operation> getOpsInBlock(long blockNumber, boolean onlyVirtual)
             throws SteemCommunicationException, SteemResponseException {
-        return TagsApi.getTrendingTags(communicationHandler, new GetTrendingTagsArgs(firstTagPattern, limit));
+        return AccountHistoryApi
+                .getOpsInBlock(communicationHandler, new GetOpsInBlockArgs(UInteger.valueOf(blockNumber), onlyVirtual))
+                .getOperations();
+    }
+
+    public void getTransaction() {
+
+    }
+
+    /**
+     * Get all operations performed by the specified account.
+     * 
+     * @param accountName
+     *            The user name of the account.
+     * @param start
+     *            The starting point.
+     * @param limit
+     *            The maximum number of entries.
+     * @return A map containing the activities. The key is the id of the
+     *         activity.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public Map<UInteger, AppliedOperation> getAccountHistory(AccountName accountName, ULong start, UInteger limit)
+            throws SteemCommunicationException, SteemResponseException {
+        return AccountHistoryApi
+                .getAccountHistory(communicationHandler, new GetAccountHistoryArgs(accountName, start, limit))
+                .getHistory();
+    }
+
+    // #########################################################################
+    // ## BLOCK API ############################################################
+    // #########################################################################
+
+    /**
+     * Get a full, signed block by providing its <code>blockNumber</code>. The
+     * returned object contains all information related to the block (e.g.
+     * processed transactions, the witness and the creation time).
+     * 
+     * @param blockNumber
+     *            Height of the block to be returned.
+     * @return The referenced full, signed block, or <code>null</code> if no
+     *         matching block was found.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public Optional<ExtendedSignedBlock> getBlock(long blockNumber)
+            throws SteemCommunicationException, SteemResponseException {
+        return BlockApi.getBlock(communicationHandler, new GetBlockArgs(UInteger.valueOf(blockNumber))).getBlock();
+    }
+
+    /**
+     * Like {@link #getBlock(long)}, but will only return the header of the
+     * requested block instead of the full, signed one.
+     * 
+     * @param blockNumber
+     *            Height of the block to be returned.
+     * @return The referenced full, signed block, or <code>null</code> if no
+     *         matching block was found.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public Optional<BlockHeader> getBlockHeader(long blockNumber)
+            throws SteemCommunicationException, SteemResponseException {
+        return BlockApi.getBlockHeader(communicationHandler, new GetBlockHeaderArgs(UInteger.valueOf(blockNumber)))
+                .getHeader();
     }
 
     // #########################################################################
@@ -362,93 +461,6 @@ public class SteemJ {
     }
 
     /**
-     * Get a full, signed block by providing its <code>blockNumber</code>. The
-     * returned object contains all information related to the block (e.g.
-     * processed transactions, the witness and the creation time).
-     * 
-     * @param blockNumber
-     *            Height of the block to be returned.
-     * @return The referenced full, signed block, or <code>null</code> if no
-     *         matching block was found.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public ExtendedSignedBlock getBlock(long blockNumber) throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getBlock(communicationHandler, blockNumber);
-    }
-
-    /**
-     * Like {@link #getBlock(long)}, but will only return the header of the
-     * requested block instead of the full, signed one.
-     * 
-     * @param blockNumber
-     *            Height of the block to be returned.
-     * @return The referenced full, signed block, or <code>null</code> if no
-     *         matching block was found.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public BlockHeader getBlockHeader(long blockNumber) throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getBlockHeader(communicationHandler, blockNumber);
-    }
-
-    /**
-     * Get a sequence of operations included/generated within a particular
-     * block.
-     * 
-     * @param blockNumber
-     *            Height of the block whose generated virtual operations should
-     *            be returned.
-     * @param onlyVirtual
-     *            Define if only virtual operations should be returned
-     *            (<code>true</code>) or not (<code>false</code>).
-     * @return A sequence of operations included/generated within a particular
-     *         block.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public List<AppliedOperation> getOpsInBlock(int blockNumber, boolean onlyVirtual)
-            throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getOpsInBlock(communicationHandler, blockNumber, onlyVirtual);
-    }
-
-    /**
      * Get the current number of registered Steem accounts.
      * 
      * @return The number of accounts.
@@ -475,51 +487,6 @@ public class SteemJ {
         requestObject.setAdditionalParameters(parameters);
 
         return communicationHandler.performRequest(requestObject, Integer.class).get(0);
-    }
-
-    /**
-     * Get all operations performed by the specified account.
-     * 
-     * @param accountName
-     *            The user name of the account.
-     * @param from
-     *            The starting point.
-     * @param limit
-     *            The maximum number of entries.
-     * @return A map containing the activities. The key is the id of the
-     *         activity.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public Map<Integer, AppliedOperation> getAccountHistory(AccountName accountName, int from, int limit)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
-        String[] parameters = { accountName.getName(), String.valueOf(from), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
-
-        for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
-            accountActivities.put((Integer) accountActivity[0], (AppliedOperation) CommunicationHandler
-                    .getObjectMapper().convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
-                    }));
-        }
-
-        return accountActivities;asd
     }
 
     /**
@@ -1789,9 +1756,7 @@ public class SteemJ {
      *            The first account name to get the reputation for.
      * @param limit
      *            The number of results.
-     * @return A list of
-     *         {@link eu.bittrade.libs.steemj.plugins.apis.follow.model.AccountReputation
-     *         AccountReputation}.
+     * @return A list of {@link AccountReputation AccountReputation}.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -1946,7 +1911,7 @@ public class SteemJ {
      * @throws InvalidParameterException
      *             If the limit is less than 0 or greater than 500.
      */
-    public eu.bittrade.libs.steemj.plugins.apis.market.history.model.OrderBook getOrderBookUsingMarketApi(short limit)
+    public eu.bittrade.libs.steemj.plugins.apis.market.history.models.OrderBook getOrderBookUsingMarketApi(short limit)
             throws SteemCommunicationException, SteemResponseException {
         return MarketHistoryApi.getOrderBook(communicationHandler, limit);
     }
@@ -2025,9 +1990,7 @@ public class SteemJ {
      *            The start time to get market history.
      * @param end
      *            The end time to get market history.
-     * @return A list of market history
-     *         {@link eu.bittrade.libs.steemj.plugins.apis.market.history.model.Bucket
-     *         Bucket}s.
+     * @return A list of market history {@link Bucket Bucket}s.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -2074,6 +2037,46 @@ public class SteemJ {
     // #########################################################################
     // ## TAGS API #############################################################
     // #########################################################################
+
+    /**
+     * Use this method to get detailed values and metrics for tags. The methods
+     * accepts a String as a search pattern and a number to limit the results.
+     * 
+     * <b>Example</b>
+     * <p>
+     * <code>getTrendingTags(communicationHandler, "steem", 2);</code> <br>
+     * Will return two tags whose name has the biggest match with the String
+     * "steem". An example response could contain the metrics and values for the
+     * tag "steem" and "steemit", while "steem" would be the first entry in the
+     * list as it has a bigger match than "steemit".
+     * </p>
+     * 
+     * @param firstTagPattern
+     *            The search pattern used to build the resulting list of tags.
+     * @param limit
+     *            The maximum number of results.
+     * @return A list of the tags. The first entry in the list is the tag that
+     *         has the biggest match with the <code>firstTagPattern</code>.
+     *         while the last tag in the last has the smallest match.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<Tag> getTrendingTags(String firstTagPattern, int limit)
+            throws SteemCommunicationException, SteemResponseException {
+        return TagsApi.getTrendingTags(communicationHandler, firstTagPattern, limit);
+    }
 
     // #########################################################################
     // ## WITNESS API ##########################################################
