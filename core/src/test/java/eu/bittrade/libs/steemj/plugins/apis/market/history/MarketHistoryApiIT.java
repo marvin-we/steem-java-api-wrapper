@@ -17,11 +17,11 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.MarketHistoryApi;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.Bucket;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTicker;

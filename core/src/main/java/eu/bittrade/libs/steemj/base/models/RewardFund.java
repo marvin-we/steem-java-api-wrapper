@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.enums.CurveId;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
 
 /**
  * This class is the java implementation of the Steem "reward_fund_object".

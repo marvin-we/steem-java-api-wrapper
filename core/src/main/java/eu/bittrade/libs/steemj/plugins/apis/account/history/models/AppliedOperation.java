@@ -4,9 +4,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.base.models.TransactionId;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.protocol.TransactionId;
 
 /**
  * This class is the java implementation of the Steem "api_operation_object"

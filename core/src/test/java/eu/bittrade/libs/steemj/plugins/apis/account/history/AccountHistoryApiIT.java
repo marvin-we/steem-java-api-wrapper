@@ -18,8 +18,6 @@ import eu.bittrade.libs.steemj.BaseIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
 import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.base.models.TransactionId;
 import eu.bittrade.libs.steemj.base.models.Version;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegationOperation;
@@ -27,6 +25,7 @@ import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.plugins.apis.block.BlockApi;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
@@ -35,6 +34,7 @@ import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockHeaderArgs;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
+import eu.bittrade.libs.steemj.protocol.TransactionId;
 
 /**
  * This class contains all test connected to the
@@ -94,7 +94,7 @@ public class AccountHistoryApiIT extends BaseIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi#getTransaction(CommunicationHandler, eu.bittrade.libs.steemj.base.models.TransactionId)}
+     * {@link eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi#getTransaction(CommunicationHandler, eu.bittrade.libs.steemj.protocol.TransactionId)}
      * method.
      * 
      * @throws SteemCommunicationException

@@ -7,9 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.BlockId;
-import eu.bittrade.libs.steemj.base.models.TransactionId;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.protocol.SignedBlock;
+import eu.bittrade.libs.steemj.protocol.TransactionId;
 
 /**
  * This class is the java implementation of the Steem "signed_block_with_info"

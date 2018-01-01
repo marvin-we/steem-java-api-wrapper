@@ -2,6 +2,8 @@ package eu.bittrade.libs.steemj.base.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import eu.bittrade.libs.steemj.fc.TimePointSec;
+
 /**
  * This class represents the Steem "account_vote" object.
  * 

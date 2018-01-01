@@ -6,8 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.TransactionId;
-
 /**
  * This class represents a Steem "annotated_signed_transaction" object.
  * 

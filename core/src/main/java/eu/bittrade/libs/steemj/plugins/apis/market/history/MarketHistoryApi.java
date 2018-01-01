@@ -3,13 +3,13 @@ package eu.bittrade.libs.steemj.plugins.apis.market.history;
 import java.security.InvalidParameterException;
 import java.util.List;
 
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.Bucket;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTicker;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTrade;

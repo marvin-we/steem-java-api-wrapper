@@ -1,6 +1,8 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.protocol;
 
 import java.io.Serializable;
+
+import eu.bittrade.libs.steemj.base.models.Ripemd160;
 
 /**
  * This class is the java implementation of the Steem "transaction_id_type"

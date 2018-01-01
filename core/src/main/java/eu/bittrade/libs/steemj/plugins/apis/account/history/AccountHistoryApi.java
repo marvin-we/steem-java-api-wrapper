@@ -9,7 +9,6 @@ import org.joou.ULong;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import eu.bittrade.libs.steemj.base.models.TransactionId;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
@@ -19,6 +18,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
+import eu.bittrade.libs.steemj.protocol.TransactionId;
 
 /**
  * This class implements the "account_history_api".

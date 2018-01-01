@@ -5,7 +5,7 @@ import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
 
 /**
  * This class represents a Steem "candle_stick" object.

@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.fc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
- * This class represents a Steem "time_point_sec" Object. It basically wraps a
+ * This class represents a FC "time_point_sec" Object. It basically wraps a
  * date in its long representation and offers a bunch of utility methods to
  * transform the timestamp into other representations.
  * 
