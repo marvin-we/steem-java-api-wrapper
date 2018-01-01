@@ -16,6 +16,8 @@ import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryReturn;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
 import eu.bittrade.libs.steemj.protocol.TransactionId;
@@ -141,22 +143,23 @@ public class AccountHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static Map<Integer, AppliedOperation> getAccountHistory(CommunicationHandler communicationHandler,
-            AccountName accountName, ULong from, UInteger limit) throws SteemCommunicationException, SteemResponseException {
+    public static GetAccountHistoryReturn getAccountHistory(CommunicationHandler communicationHandler,
+            GetAccountHistoryArgs getAccountHistoryArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
         requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
-        String[] parameters = { accountName.getName(), String.valueOf(from), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
+        requestObject.setAdditionalParameters(getAccountHistoryArgs);
+//
+//        Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
 
-        Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
+//        for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
+ //           accountActivities.put((Integer) accountActivity[0], (AppliedOperation) CommunicationHandler
+  //                  .getObjectMapper().convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
+   //                 }));
+    //    }
 
-        for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
-            accountActivities.put((Integer) accountActivity[0], (AppliedOperation) CommunicationHandler
-                    .getObjectMapper().convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
-                    }));
-        }
-
-        return accountActivities;
+      //  return accountActivities;
+        
+        return communicationHandler.performRequest(requestObject, GetAccountHistoryReturn.class).get(0);
     }
 }

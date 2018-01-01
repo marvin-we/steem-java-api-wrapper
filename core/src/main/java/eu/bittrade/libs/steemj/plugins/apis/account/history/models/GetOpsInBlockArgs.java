@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi;
-import eu.bittrade.libs.steemj.plugins.apis.witness.enums.BandwidthType;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.GetAccountBandwidthArgs;
 
 /**
@@ -26,17 +25,14 @@ public class GetOpsInBlockArgs {
      * Create a new {@link GetAccountBandwidthArgs} instance to be passed to the
      * {@link WitnessApi#getAccountBandwidth(CommunicationHandler, GetAccountBandwidthArgs)}
      * method.
-     * 
-     * @param account
-     *            The account name request the bandwidth for.
-     * @param type
-     *            The {@link BandwidthType} to request.
+     * @param blockNum 
+     * @param onlyVirtual 
      */
     @JsonCreator()
-    public GetOpsInBlockArgs() {
-        steem::protocol::account_name_type   account;
-        uint64_t                               start = -1;
-        uint32_t                               limit = 1000;
+    public GetOpsInBlockArgs(@JsonProperty("block_num") UInteger blockNum,
+            @JsonProperty("onlyVirtual") Boolean onlyVirtual) {
+        this.setBlockNum(blockNum);
+        this.setOnlyVirtual(onlyVirtual);
     }
 
     /**

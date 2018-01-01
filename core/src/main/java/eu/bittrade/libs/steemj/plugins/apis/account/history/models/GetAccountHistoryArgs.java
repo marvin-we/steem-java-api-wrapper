@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.plugins.apis.account.history.models;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;
 import org.joou.ULong;
@@ -7,11 +9,9 @@ import org.joou.ULong;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi;
-import eu.bittrade.libs.steemj.plugins.apis.witness.enums.BandwidthType;
-import eu.bittrade.libs.steemj.plugins.apis.witness.models.GetAccountBandwidthArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class implements the Steem "get_account_history_args" object.
@@ -27,20 +27,21 @@ public class GetAccountHistoryArgs {
     private UInteger limit;
 
     /**
-     * Create a new {@link GetAccountBandwidthArgs} instance to be passed to the
-     * {@link WitnessApi#getAccountBandwidth(CommunicationHandler, GetAccountBandwidthArgs)}
+     * Create a new {@link GetAccountHistoryArgs} instance to be passed to the
+     * {@link AccountHistoryApi#getAccountHistory(eu.bittrade.libs.steemj.communication.CommunicationHandler, GetAccountHistoryArgs)}
      * method.
      * 
      * @param account
-     *            The account name request the bandwidth for.
-     * @param type
-     *            The {@link BandwidthType} to request.
+     *            The account name to request the history for.
+     * @param start
+     * @param limit
      */
     @JsonCreator()
-    public GetAccountHistoryArgs() {
-        steem::protocol::account_name_type   account;
-        uint64_t                               start = -1;
-        uint32_t                               limit = 1000;
+    public GetAccountHistoryArgs(@JsonProperty("account") AccountName account, @JsonProperty("start") ULong start,
+            @JsonProperty("limit") UInteger limit) {
+        this.setAccount(account);
+        this.setStart(start);
+        this.setLimit(limit);
     }
 
     /**
@@ -55,7 +56,7 @@ public class GetAccountHistoryArgs {
      *            the account to set
      */
     public void setAccount(AccountName account) {
-        this.account = account;
+        this.account = SteemJUtils.setIfNotNull(account, "The account is required.");
     }
 
     /**
@@ -70,7 +71,8 @@ public class GetAccountHistoryArgs {
      *            the start to set
      */
     public void setStart(ULong start) {
-        this.start = start;
+        // If not provided set the start to its default value.
+        this.start = SteemJUtils.setIfNotNull(start, ULong.valueOf(-1));
     }
 
     /**
@@ -84,8 +86,9 @@ public class GetAccountHistoryArgs {
      * @param limit
      *            the limit to set
      */
-    public void setLimit(UInteger limit) {
-        this.limit = limit;
+    public void setLimit(@Nullable UInteger limit) {
+        // If not provided set the limit to its default value.
+        this.limit = SteemJUtils.setIfNotNull(limit, UInteger.valueOf(1000));
     }
 
     @Override

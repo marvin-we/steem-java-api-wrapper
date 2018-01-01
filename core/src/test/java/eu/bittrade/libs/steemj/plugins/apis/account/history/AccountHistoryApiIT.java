@@ -24,6 +24,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgs;
 import eu.bittrade.libs.steemj.plugins.apis.block.BlockApi;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockArgs;
@@ -126,16 +127,17 @@ public class AccountHistoryApiIT extends BaseIT {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetAccountHistory() throws SteemCommunicationException, SteemResponseException {
-        final Map<Integer, AppliedOperation> accountHistorySetOne = AccountHistoryApi.getAccountHistory(
-                COMMUNICATION_HANDLER, new AccountName("dez1337"), ULong.valueOf(10), UInteger.valueOf(10));
+        final Map<UInteger, AppliedOperation> accountHistorySetOne = AccountHistoryApi.getAccountHistory(
+                COMMUNICATION_HANDLER, new GetAccountHistoryArgs(new AccountName("dez1337"), ULong.valueOf(10), UInteger.valueOf(10))).getHistory();
+        
         assertEquals("expect response to contain 10 results", 11, accountHistorySetOne.size());
 
         Operation firstOperation = accountHistorySetOne.get(0).getOp();
         assertTrue("the first operation for each account is the 'account_create_operation'",
                 firstOperation instanceof AccountCreateOperation);
 
-        final Map<Integer, AppliedOperation> accountHistorySetTwo = AccountHistoryApi.getAccountHistory(
-                COMMUNICATION_HANDLER, new AccountName("randowhale"), ULong.valueOf(1000), UInteger.valueOf(1000));
+        final Map<UInteger, AppliedOperation> accountHistorySetTwo = AccountHistoryApi.getAccountHistory(
+                COMMUNICATION_HANDLER,  new GetAccountHistoryArgs(new AccountName("randowhale"), ULong.valueOf(1000), UInteger.valueOf(1000))).getHistory();
         assertEquals("expect response to contain 1001 results", 1001, accountHistorySetTwo.size());
 
         assertThat(accountHistorySetTwo.get(0).getOp(), instanceOf(AccountCreateWithDelegationOperation.class));
