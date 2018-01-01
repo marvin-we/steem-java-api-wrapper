@@ -12,6 +12,7 @@ import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperationPayload;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class represents the Steem "enable_content_editing_operation" object.
