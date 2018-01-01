@@ -46,7 +46,7 @@ public class DelegateVestingSharesOperationParsingIT extends BaseITForOperationP
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         ExtendedSignedBlock blockContainingDelegateVestingSharesOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation delegateVestingSharesOperation = blockContainingDelegateVestingSharesOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

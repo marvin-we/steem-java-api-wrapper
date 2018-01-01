@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import eu.bittrade.libs.steemj.DiscussionQuery;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.Tag;
 import eu.bittrade.libs.steemj.base.models.VoteState;
@@ -83,11 +82,11 @@ public class TagsApi {
         return communicationHandler.performRequest(requestObject, Tag.class);
     }
 
-    public static void getTagsUsedByAuthor() {
+    public static void getTagsUsedByAuthor(CommunicationHandler communicationHandler) {
         
     }
     
-    public static void getDiscussion() {
+    public static void getDiscussion(CommunicationHandler communicationHandler) {
         
     }
     
@@ -114,7 +113,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getContentReplies(AccountName author, Permlink permlink)
+    public List<Discussion> getContentReplies(CommunicationHandler communicationHandler, AccountName author, Permlink permlink)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
@@ -157,7 +156,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getDiscussionsBy(DiscussionQuery discussionQuery, DiscussionSortType sortBy)
+    public List<Discussion> getDiscussionsBy(CommunicationHandler communicationHandler, eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery discussionQuery, DiscussionSortType sortBy)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
 
@@ -168,7 +167,7 @@ public class TagsApi {
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
         
-        (get_discussions_by_trending)
+        /*(get_discussions_by_trending)
         (get_discussions_by_created)
         (get_discussions_by_active)
         (get_discussions_by_cashout)
@@ -178,7 +177,7 @@ public class TagsApi {
         (get_discussions_by_feed)
         (get_discussions_by_blog)
         (get_discussions_by_comments)
-        (get_discussions_by_promoted)
+        (get_discussions_by_promoted)*/
     }
     
 
@@ -208,7 +207,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getRepliesByLastUpdate(AccountName username, Permlink permlink, int limit)
+    public List<Discussion> getRepliesByLastUpdate(CommunicationHandler communicationHandler, AccountName username, Permlink permlink, int limit)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
@@ -247,7 +246,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getDiscussionsByAuthorBeforeDate(AccountName author, Permlink permlink, String date,
+    public List<Discussion> getDiscussionsByAuthorBeforeDate(CommunicationHandler communicationHandler, AccountName author, Permlink permlink, String date,
             int limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
 
@@ -294,7 +293,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<VoteState> getActiveVotes(AccountName author, Permlink permlink)
+    public List<VoteState> getActiveVotes(CommunicationHandler communicationHandler, AccountName author, Permlink permlink)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);

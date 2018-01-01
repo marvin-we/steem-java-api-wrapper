@@ -47,7 +47,7 @@ public class LimitOrderCreateOperationParsingIT extends BaseITForOperationParsin
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         ExtendedSignedBlock blockContainingLimitOrderCreateOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation limitOrderCreateOperation = blockContainingLimitOrderCreateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

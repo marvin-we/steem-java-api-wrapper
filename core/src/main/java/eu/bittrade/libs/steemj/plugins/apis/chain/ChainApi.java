@@ -1,7 +1,7 @@
 package eu.bittrade.libs.steemj.plugins.apis.chain;
 
 public class ChainApi {
-
+/*
     DECLARE_API(
        (push_block)
        /**
@@ -13,5 +13,7 @@ public class ChainApi {
         * queues full as well, it will be kept in the queue to be propagated later when a new block flushes out the pending
         * queues.
         */
+    /*
        (push_transaction) )
+*/
 }

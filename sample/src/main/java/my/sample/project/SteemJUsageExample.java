@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.joou.UInteger;
+import org.joou.ULong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,12 +61,6 @@ public class SteemJUsageExample {
 
             // Create a new apiWrapper with your config object.
             SteemJ steemJ = new SteemJ();
-            
-            // #########################################################################
-            // ## Use Callbacks to be informed about new blocks ########################
-            // #########################################################################
-            // This is only supported if a websocket connection is used!.
-            steemJ.setBlockAppliedCallback(new MyCustomCallback());
             
             // #########################################################################
             // ## EXECUTE SIMPLYFIED OPERATIONS ########################################
@@ -169,8 +165,8 @@ public class SteemJUsageExample {
 
 
             // Let's have a look at the account history of dez1337:
-            Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), 100,
-                    100);
+            Map<UInteger, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), ULong.valueOf(100),
+                    UInteger.valueOf(100));
             if (accountHistory.get(0).getOp() instanceof AccountCreateOperation) {
                 AccountCreateOperation accountCreateOperation = (AccountCreateOperation) (accountHistory.get(0)
                         .getOp());

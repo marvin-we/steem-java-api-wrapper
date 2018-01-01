@@ -47,7 +47,7 @@ public class CustomJsonOperationParsingIT extends BaseITForOperationParsing {
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         ExtendedSignedBlock blockContainingCustomJsonOperationOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation customJsonOperation = blockContainingCustomJsonOperationOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

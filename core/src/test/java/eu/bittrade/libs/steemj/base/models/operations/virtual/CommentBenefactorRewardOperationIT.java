@@ -50,9 +50,9 @@ public class CommentBenefactorRewardOperationIT extends BaseITForOperationParsin
     @Override
     @Test
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
+        List<Operation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation commentBenefactorRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation commentBenefactorRewardOperation = operationsInBlock.get(OPERATION_INDEX);
 
         assertThat(commentBenefactorRewardOperation, instanceOf(CommentBenefactorRewardOperation.class));
         assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getAuthor().getName(),

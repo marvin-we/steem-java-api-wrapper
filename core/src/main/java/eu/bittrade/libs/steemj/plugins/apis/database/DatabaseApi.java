@@ -3,20 +3,14 @@ package eu.bittrade.libs.steemj.plugins.apis.database;
 import java.util.List;
 
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.Tag;
-import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
-import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.plugins.apis.account.history.model.AppliedOperation;
-import eu.bittrade.libs.steemj.plugins.apis.block.model.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.state.State;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.BlockHeader;
 
 /**
  * This class implements the "database_api".
@@ -28,7 +22,7 @@ public class DatabaseApi {
     private DatabaseApi() {
     }
     
-    DECLARE_API_IMPL
+   /* DECLARE_API_IMPL
     (
        (get_config)
        (get_dynamic_global_properties)
@@ -79,61 +73,7 @@ public class DatabaseApi {
 #ifdef STEEM_ENABLE_SMT
        (get_smt_next_identifier)
 #endif
-    )
-
-    /**
-     * Use this method to register a callback method that is called whenever a
-     * new block has been applied.
-     * 
-     * <p>
-     * Please <b>Notice</b>, that there can only be one active Callback. If you
-     * call this method multiple times with different callback methods, only the
-     * last one will be called.
-     * 
-     * Beside that there is currently no way to cancel a subscription. Once
-     * you've registered a callback it will be called until the connection has
-     * been closed.
-     * </p>
-     * 
-     * @param communicationHandler
-     *            A
-     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
-     *            CommunicationHandler} instance that should be used to send the
-     *            request.
-     * @param blockAppliedCallback
-     *            A class implementing the
-     *            {@link eu.bittrade.libs.steemj.communication.BlockAppliedCallback
-     *            BlockAppliedCallback}.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public static void setBlockAppliedCallback(CommunicationHandler communicationHandler,
-            BlockAppliedCallback blockAppliedCallback) throws SteemCommunicationException, SteemResponseException {
-        // Register the given callback at the callback hub.
-        CallbackHub.getInstance().addCallback(blockAppliedCallback);
-
-        // Register the callback at the Steem node.
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.SET_BLOCK_APPLIED_CALLBACK);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-
-        Object[] parameters = { blockAppliedCallback.getUuid() };
-        requestObject.setAdditionalParameters(parameters);
-
-        communicationHandler.performRequest(requestObject, Object.class);
-    }
+    )*/
 
     /**
      * This API is a short-cut for returning all of the state required for a

@@ -45,7 +45,7 @@ public class ClaimRewardBalanceOperationParsingIT extends BaseITForOperationPars
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         ExtendedSignedBlock blockContainingClaimRewardBalanceOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation claimRewardBalanceOperation = blockContainingClaimRewardBalanceOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

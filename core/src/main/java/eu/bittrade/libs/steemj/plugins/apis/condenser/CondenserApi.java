@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.plugins.apis.condenser;
 
 public class CondenserApi {
+    /*
     (get_version)
     (get_trending_tags)
     (get_state)
@@ -85,5 +86,5 @@ public class CondenserApi {
     (get_trade_history)
     (get_recent_trades)
     (get_market_history)
-    (get_market_history_buckets)
+    (get_market_history_buckets)*/
 }

@@ -45,7 +45,7 @@ public class AccountWitnessVoteOperationParsingIT extends BaseITForOperationPars
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         ExtendedSignedBlock blockContainingAccountWitnessVoteOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation accountWitnessVoteOperation = blockContainingAccountWitnessVoteOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

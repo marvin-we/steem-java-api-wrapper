@@ -48,7 +48,7 @@ public class AccountCreateOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        ExtendedSignedBlock blockContainingAccountCreateOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        ExtendedSignedBlock blockContainingAccountCreateOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation accountCreateOperation = blockContainingAccountCreateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

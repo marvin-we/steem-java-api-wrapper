@@ -49,7 +49,7 @@ public class PowOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        ExtendedSignedBlock blockContainingPowOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        ExtendedSignedBlock blockContainingPowOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation powOperation = blockContainingPowOperation.getTransactions().get(TRANSACTION_INDEX).getOperations()
                 .get(OPERATION_INDEX);

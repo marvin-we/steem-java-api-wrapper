@@ -49,7 +49,7 @@ public class AccountCreateWithDelegationOperationParsingIT extends BaseITForOper
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         ExtendedSignedBlock blockContainingAccountCreateWithDelegationOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
 
         Operation accountCreateWithDelegationOperation = blockContainingAccountCreateWithDelegationOperation
                 .getTransactions().get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

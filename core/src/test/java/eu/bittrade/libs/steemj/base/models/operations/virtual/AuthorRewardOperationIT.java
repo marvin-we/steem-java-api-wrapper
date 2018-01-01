@@ -47,9 +47,9 @@ public class AuthorRewardOperationIT extends BaseITForOperationParsing {
     @Override
     @Test
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
+        List<Operation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation authorRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation authorRewardOperation = operationsInBlock.get(OPERATION_INDEX);
 
         assertThat(authorRewardOperation, instanceOf(AuthorRewardOperation.class));
 
