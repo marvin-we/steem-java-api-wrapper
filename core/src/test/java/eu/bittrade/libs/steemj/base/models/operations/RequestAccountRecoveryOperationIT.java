@@ -13,12 +13,12 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
  * Verify the functionality of the "request account recovery operation" under

@@ -12,7 +12,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.Permlink;
@@ -22,6 +21,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**

@@ -4,6 +4,8 @@ import java.math.BigInteger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import eu.bittrade.libs.steemj.protocol.AccountName;
+
 /**
  * This class represents the Steem data type "vote_state".
  * 

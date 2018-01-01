@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

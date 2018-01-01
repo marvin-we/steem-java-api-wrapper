@@ -11,9 +11,9 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 
 /**
  * This class tests if the {@link CustomOperation} can be parsed successfully.
@@ -43,7 +43,7 @@ public class CustomOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingCustomOperationOperation = steemJ
+        ExtendedSignedBlock blockContainingCustomOperationOperation = steemJ
                 .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation customOperation = blockContainingCustomOperationOperation.getTransactions().get(TRANSACTION_INDEX)

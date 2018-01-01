@@ -12,10 +12,10 @@ import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 
 /**
  * This class tests if the {@link FeedPublishOperation} can be parsed
@@ -51,7 +51,7 @@ public class FeedPublishOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingFeedPublishOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        ExtendedSignedBlock blockContainingFeedPublishOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation feedPublishOperation = blockContainingFeedPublishOperation.getTransactions().get(TRANSACTION_INDEX)
                 .getOperations().get(OPERATION_INDEX);

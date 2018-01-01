@@ -6,6 +6,7 @@ import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
  * This class represents the Steem "pow" object.

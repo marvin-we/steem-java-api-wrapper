@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.BaseUT;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
  * Test the PublicKey object.
@@ -35,7 +36,7 @@ public class PublicKeyTest extends BaseUT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.PublicKey#toByteArray()}
+     * {@link eu.bittrade.libs.steemj.protocol.PublicKey#toByteArray()}
      * method by creating a new PublicKey from an Address.
      * 
      * @throws Exception
@@ -48,7 +49,7 @@ public class PublicKeyTest extends BaseUT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.PublicKey#getAddressFromPublicKey}
+     * {@link eu.bittrade.libs.steemj.protocol.PublicKey#getAddressFromPublicKey}
      * method.
      * 
      * @throws Exception
@@ -61,7 +62,7 @@ public class PublicKeyTest extends BaseUT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.PublicKey#equals(Object)}
+     * {@link eu.bittrade.libs.steemj.protocol.PublicKey#equals(Object)}
      * method.
      */
     @Test

@@ -26,14 +26,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.apis.database.models.state.Discussion;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AccountVote;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.Config;
-import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
 import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
@@ -53,10 +49,14 @@ import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegatio
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.TransferOperation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.state.Discussion;
+import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.util.KeyGenerator;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -102,24 +102,6 @@ public class SteemJIT extends BaseIT {
         final int accountCount = steemJ.getAccountCount();
 
         assertThat("expect the number of accounts greater than 122908", accountCount, greaterThan(122908));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetAccountHistory() throws Exception {
-        final Map<Integer, AppliedOperation> accountHistorySetOne = steemJ.getAccountHistory(ACCOUNT, 10, 10);
-        assertEquals("expect response to contain 10 results", 11, accountHistorySetOne.size());
-
-        Operation firstOperation = accountHistorySetOne.get(0).getOp();
-        assertTrue("the first operation for each account is the 'account_create_operation'",
-                firstOperation instanceof AccountCreateOperation);
-
-        final Map<Integer, AppliedOperation> accountHistorySetTwo = steemJ.getAccountHistory(ACCOUNT_TWO, 1000, 1000);
-        assertEquals("expect response to contain 1001 results", 1001, accountHistorySetTwo.size());
-
-        assertThat(accountHistorySetTwo.get(0).getOp(), instanceOf(AccountCreateWithDelegationOperation.class));
-        assertThat(((AccountCreateWithDelegationOperation) accountHistorySetTwo.get(0).getOp()).getCreator().getName(),
-                equalTo(new AccountName("anonsteem").getName()));
     }
 
     @Category({ IntegrationTest.class })

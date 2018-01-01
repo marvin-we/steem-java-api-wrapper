@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.protocol.AccountName;
+
 /**
  * This class represents a Graphene Chain "limit_order" object.
  * 

@@ -11,6 +11,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

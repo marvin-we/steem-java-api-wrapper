@@ -8,6 +8,7 @@ import java.security.InvalidParameterException;
 import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * Test the AccountName object.
@@ -20,7 +21,7 @@ public class AccountNameTest {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.AccountName#toByteArray()
+     * {@link eu.bittrade.libs.steemj.protocol.AccountName#toByteArray()
      * toByteArray()} method.
      * 
      * @throws Exception
@@ -36,7 +37,7 @@ public class AccountNameTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.AccountName#setName(String name)
+     * {@link eu.bittrade.libs.steemj.protocol.AccountName#setName(String name)
      * setName(String name)} method by providing an account name which is too
      * long.
      */
@@ -47,7 +48,7 @@ public class AccountNameTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.AccountName#setName(String name)
+     * {@link eu.bittrade.libs.steemj.protocol.AccountName#setName(String name)
      * setName(String name)} method by providing an account name which is too
      * short.
      */
@@ -58,7 +59,7 @@ public class AccountNameTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.AccountName#setName(String name)
+     * {@link eu.bittrade.libs.steemj.protocol.AccountName#setName(String name)
      * setName(String name)} method by providing an account name with an invalid
      * start character.
      */
@@ -69,7 +70,7 @@ public class AccountNameTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.AccountName#setName(String name)
+     * {@link eu.bittrade.libs.steemj.protocol.AccountName#setName(String name)
      * setName(String name)} method by providing an account name with an invalid
      * end character.
      */
@@ -80,7 +81,7 @@ public class AccountNameTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.AccountName#setName(String name)
+     * {@link eu.bittrade.libs.steemj.protocol.AccountName#setName(String name)
      * setName(String name)} method by providing valid account names.
      */
     @Test

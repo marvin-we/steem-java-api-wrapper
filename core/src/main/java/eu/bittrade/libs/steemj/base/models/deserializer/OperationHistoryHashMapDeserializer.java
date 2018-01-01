@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

@@ -10,9 +10,9 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 
 /**
  * This class tests if the {@link EscrowApproveOperation} can be parsed
@@ -42,7 +42,7 @@ public class EscrowApproveOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingApproveOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        ExtendedSignedBlock blockContainingApproveOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation escrowApproveOperation = blockContainingApproveOperation.getTransactions().get(TRANSACTION_INDEX)
                 .getOperations().get(OPERATION_INDEX);

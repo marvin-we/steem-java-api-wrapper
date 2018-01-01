@@ -10,13 +10,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -136,7 +136,7 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
     }
 
     /**
-     * Get the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * Get the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
      * PublicKey} of the {@link #getAccount() account}.
      * 
      * @return The memo key.
@@ -147,7 +147,7 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
     }
 
     /**
-     * Set the new memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * Set the new memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
      * PublicKey} of the {@link #getAccount() account}.
      * 
      * @param memoKey

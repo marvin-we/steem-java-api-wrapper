@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
-import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.interfaces.Validatable;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.ReblogOperation;
 
 /**
  * This class is a wrapper for the different kinds of Operations, a

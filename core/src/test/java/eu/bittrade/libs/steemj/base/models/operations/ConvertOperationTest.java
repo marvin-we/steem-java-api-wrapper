@@ -12,12 +12,12 @@ import org.junit.Test;
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.BaseTransactionalUT;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * Test the transformation of the {@link ConvertOperation}.

@@ -12,13 +12,13 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
-import eu.bittrade.libs.steemj.apis.follow.models.operations.ReblogOperation;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.plugins.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.ReblogOperation;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * Verify the functionality of the "custom json operation" under the use of real

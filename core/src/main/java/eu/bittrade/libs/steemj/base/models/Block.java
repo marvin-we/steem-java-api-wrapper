@@ -4,12 +4,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
+
 /**
  * This class is the java implementation of the Steem "block_object" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Block extends SignedBlockWithInfo {
+public class Block extends ExtendedSignedBlock {
     // Original type is comment_id_type.
     private long id;
     // Original type is uint32_t so we use long here.

@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * This abstract class contains fields that exist in all Steem

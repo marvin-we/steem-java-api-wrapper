@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.protocol.AccountName;
+
 /**
  * This class represents the Steem "dynamic_global_property_api_obj" object.
  * 

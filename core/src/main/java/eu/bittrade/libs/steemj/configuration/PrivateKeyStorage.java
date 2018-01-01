@@ -11,8 +11,8 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import eu.bittrade.crypto.core.DumpedPrivateKey;
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.base58.Sha256ChecksumProvider;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * This class is used to store the private keys of multiple users in a single

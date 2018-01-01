@@ -10,11 +10,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.bittrade.libs.steemj.BaseITForOperationParsing;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 
 /**
  * Test that the {@link ProducerRewardOperation} can be parsed.

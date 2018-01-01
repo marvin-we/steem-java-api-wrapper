@@ -13,6 +13,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.Validatable;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**

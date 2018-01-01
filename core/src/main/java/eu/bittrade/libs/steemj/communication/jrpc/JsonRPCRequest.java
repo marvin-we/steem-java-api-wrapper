@@ -33,7 +33,7 @@ public class JsonRPCRequest {
     @JsonIgnore
     private RequestMethods apiMethod;
     @JsonIgnore
-    private Object[] additionalParameters;
+    private Object additionalParameters;
 
     private long id;
 
@@ -87,7 +87,7 @@ public class JsonRPCRequest {
      * 
      * @return The additional user parameters.
      */
-    public Object[] getAdditionalParameters() {
+    public Object getAdditionalParameters() {
         return additionalParameters;
     }
 
@@ -97,7 +97,7 @@ public class JsonRPCRequest {
      * @param userParameters
      *            The additional parameters you want to use.
      */
-    public void setAdditionalParameters(Object[] userParameters) {
+    public void setAdditionalParameters(Object userParameters) {
         this.additionalParameters = userParameters;
     }
 

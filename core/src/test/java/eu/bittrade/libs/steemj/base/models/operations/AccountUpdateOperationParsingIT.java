@@ -10,11 +10,11 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
  * This class tests if the {@link AccountUpdateOperation} can be parsed
@@ -47,7 +47,7 @@ public class AccountUpdateOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingAccountUpdateOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
+        ExtendedSignedBlock blockContainingAccountUpdateOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation accountUpdateOperation = blockContainingAccountUpdateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

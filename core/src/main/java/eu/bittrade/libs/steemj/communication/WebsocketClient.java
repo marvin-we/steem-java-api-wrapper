@@ -97,23 +97,13 @@ public class WebsocketClient extends AbstractClient {
                                         + SteemJConfig.getInstance().getResponseTimeout() + " millisecond(s).");
                     }
                 }
-
-                if (websocketEndpoint.getLatestResponse().isCallback()) {
-                    handleCallback(websocketEndpoint.getLatestResponse());
-                }
-            } while (websocketEndpoint.getLatestResponse() == null
-                    || websocketEndpoint.getLatestResponse().isCallback());
+            } while (websocketEndpoint.getLatestResponse() == null);
         } catch (InterruptedException e) {
             LOGGER.warn("Thread has been interrupted.", e);
             Thread.currentThread().interrupt();
         }
 
         return websocketEndpoint.getLatestResponse();
-    }
-
-    @Override
-    protected void handleCallback(JsonRPCResponse response) throws SteemCommunicationException {
-        response.handleCallback();
     }
 
     @Override

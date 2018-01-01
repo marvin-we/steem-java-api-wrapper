@@ -13,14 +13,15 @@ import org.junit.Test;
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.BaseTransactionalUT;
-import eu.bittrade.libs.steemj.apis.follow.enums.FollowType;
-import eu.bittrade.libs.steemj.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
 import eu.bittrade.libs.steemj.base.models.operations.Operation;
 import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.plugins.apis.follow.enums.FollowType;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.FollowOperation;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * Test the transaction object.

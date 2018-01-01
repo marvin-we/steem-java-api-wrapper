@@ -5,14 +5,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
  * This abstract class contains fields that exist in all Steem Operations
@@ -183,7 +183,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Get the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * Get the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
      * PublicKey} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @return The memo key.
@@ -194,7 +194,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Set the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * Set the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
      * PublicKey} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @param memoKey

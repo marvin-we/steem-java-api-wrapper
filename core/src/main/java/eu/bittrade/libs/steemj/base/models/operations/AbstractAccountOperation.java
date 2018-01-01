@@ -5,8 +5,8 @@ import java.security.InvalidParameterException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.enums.ValidationType;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -91,7 +91,7 @@ public abstract class AbstractAccountOperation extends Operation {
     public abstract void setPosting(Authority posting);
 
     /**
-     * Get the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * Get the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
      * PublicKey}.
      * 
      * @return The memo key.
@@ -99,7 +99,7 @@ public abstract class AbstractAccountOperation extends Operation {
     public abstract PublicKey getMemoKey();
 
     /**
-     * Set the memo {@link eu.bittrade.libs.steemj.base.models.PublicKey
+     * Set the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
      * PublicKey}.
      * 
      * @param memoKey

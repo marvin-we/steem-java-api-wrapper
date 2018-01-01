@@ -35,17 +35,6 @@ public abstract class AbstractClient {
             boolean sslVerificationDisabled) throws SteemCommunicationException, SteemResponseException;
 
     /**
-     * Use this method to handle callbacks.
-     * 
-     * @param rawJsonResponse
-     *            A {@link JsonRPCResponse} instance wrapping a potential
-     *            callback.
-     * @throws SteemCommunicationException
-     *             If the <code>rawJsonResponse</code> is not a callback.
-     */
-    protected abstract void handleCallback(JsonRPCResponse rawJsonResponse) throws SteemCommunicationException;
-
-    /**
      * Use this method to close the connection of this client.
      * 
      * @throws IOException

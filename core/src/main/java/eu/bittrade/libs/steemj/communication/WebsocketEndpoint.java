@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCResponse;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
@@ -85,21 +84,9 @@ public class WebsocketEndpoint extends Endpoint implements MessageHandler.Whole<
         if (this.websocketClient.getResponseCountDownLatch().getCount() > 0) {
             this.websocketClient.getResponseCountDownLatch().countDown();
         } else {
-            /*
-             * The client does not wait for an answer so this is probably a
-             * callback.
-             */
-            try {
-                JsonRPCResponse response = getLatestResponse();
-
-                if (response.isCallback()) {
-                    this.websocketClient.handleCallback(response);
-                }
-            } catch (SteemCommunicationException | SteemResponseException e) {
-                // Sadly it is not possible to throw an exception here, so the
-                // only useful thing we can do is to log it.
-                LOGGER.error("Tried to handle a potential callback and failed.", e);
-            }
+            // Sadly it is not possible to throw an exception here, so the
+            // only useful thing we can do is to log it.
+            LOGGER.error("Received an unexpected message.");
         }
     }
 }

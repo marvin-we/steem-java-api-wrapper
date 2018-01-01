@@ -1,7 +1,7 @@
 package my.sample.project;
 
-import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
 import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
+import eu.bittrade.libs.steemj.protocol.SignedBlockHeader;
 
 /**
  * This class implements the {@link BlockAppliedCallback} and can therefore be

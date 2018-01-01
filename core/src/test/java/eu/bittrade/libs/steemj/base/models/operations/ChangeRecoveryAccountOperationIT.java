@@ -11,9 +11,9 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.SignedTransaction;
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * Verify the functionality of the "change recovery account operation" under the

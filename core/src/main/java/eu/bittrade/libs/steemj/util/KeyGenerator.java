@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.bittrade.crypto.core.ECKey;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemFatalErrorException;
 import eu.bittrade.libs.steemj.exceptions.SteemKeyHandlingException;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
  * This class can be used to generate a new public, private and brain key. It is

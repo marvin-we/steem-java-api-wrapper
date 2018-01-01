@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.security.GeneralSecurityException;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,12 +57,6 @@ public class HttpClient extends AbstractClient {
         } catch (GeneralSecurityException | IOException e) {
             throw new SteemCommunicationException("A problem occured while processing the request.", e);
         }
-    }
-
-    @Override
-    protected void handleCallback(JsonRPCResponse rawJsonResponse) {
-        // See https://github.com/steemit/steem/issues/1197 for further details.
-        throw new NotImplementedException("Callbacks are not supported when HTTP is used.");
     }
 
     @Override

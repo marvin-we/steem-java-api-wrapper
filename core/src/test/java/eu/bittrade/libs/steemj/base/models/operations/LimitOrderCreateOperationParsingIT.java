@@ -11,10 +11,10 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 
 /**
  * This class tests if the {@link LimitOrderCreateOperation} can be parsed
@@ -44,7 +44,7 @@ public class LimitOrderCreateOperationParsingIT extends BaseITForOperationParsin
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        SignedBlockWithInfo blockContainingLimitOrderCreateOperation = steemJ
+        ExtendedSignedBlock blockContainingLimitOrderCreateOperation = steemJ
                 .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION);
 
         Operation limitOrderCreateOperation = blockContainingLimitOrderCreateOperation.getTransactions()
