@@ -86,7 +86,7 @@ public class ProveAuthorityOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setChallenged(AccountName challenged) {
-        this.challenged = setIfNotNull(challenged, "An account name needs to be provided.");
+        this.challenged = SteemJUtils.setIfNotNull(challenged, "An account name needs to be provided.");
     }
 
     /**

@@ -96,7 +96,7 @@ public class CancelTransferFromSavingsOperation extends Operation {
      *             If the from account is null.
      */
     public void setFrom(AccountName from) {
-        this.from = setIfNotNull(from, "The from acccount can't be null.");
+        this.from = SteemJUtils.setIfNotNull(from, "The from acccount can't be null.");
     }
 
     /**

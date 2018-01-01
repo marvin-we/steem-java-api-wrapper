@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This abstract class contains fields that exist in all Steem
@@ -58,7 +59,7 @@ abstract class AbstractEscrowOperation extends Operation {
      *             If the <code>from</code> is null.
      */
     public void setFrom(AccountName from) {
-        this.from = setIfNotNull(from, "The from account can't be null.");
+        this.from = SteemJUtils.setIfNotNull(from, "The from account can't be null.");
     }
 
     /**
@@ -79,7 +80,7 @@ abstract class AbstractEscrowOperation extends Operation {
      *             If the <code>to</code> is null.
      */
     public void setTo(AccountName to) {
-        this.to = setIfNotNull(to, "The to account can't be null.");
+        this.to = SteemJUtils.setIfNotNull(to, "The to account can't be null.");
     }
 
     /**
@@ -100,7 +101,7 @@ abstract class AbstractEscrowOperation extends Operation {
      *             If the <code>agent</code> is null.
      */
     public void setAgent(AccountName agent) {
-        this.agent = setIfNotNull(agent, "The agent can't be null.");
+        this.agent = SteemJUtils.setIfNotNull(agent, "The agent can't be null.");
     }
 
     /**

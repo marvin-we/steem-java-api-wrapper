@@ -145,7 +145,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
-        this.owner = setIfNotNull(owner, "The provided owner can't be null.");
+        this.owner = SteemJUtils.setIfNotNull(owner, "The provided owner can't be null.");
     }
 
     /**
@@ -167,7 +167,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
-        this.orderId = setIfNotNull(orderId, "The provided order id can't be null.");
+        this.orderId = SteemJUtils.setIfNotNull(orderId, "The provided order id can't be null.");
     }
 
     /**
@@ -188,7 +188,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>amountToSell</code> is null.
      */
     public void setAmountToSell(Asset amountToSell) {
-        this.amountToSell = setIfNotNull(amountToSell, "The amount to sell can't be null.");
+        this.amountToSell = SteemJUtils.setIfNotNull(amountToSell, "The amount to sell can't be null.");
     }
 
     /**
@@ -236,7 +236,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *             If the <code>exchangeRate</code> is null.
      */
     public void setExchangeRate(Price exchangeRate) {
-        this.exchangeRate = setIfNotNull(exchangeRate, "The provided exchange rate can't be null.");
+        this.exchangeRate = SteemJUtils.setIfNotNull(exchangeRate, "The provided exchange rate can't be null.");
     }
 
     /**

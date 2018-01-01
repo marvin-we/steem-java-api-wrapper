@@ -81,7 +81,7 @@ public class ResetAccountOperation extends Operation {
      *             If the <code>resetAccount</code> name is null.
      */
     public void setResetAccount(AccountName resetAccount) {
-        this.resetAccount = setIfNotNull(resetAccount, "The reset account can't be null.");
+        this.resetAccount = SteemJUtils.setIfNotNull(resetAccount, "The reset account can't be null.");
     }
 
     /**
@@ -102,7 +102,7 @@ public class ResetAccountOperation extends Operation {
      *             If the <code>accountToReset</code> is null.
      */
     public void setAccountToReset(AccountName accountToReset) {
-        this.accountToReset = setIfNotNull(accountToReset, "The account to reset can't be null.");
+        this.accountToReset = SteemJUtils.setIfNotNull(accountToReset, "The account to reset can't be null.");
     }
 
     /**
@@ -124,7 +124,7 @@ public class ResetAccountOperation extends Operation {
      *             trivial.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
-        this.newOwnerAuthority = setIfNotNull(newOwnerAuthority, "The new owner authority can't be null.");
+        this.newOwnerAuthority = SteemJUtils.setIfNotNull(newOwnerAuthority, "The new owner authority can't be null.");
     }
 
     @Override

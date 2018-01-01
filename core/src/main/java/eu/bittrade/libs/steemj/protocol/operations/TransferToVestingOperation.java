@@ -101,7 +101,7 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
      */
     @Override
     public void setAmount(Asset amount) {
-        this.amount = setIfNotNull(amount, "The amount can't be null.");
+        this.amount = SteemJUtils.setIfNotNull(amount, "The amount can't be null.");
     }
 
     @Override

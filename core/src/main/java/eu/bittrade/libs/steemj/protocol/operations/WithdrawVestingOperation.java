@@ -84,7 +84,7 @@ public class WithdrawVestingOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setAccount(AccountName account) {
-        this.account = setIfNotNull(account, "An account name needs to be provided.");
+        this.account = SteemJUtils.setIfNotNull(account, "An account name needs to be provided.");
     }
 
     /**
@@ -106,7 +106,7 @@ public class WithdrawVestingOperation extends Operation {
      *             If the asset type is null.
      */
     public void setVestingShares(Asset vestingShares) {
-        this.vestingShares = setIfNotNull(vestingShares, "The vesting shares can't be null.");
+        this.vestingShares = SteemJUtils.setIfNotNull(vestingShares, "The vesting shares can't be null.");
     }
 
     @Override

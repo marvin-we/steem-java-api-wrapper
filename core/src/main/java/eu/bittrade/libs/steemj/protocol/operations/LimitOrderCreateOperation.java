@@ -136,7 +136,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
-        this.owner = setIfNotNull(owner, "The provided owner can't be null.");
+        this.owner = SteemJUtils.setIfNotNull(owner, "The provided owner can't be null.");
     }
 
     /**
@@ -158,7 +158,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
-        this.orderId = setIfNotNull(orderId, "The provided order id can't be null.");
+        this.orderId = SteemJUtils.setIfNotNull(orderId, "The provided order id can't be null.");
     }
 
     /**
@@ -179,7 +179,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>amountToSell</code> is null.
      */
     public void setAmountToSell(Asset amountToSell) {
-        this.amountToSell = setIfNotNull(amountToSell, "The amount to sell owner can't be null.");
+        this.amountToSell = SteemJUtils.setIfNotNull(amountToSell, "The amount to sell owner can't be null.");
     }
 
     /**
@@ -201,7 +201,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If the <code>minToReceive</code> is null.
      */
     public void setMinToReceive(Asset minToReceive) {
-        this.minToReceive = setIfNotNull(minToReceive, "The min to receive owner can't be null.");
+        this.minToReceive = SteemJUtils.setIfNotNull(minToReceive, "The min to receive owner can't be null.");
     }
 
     /**

@@ -201,7 +201,7 @@ public class CommentOperation extends Operation {
      *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
-        this.author = setIfNotNull(author, "The author can't be null.");
+        this.author = SteemJUtils.setIfNotNull(author, "The author can't be null.");
     }
 
     /**
@@ -222,7 +222,7 @@ public class CommentOperation extends Operation {
      *             If the <code>permlink</code> is null.
      */
     public void setPermlink(Permlink permlink) {
-        this.permlink = setIfNotNull(permlink, "The permlink can't be null.");
+        this.permlink = SteemJUtils.setIfNotNull(permlink, "The permlink can't be null.");
     }
 
     /**
@@ -244,7 +244,7 @@ public class CommentOperation extends Operation {
      *             If the <code>parentPermlink</code> is null.
      */
     public void setParentPermlink(Permlink parentPermlink) {
-        this.parentPermlink = setIfNotNull(parentPermlink, "The permlink can't be null.");
+        this.parentPermlink = SteemJUtils.setIfNotNull(parentPermlink, "The permlink can't be null.");
     }
 
     /**

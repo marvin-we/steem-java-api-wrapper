@@ -94,7 +94,7 @@ public class CustomOperation extends Operation {
      *             If less than 1 account name has been provided.
      */
     public void setRequiredAuths(List<AccountName> requiredAuths) {
-        this.requiredAuths = setIfNotNull(requiredAuths, "At least on account must be specified.");
+        this.requiredAuths = SteemJUtils.setIfNotNull(requiredAuths, "At least on account must be specified.");
     }
 
     /**

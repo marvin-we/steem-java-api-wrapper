@@ -71,7 +71,7 @@ public class AccountWitnessProxyOperation extends Operation {
      *             been configured as the proxy.
      */
     public void setAccount(AccountName account) {
-        this.account = setIfNotNull(account, "The account can't be null.");
+        this.account = SteemJUtils.setIfNotNull(account, "The account can't be null.");
     }
 
     /**

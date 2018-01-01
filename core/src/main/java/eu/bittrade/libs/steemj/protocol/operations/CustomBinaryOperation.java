@@ -201,7 +201,7 @@ public class CustomBinaryOperation extends Operation {
      *             If the <code>id</code> is null.
      */
     public void setId(String id) {
-        this.id = setIfNotNull(id, "The id can't be null.");
+        this.id = SteemJUtils.setIfNotNull(id, "The id can't be null.");
     }
 
     /**

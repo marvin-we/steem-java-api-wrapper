@@ -143,7 +143,7 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
      *             If the <code>who</code> is null.
      */
     public void setWho(AccountName who) {
-        this.who = setIfNotNull(who, "The who account can't be null.");
+        this.who = SteemJUtils.setIfNotNull(who, "The who account can't be null.");
     }
 
     /**

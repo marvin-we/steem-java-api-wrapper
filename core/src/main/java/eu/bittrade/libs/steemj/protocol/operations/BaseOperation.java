@@ -1,7 +1,5 @@
 package eu.bittrade.libs.steemj.protocol.operations;
 
-import java.security.InvalidParameterException;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**

@@ -140,7 +140,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the owner is null.
      */
     public void setOwner(AccountName owner) {
-        this.owner = setIfNotNull(owner, "The owner can't be null.");
+        this.owner = SteemJUtils.setIfNotNull(owner, "The owner can't be null.");
     }
 
     /**
@@ -164,7 +164,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the url is null or empty.
      */
     public void setUrl(URL url) {
-        this.url = setIfNotNull(url, "You need to provide a URL.");
+        this.url = SteemJUtils.setIfNotNull(url, "You need to provide a URL.");
     }
 
     /**
@@ -186,7 +186,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the blockSigningKey is null.
      */
     public void setBlockSigningKey(PublicKey blockSigningKey) {
-        this.blockSigningKey = setIfNotNull(blockSigningKey, "You need to provide a block signing key.");
+        this.blockSigningKey = SteemJUtils.setIfNotNull(blockSigningKey, "You need to provide a block signing key.");
     }
 
     /**
@@ -207,7 +207,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the properties are null.
      */
     public void setProperties(ChainProperties properties) {
-        this.properties = setIfNotNull(properties, "You need to provide the blockchain properties.");
+        this.properties = SteemJUtils.setIfNotNull(properties, "You need to provide the blockchain properties.");
     }
 
     /**
@@ -230,7 +230,7 @@ public class WitnessUpdateOperation extends Operation {
      *             If the provided asset object is null.
      */
     public void setFee(Asset fee) {
-        this.fee = setIfNotNull(fee, "The fee can't be null.");
+        this.fee = SteemJUtils.setIfNotNull(fee, "The fee can't be null.");
     }
 
     @Override

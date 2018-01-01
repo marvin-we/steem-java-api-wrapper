@@ -13,6 +13,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This abstract class contains fields that exist in all Steem Operations
@@ -61,7 +62,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      *             than 0.
      */
     public void setFee(Asset fee) {
-        this.fee = setIfNotNull(fee, "The fee can't be null.");
+        this.fee = SteemJUtils.setIfNotNull(fee, "The fee can't be null.");
     }
 
     /**
@@ -83,7 +84,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      *             If the <code>creator</code> is null.
      */
     public void setCreator(AccountName creator) {
-        this.creator = setIfNotNull(creator, "The creator can't be null.");
+        this.creator = SteemJUtils.setIfNotNull(creator, "The creator can't be null.");
     }
 
     /**
@@ -104,7 +105,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      *             If the <code>newAccountName</code> is null.
      */
     public void setNewAccountName(AccountName newAccountName) {
-        this.newAccountName = setIfNotNull(newAccountName, "The new account name can't be null.");
+        this.newAccountName = SteemJUtils.setIfNotNull(newAccountName, "The new account name can't be null.");
     }
 
     /**
@@ -129,7 +130,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      */
     @Override
     public void setOwner(Authority owner) {
-        this.owner = setIfNotNull(owner, "The owner can't be null.");
+        this.owner = SteemJUtils.setIfNotNull(owner, "The owner can't be null.");
     }
 
     /**
@@ -154,7 +155,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      */
     @Override
     public void setActive(Authority active) {
-        this.active = setIfNotNull(active, "The active can't be null.");
+        this.active = SteemJUtils.setIfNotNull(active, "The active can't be null.");
     }
 
     /**
@@ -179,12 +180,12 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      */
     @Override
     public void setPosting(Authority posting) {
-        this.posting = setIfNotNull(posting, "The posting can't be null.");
+        this.posting = SteemJUtils.setIfNotNull(posting, "The posting can't be null.");
     }
 
     /**
-     * Get the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
-     * PublicKey} of the {@link #getNewAccountName() newAccountName}.
+     * Get the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey PublicKey}
+     * of the {@link #getNewAccountName() newAccountName}.
      * 
      * @return The memo key.
      */
@@ -194,8 +195,8 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Set the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
-     * PublicKey} of the {@link #getNewAccountName() newAccountName}.
+     * Set the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey PublicKey}
+     * of the {@link #getNewAccountName() newAccountName}.
      * 
      * @param memoKey
      *            The memo key.

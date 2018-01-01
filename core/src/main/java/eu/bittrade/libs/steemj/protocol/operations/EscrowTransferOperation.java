@@ -203,7 +203,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setFrom(AccountName from) {
-        this.from = setIfNotNull(from, "The from account can't be null.");
+        this.from = SteemJUtils.setIfNotNull(from, "The from account can't be null.");
     }
 
     /**
@@ -217,7 +217,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setTo(AccountName to) {
-        this.to = setIfNotNull(to, "The to account can't be null.");
+        this.to = SteemJUtils.setIfNotNull(to, "The to account can't be null.");
     }
 
     /**
@@ -231,7 +231,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setAgent(AccountName agent) {
-        this.agent = setIfNotNull(agent, "The agent can't be null.");
+        this.agent = SteemJUtils.setIfNotNull(agent, "The agent can't be null.");
     }
 
     /**
@@ -255,7 +255,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             both have an amount of 0.
      */
     public void setSbdAmount(Asset sbdAmount) {
-        this.sbdAmount = setIfNotNull(sbdAmount, "The sbd amount can't be null.");
+        this.sbdAmount = SteemJUtils.setIfNotNull(sbdAmount, "The sbd amount can't be null.");
     }
 
     /**
@@ -279,7 +279,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             both have an amount of 0.
      */
     public void setSteemAmount(Asset steemAmount) {
-        this.steemAmount = setIfNotNull(steemAmount, "The steem amount can't be null.");
+        this.steemAmount = SteemJUtils.setIfNotNull(steemAmount, "The steem amount can't be null.");
     }
 
     /**
@@ -301,7 +301,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             different symbol than STEEM or SBD.
      */
     public void setFee(Asset fee) {
-        this.fee = setIfNotNull(fee, "The fee can't be null.");
+        this.fee = SteemJUtils.setIfNotNull(fee, "The fee can't be null.");
     }
 
     /**
@@ -324,7 +324,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             before the {@link #getEscrowExpirationDate()}.
      */
     public void setRatificationDeadlineDate(TimePointSec ratificationDeadlineDate) {
-        this.ratificationDeadlineDate = setIfNotNull(ratificationDeadlineDate,
+        this.ratificationDeadlineDate = SteemJUtils.setIfNotNull(ratificationDeadlineDate,
                 "The ratification deadline date can't be null.");
     }
 
@@ -348,7 +348,8 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             the <code>escrowExpirationDate</code>.
      */
     public void setEscrowExpirationDate(TimePointSec escrowExpirationDate) {
-        this.escrowExpirationDate = setIfNotNull(escrowExpirationDate, "The escrow expiration date can't be null.");
+        this.escrowExpirationDate = SteemJUtils.setIfNotNull(escrowExpirationDate,
+                "The escrow expiration date can't be null.");
     }
 
     /**

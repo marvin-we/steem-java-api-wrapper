@@ -136,8 +136,8 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
     }
 
     /**
-     * Get the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey
-     * PublicKey} of the {@link #getAccount() account}.
+     * Get the memo {@link eu.bittrade.libs.steemj.protocol.PublicKey PublicKey}
+     * of the {@link #getAccount() account}.
      * 
      * @return The memo key.
      */
@@ -178,7 +178,7 @@ public class AccountUpdateOperation extends AbstractAccountOperation {
      *             If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
-        this.account = setIfNotNull(account, "The account can't be null.");
+        this.account = SteemJUtils.setIfNotNull(account, "The account can't be null.");
     }
 
     @Override

@@ -114,7 +114,7 @@ public class ChangeRecoveryAccountOperation extends Operation {
      *             If the <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
-        this.accountToRecover = setIfNotNull(accountToRecover, "The account to recover can't be null.");
+        this.accountToRecover = SteemJUtils.setIfNotNull(accountToRecover, "The account to recover can't be null.");
     }
 
     /**
@@ -139,7 +139,8 @@ public class ChangeRecoveryAccountOperation extends Operation {
      *             If the <code>newRecoveryAccount</code> is null.
      */
     public void setNewRecoveryAccount(AccountName newRecoveryAccount) {
-        this.newRecoveryAccount = setIfNotNull(newRecoveryAccount, "The new recovery account can't be null.");
+        this.newRecoveryAccount = SteemJUtils.setIfNotNull(newRecoveryAccount,
+                "The new recovery account can't be null.");
     }
 
     /**

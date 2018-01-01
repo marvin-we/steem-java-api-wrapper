@@ -87,7 +87,7 @@ public class DelegateVestingSharesOperation extends Operation {
      *             {@link #getDelegatee()} account.
      */
     public void setDelegator(AccountName delegator) {
-        this.delegator = setIfNotNull(delegator, "The delegatee account can't be null.");
+        this.delegator = SteemJUtils.setIfNotNull(delegator, "The delegatee account can't be null.");
     }
 
     /**
@@ -109,7 +109,7 @@ public class DelegateVestingSharesOperation extends Operation {
      *             {@link #getDelegator()} account.
      */
     public void setDelegatee(AccountName delegatee) {
-        this.delegatee = setIfNotNull(delegatee, "The delegatee account can't be null.");
+        this.delegatee = SteemJUtils.setIfNotNull(delegatee, "The delegatee account can't be null.");
     }
 
     /**
@@ -131,7 +131,7 @@ public class DelegateVestingSharesOperation extends Operation {
      *             symbol is not VESTS or the amount is negative.
      */
     public void setVestingShares(Asset vestingShares) {
-        this.vestingShares = setIfNotNull(vestingShares, "The vesting shares to delegate can't be null.");
+        this.vestingShares = SteemJUtils.setIfNotNull(vestingShares, "The vesting shares to delegate can't be null.");
     }
 
     @Override

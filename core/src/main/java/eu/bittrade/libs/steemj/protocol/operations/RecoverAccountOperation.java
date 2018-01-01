@@ -150,7 +150,7 @@ public class RecoverAccountOperation extends Operation {
      *             If the <code>accountToRecover</code> is null.
      */
     public void setAccountToRecover(AccountName accountToRecover) {
-        this.accountToRecover = setIfNotNull(accountToRecover, "The account to recover can't be null.");
+        this.accountToRecover = SteemJUtils.setIfNotNull(accountToRecover, "The account to recover can't be null.");
     }
 
     /**
@@ -178,7 +178,7 @@ public class RecoverAccountOperation extends Operation {
      *             recentOwnerAuhtority, or trivial.
      */
     public void setNewOwnerAuthority(Authority newOwnerAuthority) {
-        this.newOwnerAuthority = setIfNotNull(newOwnerAuthority, "The new owner authority can't be null.");
+        this.newOwnerAuthority = SteemJUtils.setIfNotNull(newOwnerAuthority, "The new owner authority can't be null.");
     }
 
     /**
@@ -203,7 +203,8 @@ public class RecoverAccountOperation extends Operation {
      *             the newOwnerAuthority, or trivial.
      */
     public void setRecentOwnerAuthority(Authority recentOwnerAuthority) {
-        this.recentOwnerAuthority = setIfNotNull(recentOwnerAuthority, "The recent owner authority can't be null.");
+        this.recentOwnerAuthority = SteemJUtils.setIfNotNull(recentOwnerAuthority,
+                "The recent owner authority can't be null.");
     }
 
     /**

@@ -94,7 +94,7 @@ public class ChallengeAuthorityOperation extends Operation {
      *             <code>challenged</code> account.
      */
     public void setChallenger(AccountName challenger) {
-        this.challenger = setIfNotNull(challenger, "The challenger can't be null");
+        this.challenger = SteemJUtils.setIfNotNull(challenger, "The challenger can't be null");
     }
 
     /**
@@ -114,7 +114,7 @@ public class ChallengeAuthorityOperation extends Operation {
      *             <code>challenger</code> account.
      */
     public void setChallenged(AccountName challenged) {
-        this.challenged = setIfNotNull(challenged, "The challenged can't be null");
+        this.challenged = SteemJUtils.setIfNotNull(challenged, "The challenged can't be null");
     }
 
     /**

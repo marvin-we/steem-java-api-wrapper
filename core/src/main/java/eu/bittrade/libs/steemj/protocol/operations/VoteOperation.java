@@ -133,7 +133,7 @@ public class VoteOperation extends Operation {
      *             If no voter is provided.
      */
     public void setVoter(AccountName voter) {
-        this.voter = setIfNotNull(voter, "An voter needs to be provided.");
+        this.voter = SteemJUtils.setIfNotNull(voter, "An voter needs to be provided.");
     }
 
     /**
@@ -145,7 +145,7 @@ public class VoteOperation extends Operation {
      *             If no author is provided.
      */
     public void setAuthor(AccountName author) {
-        this.author = setIfNotNull(author, "An author needs to be provided.");
+        this.author = SteemJUtils.setIfNotNull(author, "An author needs to be provided.");
     }
 
     /**
@@ -158,7 +158,7 @@ public class VoteOperation extends Operation {
      *             If no permlink has been provided.
      */
     public void setPermlink(Permlink permlink) {
-        this.permlink = setIfNotNull(permlink, "A permlink needs to be provided.");
+        this.permlink = SteemJUtils.setIfNotNull(permlink, "A permlink needs to be provided.");
     }
 
     /**

@@ -96,7 +96,7 @@ public class ConvertOperation extends Operation {
      *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
-        this.owner = setIfNotNull(owner, "The owner can't be null.");
+        this.owner = SteemJUtils.setIfNotNull(owner, "The owner can't be null.");
     }
 
     /**
@@ -137,7 +137,7 @@ public class ConvertOperation extends Operation {
      *             is not SBD or the amount is less than 1.
      */
     public void setAmount(Asset amount) {
-        this.amount = setIfNotNull(amount, "The amount to convert can't be null.");
+        this.amount = SteemJUtils.setIfNotNull(amount, "The amount to convert can't be null.");
     }
 
     @Override

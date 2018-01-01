@@ -62,7 +62,7 @@ public class EnableContentEditingOperation extends CustomJsonOperationPayload {
      *             If the <code>account</code> is <code>null</code>.
      */
     public void setAccount(AccountName account) {
-        this.account = setIfNotNull(account, "The account cannot be null");
+        this.account = SteemJUtils.setIfNotNull(account, "The account cannot be null");
     }
 
     /**
@@ -83,7 +83,7 @@ public class EnableContentEditingOperation extends CustomJsonOperationPayload {
      *             If the <code>relockTime</code> is <code>null</code>.
      */
     public void setRelockTime(TimePointSec relockTime) {
-        this.relockTime = setIfNotNull(relockTime, "The relock time cannot be null");
+        this.relockTime = SteemJUtils.setIfNotNull(relockTime, "The relock time cannot be null");
     }
 
     @Override

@@ -98,7 +98,7 @@ public class AccountWitnessVoteOperation extends Operation {
      *             If the <code>account</code> account is null
      */
     public void setAccount(AccountName account) {
-        this.account = setIfNotNull(account, "The witness acccount can't be null.");
+        this.account = SteemJUtils.setIfNotNull(account, "The witness acccount can't be null.");
     }
 
     /**
@@ -119,7 +119,7 @@ public class AccountWitnessVoteOperation extends Operation {
      *             If the <code>witness</code> account is null
      */
     public void setWitness(AccountName witness) {
-        this.witness = setIfNotNull(witness, "The witness acccount can't be null.");
+        this.witness = SteemJUtils.setIfNotNull(witness, "The witness acccount can't be null.");
     }
 
     /**

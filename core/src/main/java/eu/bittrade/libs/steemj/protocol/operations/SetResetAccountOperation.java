@@ -84,7 +84,7 @@ public class SetResetAccountOperation extends Operation {
      *             If no account has been provided.
      */
     public void setAccount(AccountName account) {
-        this.account = setIfNotNull(account, "The account can't be null.");
+        this.account = SteemJUtils.setIfNotNull(account, "The account can't be null.");
     }
 
     /**

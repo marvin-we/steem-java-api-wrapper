@@ -10,6 +10,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This abstract class contains fields that exist in all Steem
@@ -58,7 +59,7 @@ abstract class AbstractTransferOperation extends Operation {
      *             If the <code>from</code> account is null.
      */
     public void setFrom(AccountName from) {
-        this.from = setIfNotNull(from, "The from account can't be null.");
+        this.from = SteemJUtils.setIfNotNull(from, "The from account can't be null.");
     }
 
     /**
@@ -82,7 +83,7 @@ abstract class AbstractTransferOperation extends Operation {
      *             If the <code>to</code> account is null.
      */
     public void setTo(AccountName to) {
-        this.to = setIfNotNull(to, "The to account can't be null.");
+        this.to = SteemJUtils.setIfNotNull(to, "The to account can't be null.");
     }
 
     /**
@@ -103,7 +104,7 @@ abstract class AbstractTransferOperation extends Operation {
      *             If the <code>amount</code> is null.
      */
     public void setAmount(Asset amount) {
-        this.amount = setIfNotNull(amount, "The amount can't be null.");
+        this.amount = SteemJUtils.setIfNotNull(amount, "The amount can't be null.");
     }
 
     @Override

@@ -69,7 +69,7 @@ public class DeclineVotingRightsOperation extends Operation {
      *             If the <code>account</code> is null.
      */
     public void setAccount(AccountName account) {
-        this.account = setIfNotNull(account, "The account can't be null.");
+        this.account = SteemJUtils.setIfNotNull(account, "The account can't be null.");
     }
 
     /**

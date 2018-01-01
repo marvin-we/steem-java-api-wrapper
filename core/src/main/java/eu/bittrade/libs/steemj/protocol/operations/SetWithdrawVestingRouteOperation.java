@@ -111,7 +111,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      *             If the <code>fromAccount</code> is null.
      */
     public void setFromAccount(AccountName fromAccount) {
-        this.fromAccount = setIfNotNull(fromAccount, "The fromAccount can't be null.");
+        this.fromAccount = SteemJUtils.setIfNotNull(fromAccount, "The fromAccount can't be null.");
     }
 
     /**
@@ -132,7 +132,7 @@ public class SetWithdrawVestingRouteOperation extends Operation {
      *             If the <code>toAccount</code> is null.
      */
     public void setToAccount(AccountName toAccount) {
-        this.toAccount = setIfNotNull(toAccount, "The toAccount can't be null.");
+        this.toAccount = SteemJUtils.setIfNotNull(toAccount, "The toAccount can't be null.");
     }
 
     /**

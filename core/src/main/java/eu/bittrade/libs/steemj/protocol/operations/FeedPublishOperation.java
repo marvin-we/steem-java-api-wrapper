@@ -75,7 +75,7 @@ public class FeedPublishOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setPublisher(AccountName publisher) {
-        this.publisher = setIfNotNull(publisher, "The publisher can't be null.");
+        this.publisher = SteemJUtils.setIfNotNull(publisher, "The publisher can't be null.");
     }
 
     /**
@@ -96,7 +96,7 @@ public class FeedPublishOperation extends Operation {
      *             If no account name has been provided.
      */
     public void setExchangeRate(Price exchangeRate) {
-        this.exchangeRate = setIfNotNull(exchangeRate, "The price feed can't be null");
+        this.exchangeRate = SteemJUtils.setIfNotNull(exchangeRate, "The price feed can't be null");
     }
 
     @Override

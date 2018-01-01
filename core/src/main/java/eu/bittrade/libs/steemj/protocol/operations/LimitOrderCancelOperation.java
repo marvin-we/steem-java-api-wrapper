@@ -78,7 +78,7 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
      *             If the <code>owner</code> is null.
      */
     public void setOwner(AccountName owner) {
-        this.owner = setIfNotNull(owner, "The provided owner can't be null.");
+        this.owner = SteemJUtils.setIfNotNull(owner, "The provided owner can't be null.");
     }
 
     /**
@@ -99,7 +99,7 @@ public class LimitOrderCancelOperation extends AbstractLimitOrderOperation {
      *             If the <code>orderId</code> is null.
      */
     public void setOrderId(UInteger orderId) {
-        this.orderId = setIfNotNull(orderId, "The provided order id can't be null.");
+        this.orderId = SteemJUtils.setIfNotNull(orderId, "The provided order id can't be null.");
     }
 
     @Override

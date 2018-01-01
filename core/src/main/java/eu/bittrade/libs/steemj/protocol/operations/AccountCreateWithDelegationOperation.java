@@ -117,7 +117,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      *             than 0.
      */
     public void setDelegation(Asset delegation) {
-        this.delegation = setIfNotNull(delegation, "The delegation can't be null.");
+        this.delegation = SteemJUtils.setIfNotNull(delegation, "The delegation can't be null.");
     }
 
     /**

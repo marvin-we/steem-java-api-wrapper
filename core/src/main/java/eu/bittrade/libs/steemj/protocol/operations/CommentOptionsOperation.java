@@ -209,7 +209,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>author</code> is null.
      */
     public void setAuthor(AccountName author) {
-        this.author = setIfNotNull(author, "The author can't be null.");
+        this.author = SteemJUtils.setIfNotNull(author, "The author can't be null.");
     }
 
     /**
@@ -230,7 +230,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>permlink</code> is null.
      */
     public void setPermlink(Permlink permlink) {
-        this.permlink = setIfNotNull(permlink, "The permanent link can't be null.");
+        this.permlink = SteemJUtils.setIfNotNull(permlink, "The permanent link can't be null.");
     }
 
     /**
@@ -252,7 +252,8 @@ public class CommentOptionsOperation extends Operation {
      *             different symbol than SBD or the amount is less than 0.
      */
     public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
-        this.maxAcceptedPayout = setIfNotNull(maxAcceptedPayout, "The maximal accepted payout can't be null.");
+        this.maxAcceptedPayout = SteemJUtils.setIfNotNull(maxAcceptedPayout,
+                "The maximal accepted payout can't be null.");
     }
 
     /**

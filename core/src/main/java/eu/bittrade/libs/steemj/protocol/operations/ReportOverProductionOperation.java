@@ -85,7 +85,7 @@ public class ReportOverProductionOperation extends Operation {
      *             If the reporter is not set.
      */
     public void setReporter(AccountName reporter) {
-        this.reporter = setIfNotNull(reporter, "The reporter can't be null.");
+        this.reporter = SteemJUtils.setIfNotNull(reporter, "The reporter can't be null.");
     }
 
     /**
@@ -118,7 +118,7 @@ public class ReportOverProductionOperation extends Operation {
          * Both checks require that the SignedBlockHeader has the signee() and
          * the id().
          */
-        this.firstBlock = setIfNotNull(firstBlock, "The provided first block can't be null.");
+        this.firstBlock = SteemJUtils.setIfNotNull(firstBlock, "The provided first block can't be null.");
     }
 
     /**
@@ -142,7 +142,7 @@ public class ReportOverProductionOperation extends Operation {
      *             than the <code>firstBlock</code>.
      */
     public void setSecondBlock(SignedBlockHeader secondBlock) {
-        this.secondBlock = setIfNotNull(secondBlock, "The provided second block can't be null.");
+        this.secondBlock = SteemJUtils.setIfNotNull(secondBlock, "The provided second block can't be null.");
     }
 
     @Override

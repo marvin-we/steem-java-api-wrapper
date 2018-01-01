@@ -146,7 +146,7 @@ public class CustomJsonOperation extends Operation {
      *             provided.
      */
     public void setId(String id) {
-        this.id = setIfNotNull(id, "An ID is required.");
+        this.id = SteemJUtils.setIfNotNull(id, "An ID is required.");
     }
 
     /**

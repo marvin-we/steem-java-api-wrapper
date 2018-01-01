@@ -268,6 +268,28 @@ public class SteemJUtils {
     }
 
     /**
+     * Like {@link #setIfNotNull(Object, String, Object)}, but does not require
+     * a default value.
+     * 
+     * This method will check if given <code>objectToSet</code> is
+     * <code>null</code> and throw an {@link InvalidParameterException} if this
+     * is the case.
+     * 
+     * @param <T>
+     *            The type of the <code>objectToSet</code>.
+     * @param objectToSet
+     *            The object to check.
+     * @param message
+     *            The message of the generated exception.
+     * @return The given <code>objectToSet</code> if its not <code>null</code>.
+     * @throws InvalidParameterException
+     *             If the <code>objectToSet</code> is <code>null</code>.
+     */
+    public static <T> T setIfNotNull(T objectToSet, String message) {
+        return setIfNotNull(objectToSet, message, null);
+    }
+
+    /**
      * This method will check if given <code>objectToSet</code> is
      * <code>null</code>.
      * 
@@ -294,7 +316,7 @@ public class SteemJUtils {
      *             If the <code>objectToSet</code> is <code>null</code> and, in
      *             addition, no <code>defaultValue</code> has been provided.
      */
-    protected <T> T setIfNotNull(T objectToSet, String message, @Nullable T defaultValue) {
+    public static <T> T setIfNotNull(T objectToSet, String message, @Nullable T defaultValue) {
         if (objectToSet == null) {
             if (defaultValue != null) {
                 return defaultValue;

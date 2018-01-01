@@ -126,7 +126,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setFrom(AccountName from) {
-        this.from = setIfNotNull(from, "The from account can't be null.");
+        this.from = SteemJUtils.setIfNotNull(from, "The from account can't be null.");
     }
 
     /**
@@ -140,7 +140,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setTo(AccountName to) {
-        this.to = setIfNotNull(to, "The to account can't be null.");
+        this.to = SteemJUtils.setIfNotNull(to, "The to account can't be null.");
     }
 
     /**
@@ -155,7 +155,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      */
     @Override
     public void setAgent(AccountName agent) {
-        this.agent = setIfNotNull(agent, "The agent can't be null.");
+        this.agent = SteemJUtils.setIfNotNull(agent, "The agent can't be null.");
     }
 
     /**
@@ -178,7 +178,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      *             {@link #getAgent()} and {@link #getFrom()} account.
      */
     public void setWho(AccountName who) {
-        this.who = setIfNotNull(who, "The who account can't be null.");
+        this.who = SteemJUtils.setIfNotNull(who, "The who account can't be null.");
     }
 
     /**
@@ -200,7 +200,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      *             {@link #getFrom()} account or the {@link #getTo()} account.
      */
     public void setReceiver(AccountName receiver) {
-        this.receiver = setIfNotNull(receiver, "The receiver account can't be null.");
+        this.receiver = SteemJUtils.setIfNotNull(receiver, "The receiver account can't be null.");
     }
 
     /**
@@ -224,7 +224,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      *             both have an amount of 0.
      */
     public void setSbdAmount(Asset sbdAmount) {
-        this.sbdAmount = setIfNotNull(sbdAmount, "The sbd amount can't be null.");
+        this.sbdAmount = SteemJUtils.setIfNotNull(sbdAmount, "The sbd amount can't be null.");
     }
 
     /**
@@ -248,7 +248,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      *             both have an amount of 0.
      */
     public void setSteemAmount(Asset steemAmount) {
-        this.steemAmount = setIfNotNull(steemAmount, "The steem amount can't be null.");
+        this.steemAmount = SteemJUtils.setIfNotNull(steemAmount, "The steem amount can't be null.");
     }
 
     @Override
