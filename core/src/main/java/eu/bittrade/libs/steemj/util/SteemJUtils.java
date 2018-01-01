@@ -14,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -264,11 +266,18 @@ public class SteemJUtils {
         }
         return currentPrivateKey.getPrivateKeyEncoded(128).toBase58();
     }
-    
+
     /**
      * This method will check if given <code>objectToSet</code> is
-     * <code>null</code> and throw an {@link InvalidParameterException} if this
-     * is the case.
+     * <code>null</code>.
+     * 
+     * In case <code>objectToSet</code> is not <code>null</code>, the
+     * <code>objectToSet</code> will be returned. Otherwise the method will
+     * check the <code>defaultValue</code>. The method will return the
+     * <code>defaultValue</code> if one has been provided.
+     * 
+     * If all values are not set the method will throw an
+     * {@link InvalidParameterException}.
      * 
      * @param <T>
      *            The type of the <code>objectToSet</code>.
@@ -276,12 +285,21 @@ public class SteemJUtils {
      *            The object to check.
      * @param message
      *            The message of the generated exception.
+     * @param defaultValue
+     *            The default value to apply in case the
+     *            <code>objectToSet</code> is <code>null</code>.
      * @return The given <code>objectToSet</code> if its not <code>null</code>.
+     *         Otherwise the <code>defaultValue</code> will be returned.
      * @throws InvalidParameterException
-     *             If the <code>objectToSet</code> is <code>null</code>.
+     *             If the <code>objectToSet</code> is <code>null</code> and, in
+     *             addition, no <code>defaultValue</code> has been provided.
      */
-    protected <T> T setIfNotNull(T objectToSet, String message) {
+    protected <T> T setIfNotNull(T objectToSet, String message, @Nullable T defaultValue) {
         if (objectToSet == null) {
+            if (defaultValue != null) {
+                return defaultValue;
+            }
+
             throw new InvalidParameterException(message);
         }
 
