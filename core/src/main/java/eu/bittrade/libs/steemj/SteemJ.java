@@ -21,7 +21,6 @@ import com.google.common.collect.Lists;
 
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.Sha256Hash;
-import eu.bittrade.libs.steemj.apis.login.LoginApi;
 import eu.bittrade.libs.steemj.apis.login.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.AccountVote;
 import eu.bittrade.libs.steemj.base.models.Asset;
@@ -45,16 +44,6 @@ import eu.bittrade.libs.steemj.base.models.Tag;
 import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.base.models.Witness;
 import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
-import eu.bittrade.libs.steemj.base.models.operations.ClaimRewardBalanceOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOptionsOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CustomJsonOperation;
-import eu.bittrade.libs.steemj.base.models.operations.DelegateVestingSharesOperation;
-import eu.bittrade.libs.steemj.base.models.operations.DeleteCommentOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.TransferOperation;
-import eu.bittrade.libs.steemj.base.models.operations.VoteOperation;
-import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -94,13 +83,22 @@ import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTrade;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketVolume;
 import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadcastApi;
 import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.models.BroadcastTransactionSynchronousReturn;
+import eu.bittrade.libs.steemj.plugins.apis.tags.TagsApi;
 import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery;
-import eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.protocol.SignedBlock;
+import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
+import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
+import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
+import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
+import eu.bittrade.libs.steemj.protocol.operations.DelegateVestingSharesOperation;
+import eu.bittrade.libs.steemj.protocol.operations.DeleteCommentOperation;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.TransferOperation;
+import eu.bittrade.libs.steemj.protocol.operations.VoteOperation;
 import eu.bittrade.libs.steemj.util.CondenserUtils;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -171,6 +169,50 @@ public class SteemJ {
             throws SteemCommunicationException, SteemResponseException {
         return AccountByKeyApi.getKeyReferences(communicationHandler, new GetKeyReferencesArgs(publicKeys))
                 .getAccounts();
+    }
+    
+    // #########################################################################
+    // ## ACCOUNT HISTORY API ##################################################
+    // #########################################################################
+
+    /**
+     * Use this method to get detailed values and metrics for tags. The methods
+     * accepts a String as a search pattern and a number to limit the results.
+     * 
+     * <b>Example</b>
+     * <p>
+     * <code>getTrendingTags(communicationHandler, "steem", 2);</code> <br>
+     * Will return two tags whose name has the biggest match with the String
+     * "steem". An example response could contain the metrics and values for the
+     * tag "steem" and "steemit", while "steem" would be the first entry in the
+     * list as it has a bigger match than "steemit".
+     * </p>
+     * 
+     * @param firstTagPattern
+     *            The search pattern used to build the resulting list of tags.
+     * @param limit
+     *            The maximum number of results.
+     * @return A list of the tags. The first entry in the list is the tag that
+     *         has the biggest match with the <code>firstTagPattern</code>.
+     *         while the last tag in the last has the smallest match.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public List<Tag> getTrendingTags(String firstTagPattern, int limit)
+            throws SteemCommunicationException, SteemResponseException {
+        return TagsApi.getTrendingTags(communicationHandler, new GetTrendingTagsArgs(firstTagPattern, limit));
     }
 
     // #########################################################################
@@ -264,112 +306,9 @@ public class SteemJ {
         NetworkBroadcastApi.broadcastBlock(communicationHandler, signedBlock);
     }
 
-    /**
-     * Use this method to get detailed information about the Steem version of
-     * the node SteemJ is connected to.
-     *
-     * @return A {@link SteemVersionInfo} object which contains detailed
-     *         information about the Steem version the node is running.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public SteemVersionInfo getVersion() throws SteemCommunicationException, SteemResponseException {
-        return LoginApi.getVersion(communicationHandler);
-    }
-
     // #########################################################################
     // ## DATABASE API #########################################################
     // #########################################################################
-
-    /**
-     * Use this method to register a callback method that is called whenever a
-     * new block has been applied.
-     * 
-     * <p>
-     * Please <b>Notice</b>, that there can only be one active Callback. If you
-     * call this method multiple times with different callback methods, only the
-     * last one will be called.
-     * 
-     * Beside that there is currently no way to cancel a subscription. Once
-     * you've registered a callback it will be called until the connection has
-     * been closed.
-     * </p>
-     * 
-     * @param blockAppliedCallback
-     *            A class implementing the
-     *            {@link eu.bittrade.libs.steemj.communication.BlockAppliedCallback
-     *            BlockAppliedCallback}.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public void setBlockAppliedCallback(BlockAppliedCallback blockAppliedCallback)
-            throws SteemCommunicationException, SteemResponseException {
-        DatabaseApi.setBlockAppliedCallback(communicationHandler, blockAppliedCallback);
-    }
-
-    /**
-     * Use this method to get detailed values and metrics for tags. The methods
-     * accepts a String as a search pattern and a number to limit the results.
-     * 
-     * <b>Example</b>
-     * <p>
-     * <code>getTrendingTags(communicationHandler, "steem", 2);</code> <br>
-     * Will return two tags whose name has the biggest match with the String
-     * "steem". An example response could contain the metrics and values for the
-     * tag "steem" and "steemit", while "steem" would be the first entry in the
-     * list as it has a bigger match than "steemit".
-     * </p>
-     * 
-     * @param firstTagPattern
-     *            The search pattern used to build the resulting list of tags.
-     * @param limit
-     *            The maximum number of results.
-     * @return A list of the tags. The first entry in the list is the tag that
-     *         has the biggest match with the <code>firstTagPattern</code>.
-     *         while the last tag in the last has the smallest match.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public List<Tag> getTrendingTags(String firstTagPattern, int limit)
-            throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getTrendingTags(communicationHandler, firstTagPattern, limit);
-    }
 
     /**
      * This API is a short-cut for returning all of the state required for a
@@ -420,32 +359,6 @@ public class SteemJ {
      */
     public List<AccountName> getActiveWitnesses() throws SteemCommunicationException, SteemResponseException {
         return DatabaseApi.getActiveWitnesses(communicationHandler);
-    }
-
-    /**
-     * Use this method to get the current miner queue. <b>Attention:</b> Please
-     * be aware that mining has been disabled for the Steem Blockchain.
-     * Therefore this method will return an empty list for the original Steem
-     * Blockchain.
-     * 
-     * @return A list of account names that are in the mining queue.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public List<AccountName> getMinerQueue() throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getMinerQueue(communicationHandler);
     }
 
     /**
@@ -2166,13 +2079,16 @@ public class SteemJ {
     // ## WITNESS API ##########################################################
     // #########################################################################
 
-    public List<Integer> getAccountBandwidth() throws SteemCommunicationException, SteemResponseException {
-        return WitnessApi.getAccountBandwidth(communicationHandler, getAccountBandwidthArgs);
-    }
+    // public List<Integer> getAccountBandwidth() throws
+    // SteemCommunicationException, SteemResponseException {
+    // return WitnessApi.getAccountBandwidth(communicationHandler,
+    // getAccountBandwidthArgs);
+    // }
 
-    public List<Integer> getMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseException {
-        return WitnessApi.getReserveRatio(communicationHandler);
-    }
+    // public List<Integer> getMarketHistoryBuckets() throws
+    // SteemCommunicationException, SteemResponseException {
+    // return WitnessApi.getReserveRatio(communicationHandler);
+    // }
 
     // #########################################################################
     // ## UTILITY METHODS ######################################################
@@ -2923,7 +2839,7 @@ public class SteemJ {
 
         // Generate the permanent link from the title by replacing all unallowed
         // characters.
-        Permlink permlink = new Permlink(SteemJUtils.createPermlinkString(title));
+        Permlink permlink = new Permlink(CondenserUtils.createPermlinkString(title));
         // On new posts the parentPermlink is the main tag.
         Permlink parentPermlink = new Permlink(tags[0]);
         // One new posts the parentAuthor is empty.
