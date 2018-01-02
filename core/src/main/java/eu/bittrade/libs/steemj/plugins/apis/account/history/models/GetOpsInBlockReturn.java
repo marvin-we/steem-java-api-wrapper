@@ -6,8 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.protocol.operations.Operation;
-
 /**
  * This class implements the Steem "get_ops_in_block_return" object.
  * 
@@ -15,7 +13,7 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  */
 public class GetOpsInBlockReturn {
     @JsonProperty("ops")
-    private List<Operation> operations;
+    private List<AppliedOperation> operations;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -25,9 +23,12 @@ public class GetOpsInBlockReturn {
     }
 
     /**
-     * @return the operations
+     * Get the list of {@link AppliedOperation AppliedOperations} returned from
+     * the Steem Node.
+     * 
+     * @return A list of {@link AppliedOperation AppliedOperations}.
      */
-    public List<Operation> getOperations() {
+    public List<AppliedOperation> getOperations() {
         return operations;
     }
 

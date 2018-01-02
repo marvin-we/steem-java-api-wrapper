@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgs;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockArgs;
-import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetTransactionArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgsTest;
 import eu.bittrade.libs.steemj.plugins.apis.block.BlockApi;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockArgs;
@@ -96,7 +96,7 @@ public class AccountHistoryApiIT extends BaseIT {
     public void testGetTransaction() throws SteemCommunicationException, SteemResponseException {
         // TODO: Check also null case of optional
         final AnnotatedSignedTransaction annotatedSignedTransaction = AccountHistoryApi
-                .getTransaction(COMMUNICATION_HANDLER, new GetTransactionArgs(new TransactionId("bd8069e6544f658da560b72e93b605dfe2cb0aaf")));
+                .getTransaction(COMMUNICATION_HANDLER, new GetAccountHistoryArgsTest(new TransactionId("bd8069e6544f658da560b72e93b605dfe2cb0aaf")));
 
         //assertThat(annotatedSignedTransaction.getTimestamp().getDateTime(), equalTo("2017-07-02T19:15:06"));
         //assertThat(blockHeader.getWitness(), equalTo(new AccountName("clayop")));

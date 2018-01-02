@@ -28,7 +28,12 @@ public class GetAccountHistoryReturn {
     }
 
     /**
-     * @return the history
+     * Get the requested history for the requested account. The history is
+     * represented by a list of all operations ever made by an account. The map
+     * <code>key</code> represents the <code>id</code> of the operation and the
+     * map <code>value</code> is the operation itself.
+     * 
+     * @return A map of operations and their id.
      */
     public Map<UInteger, AppliedOperation> getHistory() {
         return history;

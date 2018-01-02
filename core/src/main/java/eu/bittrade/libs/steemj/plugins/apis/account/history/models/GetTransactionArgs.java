@@ -1,10 +1,13 @@
 package eu.bittrade.libs.steemj.plugins.apis.account.history.models;
 
+import java.security.InvalidParameterException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi;
 import eu.bittrade.libs.steemj.protocol.TransactionId;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -20,10 +23,11 @@ public class GetTransactionArgs {
 
     /**
      * Create a new {@link GetAccountHistoryArgs} instance to be passed to the
-     * {@link AccountHistoryApi#getAccountHistory(eu.bittrade.libs.steemj.communication.CommunicationHandler, GetAccountHistoryArgs)}
+     * {@link AccountHistoryApi#getAccountHistory(CommunicationHandler, GetAccountHistoryArgs)}
      * method.
      * 
      * @param id
+     *            The {@link TransactionId} to set.
      */
     @JsonCreator()
     public GetTransactionArgs(@JsonProperty("id") TransactionId id) {
@@ -31,15 +35,21 @@ public class GetTransactionArgs {
     }
 
     /**
-     * @return the id
+     * @return The {@link TransactionId} wrapped by this instance.
      */
     public TransactionId getId() {
         return id;
     }
 
     /**
+     * Override the current {@link TransactionId} wrapped by this instance.
+     * Please notice that the <code>id</code> is required. If not provided, the
+     * method will throw an {@link InvalidParameterException}.
+     * 
      * @param id
-     *            the id to set
+     *            The {@link TransactionId} to set.
+     * @throws InvalidParameterException
+     *             If the <code>id</code> is null.
      */
     public void setId(TransactionId id) {
         this.id = SteemJUtils.setIfNotNull(id, "The id cannot be null.");

@@ -9,6 +9,7 @@ import org.joou.ULong;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -28,47 +29,61 @@ public class GetAccountHistoryArgs {
 
     /**
      * Create a new {@link GetAccountHistoryArgs} instance to be passed to the
-     * {@link AccountHistoryApi#getAccountHistory(eu.bittrade.libs.steemj.communication.CommunicationHandler, GetAccountHistoryArgs)}
+     * {@link AccountHistoryApi#getAccountHistory(CommunicationHandler, GetAccountHistoryArgs)}
      * method.
+     * 
+     * Define how many operations (see {@link #setLimit(UInteger)} and
+     * {@link #setStart(ULong)}) for which <code>account</code> are requested.
      * 
      * @param account
      *            The account name to request the history for.
      * @param start
+     *            The id of the first operation to return. If not provided,
+     *            <code>-1</code> will be used as a default value.
      * @param limit
+     *            The number of results to return. If not provided,
+     *            <code>1000</code> will be used as a default value.
      */
     @JsonCreator()
-    public GetAccountHistoryArgs(@JsonProperty("account") AccountName account, @JsonProperty("start") ULong start,
-            @JsonProperty("limit") UInteger limit) {
+    public GetAccountHistoryArgs(@JsonProperty("account") AccountName account,
+            @Nullable @JsonProperty("start") ULong start, @Nullable @JsonProperty("limit") UInteger limit) {
         this.setAccount(account);
         this.setStart(start);
         this.setLimit(limit);
     }
 
     /**
-     * @return the account
+     * @return The currently configured <code>account</code> to request the
+     *         history for.
      */
     public AccountName getAccount() {
         return account;
     }
 
     /**
+     * Override the currently configured <code>account</code> to request the
+     * history for.
+     * 
      * @param account
-     *            the account to set
+     *            The <code>account</code> to request the history for.
      */
     public void setAccount(AccountName account) {
         this.account = SteemJUtils.setIfNotNull(account, "The account is required.");
     }
 
     /**
-     * @return the start
+     * @return The currently configured <code>start</code> parameter.
      */
     public ULong getStart() {
         return start;
     }
 
     /**
+     * Override the currently configured <code>start</code> parameter. The
+     * <code>start</code> parameter defines the first operation returned.
+     * 
      * @param start
-     *            the start to set
+     *            The <code>start</code> parameter to set.
      */
     public void setStart(ULong start) {
         // If not provided set the start to its default value.
@@ -83,8 +98,12 @@ public class GetAccountHistoryArgs {
     }
 
     /**
+     * Override the currently configured <code>limit</code> parameter. The
+     * <code>limit</code> parameter defines how many operations made by the
+     * {@link #getAccount() Account} are requested.
+     * 
      * @param limit
-     *            the limit to set
+     *            The <code>limit</code> parameter to set.
      */
     public void setLimit(@Nullable UInteger limit) {
         // If not provided set the limit to its default value.

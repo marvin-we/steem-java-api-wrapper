@@ -10,7 +10,7 @@ import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHis
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryReturn;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockArgs;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockReturn;
-import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetTransactionArgs;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgsTest;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
 
 /**
@@ -92,7 +92,7 @@ public class AccountHistoryApi {
      *             </ul>
      */
     public static AnnotatedSignedTransaction getTransaction(CommunicationHandler communicationHandler,
-            GetTransactionArgs getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
+            GetAccountHistoryArgsTest getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_TRANSACTION);
         requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);

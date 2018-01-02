@@ -28,7 +28,11 @@ public class GetOpsInBlockArgs {
      * method.
      * 
      * @param blockNum
+     *            The <code>blockNum</code> defines for which block number
+     *            operations are requested.
      * @param onlyVirtual
+     *            Define if only virtual (<code>true</code>) or all operation
+     *            types (<code>false</code>) are requested.
      */
     @JsonCreator()
     public GetOpsInBlockArgs(@JsonProperty("block_num") UInteger blockNum,
@@ -38,33 +42,47 @@ public class GetOpsInBlockArgs {
     }
 
     /**
-     * @return the blockNum
+     * @return The block number wrapped by this instance.
      */
     public UInteger getBlockNum() {
         return blockNum;
     }
 
     /**
+     * Override the current <code>blockNum</code> field wrapped by this
+     * instance.
+     * 
+     * The <code>blockNum</code> defines for which block number operations are
+     * requested.
+     * 
      * @param blockNum
-     *            the blockNum to set
+     *            The block number to set.
      */
     public void setBlockNum(UInteger blockNum) {
         this.blockNum = SteemJUtils.setIfNotNull(blockNum, "The block number cannot be null.");
     }
 
     /**
-     * @return the onlyVirtual
+     * Check if only virtual operations (<code>true</code>) or all operation
+     * types (<code>false</code>) are requested .
+     * 
+     * @return <code>true</code>, if only virtual operations are requested or
+     *         <code>false</code> if not.
      */
     public boolean getOnlyVirtual() {
         return onlyVirtual;
     }
 
     /**
+     * Override the current <code>onlyVirtual</code> field wrapped by this
+     * instance.
+     * 
      * @param onlyVirtual
-     *            the onlyVirtual to set
+     *            Define if only virtual (<code>true</code>) or all operation
+     *            types (<code>false</code>) are requested.
      */
     public void setOnlyVirtual(boolean onlyVirtual) {
-        this.onlyVirtual = onlyVirtual; 
+        this.onlyVirtual = onlyVirtual;
     }
 
     @Override
