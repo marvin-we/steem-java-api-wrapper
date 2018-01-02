@@ -1,6 +1,6 @@
 package eu.bittrade.libs.steemj.plugins.apis.account.history.models;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -15,7 +15,7 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  */
 public class GetOpsInBlockReturn {
     @JsonProperty("ops")
-    private ArrayList<Operation> operations;
+    private List<Operation> operations;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -27,7 +27,7 @@ public class GetOpsInBlockReturn {
     /**
      * @return the operations
      */
-    public ArrayList<Operation> getOperations() {
+    public List<Operation> getOperations() {
         return operations;
     }
 
