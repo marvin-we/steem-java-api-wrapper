@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -28,7 +30,7 @@ public class DelegateVestingSharesOperationParsingIT extends BaseITForOperationP
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_FROM_ACCOUNT = "dez1337";
     private static final String EXPECTED_TO_ACCOUNT = "steemj";
-    private static final double EXPECTED_AMOUNT = 4142.872164;
+    private static final BigDecimal EXPECTED_AMOUNT = BigDecimal.valueOf(4142.872164);
 
     /**
      * Prepare all required fields used by this test class.

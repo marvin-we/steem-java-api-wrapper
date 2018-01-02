@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -32,10 +33,10 @@ public class FillOrderOperationIT extends BaseITForOperationParsing {
     private static final int EXPECTED_CURRENT_ORDER_ID = 1507078540;
     private static final long EXPECTED_OPEN_ORDER_ID = 1507059984L;
     private static final AssetSymbolType EXPECTED_OPEN_PAYS_SYMBOL = AssetSymbolType.STEEM;
-    private static final double EXPECTED_OPEN_PAYS_VALUE_REAL = 0.015;
+    private static final BigDecimal EXPECTED_OPEN_PAYS_VALUE_REAL = BigDecimal.valueOf(0.015);
     private static final long EXPECTED_OPEN_PAYS_VALUE = 15L;
     private static final AssetSymbolType EXPECTED_CURRENT_PAYS_SYMBOL = AssetSymbolType.SBD;
-    private static final double EXPECTED_CURRENT_PAYS_VALUE_REAL = 0.02;
+    private static final BigDecimal EXPECTED_CURRENT_PAYS_VALUE_REAL = BigDecimal.valueOf(0.02);
     private static final long EXPECTED_CURRENT_PAYS_VALUE = 20L;
 
     /**

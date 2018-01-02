@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -32,7 +33,7 @@ public class CurationRewardOperationIT extends BaseITForOperationParsing {
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-quinneaker-re-joearnold-re-quinneaker-bounties-of-the-land-episode-7-preparing-for-winter-final-harvests-soon-20171003t161412134z");
     private static final AssetSymbolType EXPECTED_REWARD_SYMBOL = AssetSymbolType.VESTS;
-    private static final double EXPECTED_REWARD_VALUE_REAL = 6.173331;
+    private static final BigDecimal EXPECTED_REWARD_VALUE_REAL = BigDecimal.valueOf(6.173331);
     private static final long EXPECTED_REWARD_VALUE = 6173331L;
 
     /**

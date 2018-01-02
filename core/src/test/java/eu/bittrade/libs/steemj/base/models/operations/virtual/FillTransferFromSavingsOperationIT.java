@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -32,7 +33,7 @@ public class FillTransferFromSavingsOperationIT extends BaseITForOperationParsin
     private static final String EXPECTED_MEMO = "";
     private static final long EXPECTED_REQUEST_ID = 1506820294L;
     private static final AssetSymbolType EXPECTED_AMOUNT_SYMBOL = AssetSymbolType.SBD;
-    private static final double EXPECTED_AMOUNT_VALUE_REAL = 7.5;
+    private static final BigDecimal EXPECTED_AMOUNT_VALUE_REAL = BigDecimal.valueOf(7.5);
     private static final long EXPECTED_AMOUNT_VALUE = 7500L;
 
     /**

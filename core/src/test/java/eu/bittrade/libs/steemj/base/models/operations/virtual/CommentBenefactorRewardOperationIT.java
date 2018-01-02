@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -33,7 +34,7 @@ public class CommentBenefactorRewardOperationIT extends BaseITForOperationParsin
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-mayvil-que-hacer-cuando-no-sabemos-de-edicion-2017926t205055909z");
     private static final AssetSymbolType EXPECTED_REWARD_VESTS_SYMBOL = AssetSymbolType.VESTS;
-    private static final double EXPECTED_REWARD_VESTS_VALUE_REAL = 4.116952;
+    private static final BigDecimal EXPECTED_REWARD_VESTS_VALUE_REAL = BigDecimal.valueOf(4.116952);
     private static final long EXPECTED_REWARD_VESTS_VALUE = 4116952L;
 
     /**
@@ -50,9 +51,9 @@ public class CommentBenefactorRewardOperationIT extends BaseITForOperationParsin
     @Override
     @Test
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        List<Operation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
+        List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation commentBenefactorRewardOperation = operationsInBlock.get(OPERATION_INDEX);
+        Operation commentBenefactorRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
 
         assertThat(commentBenefactorRewardOperation, instanceOf(CommentBenefactorRewardOperation.class));
         assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getAuthor().getName(),

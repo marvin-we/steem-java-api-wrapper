@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -28,7 +29,7 @@ public class ReturnVestingDelegationOperationIT extends BaseITForOperationParsin
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_ACCOUNT = "minnowbooster";
     private static final AssetSymbolType EXPECTED_VESTS_SYMBOL = AssetSymbolType.VESTS;
-    private static final double EXPECTED_VESTS_VALUE_REAL = 2362500.0;
+    private static final BigDecimal EXPECTED_VESTS_VALUE_REAL = BigDecimal.valueOf(2362500.0);
     private static final long EXPECTED_VESTS_VALUE = 2362500000000L;
 
     /**

@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -27,7 +29,7 @@ public class ClaimRewardBalanceOperationParsingIT extends BaseITForOperationPars
     private static final int TRANSACTION_INDEX = 4;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_ACCOUNT = "lifewordmission";
-    private static final double EXPECTED_VESTS = 60552.750918;
+    private static final BigDecimal EXPECTED_VESTS = BigDecimal.valueOf(60552.750918);
 
     /**
      * Prepare all required fields used by this test class.

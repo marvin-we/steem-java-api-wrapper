@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -30,10 +31,10 @@ public class FillVestingWithdrawOperationIT extends BaseITForOperationParsing {
     private static final String EXPECTED_FROM = "chessmonster";
     private static final AccountName EXPECTED_TO = new AccountName("chessmonster");
     private static final AssetSymbolType EXPECTED_DEPOSIT_SYMBOL = AssetSymbolType.STEEM;
-    private static final double EXPECTED_DEPOSIT_VALUE_REAL = 926.471;
+    private static final BigDecimal EXPECTED_DEPOSIT_VALUE_REAL = BigDecimal.valueOf(926.471);
     private static final long EXPECTED_DEPOSIT_VALUE = 926471;
     private static final AssetSymbolType EXPECTED_WITHDRAWN_SYMBOL = AssetSymbolType.VESTS;
-    private static final double EXPECTED_WITHDRAWN_VALUE_REAL = 1907116.401647;
+    private static final BigDecimal EXPECTED_WITHDRAWN_VALUE_REAL = BigDecimal.valueOf(1907116.401647);
     private static final long EXPECTED_WITHDRAWN_VALUE = 1907116401647L;
 
     /**

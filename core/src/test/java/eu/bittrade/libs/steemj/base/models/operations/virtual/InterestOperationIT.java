@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -28,7 +29,7 @@ public class InterestOperationIT extends BaseITForOperationParsing {
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_OWNER = "eric818";
     private static final AssetSymbolType EXPECTED_INTEREST_SYMBOL = AssetSymbolType.SBD;
-    private static final double EXPECTED_INTEREST_VALUE_REAL = 0.003;
+    private static final BigDecimal EXPECTED_INTEREST_VALUE_REAL = BigDecimal.valueOf(0.003);
     private static final long EXPECTED_INTEREST_VALUE = 3L;
 
     /**

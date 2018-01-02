@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -27,9 +29,9 @@ public class WitnessUpdateOperationParsingIT extends BaseITForOperationParsing {
     private static final int TRANSACTION_INDEX = 3;
     private static final int OPERATION_INDEX = 0;
     private static final String WITNESS_NAME = "glitterpig";
-    private static final double FEE_AMOUNT = 0.0;
+    private static final BigDecimal FEE_AMOUNT = BigDecimal.valueOf(0.0);
     private static final String URL = "https://steemit.com/witness-category/@glitterpig/witness-glitterpig-because-everything-is-better-with-a-bit-of-bling";
-    private static final double ACCOUNT_CREATION_FEE = 3.0;
+    private static final BigDecimal ACCOUNT_CREATION_FEE = BigDecimal.valueOf(3.0);
 
     /**
      * Prepare all required fields used by this test class.
@@ -46,7 +48,8 @@ public class WitnessUpdateOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        ExtendedSignedBlock blockContainingWitnessUpdateOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
+        ExtendedSignedBlock blockContainingWitnessUpdateOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION)
+                .get();
 
         Operation witnessUpdateOperation = blockContainingWitnessUpdateOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

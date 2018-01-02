@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -26,7 +28,7 @@ public class TransferToVestingOperationParsingIT extends BaseITForOperationParsi
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5716852;
     private static final int TRANSACTION_INDEX = 8;
     private static final int OPERATION_INDEX = 0;
-    private static final double EXPECTED_AMOUNT = 14.438;
+    private static final BigDecimal EXPECTED_AMOUNT = BigDecimal.valueOf(14.438);
     private static final String EXPECTED_FROM = "kurtbeil";
     private static final String EXPECTED_TO = "kurtbeil";
 

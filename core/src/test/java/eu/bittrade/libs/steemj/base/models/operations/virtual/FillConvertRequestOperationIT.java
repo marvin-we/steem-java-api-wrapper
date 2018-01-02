@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.BeforeClass;
@@ -29,10 +30,10 @@ public class FillConvertRequestOperationIT extends BaseITForOperationParsing {
     private static final String EXPECTED_OWNER = "jiminykricket";
     private static final long EXPECTED_REQUEST_ID = 1506775956L;
     private static final AssetSymbolType EXPECTED_AMOUNT_IN_SYMBOL = AssetSymbolType.SBD;
-    private static final double EXPECTED_AMOUNT_IN_VALUE_REAL = 0.024;
+    private static final BigDecimal EXPECTED_AMOUNT_IN_VALUE_REAL = BigDecimal.valueOf(0.024);
     private static final long EXPECTED_AMOUNT_IN_VALUE = 24L;
     private static final AssetSymbolType EXPECTED_AMOUNT_OUT_SYMBOL = AssetSymbolType.STEEM;
-    private static final double EXPECTED_AMOUNT_OUT_VALUE_REAL = 0.017;
+    private static final BigDecimal EXPECTED_AMOUNT_OUT_VALUE_REAL = BigDecimal.valueOf(0.017);
     private static final long EXPECTED_AMOUNT_OUT_VALUE = 17L;
 
     /**
