@@ -10,7 +10,6 @@ import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHis
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryReturn;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockArgs;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockReturn;
-import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgsTest;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
 
 /**
@@ -55,7 +54,8 @@ public class AccountHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static GetOpsInBlockReturn getOpsInBlock(CommunicationHandler communicationHandler, GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
+    public static GetOpsInBlockReturn getOpsInBlock(CommunicationHandler communicationHandler,
+            GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_OPS_IN_BLOCK);
         requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
@@ -92,7 +92,7 @@ public class AccountHistoryApi {
      *             </ul>
      */
     public static AnnotatedSignedTransaction getTransaction(CommunicationHandler communicationHandler,
-            GetAccountHistoryArgsTest getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
+            GetAccountHistoryArgs getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_TRANSACTION);
         requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
