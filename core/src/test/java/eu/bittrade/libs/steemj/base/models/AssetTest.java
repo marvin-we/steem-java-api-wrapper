@@ -2,6 +2,10 @@ package eu.bittrade.libs.steemj.base.models;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.fail;
+
+import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 
 import org.junit.Test;
 
@@ -145,11 +149,29 @@ public class AssetTest {
     public void testAssetEqualsMethod() {
         Asset asset = new Asset(115, AssetSymbolType.SBD);
 
-        Asset sameAsset = new Asset(0.115, AssetSymbolType.SBD);
+        Asset sameAsset = new Asset(new BigDecimal("0.115"), AssetSymbolType.SBD);
 
         Asset differentAsset = new Asset(100, AssetSymbolType.STEEM);
 
         assertThat(asset.equals(sameAsset), equalTo(true));
         assertThat(sameAsset.equals(differentAsset), equalTo(false));
+    }
+
+    /**
+     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset} method for the
+     * VESTS asset type.
+     */
+    @Test
+    public void testAssetBigDecimalConstructor() {
+        new Asset(new BigDecimal("0.115"), AssetSymbolType.SBD);
+        new Asset(new BigDecimal("200.11"), AssetSymbolType.STEEM);
+        new Asset(new BigDecimal("2500.145111"), AssetSymbolType.VESTS);
+
+        try {
+            new Asset(new BigDecimal("0.1151"), AssetSymbolType.SBD);
+            fail();
+        } catch (InvalidParameterException e) {
+            // Expected.
+        }
     }
 }

@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.base.models.deserializer;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -29,7 +30,7 @@ public class AssetDeserializer extends JsonDeserializer<Asset> {
                  * value for the byte representation so we transform the amount
                  * into a long value here.
                  */
-                return new Asset(Double.valueOf(assetFields[0]), AssetSymbolType.valueOf(assetFields[1]));
+                return new Asset(new BigDecimal(assetFields[0]), AssetSymbolType.valueOf(assetFields[1]));
             }
         }
 

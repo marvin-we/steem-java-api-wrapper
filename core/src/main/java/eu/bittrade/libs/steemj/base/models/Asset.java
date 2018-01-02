@@ -2,6 +2,8 @@ package eu.bittrade.libs.steemj.base.models;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -42,7 +44,7 @@ public class Asset implements ByteTransformable {
      *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
      *            AssetSymbolType}.
      */
-    public Asset(double amount, AssetSymbolType symbol) {
+    public Asset(BigDecimal amount, AssetSymbolType symbol) {
         this.setSymbol(symbol);
         this.setAmount(amount);
     }
@@ -106,8 +108,14 @@ public class Asset implements ByteTransformable {
      * @param amount
      *            The amount.
      */
-    public void setAmount(double amount) {
-        this.amount = (long) (amount * Math.pow(10.0, this.getPrecision()));
+    public void setAmount(BigDecimal amount) {
+        if (amount.scale() > this.getPrecision()) {
+            throw new InvalidParameterException("The provided 'amount' has a 'scale' of " + amount.scale()
+                    + ", but needs to have a 'scale' of " + this.getPrecision() + " when " + this.getSymbol().name()
+                    + " is used as a AssetSymbolType.");
+        }
+
+        this.amount = amount.multiply(BigDecimal.valueOf(Math.pow(10, this.getPrecision()))).longValue();
     }
 
     /**
@@ -129,12 +137,13 @@ public class Asset implements ByteTransformable {
     }
 
     /**
-     * Transform this asset into its double representation.
+     * Transform this asset into its {@link BigDecimal} representation.
      * 
-     * @return The value of this asset in its double representation.
+     * @return The value of this asset in its {@link BigDecimal} representation.
      */
-    public Double toReal() {
-        return Double.valueOf(this.amount / Math.pow(10.0, this.getPrecision()));
+    public BigDecimal toReal() {
+        BigDecimal transformedValue = new BigDecimal(this.getAmount());
+        return transformedValue.setScale(this.getPrecision());
     }
 
     @Override
