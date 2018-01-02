@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.GetAccountBandwidthArgs;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class implements the Steem "get_ops_in_block_args" object.
@@ -19,18 +20,19 @@ public class GetOpsInBlockArgs {
     @JsonProperty("block_num")
     private UInteger blockNum;
     @JsonProperty("onlyVirtual")
-    private Boolean onlyVirtual;
+    private boolean onlyVirtual;
 
     /**
      * Create a new {@link GetAccountBandwidthArgs} instance to be passed to the
      * {@link WitnessApi#getAccountBandwidth(CommunicationHandler, GetAccountBandwidthArgs)}
      * method.
-     * @param blockNum 
-     * @param onlyVirtual 
+     * 
+     * @param blockNum
+     * @param onlyVirtual
      */
     @JsonCreator()
     public GetOpsInBlockArgs(@JsonProperty("block_num") UInteger blockNum,
-            @JsonProperty("onlyVirtual") Boolean onlyVirtual) {
+            @JsonProperty("onlyVirtual") boolean onlyVirtual) {
         this.setBlockNum(blockNum);
         this.setOnlyVirtual(onlyVirtual);
     }
@@ -47,13 +49,13 @@ public class GetOpsInBlockArgs {
      *            the blockNum to set
      */
     public void setBlockNum(UInteger blockNum) {
-        this.blockNum = blockNum;
+        this.blockNum = SteemJUtils.setIfNotNull(blockNum, "The block number cannot be null.");
     }
 
     /**
      * @return the onlyVirtual
      */
-    public Boolean getOnlyVirtual() {
+    public boolean getOnlyVirtual() {
         return onlyVirtual;
     }
 
@@ -61,8 +63,8 @@ public class GetOpsInBlockArgs {
      * @param onlyVirtual
      *            the onlyVirtual to set
      */
-    public void setOnlyVirtual(Boolean onlyVirtual) {
-        this.onlyVirtual = onlyVirtual;
+    public void setOnlyVirtual(boolean onlyVirtual) {
+        this.onlyVirtual = onlyVirtual; 
     }
 
     @Override

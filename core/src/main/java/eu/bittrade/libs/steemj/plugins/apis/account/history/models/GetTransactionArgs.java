@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi;
 import eu.bittrade.libs.steemj.protocol.TransactionId;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class implements the Steem "get_transaction_args" object.
@@ -41,7 +42,7 @@ public class GetTransactionArgs {
      *            the id to set
      */
     public void setId(TransactionId id) {
-        this.id = id;
+        this.id = SteemJUtils.setIfNotNull(id, "The id cannot be null.");
     }
 
     @Override
