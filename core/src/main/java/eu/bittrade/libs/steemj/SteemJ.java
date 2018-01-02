@@ -208,7 +208,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public ArrayList<Operation> getOpsInBlock(long blockNumber, boolean onlyVirtual)
+    public List<AppliedOperation> getOpsInBlock(long blockNumber, boolean onlyVirtual)
             throws SteemCommunicationException, SteemResponseException {
         return AccountHistoryApi
                 .getOpsInBlock(communicationHandler, new GetOpsInBlockArgs(UInteger.valueOf(blockNumber), onlyVirtual))
