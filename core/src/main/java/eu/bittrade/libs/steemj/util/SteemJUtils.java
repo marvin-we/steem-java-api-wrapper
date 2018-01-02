@@ -346,14 +346,6 @@ public class SteemJUtils {
      *             addition, no <code>defaultValue</code> has been provided.
      */
     public static <T> T setIfNotNull(T objectToSet, @Nullable T defaultValue) {
-        if (objectToSet == null) {
-            if (defaultValue != null) {
-                return defaultValue;
-            }
-
-            throw new InvalidParameterException("Both, the objectToSet and the default value are null.");
-        }
-
-        return objectToSet;
+        return setIfNotNull(objectToSet, "Both, the objectToSet and the default value are null.", defaultValue);
     }
 }
