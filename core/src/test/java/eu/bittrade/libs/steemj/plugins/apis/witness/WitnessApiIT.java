@@ -39,7 +39,7 @@ public class WitnessApiIT extends BaseIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi#getAccountBandwidth(CommunicationHandler, eu.bittrade.libs.steemj.plugins.apis.witness.models.GetAccountBandwidthArgs)}
+     * {@link WitnessApi#getAccountBandwidth(CommunicationHandler, GetAccountBandwidthArgs)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -57,9 +57,7 @@ public class WitnessApiIT extends BaseIT {
     }
 
     /**
-     * Test the
-     * {@link eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi#getReserveRatio(CommunicationHandler)}
-     * method.
+     * Test the {@link WitnessApi#getReserveRatio(CommunicationHandler)} method.
      * 
      * @throws SteemCommunicationException
      *             If a communication error occurs.
