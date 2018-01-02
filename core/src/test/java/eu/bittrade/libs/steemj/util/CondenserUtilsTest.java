@@ -3,6 +3,7 @@ package eu.bittrade.libs.steemj.util;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -52,5 +53,21 @@ public class CondenserUtilsTest {
     public void testGenerateSteemitMetadata() {
         assertThat(CondenserUtils.generateSteemitMetadata(DUMMY_TEXT_LINKS + DUMMY_TEXT_USER,
                 new String[] { "test", "dontvote" }, "steemj/0.4.1", "markdown"), equalTo(EXPECTED_JSON));
+    }
+
+    /**
+     * Test if the {@link CondenserUtils#createPermlinkString(String)} method is
+     * working correctly.
+     */
+    @Test
+    public void testCreatePermlinkString() {
+        // Check trimming, lowercasing, space replacement
+        assertEquals("test-title-1", CondenserUtils.createPermlinkString(" TEST TITLE 1 "));
+
+        // Only numbers, letters and hyphens allowed
+        assertEquals("test-title-2", CondenserUtils.createPermlinkString("TEST TITLE 2!"));
+
+        // Contiguous hyphens should be replaced with a single hyphen
+        assertEquals("test-title-3", CondenserUtils.createPermlinkString("TEST TITLE  3"));
     }
 }
