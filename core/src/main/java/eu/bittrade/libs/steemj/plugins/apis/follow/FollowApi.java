@@ -17,6 +17,7 @@ import eu.bittrade.libs.steemj.plugins.apis.follow.models.CommentFeedEntry;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.FeedEntry;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.FollowApiObject;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.FollowCountApiObject;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.GetFollowersReturn;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
@@ -65,17 +66,14 @@ public class FollowApi {
      *             </ul>
      * @throws SteemResponseException
      */
-    public static List<FollowApiObject> getFollowers(CommunicationHandler communicationHandler, AccountName following,
-            AccountName startFollower, FollowType type, short limit)
+    public static GetFollowersReturn getFollowers(CommunicationHandler communicationHandler, GetFollowerArgs getFollowersArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
+        requestObject.setAdditionalParameters(getFollowersArgs);
 
-        Object[] parameters = { following.getName(), startFollower.getName(), type.toString().toLowerCase(), limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FollowApiObject.class);
+        return communicationHandler.performRequest(requestObject, GetFollowersReturn.class).get(0);
     }
 
     /**

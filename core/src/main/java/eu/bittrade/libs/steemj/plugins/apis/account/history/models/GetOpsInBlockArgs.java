@@ -19,7 +19,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class GetOpsInBlockArgs {
     @JsonProperty("block_num")
     private UInteger blockNum;
-    @JsonProperty("onlyVirtual")
+    @JsonProperty("only_virtual")
     private boolean onlyVirtual;
 
     /**
