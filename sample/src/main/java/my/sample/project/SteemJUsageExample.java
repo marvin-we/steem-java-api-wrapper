@@ -1,5 +1,6 @@
 package my.sample.project;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -125,7 +126,7 @@ public class SteemJUsageExample {
             /*
              * Let the default account transfer 1.0 SBD to @dez1337.
              */
-            steemJ.transfer(new AccountName("dez1337"), new Asset(1.0, AssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
+            steemJ.transfer(new AccountName("dez1337"), new Asset(new BigDecimal(1.0), AssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
             
             /*
              * Let the default account delegate 10.0 VESTS to @dez1337.

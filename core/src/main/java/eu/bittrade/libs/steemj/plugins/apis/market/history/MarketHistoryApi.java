@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steemj.plugins.apis.market.history;
 
 import java.security.InvalidParameterException;
-import java.util.List;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
@@ -9,12 +8,17 @@ import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.fc.TimePointSec;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.models.Bucket;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTicker;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTrade;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketVolume;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.models.OrderBook;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetMarketHistoryArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetMarketHistoryBucketsReturn;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetMarketHistoryReturn;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookReturn;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetRecentTradesArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetRecentTradesReturn;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTickerReturn;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTradeHistoryArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTradeHistoryReturn;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetVolumeReturn;
 
 /**
  * This class implements the market history api.
@@ -51,7 +55,7 @@ public class MarketHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static MarketTicker getTicker(CommunicationHandler communicationHandler)
+    public static GetTickerReturn getTicker(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_TICKER);
@@ -60,7 +64,7 @@ public class MarketHistoryApi {
         Object[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, MarketTicker.class).get(0);
+        return communicationHandler.performRequest(requestObject, GetTickerReturn.class).get(0);
     }
 
     /**
@@ -88,7 +92,7 @@ public class MarketHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static MarketVolume getVolume(CommunicationHandler communicationHandler)
+    public static GetVolumeReturn getVolume(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_VOLUME);
@@ -97,7 +101,7 @@ public class MarketHistoryApi {
         Object[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, MarketVolume.class).get(0);
+        return communicationHandler.performRequest(requestObject, GetVolumeReturn.class).get(0);
     }
 
     /**
@@ -130,20 +134,18 @@ public class MarketHistoryApi {
      * @throws InvalidParameterException
      *             If the limit is less than 0 or greater than 500.
      */
-    public static OrderBook getOrderBook(CommunicationHandler communicationHandler, short limit)
-            throws SteemCommunicationException, SteemResponseException {
-        if (limit < 0 || limit > 500) {
+    public static GetOrderBookReturn getOrderBook(CommunicationHandler communicationHandler,
+            GetOrderBookArgs getOrderBookArgs) throws SteemCommunicationException, SteemResponseException {
+        if (getOrderBookArgs.getLimit().longValue() < 0 || getOrderBookArgs.getLimit().longValue() > 500) {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 500.");
         }
 
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
+        requestObject.setAdditionalParameters(getOrderBookArgs);
 
-        Object[] parameters = { limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
+        return communicationHandler.performRequest(requestObject, GetOrderBookReturn.class).get(0);
     }
 
     /**
@@ -179,20 +181,18 @@ public class MarketHistoryApi {
      * @throws InvalidParameterException
      *             If the limit is less than 0 or greater than 500.
      */
-    public static List<MarketTrade> getTradeHistory(CommunicationHandler communicationHandler, TimePointSec start,
-            TimePointSec end, short limit) throws SteemCommunicationException, SteemResponseException {
-        if (limit < 0 || limit > 1000) {
+    public static GetTradeHistoryReturn getTradeHistory(CommunicationHandler communicationHandler,
+            GetTradeHistoryArgs getTradeHistoryArgs) throws SteemCommunicationException, SteemResponseException {
+        if (getTradeHistoryArgs.getLimit().longValue() < 0 || getTradeHistoryArgs.getLimit().longValue() > 1000) {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 1000.");
         }
 
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_TRADE_HISTORY);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
+        requestObject.setAdditionalParameters(getTradeHistoryArgs);
 
-        Object[] parameters = { start, end, limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, MarketTrade.class);
+        return communicationHandler.performRequest(requestObject, GetTradeHistoryReturn.class).get(0);
     }
 
     /**
@@ -225,20 +225,18 @@ public class MarketHistoryApi {
      * @throws InvalidParameterException
      *             If the limit is less than 0 or greater than 500.
      */
-    public static List<MarketTrade> getRecentTrades(CommunicationHandler communicationHandler, short limit)
-            throws SteemCommunicationException, SteemResponseException {
-        if (limit < 0 || limit > 1000) {
+    public static GetRecentTradesReturn getRecentTrades(CommunicationHandler communicationHandler,
+            GetRecentTradesArgs getRecentTradesArgs) throws SteemCommunicationException, SteemResponseException {
+        if (getRecentTradesArgs.getLimit().longValue() < 0 || getRecentTradesArgs.getLimit().longValue() > 1000) {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 500.");
         }
 
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_RECENT_TRADES);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
+        requestObject.setAdditionalParameters(getRecentTradesArgs);
 
-        Object[] parameters = { limit };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, MarketTrade.class);
+        return communicationHandler.performRequest(requestObject, GetRecentTradesReturn.class).get(0);
     }
 
     /**
@@ -274,16 +272,14 @@ public class MarketHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static List<Bucket> getMarketHistory(CommunicationHandler communicationHandler, long bucketSeconds,
-            TimePointSec start, TimePointSec end) throws SteemCommunicationException, SteemResponseException {
+    public static GetMarketHistoryReturn getMarketHistory(CommunicationHandler communicationHandler,
+            GetMarketHistoryArgs getMarketHistoryArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_MARKET_HISTORY);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
+        requestObject.setAdditionalParameters(getMarketHistoryArgs);
 
-        Object[] parameters = { bucketSeconds, start, end };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Bucket.class);
+        return communicationHandler.performRequest(requestObject, GetMarketHistoryReturn.class).get(0);
     }
 
     /**
@@ -310,7 +306,7 @@ public class MarketHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static List<Integer> getMarketHistoryBuckets(CommunicationHandler communicationHandler)
+    public static GetMarketHistoryBucketsReturn getMarketHistoryBuckets(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_MARKET_HISTORY_BUCKETS);
@@ -319,6 +315,6 @@ public class MarketHistoryApi {
         Object[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, Integer.class);
+        return communicationHandler.performRequest(requestObject, GetMarketHistoryBucketsReturn.class).get(0);
     }
 }

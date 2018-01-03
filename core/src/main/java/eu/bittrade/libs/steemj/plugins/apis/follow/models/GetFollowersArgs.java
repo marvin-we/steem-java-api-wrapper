@@ -13,7 +13,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@paatrick">paatrick</a>
  */
-public class GetFollowerArgs {
+public class GetFollowersArgs {
 
 	@JsonProperty("account")
 	private AccountName account;
@@ -24,7 +24,7 @@ public class GetFollowerArgs {
 	@JsonProperty("limit")
 	private UInteger limit;
 	
-	public GetFollowerArgs(@JsonProperty("account") AccountName account, 
+	public GetFollowersArgs(@JsonProperty("account") AccountName account, 
 			@JsonProperty("start") AccountName start, 
 			@JsonProperty("type") FollowType type, 
 			@JsonProperty("limit") UInteger limit) {

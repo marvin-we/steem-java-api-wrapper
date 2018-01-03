@@ -14,6 +14,7 @@ import eu.bittrade.libs.steemj.fc.TimePointSec;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class MarketTrade {
+    @JsonProperty("date")
     private TimePointSec date;
     @JsonProperty("current_pays")
     private Asset currentPays;

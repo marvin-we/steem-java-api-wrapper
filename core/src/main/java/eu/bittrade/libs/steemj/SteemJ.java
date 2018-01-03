@@ -79,14 +79,19 @@ import eu.bittrade.libs.steemj.plugins.apis.follow.models.CommentFeedEntry;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.FeedEntry;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.FollowApiObject;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.FollowCountApiObject;
+import eu.bittrade.libs.steemj.plugins.apis.follow.models.GetFollowersArgs;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.PostsPerAuthorPair;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.FollowOperation;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.operations.ReblogOperation;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.MarketHistoryApi;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.Bucket;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTicker;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetMarketHistoryArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetRecentTradesArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTickerReturn;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTradeHistoryArgs;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetVolumeReturn;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTrade;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketVolume;
 import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadcastApi;
 import eu.bittrade.libs.steemj.plugins.apis.network.broadcast.models.BroadcastTransactionSynchronousReturn;
 import eu.bittrade.libs.steemj.plugins.apis.tags.TagsApi;
@@ -1499,8 +1504,9 @@ public class SteemJ {
      *             </ul>
      */
     public List<FollowApiObject> getFollowers(AccountName following, AccountName startFollower, FollowType type,
-            short limit) throws SteemCommunicationException, SteemResponseException {
-        return FollowApi.getFollowers(communicationHandler, following, startFollower, type, limit);
+            UInteger limit) throws SteemCommunicationException, SteemResponseException {
+        return FollowApi.getFollowers(communicationHandler, new GetFollowersArgs(following, startFollower, type, limit))
+                .getFollowers();
     }
 
     /**
@@ -1858,7 +1864,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public MarketTicker getTicker() throws SteemCommunicationException, SteemResponseException {
+    public GetTickerReturn getTicker() throws SteemCommunicationException, SteemResponseException {
         return MarketHistoryApi.getTicker(communicationHandler);
     }
 
@@ -1882,7 +1888,7 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public MarketVolume getVolume() throws SteemCommunicationException, SteemResponseException {
+    public GetVolumeReturn getVolume() throws SteemCommunicationException, SteemResponseException {
         return MarketHistoryApi.getVolume(communicationHandler);
     }
 
@@ -1911,9 +1917,9 @@ public class SteemJ {
      * @throws InvalidParameterException
      *             If the limit is less than 0 or greater than 500.
      */
-    public eu.bittrade.libs.steemj.plugins.apis.market.history.models.OrderBook getOrderBookUsingMarketApi(short limit)
-            throws SteemCommunicationException, SteemResponseException {
-        return MarketHistoryApi.getOrderBook(communicationHandler, limit);
+    public eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookReturn getOrderBookUsingMarketApi(
+            short limit) throws SteemCommunicationException, SteemResponseException {
+        return MarketHistoryApi.getOrderBook(communicationHandler, new GetOrderBookArgs(UInteger.valueOf(limit)));
     }
 
     /**
@@ -1944,9 +1950,10 @@ public class SteemJ {
      * @throws InvalidParameterException
      *             If the limit is less than 0 or greater than 500.
      */
-    public List<MarketTrade> getTradeHistory(TimePointSec start, TimePointSec end, short limit)
+    public List<MarketTrade> getTradeHistory(TimePointSec start, TimePointSec end, UInteger limit)
             throws SteemCommunicationException, SteemResponseException {
-        return MarketHistoryApi.getTradeHistory(communicationHandler, start, end, limit);
+        return MarketHistoryApi.getTradeHistory(communicationHandler, new GetTradeHistoryArgs(start, end, limit))
+                .getTrades();
     }
 
     /**
@@ -1975,7 +1982,8 @@ public class SteemJ {
      *             If the limit is less than 0 or greater than 500.
      */
     public List<MarketTrade> getRecentTrades(short limit) throws SteemCommunicationException, SteemResponseException {
-        return MarketHistoryApi.getRecentTrades(communicationHandler, limit);
+        return MarketHistoryApi.getRecentTrades(communicationHandler, new GetRecentTradesArgs(UInteger.valueOf(limit)))
+                .getTrades();
     }
 
     /**
@@ -2008,7 +2016,8 @@ public class SteemJ {
      */
     public List<Bucket> getMarketHistory(long bucketSeconds, TimePointSec start, TimePointSec end)
             throws SteemCommunicationException, SteemResponseException {
-        return MarketHistoryApi.getMarketHistory(communicationHandler, bucketSeconds, start, end);
+        return MarketHistoryApi.getMarketHistory(communicationHandler,
+                new GetMarketHistoryArgs(UInteger.valueOf(bucketSeconds), start, end)).getBuckets();
     }
 
     /**
@@ -2030,8 +2039,8 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Integer> getMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseException {
-        return MarketHistoryApi.getMarketHistoryBuckets(communicationHandler);
+    public List<UInteger> getMarketHistoryBuckets() throws SteemCommunicationException, SteemResponseException {
+        return MarketHistoryApi.getMarketHistoryBuckets(communicationHandler).getBucketSizes();
     }
 
     // #########################################################################

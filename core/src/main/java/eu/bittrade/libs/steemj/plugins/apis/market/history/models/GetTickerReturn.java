@@ -7,12 +7,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.base.models.Asset;
 
 /**
- * This class represents a Steem "market_ticker" object of the
+ * This class represents a Steem "get_ticker_return" object of the
  * "market_history_plugin".
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class MarketTicker {
+public class GetTickerReturn {
+    @JsonProperty("latest")
     private double latest;
     @JsonProperty("lowest_ask")
     private double lowestAsk;
@@ -29,7 +30,7 @@ public class MarketTicker {
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
-    protected MarketTicker() {
+    protected GetTickerReturn() {
     }
 
     /**

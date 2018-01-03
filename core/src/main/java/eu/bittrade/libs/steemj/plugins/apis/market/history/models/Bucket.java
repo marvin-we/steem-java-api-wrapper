@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.plugins.apis.market.history.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,7 +18,7 @@ public class Bucket {
     private long id;
     private TimePointSec open;
     // Original type is "uint32_t" so we use long here.
-    private long seconds;
+    private UInteger seconds;
     // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("high_steem")
     private long highSteem;
@@ -73,7 +74,7 @@ public class Bucket {
     /**
      * @return the seconds
      */
-    public long getSeconds() {
+    public UInteger getSeconds() {
         return seconds;
     }
 

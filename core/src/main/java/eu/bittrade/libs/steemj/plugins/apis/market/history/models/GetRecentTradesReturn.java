@@ -1,41 +1,32 @@
 package eu.bittrade.libs.steemj.plugins.apis.market.history.models;
 
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
-
 /**
- * This class represents a Steem "order_book" object of the "market_volume".
+ * This class implements the Steem "get_trade_history_return" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class MarketVolume {
-    @JsonProperty("steem_volume")
-    private Asset steemVolume;
-    @JsonProperty("sbd_volume")
-    private Asset sbdVolume;
+public class GetRecentTradesReturn {
+    @JsonProperty("trades")
+    private List<MarketTrade> trades;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
-    protected MarketVolume() {
+    private GetRecentTradesReturn() {
     }
 
     /**
-     * @return the steemVolume
+     * @return the trades
      */
-    public Asset getSteemVolume() {
-        return steemVolume;
-    }
-
-    /**
-     * @return the sbdVolume
-     */
-    public Asset getSbdVolume() {
-        return sbdVolume;
+    public List<MarketTrade> getTrades() {
+        return trades;
     }
 
     @Override
