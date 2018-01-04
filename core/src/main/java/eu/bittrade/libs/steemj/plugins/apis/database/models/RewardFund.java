@@ -1,13 +1,15 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import java.math.BigInteger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UShort;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.enums.CurveId;
+import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.protocol.enums.CurveId;
 
 /**
  * This class is the java implementation of the Steem "reward_fund_object".
@@ -29,13 +31,12 @@ public class RewardFund {
     // Original type is uint128_t so we use BigInteger here.
     @JsonProperty("content_constant")
     private BigInteger contentConstant;
-    // Original type is uint16_t so we use int here.
+    // Original type is uint16_t.
     @JsonProperty("percent_curation_rewards")
-    private int percentCurationRewards;
-    // Original type is uint16_t so we use int here.
+    private UShort percentCurationRewards;
+    // Original type is uint16_t.
     @JsonProperty("percent_content_rewards")
-    private int percentContentRewards;
-    // TODO: Original type is curve id.
+    private UShort percentContentRewards;
     @JsonProperty("author_reward_curve")
     private CurveId authorRewardCurve;
     @JsonProperty("curation_reward_curve")
@@ -93,14 +94,14 @@ public class RewardFund {
     /**
      * @return the percentCurationRewards
      */
-    public int getPercentCurationRewards() {
+    public UShort getPercentCurationRewards() {
         return percentCurationRewards;
     }
 
     /**
      * @return the percentContentRewards
      */
-    public int getPercentContentRewards() {
+    public UShort getPercentContentRewards() {
         return percentContentRewards;
     }
 

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
-import eu.bittrade.libs.steemj.plugins.apis.database.models.state.Comment;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Comment;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**

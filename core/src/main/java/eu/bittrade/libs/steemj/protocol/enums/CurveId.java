@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.enums;
+package eu.bittrade.libs.steemj.protocol.enums;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -11,5 +11,12 @@ import eu.bittrade.libs.steemj.base.models.deserializer.CurveIdDeserializer;
  */
 @JsonDeserialize(using = CurveIdDeserializer.class)
 public enum CurveId {
-    QUADRATIC, QUADRATIC_CURATION, LINEAR, SQUARE_ROOT
+    /** */
+    QUADRATIC, 
+    /** */
+    QUADRATIC_CURATION, 
+    /** */
+    LINEAR, 
+    /** */
+    SQUARE_ROOT
 }

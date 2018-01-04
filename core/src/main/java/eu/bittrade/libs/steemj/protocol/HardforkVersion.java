@@ -1,7 +1,8 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.protocol;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import eu.bittrade.libs.steemj.base.models.Version;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 
 /**

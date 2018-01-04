@@ -55,6 +55,23 @@ public class DatabaseApiIT extends BaseIT {
 
         COMMUNICATION_HANDLER = new CommunicationHandler();
     }
+    
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi#getTrendingTags(CommunicationHandler, String, int)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
+     */
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testGetHardforkProperties() throws SteemCommunicationException, SteemResponseException {
+        DatabaseApi.getHardforkProperties(COMMUNICATION_HANDLER);
+    }
+   
 
     /**
      * Test the

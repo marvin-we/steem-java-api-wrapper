@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.plugins.apis.database.models.state;
+package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import java.util.List;
 import java.util.Map;
@@ -7,12 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.Tag;
-import eu.bittrade.libs.steemj.base.models.Witness;
-import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**

@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.plugins.apis.database.models.state;
+package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;

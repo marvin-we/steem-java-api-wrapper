@@ -1,6 +1,83 @@
 package eu.bittrade.libs.steemj.plugins.apis.condenser;
 
+import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
+import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.SteemApiType;
+import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
+import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.State;
+
 public class CondenserApi {
+    /**
+     * This API is a short-cut for returning all of the state required for a
+     * particular URL with a single query.
+     * 
+     * TODO: Provide examples.
+     * 
+     * @param communicationHandler
+     *            A
+     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
+     *            CommunicationHandler} instance that should be used to send the
+     *            request.
+     * @param path
+     *            TODO: Fix JavaDoc
+     * @return TODO: Fix JavaDoc
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static State getState(CommunicationHandler communicationHandler, Permlink path)
+            throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_STATE);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, State.class).get(0);
+    }
+    
+    /**
+     * Get the hardfork version the node you are connected to is using.
+     * 
+     * @return The hardfork version that the connected node is running on.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static String getHardforkVersion(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, String.class).get(0);
+    }
     /*
     (get_version)
     (get_trending_tags)
@@ -15,7 +92,7 @@ public class CondenserApi {
     (get_current_median_history_price)
     (get_feed_history)
     (get_witness_schedule)
-    (get_hardfork_version)
+    DONE (get_hardfork_version)
     (get_next_scheduled_hardfork)
     (get_reward_fund)
     (get_key_references)

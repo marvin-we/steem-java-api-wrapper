@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.protocol.HardforkVersion;
 
 /**
  * This class is the java implementation of the Steem "hardfork_version_vote"

@@ -2,14 +2,22 @@ package eu.bittrade.libs.steemj.plugins.apis.database;
 
 import java.util.List;
 
-import eu.bittrade.libs.steemj.base.models.Permlink;
+import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.plugins.apis.database.models.state.State;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Config;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.DynamicGlobalProperty;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.HardforkProperty;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.ListWitnessVotesReturn;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.ListWitnessesReturn;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.RewardFund;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
@@ -22,19 +30,265 @@ public class DatabaseApi {
     private DatabaseApi() {
     }
     
+
+    /**
+     * Get the configuration.
+     * 
+     * @return The steem configuration.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static Config getConfig(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_CONFIG);
+        requestObject.setSteemApi(SteemApiType.CONDENSER_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, Config.class).get(0);
+    }
+    
+
+    /**
+     * Get the global properties.
+     * 
+     * @return The dynamic global properties.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static DynamicGlobalProperty getDynamicGlobalProperties(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, DynamicGlobalProperty.class).get(0);
+    }
+    
+    /**
+     * Get the witness schedule.
+     * 
+     * @return The witness schedule.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static WitnessSchedule getWitnessSchedule(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
+    }
+    
+    public static HardforkProperty getHardforkProperties(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_HARDFORK_PROPERTIES);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        System.out.println(communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0));
+        return null;
+    }
+    
+
+    /**
+     * Get detailed information of a specific reward fund.
+     * 
+     * @param rewordFundType
+     *            One of the {@link eu.bittrade.libs.steemj.enums.RewardFundType
+     *            RewardFundType}s.
+     * @return A refund object containing detailed information about the
+     *         requested reward fund.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static RewardFund getRewardFunds(CommunicationHandler communicationHandler, RewardFundType rewordFundType)
+            throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_REWARD_FUNDS);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        Object[] parameters = { rewordFundType.name().toLowerCase() };
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, RewardFund.class).get(0);
+    }
+    
+    public static Price getCurrentPriceFeed(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_CURRENT_PRICE_FEED);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        System.out.println(communicationHandler.performRequest(requestObject, Price.class).get(0));
+        return null;
+    }
+    
+    /**
+     * Get the current price and a list of history prices combined in one
+     * object.
+     * 
+     * @return The conversion history of SBD / STEEM.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public FeedHistory getFeedHistory(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
+    }
+
+    public static ListWitnessesReturn listWitnesses(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.LIST_WITNESSES);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        System.out.println(communicationHandler.performRequest(requestObject, ListWitnessesReturn.class).get(0));
+        return null;
+    }
+    
+    public static ListWitnessesReturn findWitnesses(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_CURRENT_PRICE_FEED);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        System.out.println(communicationHandler.performRequest(requestObject, ListWitnessesReturn.class).get(0));
+        return null;
+    }
+    
+    public static ListWitnessVotesReturn listWitnessesVotesReturn(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_CURRENT_PRICE_FEED);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        System.out.println(communicationHandler.performRequest(requestObject, ListWitnessVotesReturn.class).get(0));
+        return null;
+    }
+    
+    /**
+     * Get the list of the current active witnesses.
+     * 
+     * @param communicationHandler
+     *            A
+     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
+     *            CommunicationHandler} instance that should be used to send the
+     *            request.
+     * @return The list of the current active witnesses.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static List<AccountName> getActiveWitnesses(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
+        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        String[] parameters = {};
+        requestObject.setAdditionalParameters(parameters);
+
+        return communicationHandler.performRequest(requestObject, AccountName.class);
+    }
+    
+    
    /* DECLARE_API_IMPL
     (
-       (get_config)
-       (get_dynamic_global_properties)
-       (get_witness_schedule)
-       (get_hardfork_properties)
-       (get_reward_funds)
-       (get_current_price_feed)
-       (get_feed_history)
-       (list_witnesses)
-       (find_witnesses)
-       (list_witness_votes)
-       (get_active_witnesses)
+       DONE (get_config)
+       DONE (get_dynamic_global_properties)
+       DONE (get_witness_schedule)
+       ~ (get_hardfork_properties)
+       ~ (get_reward_funds)
+       ~ (get_current_price_feed)
+       DONE (get_feed_history)
+       ~ (list_witnesses)
+       ~ (find_witnesses)
+       ~ (list_witness_votes)
+       DONE (get_active_witnesses)
        (list_accounts)
        (find_accounts)
        (list_owner_histories)
@@ -75,80 +329,9 @@ public class DatabaseApi {
 #endif
     )*/
 
-    /**
-     * This API is a short-cut for returning all of the state required for a
-     * particular URL with a single query.
-     * 
-     * TODO: Provide examples.
-     * 
-     * @param communicationHandler
-     *            A
-     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
-     *            CommunicationHandler} instance that should be used to send the
-     *            request.
-     * @param path
-     *            TODO: Fix JavaDoc
-     * @return TODO: Fix JavaDoc
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public static State getState(CommunicationHandler communicationHandler, Permlink path)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_STATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, State.class).get(0);
-    }
 
-    /**
-     * Get the list of the current active witnesses.
-     * 
-     * @param communicationHandler
-     *            A
-     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
-     *            CommunicationHandler} instance that should be used to send the
-     *            request.
-     * @return The list of the current active witnesses.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public static List<AccountName> getActiveWitnesses(CommunicationHandler communicationHandler)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_WITNESSES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
 
-        return communicationHandler.performRequest(requestObject, AccountName.class);
-    }
 
     // #########################################################################
     // ## BLOCKS AND TRANSACTIONS ##############################################

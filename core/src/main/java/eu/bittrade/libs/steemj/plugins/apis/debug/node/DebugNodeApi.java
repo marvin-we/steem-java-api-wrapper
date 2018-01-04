@@ -1,5 +1,10 @@
 package eu.bittrade.libs.steemj.plugins.apis.debug.node;
 
+/**
+ * This class implements the "debug_node_api".
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class DebugNodeApi {
     //DECLARE_API(
             /**

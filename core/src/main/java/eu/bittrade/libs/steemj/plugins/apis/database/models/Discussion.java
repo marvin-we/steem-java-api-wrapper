@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.plugins.apis.database.models.state;
+package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import java.util.Date;
 import java.util.List;

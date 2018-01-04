@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import java.math.BigInteger;
 import java.net.URL;
@@ -8,9 +8,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.crypto.core.Sha256Hash;
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.Price;
+import eu.bittrade.libs.steemj.base.models.Version;
 import eu.bittrade.libs.steemj.enums.WitnessScheduleType;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.HardforkVersion;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**

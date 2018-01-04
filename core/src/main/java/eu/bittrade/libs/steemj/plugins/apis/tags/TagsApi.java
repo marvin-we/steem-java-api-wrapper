@@ -17,7 +17,7 @@ import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
-import eu.bittrade.libs.steemj.plugins.apis.database.models.state.Discussion;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Discussion;
 import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
@@ -293,7 +293,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<VoteState> getActiveVotes(CommunicationHandler communicationHandler, AccountName author, Permlink permlink)
+    public static List<VoteState> getActiveVotes(CommunicationHandler communicationHandler, AccountName author, Permlink permlink)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
