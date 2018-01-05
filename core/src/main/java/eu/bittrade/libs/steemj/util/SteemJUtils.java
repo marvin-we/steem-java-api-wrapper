@@ -11,6 +11,7 @@ import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -347,5 +348,19 @@ public class SteemJUtils {
      */
     public static <T> T setIfNotNull(T objectToSet, @Nullable T defaultValue) {
         return setIfNotNull(objectToSet, "Both, the objectToSet and the default value are null.", defaultValue);
+    }
+
+    /**
+     * 
+     * @param collectionToSet
+     * @param message
+     * @return
+     */
+    public static <T> Collection<T> setIfNotNullAndNotEmpty(Collection<T> collectionToSet, String message) {
+        if (collectionToSet == null || collectionToSet.isEmpty()) {
+            throw new InvalidParameterException(message);
+        }
+
+        return collectionToSet;
     }
 }

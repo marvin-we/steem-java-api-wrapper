@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.plugins.apis.condenser.models;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -10,6 +10,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import eu.bittrade.libs.steemj.base.models.Account;
+import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.deserializer.GuestBloggerPairDeserializer;
 import eu.bittrade.libs.steemj.base.models.deserializer.OperationHistoryHashMapDeserializer;
 import eu.bittrade.libs.steemj.base.models.deserializer.TagUsagePairDeserializer;

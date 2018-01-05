@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.plugins.apis.database.models;
+package eu.bittrade.libs.steemj.plugins.apis.condenser.models;
 
 import java.util.List;
 import java.util.Map;
@@ -7,9 +7,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.base.models.Price;
-import eu.bittrade.libs.steemj.base.models.Tag;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Market;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Witness;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.Discussion;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
@@ -21,24 +24,24 @@ public class State {
     @JsonProperty("current_route")
     private String currentRoute;
     @JsonProperty("props")
-    private DynamicGlobalProperty properties;
+    private ExtendedDynamicGlobalProperties properties;
     @JsonProperty("tag_idx")
     private TagIndex tagIndex;
     /**
      * "" is the global discussion index
      */
     @JsonProperty("discussion_idx")
-    Map<String, DiscussionIndex> discussionIndex;
+    private Map<String, DiscussionIndex> discussionIndex;
     @JsonProperty("tags")
-    Map<String, Tag> tags;
+    private Map<String, Tag> tags;
 
     /**
      * map from account/slug to full nested discussion
      */
     @JsonProperty("content")
-    Map<String, Discussion> content;
+    private Map<String, Discussion> content;
     @JsonProperty("accounts")
-    Map<String, ExtendedAccount> accounts;
+    private Map<String, ExtendedAccount> accounts;
 
     /**
      * The list of miners who are queued to produce work
@@ -46,7 +49,7 @@ public class State {
     @JsonProperty("pow_queue")
     private List<AccountName> powQueue;
     @JsonProperty("witnesses")
-    Map<String, Witness> witnesses;
+    private Map<String, Witness> witnesses;
     @JsonProperty("witness_schedule")
     private WitnessSchedule witnessSchedule;
     @JsonProperty("feed_price")
@@ -74,7 +77,7 @@ public class State {
     /**
      * @return the properties
      */
-    public DynamicGlobalProperty getProperties() {
+    public ExtendedDynamicGlobalProperties getProperties() {
         return properties;
     }
 

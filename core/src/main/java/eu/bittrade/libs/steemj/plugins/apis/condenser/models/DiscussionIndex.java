@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.plugins.apis.database.models;
+package eu.bittrade.libs.steemj.plugins.apis.condenser.models;
 
 import java.util.List;
 

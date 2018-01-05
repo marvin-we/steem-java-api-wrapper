@@ -7,7 +7,7 @@ import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.plugins.apis.database.models.State;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
 
 public class CondenserApi {
     /**

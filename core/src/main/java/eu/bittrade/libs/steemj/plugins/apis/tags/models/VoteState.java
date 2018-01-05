@@ -1,8 +1,7 @@
-package eu.bittrade.libs.steemj.base.models;
-
-import java.math.BigInteger;
+package eu.bittrade.libs.steemj.plugins.apis.tags.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.ULong;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
@@ -15,14 +14,14 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
 public class VoteState {
     private AccountName voter;
     // Original type is uint64_t.
-    private BigInteger weight;
-    // Original type is uint64_t.
-    private BigInteger rshares;
+    private ULong weight;
+    // Original type is int64_t.
+    private long rshares;
     // Original type is int16_t.
-    private int percent;
+    private short percent;
     // Original type is share_type while a share_type is a int64_t so we use
     // long here.
-    private BigInteger reputation;
+    private long reputation;
     private TimePointSec time;
 
     /**
@@ -42,28 +41,28 @@ public class VoteState {
     /**
      * @return the weight
      */
-    public BigInteger getWeight() {
+    public ULong getWeight() {
         return weight;
     }
 
     /**
      * @return the rshares
      */
-    public BigInteger getRshares() {
+    public long getRshares() {
         return rshares;
     }
 
     /**
      * @return the percent
      */
-    public int getPercent() {
+    public short getPercent() {
         return percent;
     }
 
     /**
      * @return the reputation
      */
-    public BigInteger getReputation() {
+    public long getReputation() {
         return reputation;
     }
 

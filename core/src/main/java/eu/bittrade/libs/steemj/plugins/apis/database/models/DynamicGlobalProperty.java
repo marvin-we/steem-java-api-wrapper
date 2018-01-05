@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BlockId;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlobalProperties;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
@@ -81,21 +82,15 @@ public class DynamicGlobalProperty {
     // Original type is uint32_t so we use long here.
     @JsonProperty("vote_power_reserve_rate")
     private long votePowerReserveRate;
-    // Original type is uint32_t so we use long here.
-    @JsonProperty("current_reserve_ratio")
-    private long currentReserveRatio;
-    // Original type is uint64_t so we use BigInteger here.
-    @JsonProperty("average_block_size")
-    private int avarageBlockSize;
-    // Original type is uint128_t so we use BigInteger here.
-    @JsonProperty("max_virtual_bandwidth")
-    private String maxVirtualBandwidth;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
+     * 
+     * Visibility <code>protected</code> as
+     * {@link ExtendedDynamicGlobalProperties} is a child class.
      */
-    private DynamicGlobalProperty() {
+    protected DynamicGlobalProperty() {
     }
 
     /**
@@ -292,28 +287,7 @@ public class DynamicGlobalProperty {
      */
     public long getVotePowerReserveRate() {
         return votePowerReserveRate;
-    }
-
-    /**
-     * @return the currentReserveRatio
-     */
-    public long getCurrentReserveRatio() {
-        return currentReserveRatio;
-    }
-
-    /**
-     * @return the avarageBlockSize
-     */
-    public int getAvarageBlockSize() {
-        return avarageBlockSize;
-    }
-
-    /**
-     * @return the maxVirtualBandwidth
-     */
-    public String getMaxVirtualBandwidth() {
-        return maxVirtualBandwidth;
-    }
+    }   
 
     @Override
     public String toString() {

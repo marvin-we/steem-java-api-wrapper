@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.Tag;
-import eu.bittrade.libs.steemj.base.models.VoteState;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
@@ -17,8 +15,10 @@ import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
-import eu.bittrade.libs.steemj.plugins.apis.database.models.Discussion;
 import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.Discussion;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.VoteState;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**

@@ -1,8 +1,10 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.plugins.apis.condenser.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import eu.bittrade.libs.steemj.base.models.LimitOrder;
 
 /**
  * This class represents a Steem "extended_limit_order" object.
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ExtendedLimitOrder extends LimitOrder {
     @JsonProperty("real_price")
     private double realPrice;
+    @JsonProperty("rewarded")
     private boolean rewarded;
 
     /**
