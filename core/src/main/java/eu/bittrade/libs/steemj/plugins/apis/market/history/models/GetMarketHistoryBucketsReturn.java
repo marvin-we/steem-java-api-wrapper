@@ -5,11 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.plugins.apis.market.history.MarketHistoryApi;
 
 /**
  * This class implements the Steem "get_market_history_buckets_return" object.
@@ -21,16 +17,10 @@ public class GetMarketHistoryBucketsReturn {
     private List<UInteger> bucketSizes;
 
     /**
-     * Create a new {@link GetMarketHistoryBucketsReturn} instance to be passed
-     * to the
-     * {@link MarketHistoryApi#getMarketHistoryBuckets(CommunicationHandler)}
-     * method.
-     * 
-     * @param bucketSizes
+     * This object is only used to wrap the JSON response in a POJO, so
+     * therefore this class should not be instantiated.
      */
-    @JsonCreator()
-    public GetMarketHistoryBucketsReturn(@JsonProperty("bucket_sizes") List<UInteger> bucketSizes) {
-        this.setBucketSizes(bucketSizes);
+    private GetMarketHistoryBucketsReturn() {
     }
 
     /**
