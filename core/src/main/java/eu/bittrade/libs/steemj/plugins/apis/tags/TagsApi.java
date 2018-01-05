@@ -1,25 +1,25 @@
 package eu.bittrade.libs.steemj.plugins.apis.tags;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
-import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Discussion;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQueryResult;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetActiveVotesArgs;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetActiveVotesReturn;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetDiscussionArgs;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetDiscussionsByAuthorBeforeDateArgs;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetRepliesByLastUpdateArgs;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetTagsUsedByAuthorArgs;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetTagsUsedByAuthorReturn;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
-import eu.bittrade.libs.steemj.plugins.apis.tags.models.VoteState;
-import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * This class implements the tags api.
@@ -82,14 +82,43 @@ public class TagsApi {
         return communicationHandler.performRequest(requestObject, Tag.class);
     }
 
-    public static void getTagsUsedByAuthor(CommunicationHandler communicationHandler) {
-        
+    /**
+     * 
+     * @param communicationHandler
+     * @param getTagsUsedByAuthorArgs
+     * @return
+     * @throws SteemCommunicationException
+     * @throws SteemResponseException
+     */
+    public static GetTagsUsedByAuthorReturn getTagsUsedByAuthor(CommunicationHandler communicationHandler,
+            GetTagsUsedByAuthorArgs getTagsUsedByAuthorArgs)
+            throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(getTagsUsedByAuthorArgs);
+
+        return communicationHandler.performRequest(requestObject, GetTagsUsedByAuthorReturn.class).get(0);
     }
-    
-    public static void getDiscussion(CommunicationHandler communicationHandler) {
-        
+
+    /**
+     * 
+     * @param communicationHandler
+     * @param getDiscussionArgs
+     * @return
+     * @throws SteemCommunicationException
+     * @throws SteemResponseException
+     */
+    public static Discussion getDiscussion(CommunicationHandler communicationHandler,
+            GetDiscussionArgs getDiscussionArgs) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_DISCUSSION);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(getDiscussionArgs);
+
+        return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
     }
-    
+
     /**
      * Get the replies of a specific post.
      * 
@@ -113,26 +142,52 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getContentReplies(CommunicationHandler communicationHandler, AccountName author, Permlink permlink)
-            throws SteemCommunicationException, SteemResponseException {
+    public DiscussionQueryResult getContentReplies(CommunicationHandler communicationHandler,
+            DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { author.getName(), permlink.getLink() };
-        requestObject.setAdditionalParameters(parameters);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(discussionQuery);
 
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
-    
-    
-    public static void getPostDiscussionsByPayout() {
-        
+
+    /**
+     * 
+     * @param communicationHandler
+     * @param discussionQuery
+     * @return
+     * @throws SteemCommunicationException
+     * @throws SteemResponseException
+     */
+    public static DiscussionQueryResult getPostDiscussionsByPayout(CommunicationHandler communicationHandler,
+            DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_POST_DISCUSSIONS_BY_PAYOUT);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(discussionQuery);
+
+        return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
-    
-    public static void getCommentDiscussionsByPayout() {
-        
+
+    /**
+     * 
+     * @param communicationHandler
+     * @param discussionQuery
+     * @return
+     * @throws SteemCommunicationException
+     * @throws SteemResponseException
+     */
+    public static DiscussionQueryResult getCommentDiscussionsByPayout(CommunicationHandler communicationHandler,
+            DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest();
+        requestObject.setApiMethod(RequestMethods.GET_COMMENT_DISCUSSIONS_BY_PAYOUT);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(discussionQuery);
+
+        return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
-    
+
     /**
      * Get active discussions for a specified tag.
      * 
@@ -156,30 +211,15 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getDiscussionsBy(CommunicationHandler communicationHandler, eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery discussionQuery, DiscussionSortType sortBy)
-            throws SteemCommunicationException, SteemResponseException {
+    public List<Discussion> getDiscussionsBy(CommunicationHandler communicationHandler, DiscussionQuery discussionQuery,
+            DiscussionSortType sortBy) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-
         requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { discussionQuery };
-        requestObject.setAdditionalParameters(parameters);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(discussionQuery);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
-        
-        /*(get_discussions_by_trending)
-        (get_discussions_by_created)
-        (get_discussions_by_active)
-        (get_discussions_by_cashout)
-        (get_discussions_by_votes)
-        (get_discussions_by_children)
-        (get_discussions_by_hot)
-        (get_discussions_by_feed)
-        (get_discussions_by_blog)
-        (get_discussions_by_comments)
-        (get_discussions_by_promoted)*/
     }
-    
 
     /**
      * /** Get a list of Content starting from the given post of the given user.
@@ -207,17 +247,17 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getRepliesByLastUpdate(CommunicationHandler communicationHandler, AccountName username, Permlink permlink, int limit)
+    public List<Discussion> getRepliesByLastUpdate(CommunicationHandler communicationHandler,
+            GetRepliesByLastUpdateArgs getRepliesByLastUpdateArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { username, permlink.getLink(), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(getRepliesByLastUpdateArgs);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
     }
-    
+
     /**
      * Get a list of discussion for a given author.
      * 
@@ -246,30 +286,17 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getDiscussionsByAuthorBeforeDate(CommunicationHandler communicationHandler, AccountName author, Permlink permlink, String date,
-            int limit) throws SteemCommunicationException, SteemResponseException {
+    public DiscussionQueryResult getDiscussionsByAuthorBeforeDate(CommunicationHandler communicationHandler,
+            GetDiscussionsByAuthorBeforeDateArgs getDiscussionsByAuthorBeforeDateArgs)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-
         requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(getDiscussionsByAuthorBeforeDateArgs);
 
-        // Verify that the date has the correct format.
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
-        Date beforeDate;
-        try {
-            beforeDate = simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            throw new SteemTransformationException("Could not parse the received date to a Date object.", e);
-        }
-
-        String[] parameters = { author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
-                String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
-    
+
     /**
      * Get the active votes for a given post of a given author.
      * 
@@ -293,14 +320,13 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static List<VoteState> getActiveVotes(CommunicationHandler communicationHandler, AccountName author, Permlink permlink)
-            throws SteemCommunicationException, SteemResponseException {
+    public static GetActiveVotesReturn getActiveVotes(CommunicationHandler communicationHandler,
+            GetActiveVotesArgs getActiveVotesArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { author.getName(), permlink.getLink() };
-        requestObject.setAdditionalParameters(parameters);
+        requestObject.setSteemApi(SteemApiType.TAGS_API);
+        requestObject.setAdditionalParameters(getActiveVotesArgs);
 
-        return communicationHandler.performRequest(requestObject, VoteState.class);
+        return communicationHandler.performRequest(requestObject, GetActiveVotesReturn.class).get(0);
     }
 }
