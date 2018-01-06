@@ -35,8 +35,7 @@ public class PublicKeyTest extends BaseUT {
     }
 
     /**
-     * Test the
-     * {@link eu.bittrade.libs.steemj.protocol.PublicKey#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.PublicKey#toByteArray()}
      * method by creating a new PublicKey from an Address.
      * 
      * @throws Exception
@@ -62,8 +61,7 @@ public class PublicKeyTest extends BaseUT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.protocol.PublicKey#equals(Object)}
-     * method.
+     * {@link eu.bittrade.libs.steemj.protocol.PublicKey#equals(Object)} method.
      */
     @Test
     public void testPublicKeyEqualsMethod() {

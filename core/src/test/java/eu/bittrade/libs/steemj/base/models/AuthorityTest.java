@@ -23,8 +23,7 @@ public class AuthorityTest {
             + "ce5bf78d5dd3aa731550100";
 
     /**
-     * Test the
-     * {@link eu.bittrade.libs.steemj.protocol.Authority#toByteArray()
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Authority#toByteArray()
      * toByteArray()} method.
      * 
      * @throws Exception
@@ -45,8 +44,7 @@ public class AuthorityTest {
     }
 
     /**
-     * Test the
-     * {@link eu.bittrade.libs.steemj.protocol.Authority#equals(Object)
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Authority#equals(Object)
      * equals(Object)} method.
      */
     @Test

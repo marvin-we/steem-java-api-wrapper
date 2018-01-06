@@ -46,7 +46,8 @@ public class DeleteCommentOperationParsingIT extends BaseITForOperationParsing {
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        ExtendedSignedBlock blockContainingDeleteCommentOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
+        ExtendedSignedBlock blockContainingDeleteCommentOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION)
+                .get();
 
         Operation deleteCommentOperation = blockContainingDeleteCommentOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

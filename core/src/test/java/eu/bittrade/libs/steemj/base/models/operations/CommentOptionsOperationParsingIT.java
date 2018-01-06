@@ -48,7 +48,8 @@ public class CommentOptionsOperationParsingIT extends BaseITForOperationParsing 
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        ExtendedSignedBlock blockContainingCommentOptionsOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
+        ExtendedSignedBlock blockContainingCommentOptionsOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION)
+                .get();
 
         Operation commentOptionsOperation = blockContainingCommentOptionsOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

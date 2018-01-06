@@ -45,7 +45,8 @@ public class EscrowTransferOperationParsingIT extends BaseITForOperationParsing 
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        ExtendedSignedBlock blockContainingEscrowTransferOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
+        ExtendedSignedBlock blockContainingEscrowTransferOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION)
+                .get();
 
         Operation escrowTransferOperation = blockContainingEscrowTransferOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

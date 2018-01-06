@@ -45,8 +45,8 @@ public class WithdrawVestingOperationParsingIT extends BaseITForOperationParsing
     @Test
     @Category({ IntegrationTest.class })
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
-        ExtendedSignedBlock blockContainingWithdrawVestingOperation = steemJ
-                .getBlock(BLOCK_NUMBER_CONTAINING_OPERATION).get();
+        ExtendedSignedBlock blockContainingWithdrawVestingOperation = steemJ.getBlock(BLOCK_NUMBER_CONTAINING_OPERATION)
+                .get();
 
         Operation withdrawVestingOperation = blockContainingWithdrawVestingOperation.getTransactions()
                 .get(TRANSACTION_INDEX).getOperations().get(OPERATION_INDEX);

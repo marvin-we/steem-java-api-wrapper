@@ -9,7 +9,6 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
 
 public class CondenserApiIT extends BaseIT {
     private static CommunicationHandler COMMUNICATION_HANDLER;
@@ -26,7 +25,7 @@ public class CondenserApiIT extends BaseIT {
 
         COMMUNICATION_HANDLER = new CommunicationHandler();
     }
-    
+
     /**
      * Test the
      * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi#getTrendingTags(CommunicationHandler, String, int)}

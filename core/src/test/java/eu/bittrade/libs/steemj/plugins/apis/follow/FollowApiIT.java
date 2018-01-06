@@ -22,7 +22,6 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.plugins.apis.follow.FollowApi;
 import eu.bittrade.libs.steemj.plugins.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.AccountReputation;
 import eu.bittrade.libs.steemj.plugins.apis.follow.models.BlogEntry;

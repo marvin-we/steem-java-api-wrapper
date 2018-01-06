@@ -17,26 +17,20 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.BlockHeaderExtensions;
-import eu.bittrade.libs.steemj.base.models.HardforkVersionVote;
-import eu.bittrade.libs.steemj.base.models.Version;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
-import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
 
 /**
  * This class contains all test connected to the
- * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi DatabaseApi}.
+ * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi
+ * DatabaseApi}.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -55,7 +49,7 @@ public class DatabaseApiIT extends BaseIT {
 
         COMMUNICATION_HANDLER = new CommunicationHandler();
     }
-    
+
     /**
      * Test the
      * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi#getTrendingTags(CommunicationHandler, String, int)}
@@ -71,7 +65,6 @@ public class DatabaseApiIT extends BaseIT {
     public void testGetHardforkProperties() throws SteemCommunicationException, SteemResponseException {
         DatabaseApi.getHardforkProperties(COMMUNICATION_HANDLER);
     }
-   
 
     /**
      * Test the
@@ -137,8 +130,6 @@ public class DatabaseApiIT extends BaseIT {
         assertThat(activeWitnesses.size(), greaterThan(0));
         assertThat(activeWitnesses.get(0).getName(), not(isEmptyOrNullString()));
     }
-
-
 
     /**
      * Test the
