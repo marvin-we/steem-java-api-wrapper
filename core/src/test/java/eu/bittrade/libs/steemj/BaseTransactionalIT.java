@@ -14,7 +14,7 @@ import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.HttpClientRequestInitializer;
 import eu.bittrade.libs.steemj.enums.AddressPrefixType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;

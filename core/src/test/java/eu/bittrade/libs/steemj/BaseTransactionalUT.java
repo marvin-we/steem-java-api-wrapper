@@ -2,7 +2,7 @@ package eu.bittrade.libs.steemj;
 
 import java.io.UnsupportedEncodingException;
 
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;

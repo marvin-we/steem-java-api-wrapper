@@ -1,6 +1,6 @@
 package eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api;
 
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;

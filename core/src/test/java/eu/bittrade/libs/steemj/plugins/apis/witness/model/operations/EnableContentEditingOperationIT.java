@@ -11,7 +11,7 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseTransactionVerificationIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.operations.EnableContentEditingOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;

@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.BaseTransactionalUT;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;

@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.chain;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,6 +23,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.Sha256Hash;
+import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.BlockId;
+import eu.bittrade.libs.steemj.base.models.FutureExtensions;
+import eu.bittrade.libs.steemj.base.models.Transaction;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;

@@ -86,7 +86,7 @@ public class TagsApi {
      * 
      * @param communicationHandler
      * @param getTagsUsedByAuthorArgs
-     * @return
+     * @return GetTagsUsedByAuthorReturn
      * @throws SteemCommunicationException
      * @throws SteemResponseException
      */
@@ -105,7 +105,7 @@ public class TagsApi {
      * 
      * @param communicationHandler
      * @param getDiscussionArgs
-     * @return
+     * @return Dicussions
      * @throws SteemCommunicationException
      * @throws SteemResponseException
      */
@@ -122,10 +122,9 @@ public class TagsApi {
     /**
      * Get the replies of a specific post.
      * 
-     * @param author
-     *            The authors name.
-     * @param permlink
-     *            The permlink of the article.
+     * @param communicationHandler
+     * @param discussionQuery
+     * 
      * @return A list of discussions or null if the post has no replies.
      * @throws SteemCommunicationException
      *             <ul>
@@ -142,7 +141,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public DiscussionQueryResult getContentReplies(CommunicationHandler communicationHandler,
+    public static DiscussionQueryResult getContentReplies(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
@@ -156,7 +155,7 @@ public class TagsApi {
      * 
      * @param communicationHandler
      * @param discussionQuery
-     * @return
+     * @return DiscussionQueryResult
      * @throws SteemCommunicationException
      * @throws SteemResponseException
      */
@@ -174,7 +173,7 @@ public class TagsApi {
      * 
      * @param communicationHandler
      * @param discussionQuery
-     * @return
+     * @return DiscussionQueryResult
      * @throws SteemCommunicationException
      * @throws SteemResponseException
      */
@@ -190,6 +189,8 @@ public class TagsApi {
 
     /**
      * Get active discussions for a specified tag.
+     * 
+     * @param communicationHandler
      * 
      * @param discussionQuery
      *            A query defining specific search parameters.
@@ -211,8 +212,9 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getDiscussionsBy(CommunicationHandler communicationHandler, DiscussionQuery discussionQuery,
-            DiscussionSortType sortBy) throws SteemCommunicationException, SteemResponseException {
+    public static List<Discussion> getDiscussionsBy(CommunicationHandler communicationHandler,
+            DiscussionQuery discussionQuery, DiscussionSortType sortBy)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
         requestObject.setSteemApi(SteemApiType.TAGS_API);
@@ -225,12 +227,9 @@ public class TagsApi {
      * /** Get a list of Content starting from the given post of the given user.
      * The list will be sorted by the Date of the last update.
      * 
-     * @param username
-     *            The name of the user.
-     * @param permlink
-     *            The permlink of an article.
-     * @param limit
-     *            Number of results.
+     * @param communicationHandler
+     * @param getRepliesByLastUpdateArgs
+     * 
      * @return A list of Content objects.
      * @throws SteemCommunicationException
      *             <ul>
@@ -247,7 +246,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Discussion> getRepliesByLastUpdate(CommunicationHandler communicationHandler,
+    public static List<Discussion> getRepliesByLastUpdate(CommunicationHandler communicationHandler,
             GetRepliesByLastUpdateArgs getRepliesByLastUpdateArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
@@ -261,15 +260,10 @@ public class TagsApi {
     /**
      * Get a list of discussion for a given author.
      * 
-     * @param author
-     *            The authors name.
-     * @param permlink
-     *            The permlink of the article.
-     * @param date
-     *            Only return articles before this date. (This field seems to be
-     *            ignored by the Steem api)
-     * @param limit
-     *            The number of results you want to receive.
+     * @param communicationHandler
+     * 
+     * @param getDiscussionsByAuthorBeforeDateArgs
+     * 
      * @return A list of discussions.
      * @throws SteemCommunicationException
      *             <ul>
@@ -286,7 +280,7 @@ public class TagsApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public DiscussionQueryResult getDiscussionsByAuthorBeforeDate(CommunicationHandler communicationHandler,
+    public static DiscussionQueryResult getDiscussionsByAuthorBeforeDate(CommunicationHandler communicationHandler,
             GetDiscussionsByAuthorBeforeDateArgs getDiscussionsByAuthorBeforeDateArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
@@ -300,10 +294,9 @@ public class TagsApi {
     /**
      * Get the active votes for a given post of a given author.
      * 
-     * @param author
-     *            The authors name.
-     * @param permlink
-     *            The permlink of the article.
+     * @param communicationHandler
+     * @param getActiveVotesArgs
+     * 
      * @return A list of votes for a specific article.
      * @throws SteemCommunicationException
      *             <ul>

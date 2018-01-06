@@ -17,7 +17,7 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.BaseTransactionBroadcastIT;
 import eu.bittrade.libs.steemj.BaseTransactionalIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -57,7 +57,7 @@ public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadcastApi#broadcastTransactionSynchronous(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
+     * {@link eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadcastApi#broadcastTransactionSynchronous(CommunicationHandler, eu.bittrade.libs.steemj.chain.SignedTransaction)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -100,7 +100,7 @@ public class NetworkBroadcastApiIT extends BaseTransactionBroadcastIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadcastApi#broadcastTransaction(CommunicationHandler, eu.bittrade.libs.steemj.base.models.SignedTransaction)}
+     * {@link eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api.NetworkBroadcastApi#broadcastTransaction(CommunicationHandler, eu.bittrade.libs.steemj.chain.SignedTransaction)}
      * method.
      * 
      * @throws SteemCommunicationException

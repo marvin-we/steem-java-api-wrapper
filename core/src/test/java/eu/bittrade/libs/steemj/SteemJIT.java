@@ -34,7 +34,7 @@ import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;

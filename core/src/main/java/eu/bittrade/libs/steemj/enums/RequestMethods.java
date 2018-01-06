@@ -21,6 +21,11 @@ public enum RequestMethods {
     GET_BLOCK,
     /** */
     GET_BLOCK_HEADER,
+    // chain_api
+    /** */
+    PUSH_BLOCK,
+    /** */
+    PUSH_TRANSACTION,
     // condenser_api
     /** */
     GET_STATE,

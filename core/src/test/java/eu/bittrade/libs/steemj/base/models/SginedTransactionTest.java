@@ -13,6 +13,7 @@ import org.junit.Test;
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.BaseTransactionalUT;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
