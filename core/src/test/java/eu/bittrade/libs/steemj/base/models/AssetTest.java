@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
  * Test the Asset object.
@@ -30,7 +31,7 @@ public class AssetTest {
     private final String EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION = "be9bb404000000000354535444000000";
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
      * method for the VESTS asset type.
      * 
      * @throws Exception
@@ -46,7 +47,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
      * method for the STEEM asset type.
      * 
      * @throws Exception
@@ -62,7 +63,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
      * method for the SBD asset type.
      * 
      * @throws Exception
@@ -78,7 +79,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
      * method for the STMD asset type.
      * 
      * @throws Exception
@@ -94,7 +95,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
      * method for the TESTS asset type.
      * 
      * @throws Exception
@@ -110,7 +111,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
      * method for the TBD asset type.
      * 
      * @throws Exception
@@ -126,7 +127,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
      * method for the TSTD asset type.
      * 
      * @throws Exception
@@ -142,7 +143,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset#equals(Object)}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#equals(Object)}
      * method for the VESTS asset type.
      */
     @Test
@@ -158,7 +159,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Asset} method for the
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset} method for the
      * VESTS asset type.
      */
     @Test

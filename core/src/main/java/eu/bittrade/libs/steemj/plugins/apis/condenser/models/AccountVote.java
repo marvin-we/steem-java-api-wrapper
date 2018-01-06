@@ -1,6 +1,7 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.plugins.apis.condenser.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.ULong;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 
@@ -11,11 +12,11 @@ import eu.bittrade.libs.steemj.fc.TimePointSec;
  */
 public class AccountVote {
     private String authorperm;
-    // Original type is uint64_t
-    private long weight;
-    // Original type is int64_t
+    // Original type is uint64_t.
+    private ULong weight;
+    // Original type is int64_t.
     private long rshares;
-    // Original type is int16_t
+    // Original type is int16_t.
     private short percent;
     private TimePointSec time;
 
@@ -36,7 +37,7 @@ public class AccountVote {
     /**
      * @return the weight
      */
-    public long getWeight() {
+    public ULong getWeight() {
         return weight;
     }
 

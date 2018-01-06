@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.protocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
  * Test the Price object.

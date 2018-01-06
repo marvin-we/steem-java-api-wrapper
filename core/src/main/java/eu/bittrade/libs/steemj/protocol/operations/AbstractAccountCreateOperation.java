@@ -5,13 +5,13 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -109,7 +109,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Get the owner {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Get the owner {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @return The owner authority.
@@ -120,7 +120,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Set the owner {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Set the owner {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @param owner
@@ -134,7 +134,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Get the active {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Get the active {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @return The active authority.
@@ -145,7 +145,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Set the active {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Set the active {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @param active
@@ -159,7 +159,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Get the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Get the posting {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @return The posting authority.
@@ -170,7 +170,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     /**
-     * Set the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Set the posting {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority} of the {@link #getNewAccountName() newAccountName}.
      * 
      * @param posting

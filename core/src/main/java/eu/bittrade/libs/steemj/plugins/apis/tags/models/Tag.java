@@ -7,7 +7,7 @@ import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
  * This class represents a Steem "tag_api_obj" object.

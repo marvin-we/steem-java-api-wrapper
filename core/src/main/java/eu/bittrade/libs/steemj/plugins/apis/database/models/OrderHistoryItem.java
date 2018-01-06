@@ -4,9 +4,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.database.enums.OrderType;
+import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
  * This class represents a Steem "order_history_item" object.

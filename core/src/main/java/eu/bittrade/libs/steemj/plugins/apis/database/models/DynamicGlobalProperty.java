@@ -6,11 +6,11 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.BlockId;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlobalProperties;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
  * This class represents the Steem "dynamic_global_property_api_obj" object.

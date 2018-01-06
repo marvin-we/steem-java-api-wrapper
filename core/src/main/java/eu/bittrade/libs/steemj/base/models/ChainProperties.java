@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**

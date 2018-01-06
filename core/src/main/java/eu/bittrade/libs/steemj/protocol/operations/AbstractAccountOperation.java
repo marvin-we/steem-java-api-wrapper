@@ -4,8 +4,8 @@ import java.security.InvalidParameterException;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.enums.ValidationType;
+import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -40,7 +40,7 @@ public abstract class AbstractAccountOperation extends Operation {
     }
 
     /**
-     * Get the owner {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Get the owner {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority}.
      * 
      * @return The owner authority.
@@ -48,7 +48,7 @@ public abstract class AbstractAccountOperation extends Operation {
     public abstract Authority getOwner();
 
     /**
-     * Set the owner {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Set the owner {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority}.
      * 
      * @param owner
@@ -57,7 +57,7 @@ public abstract class AbstractAccountOperation extends Operation {
     public abstract void setOwner(Authority owner);
 
     /**
-     * Get the active {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Get the active {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority}.
      * 
      * @return The active authority.
@@ -65,7 +65,7 @@ public abstract class AbstractAccountOperation extends Operation {
     public abstract Authority getActive();
 
     /**
-     * Set the active {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Set the active {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority}.
      * 
      * @param active
@@ -74,7 +74,7 @@ public abstract class AbstractAccountOperation extends Operation {
     public abstract void setActive(Authority active);
 
     /**
-     * Get the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Get the posting {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority}.
      * 
      * @return The posting authority.
@@ -82,7 +82,7 @@ public abstract class AbstractAccountOperation extends Operation {
     public abstract Authority getPosting();
 
     /**
-     * Set the posting {@link eu.bittrade.libs.steemj.base.models.Authority
+     * Set the posting {@link eu.bittrade.libs.steemj.protocol.Authority
      * Authority}.
      * 
      * @param posting

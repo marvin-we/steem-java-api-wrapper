@@ -11,12 +11,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import eu.bittrade.libs.steemj.base.models.Account;
-import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.deserializer.GuestBloggerPairDeserializer;
 import eu.bittrade.libs.steemj.base.models.deserializer.OperationHistoryHashMapDeserializer;
 import eu.bittrade.libs.steemj.base.models.deserializer.TagUsagePairDeserializer;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
  * This class represents a Steem "extended_account" object.

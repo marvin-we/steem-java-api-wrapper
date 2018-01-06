@@ -8,8 +8,8 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

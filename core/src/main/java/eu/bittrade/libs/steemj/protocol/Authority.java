@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.protocol;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,8 +19,6 @@ import eu.bittrade.libs.steemj.base.models.serializer.PublicKeyHashMapSerializer
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**

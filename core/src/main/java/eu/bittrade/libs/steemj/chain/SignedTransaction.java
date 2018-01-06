@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.Sha256Hash;
-import eu.bittrade.libs.steemj.base.models.Authority;
 import eu.bittrade.libs.steemj.base.models.BlockId;
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.base.models.Transaction;
@@ -35,6 +34,7 @@ import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -43,7 +43,6 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
-
 public class SignedTransaction extends Transaction implements ByteTransformable, Serializable {
     private static final long serialVersionUID = 4821422578657270330L;
     private static final Logger LOGGER = LoggerFactory.getLogger(SignedTransaction.class);

@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**
@@ -23,7 +24,7 @@ public class AuthorityTest {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.Authority#toByteArray()
+     * {@link eu.bittrade.libs.steemj.protocol.Authority#toByteArray()
      * toByteArray()} method.
      * 
      * @throws Exception
@@ -45,7 +46,7 @@ public class AuthorityTest {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.base.models.Authority#equals(Object)
+     * {@link eu.bittrade.libs.steemj.protocol.Authority#equals(Object)
      * equals(Object)} method.
      */
     @Test
@@ -73,7 +74,7 @@ public class AuthorityTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Authority#isEmpty()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Authority#isEmpty()}
      * method.
      */
     @Test
@@ -104,7 +105,7 @@ public class AuthorityTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Authority#hashCode()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Authority#hashCode()}
      * method.
      */
     @Test

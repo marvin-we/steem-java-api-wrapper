@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**

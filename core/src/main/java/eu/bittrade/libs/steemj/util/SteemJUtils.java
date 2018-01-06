@@ -11,8 +11,8 @@ import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import javax.annotation.Nullable;
@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.VarInt;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * This class contains some utility methods used by SteemJ.
@@ -356,7 +357,7 @@ public class SteemJUtils {
      * @param message
      * @return
      */
-    public static <T> Collection<T> setIfNotNullAndNotEmpty(Collection<T> collectionToSet, String message) {
+    public static <T> List<T> setIfNotNullAndNotEmpty(List<T> collectionToSet, String message) {
         if (collectionToSet == null || collectionToSet.isEmpty()) {
             throw new InvalidParameterException(message);
         }

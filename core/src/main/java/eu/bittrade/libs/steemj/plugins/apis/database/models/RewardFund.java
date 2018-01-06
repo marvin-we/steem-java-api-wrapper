@@ -7,8 +7,8 @@ import org.joou.UShort;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.enums.CurveId;
 
 /**
