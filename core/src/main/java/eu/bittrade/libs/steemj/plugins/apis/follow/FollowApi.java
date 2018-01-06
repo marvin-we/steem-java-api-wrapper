@@ -67,8 +67,8 @@ public class FollowApi {
      *             </ul>
      * @throws SteemResponseException
      */
-    public static GetFollowersReturn getFollowers(CommunicationHandler communicationHandler, GetFollowersArgs getFollowersArgs)
-            throws SteemCommunicationException, SteemResponseException {
+    public static GetFollowersReturn getFollowers(CommunicationHandler communicationHandler,
+            GetFollowersArgs getFollowersArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);

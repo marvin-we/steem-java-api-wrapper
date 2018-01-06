@@ -20,7 +20,7 @@ public class ChainApi {
     /** Add a private constructor to hide the implicit public one. */
     private ChainApi() {
     }
-    
+
     public static PushBlockReturn pushBlock(CommunicationHandler communicationHandler, PushBlockArgs pushBlockArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
@@ -30,18 +30,20 @@ public class ChainApi {
 
         return communicationHandler.performRequest(requestObject, PushBlockReturn.class).get(0);
     }
-    
+
     /**
      * Attempts to push the transaction into the pending queue
      *
-     * When called to push a locally generated transaction, set the skip_block_size_check bit on the skip argument. This
-     * will allow the transaction to be pushed even if it causes the pending block size to exceed the maximum block size.
-     * Although the transaction will probably not propagate further now, as the peers are likely to have their pending
-     * queues full as well, it will be kept in the queue to be propagated later when a new block flushes out the pending
-     * queues.
+     * When called to push a locally generated transaction, set the
+     * skip_block_size_check bit on the skip argument. This will allow the
+     * transaction to be pushed even if it causes the pending block size to
+     * exceed the maximum block size. Although the transaction will probably not
+     * propagate further now, as the peers are likely to have their pending
+     * queues full as well, it will be kept in the queue to be propagated later
+     * when a new block flushes out the pending queues.
      */
-    public static PushTransactionReturn pushTransaction(CommunicationHandler communicationHandler, SignedTransaction signedTransaction)
-            throws SteemCommunicationException, SteemResponseException {
+    public static PushTransactionReturn pushTransaction(CommunicationHandler communicationHandler,
+            SignedTransaction signedTransaction) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.PUSH_TRANSACTION);
         requestObject.setSteemApi(SteemApiType.CHAIN_API);

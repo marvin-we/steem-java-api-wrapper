@@ -31,7 +31,8 @@ public class WitnessApi {
         return communicationHandler.performRequest(requestObject, GetAccountBandwidthReturn.class).get(0);
     }
 
-    public static ReserveRatioObject getReserveRatio(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+    public static ReserveRatioObject getReserveRatio(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_REVERSE_RATIO);
         requestObject.setSteemApi(SteemApiType.WITNESS_API);

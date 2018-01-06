@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.VarInt;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
  * This class contains some utility methods used by SteemJ.

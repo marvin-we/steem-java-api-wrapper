@@ -287,7 +287,7 @@ public class DynamicGlobalProperty {
      */
     public long getVotePowerReserveRate() {
         return votePowerReserveRate;
-    }   
+    }
 
     @Override
     public String toString() {

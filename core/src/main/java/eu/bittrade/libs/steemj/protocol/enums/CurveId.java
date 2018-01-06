@@ -12,11 +12,11 @@ import eu.bittrade.libs.steemj.base.models.deserializer.CurveIdDeserializer;
 @JsonDeserialize(using = CurveIdDeserializer.class)
 public enum CurveId {
     /** */
-    QUADRATIC, 
+    QUADRATIC,
     /** */
-    QUADRATIC_CURATION, 
+    QUADRATIC_CURATION,
     /** */
-    LINEAR, 
+    LINEAR,
     /** */
     SQUARE_ROOT
 }

@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
- * This class represents a Steem "get_volume_return" object of the "market_volume".
+ * This class represents a Steem "get_volume_return" object of the
+ * "market_volume".
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */

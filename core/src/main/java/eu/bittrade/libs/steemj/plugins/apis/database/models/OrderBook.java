@@ -22,8 +22,8 @@ public class OrderBook {
 
     /**
      * @return A list of open buy
-     *         {@link eu.bittrade.libs.steemj.plugins.apis.database.models.Order Order}s of the
-     *         internal market.
+     *         {@link eu.bittrade.libs.steemj.plugins.apis.database.models.Order
+     *         Order}s of the internal market.
      */
     public List<Order> getAsks() {
         return asks;
@@ -31,8 +31,8 @@ public class OrderBook {
 
     /**
      * @return A list of open sell
-     *         {@link eu.bittrade.libs.steemj.plugins.apis.database.models.Order Order}s of the
-     *         internal market.
+     *         {@link eu.bittrade.libs.steemj.plugins.apis.database.models.Order
+     *         Order}s of the internal market.
      */
     public List<Order> getBids() {
         return bids;

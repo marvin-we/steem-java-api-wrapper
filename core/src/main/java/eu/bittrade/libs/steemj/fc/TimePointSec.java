@@ -16,9 +16,9 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
- * This class represents a FC "time_point_sec" Object. It basically wraps a
- * date in its long representation and offers a bunch of utility methods to
- * transform the timestamp into other representations.
+ * This class represents a FC "time_point_sec" Object. It basically wraps a date
+ * in its long representation and offers a bunch of utility methods to transform
+ * the timestamp into other representations.
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */

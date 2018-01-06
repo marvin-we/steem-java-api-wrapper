@@ -15,55 +15,53 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class GetFollowersArgs {
 
-	@JsonProperty("account")
-	private AccountName account;
-	@JsonProperty("start")
-	private AccountName start;
-	@JsonProperty("type")
-	private FollowType type;
-	@JsonProperty("limit")
-	private UInteger limit;
-	
-	public GetFollowersArgs(@JsonProperty("account") AccountName account, 
-			@JsonProperty("start") AccountName start, 
-			@JsonProperty("type") FollowType type, 
-			@JsonProperty("limit") UInteger limit) {
-		this.setAccount(account);
-		this.setStart(start);
-		this.setType(type);
-		this.setLimit(limit);
-	}
+    @JsonProperty("account")
+    private AccountName account;
+    @JsonProperty("start")
+    private AccountName start;
+    @JsonProperty("type")
+    private FollowType type;
+    @JsonProperty("limit")
+    private UInteger limit;
 
-	public AccountName getAccount() {
-		return account;
-	}
+    public GetFollowersArgs(@JsonProperty("account") AccountName account, @JsonProperty("start") AccountName start,
+            @JsonProperty("type") FollowType type, @JsonProperty("limit") UInteger limit) {
+        this.setAccount(account);
+        this.setStart(start);
+        this.setType(type);
+        this.setLimit(limit);
+    }
 
-	public void setAccount(AccountName account) {
-		this.account = account;
-	}
+    public AccountName getAccount() {
+        return account;
+    }
 
-	public AccountName getStart() {
-		return start;
-	}
+    public void setAccount(AccountName account) {
+        this.account = account;
+    }
 
-	public void setStart(AccountName start) {
-		this.start = start;
-	}
+    public AccountName getStart() {
+        return start;
+    }
 
-	public FollowType getType() {
-		return type;
-	}
+    public void setStart(AccountName start) {
+        this.start = start;
+    }
 
-	public void setType(FollowType type) {
-		this.type = type;
-	}
+    public FollowType getType() {
+        return type;
+    }
 
-	public UInteger getLimit() {
-		return limit;
-	}
+    public void setType(FollowType type) {
+        this.type = type;
+    }
 
-	public void setLimit(UInteger limit) {
-		this.limit = SteemJUtils.setIfNotNull(limit, UInteger.valueOf(1000));
-	}
-	
+    public UInteger getLimit() {
+        return limit;
+    }
+
+    public void setLimit(UInteger limit) {
+        this.limit = SteemJUtils.setIfNotNull(limit, UInteger.valueOf(1000));
+    }
+
 }

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
+import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
 
 /**
  * This class is the java implementation of the Steem "signed_block" object.

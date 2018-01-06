@@ -29,7 +29,6 @@ public class DatabaseApi {
     /** Add a private constructor to hide the implicit public one. */
     private DatabaseApi() {
     }
-    
 
     /**
      * Get the configuration.
@@ -50,7 +49,8 @@ public class DatabaseApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static Config getConfig(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+    public static Config getConfig(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CONFIG);
         requestObject.setSteemApi(SteemApiType.CONDENSER_API);
@@ -59,7 +59,6 @@ public class DatabaseApi {
 
         return communicationHandler.performRequest(requestObject, Config.class).get(0);
     }
-    
 
     /**
      * Get the global properties.
@@ -90,7 +89,7 @@ public class DatabaseApi {
 
         return communicationHandler.performRequest(requestObject, DynamicGlobalProperty.class).get(0);
     }
-    
+
     /**
      * Get the witness schedule.
      * 
@@ -110,7 +109,8 @@ public class DatabaseApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static WitnessSchedule getWitnessSchedule(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+    public static WitnessSchedule getWitnessSchedule(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
@@ -119,8 +119,9 @@ public class DatabaseApi {
 
         return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
     }
-    
-    public static HardforkProperty getHardforkProperties(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+
+    public static HardforkProperty getHardforkProperties(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_HARDFORK_PROPERTIES);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
@@ -130,7 +131,6 @@ public class DatabaseApi {
         System.out.println(communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0));
         return null;
     }
-    
 
     /**
      * Get detailed information of a specific reward fund.
@@ -165,8 +165,9 @@ public class DatabaseApi {
 
         return communicationHandler.performRequest(requestObject, RewardFund.class).get(0);
     }
-    
-    public static Price getCurrentPriceFeed(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+
+    public static Price getCurrentPriceFeed(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CURRENT_PRICE_FEED);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
@@ -176,7 +177,7 @@ public class DatabaseApi {
         System.out.println(communicationHandler.performRequest(requestObject, Price.class).get(0));
         return null;
     }
-    
+
     /**
      * Get the current price and a list of history prices combined in one
      * object.
@@ -197,7 +198,8 @@ public class DatabaseApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public FeedHistory getFeedHistory(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+    public FeedHistory getFeedHistory(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
@@ -207,7 +209,8 @@ public class DatabaseApi {
         return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
     }
 
-    public static ListWitnessesReturn listWitnesses(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+    public static ListWitnessesReturn listWitnesses(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.LIST_WITNESSES);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
@@ -217,8 +220,9 @@ public class DatabaseApi {
         System.out.println(communicationHandler.performRequest(requestObject, ListWitnessesReturn.class).get(0));
         return null;
     }
-    
-    public static ListWitnessesReturn findWitnesses(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+
+    public static ListWitnessesReturn findWitnesses(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CURRENT_PRICE_FEED);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
@@ -228,8 +232,9 @@ public class DatabaseApi {
         System.out.println(communicationHandler.performRequest(requestObject, ListWitnessesReturn.class).get(0));
         return null;
     }
-    
-    public static ListWitnessVotesReturn listWitnessesVotesReturn(CommunicationHandler communicationHandler) throws SteemCommunicationException, SteemResponseException {
+
+    public static ListWitnessVotesReturn listWitnessesVotesReturn(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setApiMethod(RequestMethods.GET_CURRENT_PRICE_FEED);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
@@ -239,7 +244,7 @@ public class DatabaseApi {
         System.out.println(communicationHandler.performRequest(requestObject, ListWitnessVotesReturn.class).get(0));
         return null;
     }
-    
+
     /**
      * Get the list of the current active witnesses.
      * 
@@ -274,72 +279,34 @@ public class DatabaseApi {
 
         return communicationHandler.performRequest(requestObject, AccountName.class);
     }
-    
-    
-   /* DECLARE_API_IMPL
-    (
-       DONE (get_config)
-       DONE (get_dynamic_global_properties)
-       DONE (get_witness_schedule)
-       ~ (get_hardfork_properties)
-       ~ (get_reward_funds)
-       ~ (get_current_price_feed)
-       DONE (get_feed_history)
-       ~ (list_witnesses)
-       ~ (find_witnesses)
-       ~ (list_witness_votes)
-       DONE (get_active_witnesses)
-       (list_accounts)
-       (find_accounts)
-       (list_owner_histories)
-       (find_owner_histories)
-       (list_account_recovery_requests)
-       (find_account_recovery_requests)
-       (list_change_recovery_account_requests)
-       (find_change_recovery_account_requests)
-       (list_escrows)
-       (find_escrows)
-       (list_withdraw_vesting_routes)
-       (find_withdraw_vesting_routes)
-       (list_savings_withdrawals)
-       (find_savings_withdrawals)
-       (list_vesting_delegations)
-       (find_vesting_delegations)
-       (list_vesting_delegation_expirations)
-       (find_vesting_delegation_expirations)
-       (list_sbd_conversion_requests)
-       (find_sbd_conversion_requests)
-       (list_decline_voting_rights_requests)
-       (find_decline_voting_rights_requests)
-       (list_comments)
-       (find_comments)
-       (list_votes)
-       (find_votes)
-       (list_limit_orders)
-       (find_limit_orders)
-       (get_order_book)
-       (get_transaction_hex)
-       (get_required_signatures)
-       (get_potential_signatures)
-       (verify_authority)
-       (verify_account_authority)
-       (verify_signatures)
-#ifdef STEEM_ENABLE_SMT
-       (get_smt_next_identifier)
-#endif
-    )*/
 
-
-
-
+    /*
+     * DECLARE_API_IMPL ( DONE (get_config) DONE (get_dynamic_global_properties)
+     * DONE (get_witness_schedule) ~ (get_hardfork_properties) ~
+     * (get_reward_funds) ~ (get_current_price_feed) DONE (get_feed_history) ~
+     * (list_witnesses) ~ (find_witnesses) ~ (list_witness_votes) DONE
+     * (get_active_witnesses) (list_accounts) (find_accounts)
+     * (list_owner_histories) (find_owner_histories)
+     * (list_account_recovery_requests) (find_account_recovery_requests)
+     * (list_change_recovery_account_requests)
+     * (find_change_recovery_account_requests) (list_escrows) (find_escrows)
+     * (list_withdraw_vesting_routes) (find_withdraw_vesting_routes)
+     * (list_savings_withdrawals) (find_savings_withdrawals)
+     * (list_vesting_delegations) (find_vesting_delegations)
+     * (list_vesting_delegation_expirations)
+     * (find_vesting_delegation_expirations) (list_sbd_conversion_requests)
+     * (find_sbd_conversion_requests) (list_decline_voting_rights_requests)
+     * (find_decline_voting_rights_requests) (list_comments) (find_comments)
+     * (list_votes) (find_votes) (list_limit_orders) (find_limit_orders)
+     * (get_order_book) (get_transaction_hex) (get_required_signatures)
+     * (get_potential_signatures) (verify_authority) (verify_account_authority)
+     * (verify_signatures) #ifdef STEEM_ENABLE_SMT (get_smt_next_identifier)
+     * #endif )
+     */
 
     // #########################################################################
     // ## BLOCKS AND TRANSACTIONS ##############################################
     // #########################################################################
-
-
-
-
 
     /////////////
     // Globals //

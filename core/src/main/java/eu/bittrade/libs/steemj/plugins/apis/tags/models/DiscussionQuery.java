@@ -7,11 +7,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * This class represents the Steem "discussion_query" object.

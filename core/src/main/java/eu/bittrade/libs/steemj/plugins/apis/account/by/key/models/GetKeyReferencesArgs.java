@@ -33,12 +33,11 @@ public class GetKeyReferencesArgs {
     public GetKeyReferencesArgs(@JsonProperty("keys") List<PublicKey> keys) {
         this.setKeys(keys);
     }
-    
+
     public GetKeyReferencesArgs(PublicKey key) {
         this.setKeys(Arrays.asList(key));
     }
 
-    
     /**
      * @return the keys
      */

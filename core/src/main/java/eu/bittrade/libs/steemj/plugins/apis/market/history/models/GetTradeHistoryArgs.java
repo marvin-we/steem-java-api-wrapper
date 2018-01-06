@@ -31,9 +31,10 @@ public class GetTradeHistoryArgs {
      * Create a new {@link GetAccountBandwidthArgs} instance to be passed to the
      * {@link WitnessApi#getAccountBandwidth(CommunicationHandler, GetAccountBandwidthArgs)}
      * method.
-     * @param start 
-     * @param end 
-     * @param limit 
+     * 
+     * @param start
+     * @param end
+     * @param limit
      * 
      * 
      */
