@@ -1,9 +1,10 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 
 /**

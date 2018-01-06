@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class OrderBook {
 
     /**
      * @return A list of open buy
-     *         {@link eu.bittrade.libs.steemj.base.models.Order Order}s of the
+     *         {@link eu.bittrade.libs.steemj.plugins.apis.database.models.Order Order}s of the
      *         internal market.
      */
     public List<Order> getAsks() {
@@ -31,7 +31,7 @@ public class OrderBook {
 
     /**
      * @return A list of open sell
-     *         {@link eu.bittrade.libs.steemj.base.models.Order Order}s of the
+     *         {@link eu.bittrade.libs.steemj.plugins.apis.database.models.Order Order}s of the
      *         internal market.
      */
     public List<Order> getBids() {
