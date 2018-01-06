@@ -154,6 +154,61 @@ public enum RequestMethods {
     VERIFY_ACCOUNT_AUTHORITY,
     /** */
     VERIFY_SIGNATURES,
+    // debug_node_api
+    /** */
+    DEBUG_POP_BLOCK,
+    /** */
+    DEBUG_GET_WITNESS_SCHEDULE,
+    /** */
+    DEBUG_GET_HARDFORK_PROPERTY_OBJECT,
+    /** */
+    DEBUG_SET_HARDFORK,
+    /** */
+    DEBUG_HAS_HARDFORK,
+    /** */
+    DEBUG_GET_JSON_SCHEMA,
+    // follow_api
+    /** */
+    GET_FOLLOWERS,
+    /** */
+    GET_FOLLOWING,
+    /** */
+    GET_FOLLOW_COUNT,
+    /** */
+    GET_FEED_ENTRIES,
+    /** */
+    GET_FEED,
+    /** */
+    GET_BLOG_ENTRIES,
+    /** */
+    GET_BLOG,
+    /** */
+    GET_ACCOUNT_REPUTATIONS,
+    /** */
+    GET_REBLOGGED_BY,
+    /** */
+    GET_BLOG_AUTHORS,
+    // market_history_api
+    // GET_ORDER_BOOK (doubled with database_api)
+    /** */
+    GET_TICKER,
+    /** */
+    GET_VOLUME,
+    /** */
+    GET_TRADE_HISTORY,
+    /** */
+    GET_RECENT_TRADES,
+    /** */
+    GET_MARKET_HISTORY,
+    /** */
+    GET_MARKET_HISTORY_BUCKETS,
+    // network_broadcast_api
+    /** */
+    BROADCAST_TRANSACTION,
+    /** */
+    BROADCAST_TRANSACTION_SYNCHRONOUS,
+    /** */
+    BROADCAST_BLOCK,
     // tags_api
     /** */
     GET_TRENDING_TAGS,
@@ -195,48 +250,6 @@ public enum RequestMethods {
     GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE,
     /** */
     GET_ACTIVE_VOTES,
-    // network_broadcast_api
-    /** */
-    BROADCAST_TRANSACTION,
-    /** */
-    BROADCAST_TRANSACTION_SYNCHRONOUS,
-    /** */
-    BROADCAST_BLOCK,
-    // follow_api
-    /** */
-    GET_FOLLOWERS,
-    /** */
-    GET_FOLLOWING,
-    /** */
-    GET_FOLLOW_COUNT,
-    /** */
-    GET_FEED_ENTRIES,
-    /** */
-    GET_FEED,
-    /** */
-    GET_BLOG_ENTRIES,
-    /** */
-    GET_BLOG,
-    /** */
-    GET_ACCOUNT_REPUTATIONS,
-    /** */
-    GET_REBLOGGED_BY,
-    /** */
-    GET_BLOG_AUTHORS,
-    // market_history_api
-    // GET_ORDER_BOOK (doubled with database_api)
-    /** */
-    GET_TICKER,
-    /** */
-    GET_VOLUME,
-    /** */
-    GET_TRADE_HISTORY,
-    /** */
-    GET_RECENT_TRADES,
-    /** */
-    GET_MARKET_HISTORY,
-    /** */
-    GET_MARKET_HISTORY_BUCKETS,
     // witness_api
     /** */
     GET_ACCOUNT_BANDWIDTH,
