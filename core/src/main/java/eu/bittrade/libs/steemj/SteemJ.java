@@ -109,6 +109,7 @@ import eu.bittrade.libs.steemj.plugins.apis.tags.TagsApi;
 import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Discussion;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.GetActiveVotesArgs;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.VoteState;
 import eu.bittrade.libs.steemj.protocol.AccountName;
@@ -628,7 +629,7 @@ public class SteemJ {
      */
     public List<VoteState> getActiveVotes(AccountName author, Permlink permlink)
             throws SteemCommunicationException, SteemResponseException {
-        return TagsApi.getActiveVotes(communicationHandler, author, permlink);
+        return TagsApi.getActiveVotes(communicationHandler, new GetActiveVotesArgs(author, permlink)).getVotes();
     }
 
     /**
