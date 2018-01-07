@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class FindAccountArgs {
+public class FindAccountsArgs {
     @JsonProperty("accounts")
     private List<AccountName> accounts;
 
@@ -40,7 +40,7 @@ public class FindAccountArgs {
      * @param accounts
      */
     @JsonCreator
-    public FindAccountArgs(@JsonProperty("accounts") List<AccountName> accounts) {
+    public FindAccountsArgs(@JsonProperty("accounts") List<AccountName> accounts) {
     }
 
     /**

@@ -36,8 +36,11 @@ public class ListEscrowsReturn {
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
+     * 
+     * Visibility set to <code>protected</code> as this class is the parent of
+     * the {@link FindEscrowsReturn} class.
      */
-    private ListEscrowsReturn() {
+    protected ListEscrowsReturn() {
     }
 
     /**

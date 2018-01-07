@@ -34,12 +34,12 @@ import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.enums.AddressPrefixType;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 
 /**
  * This class stores the configuration that is used for the communication to the
@@ -52,7 +52,7 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
     /** The endpoint URI used by default. */
-    private static final String DEFAULT_STEEM_API_URI = "https://api.steemitdev.com";
+    private static final String DEFAULT_STEEM_API_URI = "https://api.steemitstage.com";
     /** The SteemJ account. */
     private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
     /** The SteemJ version. */

@@ -34,8 +34,11 @@ public class ListOwnerHistoriesReturn {
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
+     * 
+     * Visibility set to <code>protected</code> as it is the parent of the
+     * {@link FindOwnerHistoriesReturn} class.
      */
-    private ListOwnerHistoriesReturn() {
+    protected ListOwnerHistoriesReturn() {
     }
 
     /**

@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.bittrade.libs.steemj.enums;
+package eu.bittrade.libs.steemj.protocol.enums;
 
 /**
  * This enum stores all available asset symbols.

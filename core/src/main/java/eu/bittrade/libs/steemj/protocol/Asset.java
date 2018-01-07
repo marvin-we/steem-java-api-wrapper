@@ -29,9 +29,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import eu.bittrade.libs.steemj.base.models.deserializer.AssetDeserializer;
 import eu.bittrade.libs.steemj.base.models.serializer.AssetSerializer;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -57,7 +57,7 @@ public class Asset implements ByteTransformable {
      *            The amount.
      * @param symbol
      *            One type of
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
      *            AssetSymbolType}.
      */
     public Asset(BigDecimal amount, AssetSymbolType symbol) {
@@ -72,7 +72,7 @@ public class Asset implements ByteTransformable {
      *            The amount.
      * @param symbol
      *            One type of
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
      *            AssetSymbolType}.
      */
     public Asset(long amount, AssetSymbolType symbol) {
@@ -101,7 +101,7 @@ public class Asset implements ByteTransformable {
     /**
      * Get the symbol for this asset object.
      * 
-     * @return One type of {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
+     * @return One type of {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
      *         AssetSymbolType}.
      */
     public AssetSymbolType getSymbol() {
@@ -139,7 +139,7 @@ public class Asset implements ByteTransformable {
      * 
      * @param symbol
      *            One type of
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
      *            AssetSymbolType}.
      */
     public void setSymbol(AssetSymbolType symbol) {

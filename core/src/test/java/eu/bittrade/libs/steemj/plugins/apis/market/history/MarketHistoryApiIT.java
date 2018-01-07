@@ -36,7 +36,6 @@ import org.junit.experimental.categories.Category;
 import eu.bittrade.libs.steemj.BaseIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
@@ -49,6 +48,7 @@ import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTickerRetur
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTradeHistoryArgs;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetVolumeReturn;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTrade;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 
 /**
  * This class contains all test connected to the

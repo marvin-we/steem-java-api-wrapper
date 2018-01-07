@@ -32,8 +32,11 @@ public class OrderBook {
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
+     * 
+     * Visibility set to <code>protected</code> as this is the parent of the
+     * {@link GetOrderBookReturn} class.
      */
-    private OrderBook() {
+    protected OrderBook() {
     }
 
     /**

@@ -26,8 +26,8 @@ import java.security.InvalidParameterException;
 import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 
 /**
  * Test the Asset object.

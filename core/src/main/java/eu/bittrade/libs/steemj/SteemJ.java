@@ -50,7 +50,6 @@ import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
@@ -117,6 +116,7 @@ import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.protocol.SignedBlock;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
@@ -3453,7 +3453,7 @@ public class SteemJ {
      *            transfer currency to.
      * @param amount
      *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType} and the
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType} and the
      *            amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
@@ -3507,7 +3507,7 @@ public class SteemJ {
      *            The account to which to transfer currency.
      * @param amount
      *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType} and the
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType} and the
      *            amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)

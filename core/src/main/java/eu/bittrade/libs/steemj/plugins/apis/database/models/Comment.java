@@ -16,9 +16,8 @@
  */
 package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
-import java.math.BigInteger;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.ULong;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -56,9 +55,6 @@ public class Comment {
     private short depth;
     // Orignal type is uint32_t.
     private int children;
-    @Deprecated
-    @JsonProperty("children_rshares2")
-    private String childrenRshares2;
     // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("net_rshares")
     private long netRshares;
@@ -75,11 +71,8 @@ public class Comment {
     private TimePointSec cashoutTime;
     @JsonProperty("max_cashout_time")
     private TimePointSec maxCashoutTime;
-    // TODO: Original type is uint64_t, but long seems to be not enough here -->
-    // "Can not deserialize value of type long from String
-    // "16089511318360462253": not a valid Long value"
     @JsonProperty("total_vote_weight")
-    private BigInteger totalVoteWeight;
+    private ULong totalVoteWeight;
     // Original type is uint64_t.
     @JsonProperty("reward_weight")
     private long rewardWeight;
@@ -96,8 +89,6 @@ public class Comment {
     // Original type is comment_id_type.
     @JsonProperty("root_comment")
     private long rootComment;
-    @Deprecated
-    private String mode;
     @JsonProperty("max_accepted_payout")
     private Asset maxAcceptedPayout;
     // Original type is uint16_t.
@@ -227,13 +218,6 @@ public class Comment {
     }
 
     /**
-     * @return the childrenRshares2
-     */
-    public String getChildrenRshares2() {
-        return childrenRshares2;
-    }
-
-    /**
      * @return the netRshares
      */
     public long getNetRshares() {
@@ -276,13 +260,6 @@ public class Comment {
     }
 
     /**
-     * @return the totalVoteWeight
-     */
-    public BigInteger getTotalVoteWeight() {
-        return totalVoteWeight;
-    }
-
-    /**
      * @return the rewardWeight
      */
     public long getRewardWeight() {
@@ -322,13 +299,6 @@ public class Comment {
      */
     public long getRootComment() {
         return rootComment;
-    }
-
-    /**
-     * @return the mode
-     */
-    public String getMode() {
-        return mode;
     }
 
     /**

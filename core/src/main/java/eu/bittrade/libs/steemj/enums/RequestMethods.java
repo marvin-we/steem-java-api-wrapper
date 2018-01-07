@@ -170,6 +170,8 @@ public enum RequestMethods {
     VERIFY_ACCOUNT_AUTHORITY,
     /** */
     VERIFY_SIGNATURES,
+    /** */
+    GET_SMT_NEXT_IDENTIFIER,
     // debug_node_api
     /** */
     DEBUG_POP_BLOCK,
