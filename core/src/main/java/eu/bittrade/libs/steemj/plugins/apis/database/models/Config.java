@@ -31,13 +31,6 @@ import eu.bittrade.libs.steemj.protocol.Asset;
 public class Config {
     @JsonProperty("IS_TEST_NET")
     private boolean isTestNet;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("GRAPHENE_CURRENT_DB_VERSION")
-    private String grapheneCurrentDbVersion;
     @JsonProperty("SBD_SYMBOL")
     private long sdbSymbol;
     @JsonProperty("STEEMIT_100_PERCENT")
@@ -96,20 +89,6 @@ public class Config {
     private String steemitChainId;
     @JsonProperty("STEEMIT_COMMENT_REWARD_FUND_NAME")
     private String steemitCommentRewardFundName;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_TEMP_LINEAR_REWARD_FUND_NAME")
-    private String steemitTempLinearRewardFundName;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_TEMP_LINEAR_REWARD_FUND_ID")
-    private int steemitTempLinearRewardFundId;
     @JsonProperty("STEEMIT_CONTENT_APR_PERCENT")
     private int steemitContentAprPercent;
     @JsonProperty("STEEMIT_CONTENT_CONSTANT_HF0")
@@ -188,26 +167,11 @@ public class Config {
     private int steemitMaxCommentDepthPreHf17;
     @JsonProperty("STEEMIT_MAX_FEED_AGE_SECONDS")
     private long steemitMaxFeedAgeSeconds;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_MAX_FEED_AGE")
-    private String steemitMaxFeedAge;
-    @JsonProperty("STEEMIT_MAX_INSTANCE_ID")
     private String steemitMaxInstanceId;
     @JsonProperty("STEEMIT_MAX_MEMO_SIZE")
     private int steemitMaxMemoSize;
     @JsonProperty("STEEMIT_MAX_WITNESSES")
     private int steemitMaxWitnesses;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_MAX_MINER_WITNESSES")
-    private int steemitMaxMinerWitnesses;
     @JsonProperty("STEEMIT_MAX_MINER_WITNESSES_HF0")
     private int steemitMaxMinerWitnessesHf0;
     @JsonProperty("STEEMIT_MAX_MINER_WITNESSES_HF17")
@@ -220,13 +184,6 @@ public class Config {
     private long steemitMaxRationDecayRate;
     @JsonProperty("STEEMIT_MAX_RESERVE_RATIO")
     private int steemitMaxReserveRatio;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_MAX_RUNNER_WITNESSES")
-    private int steemitMaxRunnerWitnesses;
     @JsonProperty("STEEMIT_MAX_RUNNER_WITNESSES_HF0")
     private int steemitMaxRunnerWitnessesHf0;
     @JsonProperty("STEEMIT_MAX_RUNNER_WITNESSES_HF17")
@@ -245,13 +202,6 @@ public class Config {
     private int steemitMaxUrlLength;
     @JsonProperty("STEEMIT_MAX_VOTE_CHANGES")
     private int steemitMaxVoteChanges;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_MAX_VOTED_WITNESSES")
-    private int steemitMaxVotedWitnesses;
     @JsonProperty("STEEMIT_MAX_VOTED_WITNESSES_HF0")
     private int steemitMaxVotedWitnessesHf0;
     @JsonProperty("STEEMIT_MAX_VOTED_WITNESSES_HF17")
@@ -342,13 +292,6 @@ public class Config {
     private long steemitSDBInterestCompoundIntervalSec;
     @JsonProperty("STEEMIT_SECONDS_PER_YEAR")
     private long steemitSecondsPerYear;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_RECENT_RSHARES_DECAY_RATE")
-    private long steemitRecentRSharesDecayRate;
     @JsonProperty("STEEMIT_RECENT_RSHARES_DECAY_RATE_HF19")
     private long steemitRecentRSharesDecayRateHf19;
     @JsonProperty("STEEMIT_RECENT_RSHARES_DECAY_RATE_HF17")
@@ -377,13 +320,6 @@ public class Config {
     private String steemitSymbol;
     @JsonProperty("STEEMIT_TEMP_ACCOUNT")
     private String steemitTempAccount;
-    /**
-     * @deprecated Has been removed with HF 19. Depending on the version of the
-     *             used Steem Node the value of this field may be null.
-     */
-    @Deprecated
-    @JsonProperty("STEEMIT_UPVOTE_LOCKOUT")
-    private long steemitUpvoteLockout;
     @JsonProperty("STEEMIT_UPVOTE_LOCKOUT_HF7")
     private long steemitUpvoteLockoutHf7;
     @JsonProperty("STEEMIT_UPVOTE_LOCKOUT_HF17")
@@ -425,13 +361,6 @@ public class Config {
      */
     public boolean getIsTestNet() {
         return isTestNet;
-    }
-
-    /**
-     * @return the grapheneCurrentDbVersion
-     */
-    public String getGrapheneCurrentDbVersion() {
-        return grapheneCurrentDbVersion;
     }
 
     /**
@@ -635,20 +564,6 @@ public class Config {
      */
     public String getSteemitCommentRewardFundName() {
         return steemitCommentRewardFundName;
-    }
-
-    /**
-     * @return the steemitTempLinearRewardFundName
-     */
-    public String getSteemitTempLinearRewardFundName() {
-        return steemitTempLinearRewardFundName;
-    }
-
-    /**
-     * @return the steemitTempLinearRewardFundId
-     */
-    public int getSteemitTempLinearRewardFundId() {
-        return steemitTempLinearRewardFundId;
     }
 
     /**
@@ -925,13 +840,6 @@ public class Config {
     }
 
     /**
-     * @return the steemitMaxFeedAge
-     */
-    public String getSteemitMaxFeedAge() {
-        return steemitMaxFeedAge;
-    }
-
-    /**
      * @return the steemitMaxInstanceId
      */
     public String getSteemitMaxInstanceId() {
@@ -950,13 +858,6 @@ public class Config {
      */
     public int getSteemitMaxWitnesses() {
         return steemitMaxWitnesses;
-    }
-
-    /**
-     * @return the steemitMaxMinerWitnesses
-     */
-    public int getSteemitMaxMinerWitnesses() {
-        return steemitMaxMinerWitnesses;
     }
 
     /**
@@ -999,13 +900,6 @@ public class Config {
      */
     public int getSteemitMaxReserveRatio() {
         return steemitMaxReserveRatio;
-    }
-
-    /**
-     * @return the steemitMaxRunnerWitnesses
-     */
-    public int getSteemitMaxRunnerWitnesses() {
-        return steemitMaxRunnerWitnesses;
     }
 
     /**
@@ -1069,13 +963,6 @@ public class Config {
      */
     public int getSteemitMaxVoteChanges() {
         return steemitMaxVoteChanges;
-    }
-
-    /**
-     * @return the steemitMaxVotedWitnesses
-     */
-    public int getSteemitMaxVotedWitnesses() {
-        return steemitMaxVotedWitnesses;
     }
 
     /**
@@ -1394,13 +1281,6 @@ public class Config {
     }
 
     /**
-     * @return the steemitRecentRSharesDecayRate
-     */
-    public long getSteemitRecentRSharesDecayRate() {
-        return steemitRecentRSharesDecayRate;
-    }
-
-    /**
      * @return the steemitRecentRSharesDecayRateHf19
      */
     public long getSteemitRecentRSharesDecayRateHf19() {
@@ -1496,13 +1376,6 @@ public class Config {
      */
     public String getSteemitTempAccount() {
         return steemitTempAccount;
-    }
-
-    /**
-     * @return the steemitUpvoteLockout
-     */
-    public long getSteemitUpvoteLockout() {
-        return steemitUpvoteLockout;
     }
 
     /**
