@@ -71,8 +71,8 @@ public class Price implements ByteTransformable {
      */
     @JsonCreator
     public Price(@JsonProperty("base") Asset base, @ JsonProperty("quote") Asset quote) {
-        this.setBase(base);
-        this.setQuote(quote);
+        this.base = base;
+        this.quote = quote;
 
         validate();
     }
@@ -93,9 +93,9 @@ public class Price implements ByteTransformable {
      *             have an amount less than 1.
      */
     public void setBase(Asset base) {
-        validate();
-
         this.base = base;
+
+        validate();
     }
 
     /**
@@ -114,9 +114,9 @@ public class Price implements ByteTransformable {
      *             have an amount less than 1.
      */
     public void setQuote(Asset quote) {
-        validate();
-
         this.quote = quote;
+
+        validate();
     }
 
     /**
