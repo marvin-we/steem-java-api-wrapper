@@ -19,7 +19,6 @@ package eu.bittrade.libs.steemj.plugins.apis.database;
 import java.util.List;
 
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
-import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.enums.RequestMethods;
@@ -106,6 +105,7 @@ import eu.bittrade.libs.steemj.plugins.apis.database.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookArgs;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookReturn;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Price;
 
 /**
  * This class implements the "database_api".

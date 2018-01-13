@@ -25,12 +25,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.base.models.Version;
 import eu.bittrade.libs.steemj.enums.WitnessScheduleType;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.HardforkVersion;
+import eu.bittrade.libs.steemj.protocol.Price;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 
 /**

@@ -14,7 +14,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.protocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class is the java implementation of the <a href=
@@ -43,17 +43,38 @@ public class Price implements ByteTransformable {
     private Asset quote;
 
     /**
-     * Create a new price object by providing a base and a quote asset.
+     * Create a new price object by providing a <code>base</code> and a
+     * <code>quote</code> asset.
+     * 
+     * Represents quotation of the relative value of asset against another
+     * asset. Similar to 'currency pair' used to determine value of currencies.
+     * 
+     * For example:
+     * <p>
+     * 1 EUR / 1.25 USD where:
+     * <ul>
+     * <li>1 EUR is an asset specified as a <code>base</code></li>
+     * <li>1.25 USD us an asset specified as a <code>quote</code></li>
+     * </ul>
+     * can determine value of EUR against USD.
+     * </p>
      * 
      * @param base
-     *            The base asset to set ({@link #setBase(Asset)}).
+     *            Represents a value of the <code>Price</code> object to be
+     *            expressed relatively to <code>quote</code> asset.
      * @param quote
-     *            The quote asset to set ({@link #setQuote(Asset)}).
+     *            Represents an relative asset.
+     * @throws InvalidParameterException
+     *             If the <code>base</code>, the <code>quote</code> or both
+     *             objects have not been provided, contain the same symbol or
+     *             have an amount less than 1.
      */
     @JsonCreator
     public Price(@JsonProperty("base") Asset base, @ JsonProperty("quote") Asset quote) {
         this.setBase(base);
         this.setQuote(quote);
+
+        validate();
     }
 
     /**
@@ -67,15 +88,13 @@ public class Price implements ByteTransformable {
      * @param base
      *            The base asset to set.
      * @throws InvalidParameterException
-     *             If the asset is not present or has the same property than the
-     *             {@link #getQuote()} asset.
+     *             If the <code>base</code>, the <code>quote</code> or both
+     *             objects have not been provided, contain the same symbol or
+     *             have an amount less than 1.
      */
     public void setBase(Asset base) {
-        if (base == null || base. getAmount() <= 0
-                || this.getQuote() != null && this.getQuote().getSymbol() == base.getSymbol()) {
-            throw new InvalidParameterException(
-                    "The base asset needs to be present and needs to have a different symbol than the quote asset.");
-        }
+        validate();
+
         this.base = base;
     }
 
@@ -90,15 +109,13 @@ public class Price implements ByteTransformable {
      * @param quote
      *            The quote asset to set.
      * @throws InvalidParameterException
-     *             If the asset is not present or has the same property than the
-     *             {@link #getQuote()} asset.
+     *             If the <code>base</code>, the <code>quote</code> or both
+     *             objects have not been provided, contain the same symbol or
+     *             have an amount less than 1.
      */
     public void setQuote(Asset quote) {
-        if (quote == null || quote.getAmount() <= 0
-                || this.getBase() != null && this.getBase().getSymbol() == quote.getSymbol()) {
-            throw new InvalidParameterException(
-                    "The quote asset needs to be present and needs to have a different symbol than the base asset.");
-        }
+        validate();
+
         this.quote = quote;
     }
 
@@ -129,6 +146,25 @@ public class Price implements ByteTransformable {
         } else {
             throw new InvalidParameterException(
                     "The provided asset does not fulfill the requirements to perform the multiply operation.");
+        }
+    }
+
+    /**
+     * Validate this <code>Price</code> object.
+     * 
+     * @throws InvalidParameterException
+     *             If the <code>base</code>, the <code>quote</code> or both
+     *             objects have not been provided, contain the same symbol or
+     *             have an amount less than 1.
+     */
+    private void validate() {
+        if (SteemJUtils.setIfNotNull(this.base, "The base asset needs to be provided.").getSymbol() == SteemJUtils
+                .setIfNotNull(this.quote, "The quote asset needs to be provided.").getSymbol()) {
+            throw new InvalidParameterException("The base asset needs to have a different type than the quote asset.");
+        } else if (this.base.getAmount() <= 0) {
+            throw new InvalidParameterException("The base asset amount needs to be greater than 0.");
+        } else if (this.quote.getAmount() <= 0) {
+            throw new InvalidParameterException("The quote asset amount needs to be greater than 0.");
         }
     }
 

@@ -23,13 +23,13 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Price;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.Market;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.Witness;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.WitnessSchedule;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Discussion;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Price;
 
 /**
  * This class represents a Steem "state" object.

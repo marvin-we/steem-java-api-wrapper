@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.plugins.apis.account.by.key.models;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -67,5 +68,10 @@ public class GetKeyReferencesArgs {
      */
     public void setKeys(List<PublicKey> keys) {
         this.keys = keys;
+    }
+    
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

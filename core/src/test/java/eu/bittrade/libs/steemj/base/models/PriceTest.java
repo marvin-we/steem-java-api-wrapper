@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.Price;
 import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 
 /**
@@ -38,7 +39,7 @@ public class PriceTest {
     private final String EXPECTED_BYTE_REPRESENTATION = "73000000000000000353424400000000640000000000000003535445454d0000";
 
     /**
-     * Test if the {@link eu.bittrade.libs.steemj.base.models.Price#toByteArray}
+     * Test if the {@link eu.bittrade.libs.steemj.protocol.Price#toByteArray}
      * method of a price object returns the expected byte array.
      * 
      * @throws Exception
@@ -56,7 +57,7 @@ public class PriceTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.base.models.Price#equals} method
+     * Test the {@link eu.bittrade.libs.steemj.protocol.Price#equals} method
      * of a price object.
      */
     @Test
@@ -82,7 +83,7 @@ public class PriceTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.Price} object by providing
+     * {@link eu.bittrade.libs.steemj.protocol.Price} object by providing
      * invalid assets.
      */
     @Test(expected = InvalidParameterException.class)
@@ -97,7 +98,7 @@ public class PriceTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.Price} object by providing
+     * {@link eu.bittrade.libs.steemj.protocol.Price} object by providing
      * invalid assets.
      */
     @Test(expected = InvalidParameterException.class)
@@ -110,7 +111,7 @@ public class PriceTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.Price} object by providing
+     * {@link eu.bittrade.libs.steemj.protocol.Price} object by providing
      * invalid assets.
      */
     @Test(expected = InvalidParameterException.class)
@@ -123,7 +124,7 @@ public class PriceTest {
 
     /**
      * Test the validation of the
-     * {@link eu.bittrade.libs.steemj.base.models.Price}} object by providing
+     * {@link eu.bittrade.libs.steemj.protocol.Price}} object by providing
      * valid assets.
      */
     @Test
