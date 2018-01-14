@@ -2099,6 +2099,30 @@ public class SteemJ {
     // ## UTILITY METHODS ######################################################
     // #########################################################################
 
+    public static Asset steemToSbd(Price price, Asset steemAsset) {
+        if (steemAsset == null || !steemAsset.getSymbol().equals(AssetSymbolType.STEEM)) {
+            throw new InvalidParameterException("The asset needs be of SymbolType STEEM.");
+        }
+
+        if (price == null) {
+            return new Asset(0, AssetSymbolType.SBD);
+        }
+
+        return price.multiply(steemAsset);
+    }
+
+    public static Asset sbdToSteem(Price price, Asset sbdAsset) {
+        if (sbdAsset == null || !sbdAsset.getSymbol().equals(AssetSymbolType.SBD)) {
+            throw new InvalidParameterException("The asset needs be of SymbolType STEEM.");
+        }
+
+        if (price == null) {
+            return new Asset(0, AssetSymbolType.STEEM);
+        }
+
+        return price.multiply(sbdAsset);
+    }
+
     /**
      * 
      * @param accountName
