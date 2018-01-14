@@ -17,14 +17,10 @@
 package eu.bittrade.libs.steemj;
 
 import java.security.InvalidParameterException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -38,6 +34,7 @@ import com.google.common.collect.Lists;
 
 import eu.bittrade.crypto.core.ECKey;
 import eu.bittrade.crypto.core.Sha256Hash;
+import eu.bittrade.libs.steemj.base.models.Account;
 import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
@@ -47,16 +44,12 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
-import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.AccountByKeyApi;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.models.GetKeyReferencesArgs;
@@ -71,6 +64,7 @@ import eu.bittrade.libs.steemj.plugins.apis.block.models.GetBlockHeaderArgs;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.CondenserApi;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.AccountVote;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlobalProperties;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
@@ -2065,6 +2059,11 @@ public class SteemJ {
     // #########################################################################
     // ## UTILITY METHODS ######################################################
     // #########################################################################
+
+    public static double calculateRemainingBandwidth(ExtendedDynamicGlobalProperties extendedDynamicGlobalProperties,
+            Account account) {
+        return 0.0;
+    }
 
     /*
      * TODO: Provided by mdfk -> Needs to adjusted to work with the new api

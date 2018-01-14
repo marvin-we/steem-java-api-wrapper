@@ -23,9 +23,40 @@ import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlobalProperties;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
+import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
 
+/**
+ * This class implements the "condenser_api".
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
 public class CondenserApi {
+    /** Add a private constructor to hide the implicit public one. */
+    private CondenserApi() {
+    }
+
+    /**
+     * Like
+     * {@link DatabaseApi#getDynamicGlobalProperties(CommunicationHandler)}, but
+     * returns an {@link ExtendedDynamicGlobalProperties} object providing
+     * additional information.
+     * 
+     * @param communicationHandler
+     * @return ExtendedDynamicGlobalProperties
+     * @throws SteemCommunicationException
+     * @throws SteemResponseException
+     */
+    public static ExtendedDynamicGlobalProperties getDynamicGlobalProperties(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.CONDENSER_API,
+                RequestMethod.GET_DYNAMIC_GLOBAL_PROPERTIES, null);
+
+        return communicationHandler.performRequest(requestObject, ExtendedDynamicGlobalProperties.class).get(0);
+
+    }
+
     /**
      * This API is a short-cut for returning all of the state required for a
      * particular URL with a single query.
