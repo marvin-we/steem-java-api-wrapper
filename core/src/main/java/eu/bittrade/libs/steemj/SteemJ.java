@@ -16,6 +16,7 @@
  */
 package eu.bittrade.libs.steemj;
 
+import java.math.BigInteger;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2060,9 +2061,57 @@ public class SteemJ {
     // ## UTILITY METHODS ######################################################
     // #########################################################################
 
+    /**
+     * 
+     * @param accountName
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public double calculateRemainingBandwidth(AccountName accountName)
+            throws SteemCommunicationException, SteemResponseException {
+        ExtendedDynamicGlobalProperties extendedDynamicGlobalProperties = CondenserApi
+                .getDynamicGlobalProperties(communicationHandler);
+        List<ExtendedAccount> extendedAccounts = CondenserApi.getAccounts(communicationHandler);
+
+        if (!extendedAccounts.contains(accountName)) {
+            throw new InvalidParameterException("No account has been found matching the provided account name.");
+        }
+        return calculateRemainingBandwidth(extendedDynamicGlobalProperties,
+                extendedAccounts.get(extendedAccounts.indexOf(accountName)));
+    }
+
+    /**
+     * 
+     * @param extendedDynamicGlobalProperties
+     * @param account
+     * @return
+     */
     public static double calculateRemainingBandwidth(ExtendedDynamicGlobalProperties extendedDynamicGlobalProperties,
             Account account) {
-        return 0.0;
+        long maxVirtualBandwidth = extendedDynamicGlobalProperties.getMaxVirtualBandwidth().longValue();
+        long secondsPerWeek = 60 * 60 * 24 * 7;
+        long secondsSinceLastUpdate = (System.currentTimeMillis() / 1000)
+                - account.getLastBandwidthUpdate().getDateTimeAsInt();
+        long delta = ((secondsPerWeek - secondsSinceLastUpdate) * account.getAverageBandwidth()) / secondsPerWeek;
+
+        long bandwidthOfTheUser = (account.getVestingShares().getAmount()
+                + account.getReceivedVestingShares().getAmount()) * maxVirtualBandwidth
+                / extendedDynamicGlobalProperties.getTotalVestingShares().getAmount();
+
+        return bandwidthOfTheUser;
     }
 
     /*

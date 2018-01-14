@@ -65,7 +65,7 @@ public class ExtendedDynamicGlobalProperties extends DynamicGlobalProperty {
     }
 
     /**
-     * @return the maxVirtualBandwidth
+     * @return The maximum bandwidth available for all Steem users.
      */
     public BigInteger getMaxVirtualBandwidth() {
         return maxVirtualBandwidth;
