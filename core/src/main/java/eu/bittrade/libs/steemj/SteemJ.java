@@ -525,13 +525,7 @@ public class SteemJ {
      *             </ul>
      */
     public int getAccountCount() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_COUNT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
+        return 0;
     }
 
     /**
@@ -556,20 +550,23 @@ public class SteemJ {
      */
     public List<ExtendedAccount> getAccounts(List<AccountName> accountNames)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setApiMethod(RequestMethod.GET_ACCOUNTS);
-
-        // The API expects an array of arrays here.
-        String[] innerParameters = new String[accountNames.size()];
-        for (int i = 0; i < accountNames.size(); i++) {
-            innerParameters[i] = accountNames.get(i).getName();
-        }
-
-        String[][] parameters = { innerParameters };
-
-        requestObject.setAdditionalParameters(parameters);
-        return communicationHandler.performRequest(requestObject, ExtendedAccount.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API);
+         * requestObject.setApiMethod(RequestMethod.GET_ACCOUNTS);
+         * 
+         * // The API expects an array of arrays here. String[] innerParameters
+         * = new String[accountNames.size()]; for (int i = 0; i <
+         * accountNames.size(); i++) { innerParameters[i] =
+         * accountNames.get(i).getName(); }
+         * 
+         * String[][] parameters = { innerParameters };
+         * 
+         * requestObject.setAdditionalParameters(parameters); return
+         * communicationHandler.performRequest(requestObject,
+         * ExtendedAccount.class);
+         */
+        return null;
     }
 
     /**
@@ -595,13 +592,17 @@ public class SteemJ {
      */
     public List<AccountVote> getAccountVotes(AccountName accountName)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_VOTES);
-        String[] parameters = { accountName.getName() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, AccountVote.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API);
+         * requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_VOTES); String[]
+         * parameters = { accountName.getName() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * AccountVote.class);
+         */
+        return null;
     }
 
     /**
@@ -652,13 +653,16 @@ public class SteemJ {
      *             </ul>
      */
     public ChainProperties getChainProperties() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CHAIN_PROPERTIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_CHAIN_PROPERTIES);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * ChainProperties.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -686,13 +690,17 @@ public class SteemJ {
      */
     public Discussion getContent(AccountName author, Permlink permlink)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CONTENT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { author.getName(), permlink.getLink() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_CONTENT);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { author.getName(), permlink.getLink() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -721,13 +729,17 @@ public class SteemJ {
     public List<Discussion> getContentReplies(AccountName author, Permlink permlink)
             throws SteemCommunicationException, SteemResponseException {
         // TODO TagsApi.getContentReplies
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CONTENT_REPLIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { author.getName(), permlink.getLink() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_CONTENT_REPLIES);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { author.getName(), permlink.getLink() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class);
+         */
+        return null;
     }
 
     /**
@@ -753,13 +765,17 @@ public class SteemJ {
      */
     public Object[] getConversionRequests(AccountName account)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CONVERSION_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { account.getName() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Object[].class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_CONVERSION_REQUESTS);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { account.getName() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Object[].class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -782,13 +798,17 @@ public class SteemJ {
      *             </ul>
      */
     public Price getCurrentMedianHistoryPrice() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CURRENT_MEDIAN_HISTORY_PRICE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Price.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.
+         * GET_CURRENT_MEDIAN_HISTORY_PRICE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Price.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -816,14 +836,19 @@ public class SteemJ {
      */
     public List<Discussion> getDiscussionsBy(DiscussionQuery discussionQuery, DiscussionSortType sortBy)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
 
-        requestObject.setApiMethod(RequestMethod.valueOf(sortBy.name()));
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { discussionQuery };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * 
+         * requestObject.setApiMethod(RequestMethod.valueOf(sortBy.name()));
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); Object[]
+         * parameters = { discussionQuery };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class);
+         */
+        return null;
     }
 
     /**
@@ -856,26 +881,30 @@ public class SteemJ {
      */
     public List<Discussion> getDiscussionsByAuthorBeforeDate(AccountName author, Permlink permlink, String date,
             int limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-
-        requestObject.setApiMethod(RequestMethod.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-
-        // Verify that the date has the correct format.
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
-        Date beforeDate;
-        try {
-            beforeDate = simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            throw new SteemTransformationException("Could not parse the received date to a Date object.", e);
-        }
-
-        String[] parameters = { author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
-                String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * 
+         * requestObject.setApiMethod(RequestMethod.
+         * GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API);
+         * 
+         * // Verify that the date has the correct format. SimpleDateFormat
+         * simpleDateFormat = new
+         * SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
+         * simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.
+         * getInstance().getTimeZoneId())); Date beforeDate; try { beforeDate =
+         * simpleDateFormat.parse(date); } catch (ParseException e) { throw new
+         * SteemTransformationException("Could not parse the received date to a Date object."
+         * , e); }
+         * 
+         * String[] parameters = { author.getName(), permlink.getLink(),
+         * simpleDateFormat.format(beforeDate), String.valueOf(limit) };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class);
+         */
+        return null;
     }
 
     /**
@@ -899,13 +928,16 @@ public class SteemJ {
      *             </ul>
      */
     public FeedHistory getFeedHistory() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_FEED_HISTORY);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_FEED_HISTORY);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * FeedHistory.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -929,13 +961,16 @@ public class SteemJ {
      *             </ul>
      */
     public ScheduledHardfork getNextScheduledHarfork() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_NEXT_SCHEDULED_HARDFORK);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, ScheduledHardfork.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_NEXT_SCHEDULED_HARDFORK)
+         * ; requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * ScheduledHardfork.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -962,13 +997,17 @@ public class SteemJ {
      */
     public List<ExtendedLimitOrder> getOpenOrders(AccountName accountName)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_OPEN_ORDERS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { accountName.getName() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, ExtendedLimitOrder.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_OPEN_ORDERS);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { accountName.getName() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * ExtendedLimitOrder.class);
+         */
+        return null;
     }
 
     /**
@@ -994,23 +1033,29 @@ public class SteemJ {
      */
     public OrderBook getOrderBookUsingDatabaseApi(int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ORDER_BOOK);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, OrderBook.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_ORDER_BOOK);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { String.valueOf(limit) };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * OrderBook.class).get(0);
+         */
+        return null;
     }
 
     // TODO implement this!
     public List<String[]> getPotentialSignatures() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_POTENTIAL_SIGNATURES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-        LOGGER.info("output: {}", communicationHandler.performRequest(requestObject, Object[].class));
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_POTENTIAL_SIGNATURES);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); Object[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * LOGGER.info("output: {}",
+         * communicationHandler.performRequest(requestObject, Object[].class));
+         */
         return null;
     }
 
@@ -1042,13 +1087,17 @@ public class SteemJ {
      */
     public List<Discussion> getRepliesByLastUpdate(AccountName username, Permlink permlink, int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_REPLIES_BY_LAST_UPDATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { username, permlink.getLink(), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_REPLIES_BY_LAST_UPDATE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); Object[]
+         * parameters = { username, permlink.getLink(), String.valueOf(limit) };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class);
+         */
+        return null;
     }
 
     /**
@@ -1104,14 +1153,18 @@ public class SteemJ {
      */
     public String getTransactionHex(SignedTransaction signedTransaction)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_TRANSACTION_HEX);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-
-        Object[] parameters = { signedTransaction };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_TRANSACTION_HEX);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API);
+         * 
+         * Object[] parameters = { signedTransaction };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * String.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1137,13 +1190,17 @@ public class SteemJ {
      */
     public Witness getWitnessByAccount(AccountName witnessName)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_WITNESS_BY_ACCOUNT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { witnessName.getName() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Witness.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESS_BY_ACCOUNT);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { witnessName.getName() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Witness.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1173,13 +1230,17 @@ public class SteemJ {
      */
     public List<Witness> getWitnessByVote(AccountName witnessName, int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_WITNESSES_BY_VOTE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { witnessName.getName(), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Witness.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESSES_BY_VOTE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { witnessName.getName(), String.valueOf(limit) };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Witness.class);
+         */
+        return null;
     }
 
     /**
@@ -1202,13 +1263,16 @@ public class SteemJ {
      *             </ul>
      */
     public int getWitnessCount() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_WITNESS_COUNT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESS_COUNT);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Integer.class).get(0);
+         */
+        return 0;
     }
 
     /**
@@ -1231,13 +1295,16 @@ public class SteemJ {
      *             </ul>
      */
     public List<Witness> getWitnesses() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_WITNESSES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Witness.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESSES);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Witness.class);
+         */
+        return null;
     }
 
     /**
@@ -1260,13 +1327,16 @@ public class SteemJ {
      *             </ul>
      */
     public WitnessSchedule getWitnessSchedule() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_WITNESS_SCHEDULE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESS_SCHEDULE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * WitnessSchedule.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1294,13 +1364,9 @@ public class SteemJ {
      */
     public List<String> lookupAccounts(String pattern, int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LOOKUP_ACCOUNTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { pattern, String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class);
+        // return DatabaseApi.findAccounts(communicationHandler,
+        // findAccountsArgs);
+        return null;
     }
 
     /**
@@ -1328,13 +1394,9 @@ public class SteemJ {
      */
     public List<String> lookupWitnessAccounts(String pattern, int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LOOKUP_WITNESS_ACCOUNTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { pattern, String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class);
+        // return
+        // DatabaseApi.findWitnesses(communicationHandler).getWitnesses();
+        return null;
     }
 
     /**
@@ -1362,7 +1424,7 @@ public class SteemJ {
      */
     public boolean verifyAuthority(SignedTransaction signedTransaction)
             throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.verifyAccountAuthority(communicationHandler, null);
+        return DatabaseApi.verifyAccountAuthority(communicationHandler, null).isValid();
     }
 
     // #########################################################################
@@ -3445,8 +3507,8 @@ public class SteemJ {
      *            transfer currency to.
      * @param amount
      *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType} and the
-     *            amount to transfer.
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType}
+     *            and the amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
      * @return The TransferOperation broadcast.
@@ -3499,8 +3561,8 @@ public class SteemJ {
      *            The account to which to transfer currency.
      * @param amount
      *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType} and the
-     *            amount to transfer.
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType}
+     *            and the amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
      * @return The TransferOperation broadcast.
