@@ -63,11 +63,8 @@ public class AccountByKeyApi {
      */
     public static GetKeyReferencesReturn getKeyReferences(CommunicationHandler communicationHandler,
             GetKeyReferencesArgs publicKeys) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_KEY_REFERENCES);
-        requestObject.setSteemApi(SteemApiType.ACCOUNT_BY_KEY_API);
-        Object[] parameters = { publicKeys };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_BY_KEY_API,
+                RequestMethod.GET_KEY_REFERENCES, publicKeys);
 
         return communicationHandler.performRequest(requestObject, GetKeyReferencesReturn.class).get(0);
     }

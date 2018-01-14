@@ -36,23 +36,34 @@ public class WitnessApi {
     private WitnessApi() {
     }
 
+    /**
+     * 
+     * @param communicationHandler
+     * @param getAccountBandwidthArgs
+     * @return
+     * @throws SteemCommunicationException
+     * @throws SteemResponseException
+     */
     public static GetAccountBandwidthReturn getAccountBandwidth(CommunicationHandler communicationHandler,
             GetAccountBandwidthArgs getAccountBandwidthArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_BANDWIDTH);
-        requestObject.setSteemApi(SteemApiType.WITNESS_API);
-        requestObject.setAdditionalParameters(getAccountBandwidthArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.WITNESS_API, RequestMethod.GET_ACCOUNT_BANDWIDTH,
+                getAccountBandwidthArgs);
 
         return communicationHandler.performRequest(requestObject, GetAccountBandwidthReturn.class).get(0);
     }
 
+    /**
+     * 
+     * @param communicationHandler
+     * @return
+     * @throws SteemCommunicationException
+     * @throws SteemResponseException
+     */
     public static ReserveRatioObject getReserveRatio(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_REVERSE_RATIO);
-        requestObject.setSteemApi(SteemApiType.WITNESS_API);
-        // requestObject.setAdditionalParameters("");
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.WITNESS_API, RequestMethod.GET_REVERSE_RATIO,
+                null);
 
         return communicationHandler.performRequest(requestObject, ReserveRatioObject.class).get(0);
     }

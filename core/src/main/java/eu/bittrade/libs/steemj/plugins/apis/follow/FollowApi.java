@@ -85,10 +85,8 @@ public class FollowApi {
      */
     public static GetFollowersReturn getFollowers(CommunicationHandler communicationHandler,
             GetFollowersArgs getFollowersArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_FOLLOWERS);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-        requestObject.setAdditionalParameters(getFollowersArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_FOLLOWERS,
+                getFollowersArgs);
 
         return communicationHandler.performRequest(requestObject, GetFollowersReturn.class).get(0);
     }
@@ -134,12 +132,7 @@ public class FollowApi {
     public static List<FollowApiObject> getFollowing(CommunicationHandler communicationHandler, AccountName follower,
             AccountName startFollowing, FollowType type, short limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_FOLLOWING);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { follower.getName(), startFollowing.getName(), type.toString().toLowerCase(), limit };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_FOLLOWING, null);
 
         return communicationHandler.performRequest(requestObject, FollowApiObject.class);
     }
@@ -175,12 +168,8 @@ public class FollowApi {
      */
     public static FollowCountApiObject getFollowCount(CommunicationHandler communicationHandler, AccountName account)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_FOLLOW_COUNT);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { account.getName() };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_FOLLOW_COUNT,
+                account.getName());
 
         return communicationHandler.performRequest(requestObject, FollowCountApiObject.class).get(0);
     }
@@ -223,12 +212,8 @@ public class FollowApi {
      */
     public static List<FeedEntry> getFeedEntries(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_FEED_ENTRIES);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_FEED_ENTRIES,
+                null);
 
         return communicationHandler.performRequest(requestObject, FeedEntry.class);
     }
@@ -271,12 +256,8 @@ public class FollowApi {
      */
     public static List<CommentFeedEntry> getFeed(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_FEED);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API,
+                RequestMethod.GET_FEED.BROADCAST_BLOCK, null);
 
         return communicationHandler.performRequest(requestObject, CommentFeedEntry.class);
     }
@@ -339,12 +320,8 @@ public class FollowApi {
      */
     public static List<BlogEntry> getBlogEntries(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_BLOG_ENTRIES);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_BLOG_ENTRIES,
+                null);
 
         return communicationHandler.performRequest(requestObject, BlogEntry.class);
 
@@ -387,12 +364,7 @@ public class FollowApi {
      */
     public static List<CommentBlogEntry> getBlog(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_BLOG);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { account.getName(), entryId, limit };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_BLOG, null);
 
         return communicationHandler.performRequest(requestObject, CommentBlogEntry.class);
     }
@@ -448,12 +420,8 @@ public class FollowApi {
      */
     public static List<AccountReputation> getAccountReputations(CommunicationHandler communicationHandler,
             AccountName accountName, int limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_REPUTATIONS);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { accountName.getName(), limit };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API,
+                RequestMethod.GET_ACCOUNT_REPUTATIONS, null);
 
         return communicationHandler.performRequest(requestObject, AccountReputation.class);
     }
@@ -488,12 +456,8 @@ public class FollowApi {
      */
     public static List<AccountName> getRebloggedBy(CommunicationHandler communicationHandler, AccountName author,
             Permlink permlink) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_REBLOGGED_BY);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { author.getName(), permlink.getLink() };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_REBLOGGED_BY,
+                null);
 
         return communicationHandler.performRequest(requestObject, AccountName.class);
     }
@@ -529,12 +493,8 @@ public class FollowApi {
      */
     public static List<PostsPerAuthorPair> getBlogAuthors(CommunicationHandler communicationHandler,
             AccountName blogAccount) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_BLOG_AUTHORS);
-        requestObject.setSteemApi(SteemApiType.FOLLOW_API);
-
-        Object[] parameters = { blogAccount.getName() };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_BLOG_AUTHORS,
+                null);
 
         return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
     }

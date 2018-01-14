@@ -39,10 +39,8 @@ public class ChainApi {
 
     public static PushBlockReturn pushBlock(CommunicationHandler communicationHandler, PushBlockArgs pushBlockArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.PUSH_BLOCK);
-        requestObject.setSteemApi(SteemApiType.CHAIN_API);
-        requestObject.setAdditionalParameters(pushBlockArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.CHAIN_API, RequestMethod.PUSH_BLOCK,
+                pushBlockArgs);
 
         return communicationHandler.performRequest(requestObject, PushBlockReturn.class).get(0);
     }
@@ -60,10 +58,8 @@ public class ChainApi {
      */
     public static PushTransactionReturn pushTransaction(CommunicationHandler communicationHandler,
             SignedTransaction signedTransaction) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.PUSH_TRANSACTION);
-        requestObject.setSteemApi(SteemApiType.CHAIN_API);
-        requestObject.setAdditionalParameters(signedTransaction);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.CHAIN_API, RequestMethod.PUSH_TRANSACTION,
+                signedTransaction);
 
         return communicationHandler.performRequest(requestObject, PushTransactionReturn.class).get(0);
     }

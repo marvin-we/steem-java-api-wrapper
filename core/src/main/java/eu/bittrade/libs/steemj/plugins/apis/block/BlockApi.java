@@ -67,10 +67,8 @@ public class BlockApi {
      */
     public static GetBlockHeaderReturn getBlockHeader(CommunicationHandler communicationHandler,
             GetBlockHeaderArgs getBlockHeaderArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_BLOCK_HEADER);
-        requestObject.setSteemApi(SteemApiType.BLOCK_API);
-        requestObject.setAdditionalParameters(getBlockHeaderArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.BLOCK_API, RequestMethod.GET_BLOCK_HEADER,
+                getBlockHeaderArgs);
 
         return communicationHandler.performRequest(requestObject, GetBlockHeaderReturn.class).get(0);
     }
@@ -106,10 +104,8 @@ public class BlockApi {
      */
     public static GetBlockReturn getBlock(CommunicationHandler communicationHandler, GetBlockArgs getBlockArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_BLOCK);
-        requestObject.setSteemApi(SteemApiType.BLOCK_API);
-        requestObject.setAdditionalParameters(getBlockArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.BLOCK_API, RequestMethod.GET_BLOCK,
+                getBlockArgs);
 
         return communicationHandler.performRequest(requestObject, GetBlockReturn.class).get(0);
     }

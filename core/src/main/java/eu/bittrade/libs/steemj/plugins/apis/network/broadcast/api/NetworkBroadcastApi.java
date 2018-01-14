@@ -72,16 +72,12 @@ public class NetworkBroadcastApi {
      */
     public static void broadcastTransaction(CommunicationHandler communicationHandler, SignedTransaction transaction)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.BROADCAST_TRANSACTION);
-        requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
-
         if (transaction.getSignatures() == null || transaction.getSignatures().isEmpty()) {
             transaction.sign();
         }
 
-        Object[] parameters = { transaction };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.NETWORK_BROADCAST_API,
+                RequestMethod.BROADCAST_TRANSACTION, transaction);
 
         communicationHandler.performRequest(requestObject, Object.class);
     }
@@ -121,16 +117,12 @@ public class NetworkBroadcastApi {
     public static BroadcastTransactionSynchronousReturn broadcastTransactionSynchronous(
             CommunicationHandler communicationHandler, SignedTransaction transaction)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.BROADCAST_TRANSACTION_SYNCHRONOUS);
-        requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
-
         if (transaction.getSignatures() == null || transaction.getSignatures().isEmpty()) {
             transaction.sign();
         }
 
-        Object[] parameters = { transaction };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.NETWORK_BROADCAST_API,
+                RequestMethod.BROADCAST_TRANSACTION_SYNCHRONOUS, transaction);
 
         return communicationHandler.performRequest(requestObject, BroadcastTransactionSynchronousReturn.class).get(0);
     }
@@ -162,12 +154,8 @@ public class NetworkBroadcastApi {
      */
     public static void broadcastBlock(CommunicationHandler communicationHandler, SignedBlock signedBlock)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.BROADCAST_BLOCK);
-        requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
-
-        Object[] parameters = { signedBlock };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.NETWORK_BROADCAST_API,
+                RequestMethod.BROADCAST_BLOCK, signedBlock);
 
         communicationHandler.performRequest(requestObject, Object.class);
     }

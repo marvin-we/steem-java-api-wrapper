@@ -140,11 +140,7 @@ public class DatabaseApi {
      */
     public static Config getConfig(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CONFIG);
-        requestObject.setSteemApi(SteemApiType.CONDENSER_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_CONFIG, null);
 
         return communicationHandler.performRequest(requestObject, Config.class).get(0);
     }
@@ -172,11 +168,8 @@ public class DatabaseApi {
      */
     public static DynamicGlobalProperty getDynamicGlobalProperties(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_DYNAMIC_GLOBAL_PROPERTIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_DYNAMIC_GLOBAL_PROPERTIES, null);
 
         return communicationHandler.performRequest(requestObject, DynamicGlobalProperty.class).get(0);
     }
@@ -204,11 +197,8 @@ public class DatabaseApi {
      */
     public static WitnessSchedule getWitnessSchedule(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_WITNESS_SCHEDULE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_WITNESS_SCHEDULE,
+                null);
 
         return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
     }
@@ -221,11 +211,8 @@ public class DatabaseApi {
      */
     public static HardforkProperty getHardforkProperties(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_HARDFORK_PROPERTIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_HARDFORK_PROPERTIES, null);
 
         return communicationHandler.performRequest(requestObject, HardforkProperty.class).get(0);
     }
@@ -257,11 +244,8 @@ public class DatabaseApi {
      */
     public static RewardFund getRewardFunds(CommunicationHandler communicationHandler, RewardFundType rewordFundType)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_REWARD_FUNDS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { rewordFundType.name().toLowerCase() };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_REWARD_FUNDS,
+                rewordFundType.name().toLowerCase());
 
         return communicationHandler.performRequest(requestObject, RewardFund.class).get(0);
     }
@@ -274,11 +258,8 @@ public class DatabaseApi {
      */
     public static Price getCurrentPriceFeed(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CURRENT_PRICE_FEED);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_CURRENT_PRICE_FEED, null);
 
         return communicationHandler.performRequest(requestObject, Price.class).get(0);
     }
@@ -307,11 +288,8 @@ public class DatabaseApi {
      */
     public FeedHistory getFeedHistory(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_FEED_HISTORY);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_FEED_HISTORY,
+                null);
 
         return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
     }
@@ -324,11 +302,8 @@ public class DatabaseApi {
      */
     public static ListWitnessesReturn listWitnesses(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_WITNESSES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.LIST_WITNESSES,
+                null);
 
         return communicationHandler.performRequest(requestObject, ListWitnessesReturn.class).get(0);
     }
@@ -341,11 +316,8 @@ public class DatabaseApi {
      */
     public static ListWitnessesReturn findWitnesses(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CURRENT_PRICE_FEED);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_CURRENT_PRICE_FEED, null);
 
         return communicationHandler.performRequest(requestObject, ListWitnessesReturn.class).get(0);
     }
@@ -358,11 +330,8 @@ public class DatabaseApi {
      */
     public static ListWitnessVotesReturn listWitnessesVotesReturn(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CURRENT_PRICE_FEED);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_CURRENT_PRICE_FEED, null);
 
         return communicationHandler.performRequest(requestObject, ListWitnessVotesReturn.class).get(0);
     }
@@ -393,11 +362,8 @@ public class DatabaseApi {
      */
     public static List<AccountName> getActiveWitnesses(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ACTIVE_WITNESSES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_ACTIVE_WITNESSES,
+                null);
 
         return communicationHandler.performRequest(requestObject, AccountName.class);
     }
@@ -412,10 +378,8 @@ public class DatabaseApi {
      */
     public static ListAccountsReturn listAccounts(CommunicationHandler communicationHandler,
             ListAccountsArgs listAccountsArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_ACCOUNTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listAccountsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.LIST_ACCOUNTS,
+                listAccountsArgs);
 
         return communicationHandler.performRequest(requestObject, ListAccountsReturn.class).get(0);
     }
@@ -430,10 +394,8 @@ public class DatabaseApi {
      */
     public static FindAccountsReturn findAccounts(CommunicationHandler communicationHandler,
             FindAccountsArgs findAccountsArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_ACCOUNTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findAccountsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.FIND_ACCOUNTS,
+                findAccountsArgs);
 
         return communicationHandler.performRequest(requestObject, FindAccountsReturn.class).get(0);
     }
@@ -448,10 +410,8 @@ public class DatabaseApi {
      */
     public static ListOwnerHistoriesReturn listOwnerHistories(CommunicationHandler communicationHandler,
             ListOwnerHistoriesArgs listOwnerHistoriesArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_OWNER_HISTORIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listOwnerHistoriesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.LIST_OWNER_HISTORIES,
+                listOwnerHistoriesArgs);
 
         return communicationHandler.performRequest(requestObject, ListOwnerHistoriesReturn.class).get(0);
     }
@@ -466,10 +426,8 @@ public class DatabaseApi {
      */
     public static FindOwnerHistoriesReturn findOwnerHistories(CommunicationHandler communicationHandler,
             FindOwnerHistoriesArgs findOwnerHistoriesArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_OWNER_HISTORIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findOwnerHistoriesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.FIND_OWNER_HISTORIES,
+                findOwnerHistoriesArgs);
 
         return communicationHandler.performRequest(requestObject, FindOwnerHistoriesReturn.class).get(0);
     }
@@ -485,10 +443,8 @@ public class DatabaseApi {
     public static ListAccountRecoveryRequestsReturn listAccountRecoveryRequests(
             CommunicationHandler communicationHandler, ListAccountRecoveryRequestsArgs listAccountRecoveryRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_ACCOUNT_RECOVERY_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listAccountRecoveryRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_ACCOUNT_RECOVERY_REQUESTS, listAccountRecoveryRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, ListAccountRecoveryRequestsReturn.class).get(0);
     }
@@ -504,10 +460,8 @@ public class DatabaseApi {
     public static FindAccountRecoveryRequestsReturn findAccountRecoveryRequests(
             CommunicationHandler communicationHandler, FindAccountRecoveryRequestsArgs findAccountRecoveryRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_ACCOUNT_RECOVERY_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findAccountRecoveryRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_ACCOUNT_RECOVERY_REQUESTS, findAccountRecoveryRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, FindAccountRecoveryRequestsReturn.class).get(0);
     }
@@ -524,10 +478,8 @@ public class DatabaseApi {
             CommunicationHandler communicationHandler,
             ListChangeRecoveryAccountRequestsArgs listChangeRecoveryAccountRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_CHANGE_RECOVERY_ACCOUNT_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listChangeRecoveryAccountRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_CHANGE_RECOVERY_ACCOUNT_REQUESTS, listChangeRecoveryAccountRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, ListChangeRecoveryAccountRequestsReturn.class).get(0);
     }
@@ -544,10 +496,8 @@ public class DatabaseApi {
             CommunicationHandler communicationHandler,
             FindChangeRecoveryAccountRequestsArgs findChangeRecoveryAccountRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_CHANGE_RECOVERY_ACCOUNT_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findChangeRecoveryAccountRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_CHANGE_RECOVERY_ACCOUNT_REQUESTS, findChangeRecoveryAccountRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, FindChangeRecoveryAccountRequestsReturn.class).get(0);
     }
@@ -562,10 +512,8 @@ public class DatabaseApi {
      */
     public static ListEscrowsReturn listEscrows(CommunicationHandler communicationHandler,
             ListEscrowsArgs listEscrowsArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_ESCROWS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listEscrowsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.LIST_ESCROWS,
+                listEscrowsArgs);
 
         return communicationHandler.performRequest(requestObject, ListEscrowsReturn.class).get(0);
     }
@@ -580,10 +528,8 @@ public class DatabaseApi {
      */
     public static FindEscrowsReturn findEscrows(CommunicationHandler communicationHandler,
             FindEscrowsArgs findEscrowsArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_ESCROWS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findEscrowsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.FIND_ESCROWS,
+                findEscrowsArgs);
 
         return communicationHandler.performRequest(requestObject, FindEscrowsReturn.class).get(0);
     }
@@ -599,10 +545,8 @@ public class DatabaseApi {
     public static ListWithdrawVestingRoutesReturn listWithdrawVestingRoutes(CommunicationHandler communicationHandler,
             ListWithdrawVestingRoutesArgs listWithdrawVestingRoutesArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_WITHDRAW_VESTING_ROUTES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listWithdrawVestingRoutesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_WITHDRAW_VESTING_ROUTES, listWithdrawVestingRoutesArgs);
 
         return communicationHandler.performRequest(requestObject, ListWithdrawVestingRoutesReturn.class).get(0);
     }
@@ -618,10 +562,8 @@ public class DatabaseApi {
     public static FindWithdrawVestingRoutesReturn findWithdrawVestingRoutes(CommunicationHandler communicationHandler,
             FindWithdrawVestingRoutesArgs findWithdrawVestingRoutesArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_WITHDRAW_VESTING_ROUTES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findWithdrawVestingRoutesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_WITHDRAW_VESTING_ROUTES, findWithdrawVestingRoutesArgs);
 
         return communicationHandler.performRequest(requestObject, FindWithdrawVestingRoutesReturn.class).get(0);
     }
@@ -637,10 +579,8 @@ public class DatabaseApi {
     public static ListSavingsWithdrawalsReturn listSavingsWithdrawals(CommunicationHandler communicationHandler,
             ListSavingsWithdrawalsArgs listSavingsWithdrawalsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_SAVINGS_WITHDRAWALS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listSavingsWithdrawalsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_SAVINGS_WITHDRAWALS, listSavingsWithdrawalsArgs);
 
         return communicationHandler.performRequest(requestObject, ListSavingsWithdrawalsReturn.class).get(0);
     }
@@ -656,10 +596,8 @@ public class DatabaseApi {
     public static FindSavingsWithdrawalsReturn findSavingsWithdrawals(CommunicationHandler communicationHandler,
             FindSavingsWithdrawalsArgs findSavingsWithdrawalsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_SAVINGS_WITHDRAWALS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findSavingsWithdrawalsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_SAVINGS_WITHDRAWALS, findSavingsWithdrawalsArgs);
 
         return communicationHandler.performRequest(requestObject, FindSavingsWithdrawalsReturn.class).get(0);
     }
@@ -675,10 +613,8 @@ public class DatabaseApi {
     public static ListVestingDelegationsReturn listVestingDelegations(CommunicationHandler communicationHandler,
             ListVestingDelegationsArgs listVestingDelegationsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_VESTING_DELEGATIONS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listVestingDelegationsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_VESTING_DELEGATIONS, listVestingDelegationsArgs);
 
         return communicationHandler.performRequest(requestObject, ListVestingDelegationsReturn.class).get(0);
     }
@@ -694,10 +630,8 @@ public class DatabaseApi {
     public static FindVestingDelegationsReturn findVestingDelegations(CommunicationHandler communicationHandler,
             FindVestingDelegationsArgs findVestingDelegationsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_VESTING_DELEGATIONS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findVestingDelegationsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_VESTING_DELEGATIONS, findVestingDelegationsArgs);
 
         return communicationHandler.performRequest(requestObject, FindVestingDelegationsReturn.class).get(0);
     }
@@ -714,10 +648,8 @@ public class DatabaseApi {
             CommunicationHandler communicationHandler,
             ListVestingDelegationExpirationsArgs listVestingDelegationExpirationsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_VESTING_DELEGATION_EXPIRATIONS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listVestingDelegationExpirationsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_VESTING_DELEGATION_EXPIRATIONS, listVestingDelegationExpirationsArgs);
 
         return communicationHandler.performRequest(requestObject, ListVestingDelegationExpirationsReturn.class).get(0);
     }
@@ -734,10 +666,8 @@ public class DatabaseApi {
             CommunicationHandler communicationHandler,
             FindVestingDelegationExpirationsArgs findVestingDelegationExpirationsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_VESTING_DELEGATION_EXPIRATIONS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findVestingDelegationExpirationsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_VESTING_DELEGATION_EXPIRATIONS, findVestingDelegationExpirationsArgs);
 
         return communicationHandler.performRequest(requestObject, FindVestingDelegationExpirationsReturn.class).get(0);
     }
@@ -753,10 +683,8 @@ public class DatabaseApi {
     public static ListSbdConversionRequestsReturn listSbdConversionRequests(CommunicationHandler communicationHandler,
             ListSbdConversionRequestsArgs listSbdConversionRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_SBD_CONVERSION_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listSbdConversionRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_SBD_CONVERSION_REQUESTS, listSbdConversionRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, ListSbdConversionRequestsReturn.class).get(0);
     }
@@ -772,10 +700,8 @@ public class DatabaseApi {
     public static FindSbdConversionRequestsReturn findSbdConversionRequests(CommunicationHandler communicationHandler,
             FindSbdConversionRequestsArgs findSbdConversionRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_SBD_CONVERSION_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findSbdConversionRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_SBD_CONVERSION_REQUESTS, findSbdConversionRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, FindSbdConversionRequestsReturn.class).get(0);
     }
@@ -792,10 +718,8 @@ public class DatabaseApi {
             CommunicationHandler communicationHandler,
             ListDeclineVotingRightsRequestsArgs listDeclineVotingRightsRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_DECLINE_VOTING_RIGHTS_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listDeclineVotingRightsRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.LIST_DECLINE_VOTING_RIGHTS_REQUESTS, listDeclineVotingRightsRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, ListDeclineVotingRightsRequestsReturn.class).get(0);
     }
@@ -812,10 +736,8 @@ public class DatabaseApi {
             CommunicationHandler communicationHandler,
             FindDeclineVotingRightsRequestsArgs findDeclineVotingRightsRequestsArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_DECLINE_VOTING_RIGHTS_REQUESTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findDeclineVotingRightsRequestsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.FIND_DECLINE_VOTING_RIGHTS_REQUESTS, findDeclineVotingRightsRequestsArgs);
 
         return communicationHandler.performRequest(requestObject, FindDeclineVotingRightsRequestsReturn.class).get(0);
     }
@@ -830,10 +752,8 @@ public class DatabaseApi {
      */
     public static ListCommentsReturn listComments(CommunicationHandler communicationHandler,
             ListCommentsArgs listCommentsArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_COMMENTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listCommentsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.LIST_COMMENTS,
+                listCommentsArgs);
 
         return communicationHandler.performRequest(requestObject, ListCommentsReturn.class).get(0);
     }
@@ -848,10 +768,8 @@ public class DatabaseApi {
      */
     public static FindCommentsReturn findComments(CommunicationHandler communicationHandler,
             FindCommentsArgs findCommentsArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_COMMENTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findCommentsArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.FIND_COMMENTS,
+                findCommentsArgs);
 
         return communicationHandler.performRequest(requestObject, FindCommentsReturn.class).get(0);
     }
@@ -866,10 +784,8 @@ public class DatabaseApi {
      */
     public static ListVotesReturn listVotes(CommunicationHandler communicationHandler, ListVotesArgs listVotesArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_VOTES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listVotesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.LIST_VOTES,
+                listVotesArgs);
 
         return communicationHandler.performRequest(requestObject, ListVotesReturn.class).get(0);
     }
@@ -884,10 +800,8 @@ public class DatabaseApi {
      */
     public static FindVotesReturn findVotes(CommunicationHandler communicationHandler, FindVotesArgs findVotesArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_VOTES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findVotesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.FIND_VOTES,
+                findVotesArgs);
 
         return communicationHandler.performRequest(requestObject, FindVotesReturn.class).get(0);
     }
@@ -902,10 +816,8 @@ public class DatabaseApi {
      */
     public static ListLimitOrdersReturn listLimitOrders(CommunicationHandler communicationHandler,
             ListLimitOrdersArgs listLimitOrdersArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.LIST_LIMIT_ORDERS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(listLimitOrdersArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.LIST_LIMIT_ORDERS,
+                listLimitOrdersArgs);
 
         return communicationHandler.performRequest(requestObject, ListLimitOrdersReturn.class).get(0);
     }
@@ -920,10 +832,8 @@ public class DatabaseApi {
      */
     public static FindLimitOrdersReturn findLimitOrders(CommunicationHandler communicationHandler,
             FindLimitOrdersArgs findLimitOrdersArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.FIND_LIMIT_ORDERS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(findLimitOrdersArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.FIND_LIMIT_ORDERS,
+                findLimitOrdersArgs);
 
         return communicationHandler.performRequest(requestObject, FindLimitOrdersReturn.class).get(0);
     }
@@ -938,10 +848,8 @@ public class DatabaseApi {
      */
     public static GetOrderBookReturn getOrderBook(CommunicationHandler communicationHandler,
             GetOrderBookArgs getOrderBookArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ORDER_BOOK);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(getOrderBookArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_ORDER_BOOK,
+                getOrderBookArgs);
 
         return communicationHandler.performRequest(requestObject, GetOrderBookReturn.class).get(0);
     }
@@ -956,10 +864,8 @@ public class DatabaseApi {
      */
     public static GetTransactionHexReturn getTransactionHex(CommunicationHandler communicationHandler,
             GetTransactionHexArgs getTransactionHexArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_TRANSACTION_HEX);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(getTransactionHexArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_TRANSACTION_HEX,
+                getTransactionHexArgs);
 
         return communicationHandler.performRequest(requestObject, GetTransactionHexReturn.class).get(0);
     }
@@ -975,10 +881,8 @@ public class DatabaseApi {
     public static GetRequiredSignaturesReturn getRequiredSignatures(CommunicationHandler communicationHandler,
             GetRequiredSignaturesArgs getRequiredSignaturesArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_REQUIRED_SIGNATURES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(getRequiredSignaturesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_REQUIRED_SIGNATURES, getRequiredSignaturesArgs);
 
         return communicationHandler.performRequest(requestObject, GetRequiredSignaturesReturn.class).get(0);
     }
@@ -994,10 +898,8 @@ public class DatabaseApi {
     public static GetPotentialSignaturesReturn getPotentialSignatures(CommunicationHandler communicationHandler,
             GetPotentialSignaturesArgs getPotentialSignaturesArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_POTENTIAL_SIGNATURES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(getPotentialSignaturesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_POTENTIAL_SIGNATURES, getPotentialSignaturesArgs);
 
         return communicationHandler.performRequest(requestObject, GetPotentialSignaturesReturn.class).get(0);
     }
@@ -1012,10 +914,8 @@ public class DatabaseApi {
      */
     public static VerifyAuthorityReturn verifyAuthority(CommunicationHandler communicationHandler,
             VerifyAuthorityArgs verifyAuthorityArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.VERIFY_AUTHORITY);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(verifyAuthorityArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.VERIFY_AUTHORITY,
+                verifyAuthorityArgs);
 
         return communicationHandler.performRequest(requestObject, VerifyAuthorityReturn.class).get(0);
     }
@@ -1031,10 +931,8 @@ public class DatabaseApi {
     public static VerifyAccountAuthorityReturn verifyAccountAuthority(CommunicationHandler communicationHandler,
             VerifyAccountAuthorityArgs verifyAccountAuthorityArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.VERIFY_ACCOUNT_AUTHORITY);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(verifyAccountAuthorityArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.VERIFY_ACCOUNT_AUTHORITY, null);
 
         return communicationHandler.performRequest(requestObject, VerifyAccountAuthorityReturn.class).get(0);
     }
@@ -1049,10 +947,8 @@ public class DatabaseApi {
      */
     public static VerifySignaturesReturn verifySignatures(CommunicationHandler communicationHandler,
             VerifySignaturesArgs verifySignaturesArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.VERIFY_SIGNATURES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(verifySignaturesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.VERIFY_SIGNATURES,
+                null);
 
         return communicationHandler.performRequest(requestObject, VerifySignaturesReturn.class).get(0);
     }
@@ -1067,10 +963,8 @@ public class DatabaseApi {
      */
     public static GetSmtNextIdentifierReturn getSmtNextIdentifier(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_SMT_NEXT_IDENTIFIER);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setAdditionalParameters(null);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_SMT_NEXT_IDENTIFIER, null);
 
         return communicationHandler.performRequest(requestObject, GetSmtNextIdentifierReturn.class).get(0);
     }

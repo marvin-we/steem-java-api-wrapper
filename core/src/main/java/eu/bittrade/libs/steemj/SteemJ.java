@@ -1362,15 +1362,7 @@ public class SteemJ {
      */
     public boolean verifyAuthority(SignedTransaction signedTransaction)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.VERIFY_AUTHORITY);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-
-        Object[] parameters = { signedTransaction };
-        requestObject.setAdditionalParameters(parameters);
-        // The method does not simply return false, it throws an error
-        // describing the problem.
-        return communicationHandler.performRequest(requestObject, Boolean.class).get(0);
+        return DatabaseApi.verifyAccountAuthority(communicationHandler, null);
     }
 
     // #########################################################################

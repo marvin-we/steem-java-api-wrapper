@@ -73,12 +73,8 @@ public class MarketHistoryApi {
      */
     public static GetTickerReturn getTicker(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_TICKER);
-        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
-
-        Object[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.MARKET_HISTORY_API,
+                RequestMethod.GET_TICKER.BROADCAST_BLOCK, null);
 
         return communicationHandler.performRequest(requestObject, GetTickerReturn.class).get(0);
     }
@@ -110,12 +106,8 @@ public class MarketHistoryApi {
      */
     public static GetVolumeReturn getVolume(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_VOLUME);
-        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
-
-        Object[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.MARKET_HISTORY_API, RequestMethod.GET_VOLUME,
+                null);
 
         return communicationHandler.performRequest(requestObject, GetVolumeReturn.class).get(0);
     }
@@ -156,10 +148,8 @@ public class MarketHistoryApi {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 500.");
         }
 
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ORDER_BOOK);
-        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
-        requestObject.setAdditionalParameters(getOrderBookArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.MARKET_HISTORY_API, RequestMethod.GET_ORDER_BOOK,
+                getOrderBookArgs);
 
         return communicationHandler.performRequest(requestObject, GetOrderBookReturn.class).get(0);
     }
@@ -203,10 +193,8 @@ public class MarketHistoryApi {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 1000.");
         }
 
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_TRADE_HISTORY);
-        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
-        requestObject.setAdditionalParameters(getTradeHistoryArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.MARKET_HISTORY_API,
+                RequestMethod.GET_TRADE_HISTORY, getTradeHistoryArgs);
 
         return communicationHandler.performRequest(requestObject, GetTradeHistoryReturn.class).get(0);
     }

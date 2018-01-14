@@ -57,11 +57,7 @@ public class CondenserApi {
      */
     public static State getState(CommunicationHandler communicationHandler, Permlink path)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_STATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_STATE, null);
 
         return communicationHandler.performRequest(requestObject, State.class).get(0);
     }
@@ -87,11 +83,8 @@ public class CondenserApi {
      */
     public static String getHardforkVersion(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_HARDFORK_VERSION);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_HARDFORK_VERSION,
+                null);
 
         return communicationHandler.performRequest(requestObject, String.class).get(0);
     }

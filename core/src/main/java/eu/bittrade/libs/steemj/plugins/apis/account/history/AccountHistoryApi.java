@@ -72,10 +72,8 @@ public class AccountHistoryApi {
      */
     public static GetOpsInBlockReturn getOpsInBlock(CommunicationHandler communicationHandler,
             GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_OPS_IN_BLOCK);
-        requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
-        requestObject.setAdditionalParameters(getOpsInBlockArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
+                RequestMethod.GET_OPS_IN_BLOCK, getOpsInBlockArgs);
 
         return communicationHandler.performRequest(requestObject, GetOpsInBlockReturn.class).get(0);
     }
@@ -109,10 +107,8 @@ public class AccountHistoryApi {
      */
     public static AnnotatedSignedTransaction getTransaction(CommunicationHandler communicationHandler,
             GetAccountHistoryArgs getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_TRANSACTION);
-        requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
-        requestObject.setAdditionalParameters(getTransactionArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
+                RequestMethod.GET_TRANSACTION, getTransactionArgs);
 
         return communicationHandler.performRequest(requestObject, AnnotatedSignedTransaction.class).get(0);
     }
@@ -150,10 +146,8 @@ public class AccountHistoryApi {
      */
     public static GetAccountHistoryReturn getAccountHistory(CommunicationHandler communicationHandler,
             GetAccountHistoryArgs getAccountHistoryArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
-        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_HISTORY);
-        requestObject.setAdditionalParameters(getAccountHistoryArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
+                RequestMethod.GET_ACCOUNT_HISTORY, getAccountHistoryArgs);
 
         return communicationHandler.performRequest(requestObject, GetAccountHistoryReturn.class).get(0);
     }

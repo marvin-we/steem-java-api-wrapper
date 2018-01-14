@@ -89,11 +89,8 @@ public class TagsApi {
      */
     public static List<Tag> getTrendingTags(CommunicationHandler communicationHandler, String firstTagPattern,
             int limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_TRENDING_TAGS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { firstTagPattern, String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_TRENDING_TAGS,
+                null);
 
         return communicationHandler.performRequest(requestObject, Tag.class);
     }
@@ -109,10 +106,8 @@ public class TagsApi {
     public static GetTagsUsedByAuthorReturn getTagsUsedByAuthor(CommunicationHandler communicationHandler,
             GetTagsUsedByAuthorArgs getTagsUsedByAuthorArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CONTENT_REPLIES);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(getTagsUsedByAuthorArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_TAGS_USED_BY_AUTHOR, getTagsUsedByAuthorArgs);
 
         return communicationHandler.performRequest(requestObject, GetTagsUsedByAuthorReturn.class).get(0);
     }
@@ -127,10 +122,8 @@ public class TagsApi {
      */
     public static Discussion getDiscussion(CommunicationHandler communicationHandler,
             GetDiscussionArgs getDiscussionArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_DISCUSSION);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(getDiscussionArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_DISCUSSION,
+                getDiscussionArgs);
 
         return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
     }
@@ -159,11 +152,8 @@ public class TagsApi {
      */
     public static DiscussionQueryResult getContentReplies(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_CONTENT_REPLIES);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(discussionQuery);
-
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_CONTENT_REPLIES,
+                discussionQuery);
         return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
 
@@ -177,10 +167,8 @@ public class TagsApi {
      */
     public static DiscussionQueryResult getPostDiscussionsByPayout(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_POST_DISCUSSIONS_BY_PAYOUT);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(discussionQuery);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_POST_DISCUSSIONS_BY_PAYOUT, discussionQuery);
 
         return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
@@ -195,10 +183,8 @@ public class TagsApi {
      */
     public static DiscussionQueryResult getCommentDiscussionsByPayout(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_COMMENT_DISCUSSIONS_BY_PAYOUT);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(discussionQuery);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_COMMENT_DISCUSSIONS_BY_PAYOUT, discussionQuery);
 
         return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
@@ -231,10 +217,8 @@ public class TagsApi {
     public static List<Discussion> getDiscussionsBy(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery, DiscussionSortType sortBy)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.valueOf(sortBy.name()));
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(discussionQuery);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_DISCUSSIONS_BY_ACTIVE, discussionQuery);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
     }
@@ -265,10 +249,8 @@ public class TagsApi {
     public static List<Discussion> getRepliesByLastUpdate(CommunicationHandler communicationHandler,
             GetRepliesByLastUpdateArgs getRepliesByLastUpdateArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_REPLIES_BY_LAST_UPDATE);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(getRepliesByLastUpdateArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_REPLIES_BY_LAST_UPDATE, getRepliesByLastUpdateArgs);
 
         return communicationHandler.performRequest(requestObject, Discussion.class);
     }
@@ -299,10 +281,8 @@ public class TagsApi {
     public static DiscussionQueryResult getDiscussionsByAuthorBeforeDate(CommunicationHandler communicationHandler,
             GetDiscussionsByAuthorBeforeDateArgs getDiscussionsByAuthorBeforeDateArgs)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(getDiscussionsByAuthorBeforeDateArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API,
+                RequestMethod.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE, getDiscussionsByAuthorBeforeDateArgs);
 
         return communicationHandler.performRequest(requestObject, DiscussionQueryResult.class).get(0);
     }
@@ -331,10 +311,8 @@ public class TagsApi {
      */
     public static GetActiveVotesReturn getActiveVotes(CommunicationHandler communicationHandler,
             GetActiveVotesArgs getActiveVotesArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethod.GET_ACTIVE_VOTES);
-        requestObject.setSteemApi(SteemApiType.TAGS_API);
-        requestObject.setAdditionalParameters(getActiveVotesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_ACTIVE_VOTES,
+                getActiveVotesArgs);
 
         return communicationHandler.performRequest(requestObject, GetActiveVotesReturn.class).get(0);
     }
