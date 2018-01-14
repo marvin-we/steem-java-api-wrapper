@@ -16,6 +16,8 @@
  */
 package eu.bittrade.libs.steemj.plugins.apis.condenser;
 
+import java.util.List;
+
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
@@ -23,6 +25,7 @@ import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedAccount;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlobalProperties;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
@@ -46,7 +49,19 @@ public class CondenserApi {
      * @param communicationHandler
      * @return ExtendedDynamicGlobalProperties
      * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
      * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
      */
     public static ExtendedDynamicGlobalProperties getDynamicGlobalProperties(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
@@ -54,7 +69,32 @@ public class CondenserApi {
                 RequestMethod.GET_DYNAMIC_GLOBAL_PROPERTIES, null);
 
         return communicationHandler.performRequest(requestObject, ExtendedDynamicGlobalProperties.class).get(0);
+    }
 
+    /**
+     * 
+     * @param communicationHandler
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static List<ExtendedAccount> getAccounts(CommunicationHandler communicationHandler)
+            throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.CONDENSER_API, RequestMethod.GET_ACCOUNTS, null);
+
+        return communicationHandler.performRequest(requestObject, ExtendedAccount.class);
     }
 
     /**
