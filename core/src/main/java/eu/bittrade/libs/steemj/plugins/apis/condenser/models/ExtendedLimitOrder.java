@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.LimitOrder;
+import eu.bittrade.libs.steemj.chain.LimitOrder;
 
 /**
  * This class represents a Steem "extended_limit_order" object.

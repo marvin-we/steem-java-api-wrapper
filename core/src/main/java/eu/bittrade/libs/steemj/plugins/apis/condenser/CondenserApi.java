@@ -19,7 +19,7 @@ package eu.bittrade.libs.steemj.plugins.apis.condenser;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -58,7 +58,7 @@ public class CondenserApi {
     public static State getState(CommunicationHandler communicationHandler, Permlink path)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_STATE);
+        requestObject.setApiMethod(RequestMethod.GET_STATE);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);
@@ -88,7 +88,7 @@ public class CondenserApi {
     public static String getHardforkVersion(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
+        requestObject.setApiMethod(RequestMethod.GET_HARDFORK_VERSION);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
         String[] parameters = {};
         requestObject.setAdditionalParameters(parameters);

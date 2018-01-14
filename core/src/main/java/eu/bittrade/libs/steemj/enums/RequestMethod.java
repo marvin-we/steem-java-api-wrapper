@@ -21,7 +21,7 @@ package eu.bittrade.libs.steemj.enums;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public enum RequestMethods {
+public enum RequestMethod {
     // account_by_key_api
     /** Find accounts by their public key. */
     GET_KEY_REFERENCES,

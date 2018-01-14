@@ -20,7 +20,7 @@ import java.security.InvalidParameterException;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -74,7 +74,7 @@ public class MarketHistoryApi {
     public static GetTickerReturn getTicker(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_TICKER);
+        requestObject.setApiMethod(RequestMethod.GET_TICKER);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = {};
@@ -111,7 +111,7 @@ public class MarketHistoryApi {
     public static GetVolumeReturn getVolume(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_VOLUME);
+        requestObject.setApiMethod(RequestMethod.GET_VOLUME);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
 
         Object[] parameters = {};
@@ -157,7 +157,7 @@ public class MarketHistoryApi {
         }
 
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_ORDER_BOOK);
+        requestObject.setApiMethod(RequestMethod.GET_ORDER_BOOK);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
         requestObject.setAdditionalParameters(getOrderBookArgs);
 
@@ -204,7 +204,7 @@ public class MarketHistoryApi {
         }
 
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_TRADE_HISTORY);
+        requestObject.setApiMethod(RequestMethod.GET_TRADE_HISTORY);
         requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
         requestObject.setAdditionalParameters(getTradeHistoryArgs);
 
@@ -247,10 +247,8 @@ public class MarketHistoryApi {
             throw new InvalidParameterException("The limit can't be less than 0 or greater than 500.");
         }
 
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_RECENT_TRADES);
-        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
-        requestObject.setAdditionalParameters(getRecentTradesArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.MARKET_HISTORY_API,
+                RequestMethod.GET_RECENT_TRADES, getRecentTradesArgs);
 
         return communicationHandler.performRequest(requestObject, GetRecentTradesReturn.class).get(0);
     }
@@ -290,10 +288,7 @@ public class MarketHistoryApi {
      */
     public static GetMarketHistoryReturn getMarketHistory(CommunicationHandler communicationHandler,
             GetMarketHistoryArgs getMarketHistoryArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_MARKET_HISTORY);
-        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
-        requestObject.setAdditionalParameters(getMarketHistoryArgs);
+        JsonRPCRequest requestObject = new JsonRPCRequest(null, RequestMethod.GET_MARKET_HISTORY, getMarketHistoryArgs);
 
         return communicationHandler.performRequest(requestObject, GetMarketHistoryReturn.class).get(0);
     }
@@ -324,12 +319,8 @@ public class MarketHistoryApi {
      */
     public static GetMarketHistoryBucketsReturn getMarketHistoryBuckets(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_MARKET_HISTORY_BUCKETS);
-        requestObject.setSteemApi(SteemApiType.MARKET_HISTORY_API);
-
-        Object[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.MARKET_HISTORY_API,
+                RequestMethod.GET_MARKET_HISTORY_BUCKETS, null);
 
         return communicationHandler.performRequest(requestObject, GetMarketHistoryBucketsReturn.class).get(0);
     }

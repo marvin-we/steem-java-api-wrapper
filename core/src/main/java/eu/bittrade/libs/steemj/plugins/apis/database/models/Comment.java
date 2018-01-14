@@ -16,18 +16,23 @@
  */
 package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UInteger;
 import org.joou.ULong;
+import org.joou.UShort;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.Asset;
 
 /**
- * This class represents the Steem "comment_api_obj".
+ * This class represents the Steem "api_comment_object".
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
@@ -52,9 +57,9 @@ public class Comment {
     @JsonProperty("last_payout")
     private TimePointSec lastPayout;
     // Original type is uint8_t.
-    private short depth;
+    private byte depth;
     // Orignal type is uint32_t.
-    private int children;
+    private UInteger children;
     // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("net_rshares")
     private long netRshares;
@@ -75,7 +80,7 @@ public class Comment {
     private ULong totalVoteWeight;
     // Original type is uint64_t.
     @JsonProperty("reward_weight")
-    private long rewardWeight;
+    private UShort rewardWeight;
     @JsonProperty("total_payout_value")
     private Asset totalPayoutValue;
     @JsonProperty("curator_payout_value")
@@ -93,17 +98,14 @@ public class Comment {
     private Asset maxAcceptedPayout;
     // Original type is uint16_t.
     @JsonProperty("percent_steem_dollars")
-    private short percentSteemDollars;
+    private UShort percentSteemDollars;
     @JsonProperty("allow_replies")
     private boolean allowReplies;
     @JsonProperty("allow_votes")
     private boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
     private boolean allowCurationRewards;
-    // TODO: Fix type
-    // bip::vector< beneficiary_route_type, allocator< beneficiary_route_type >
-    // > beneficiaries;
-    private Object[] beneficiaries;
+    private List<BeneficiaryRouteType> beneficiaries;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -206,14 +208,14 @@ public class Comment {
     /**
      * @return the depth
      */
-    public short getDepth() {
+    public byte getDepth() {
         return depth;
     }
 
     /**
      * @return the children
      */
-    public int getChildren() {
+    public UInteger getChildren() {
         return children;
     }
 
@@ -262,7 +264,7 @@ public class Comment {
     /**
      * @return the rewardWeight
      */
-    public long getRewardWeight() {
+    public UShort getRewardWeight() {
         return rewardWeight;
     }
 
@@ -311,7 +313,7 @@ public class Comment {
     /**
      * @return the percentSteemDollars
      */
-    public short getPercentSteemDollars() {
+    public UShort getPercentSteemDollars() {
         return percentSteemDollars;
     }
 
@@ -339,7 +341,7 @@ public class Comment {
     /**
      * @return the beneficiaries
      */
-    public Object[] getBeneficiaries() {
+    public List<BeneficiaryRouteType> getBeneficiaries() {
         return beneficiaries;
     }
 

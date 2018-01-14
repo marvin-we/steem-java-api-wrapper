@@ -2,13 +2,16 @@ package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * This class represents a Steem "list_comments_return" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ListCommentsReturn {
-    // TODO: vector< api_comment_object > comments;
+    @JsonProperty("comments")
+    private Comment comments;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -18,6 +21,13 @@ public class ListCommentsReturn {
      * {@link FindCommentsReturn} class.
      */
     protected ListCommentsReturn() {
+    }
+
+    /**
+     * @return the comments
+     */
+    public Comment getComments() {
+        return comments;
     }
 
     @Override

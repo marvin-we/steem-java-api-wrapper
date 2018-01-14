@@ -52,7 +52,7 @@ import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
     /** The endpoint URI used by default. */
-    private static final String DEFAULT_STEEM_API_URI = "https://api.steemitstage.com";
+    private static final String DEFAULT_STEEM_API_URI = "https://api.steemit.com";
     /** The SteemJ account. */
     private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
     /** The SteemJ version. */

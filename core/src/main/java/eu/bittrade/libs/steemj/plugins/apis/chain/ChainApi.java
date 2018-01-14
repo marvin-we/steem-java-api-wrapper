@@ -19,7 +19,7 @@ package eu.bittrade.libs.steemj.plugins.apis.chain;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -40,7 +40,7 @@ public class ChainApi {
     public static PushBlockReturn pushBlock(CommunicationHandler communicationHandler, PushBlockArgs pushBlockArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.PUSH_BLOCK);
+        requestObject.setApiMethod(RequestMethod.PUSH_BLOCK);
         requestObject.setSteemApi(SteemApiType.CHAIN_API);
         requestObject.setAdditionalParameters(pushBlockArgs);
 
@@ -61,7 +61,7 @@ public class ChainApi {
     public static PushTransactionReturn pushTransaction(CommunicationHandler communicationHandler,
             SignedTransaction signedTransaction) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.PUSH_TRANSACTION);
+        requestObject.setApiMethod(RequestMethod.PUSH_TRANSACTION);
         requestObject.setSteemApi(SteemApiType.CHAIN_API);
         requestObject.setAdditionalParameters(signedTransaction);
 

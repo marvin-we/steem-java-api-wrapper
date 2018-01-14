@@ -18,7 +18,7 @@ package eu.bittrade.libs.steemj.plugins.apis.block;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -68,7 +68,7 @@ public class BlockApi {
     public static GetBlockHeaderReturn getBlockHeader(CommunicationHandler communicationHandler,
             GetBlockHeaderArgs getBlockHeaderArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_BLOCK_HEADER);
+        requestObject.setApiMethod(RequestMethod.GET_BLOCK_HEADER);
         requestObject.setSteemApi(SteemApiType.BLOCK_API);
         requestObject.setAdditionalParameters(getBlockHeaderArgs);
 
@@ -107,7 +107,7 @@ public class BlockApi {
     public static GetBlockReturn getBlock(CommunicationHandler communicationHandler, GetBlockArgs getBlockArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_BLOCK);
+        requestObject.setApiMethod(RequestMethod.GET_BLOCK);
         requestObject.setSteemApi(SteemApiType.BLOCK_API);
         requestObject.setAdditionalParameters(getBlockArgs);
 

@@ -19,7 +19,7 @@ package eu.bittrade.libs.steemj.plugins.apis.network.broadcast.api;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
@@ -73,7 +73,7 @@ public class NetworkBroadcastApi {
     public static void broadcastTransaction(CommunicationHandler communicationHandler, SignedTransaction transaction)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION);
+        requestObject.setApiMethod(RequestMethod.BROADCAST_TRANSACTION);
         requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
 
         if (transaction.getSignatures() == null || transaction.getSignatures().isEmpty()) {
@@ -122,7 +122,7 @@ public class NetworkBroadcastApi {
             CommunicationHandler communicationHandler, SignedTransaction transaction)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.BROADCAST_TRANSACTION_SYNCHRONOUS);
+        requestObject.setApiMethod(RequestMethod.BROADCAST_TRANSACTION_SYNCHRONOUS);
         requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
 
         if (transaction.getSignatures() == null || transaction.getSignatures().isEmpty()) {
@@ -163,7 +163,7 @@ public class NetworkBroadcastApi {
     public static void broadcastBlock(CommunicationHandler communicationHandler, SignedBlock signedBlock)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.BROADCAST_BLOCK);
+        requestObject.setApiMethod(RequestMethod.BROADCAST_BLOCK);
         requestObject.setSteemApi(SteemApiType.NETWORK_BROADCAST_API);
 
         Object[] parameters = { signedBlock };

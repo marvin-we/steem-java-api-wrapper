@@ -18,7 +18,7 @@ package eu.bittrade.libs.steemj.plugins.apis.account.by.key;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -64,7 +64,7 @@ public class AccountByKeyApi {
     public static GetKeyReferencesReturn getKeyReferences(CommunicationHandler communicationHandler,
             GetKeyReferencesArgs publicKeys) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
+        requestObject.setApiMethod(RequestMethod.GET_KEY_REFERENCES);
         requestObject.setSteemApi(SteemApiType.ACCOUNT_BY_KEY_API);
         Object[] parameters = { publicKeys };
         requestObject.setAdditionalParameters(parameters);

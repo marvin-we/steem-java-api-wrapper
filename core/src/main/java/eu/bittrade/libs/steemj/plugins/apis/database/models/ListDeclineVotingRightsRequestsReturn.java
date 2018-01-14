@@ -1,6 +1,12 @@
 package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import eu.bittrade.libs.steemj.chain.DeclineVotingRightsRequestObject;
 
 /**
  * This class represents a Steem "list_decline_voting_rights_requests_return"
@@ -9,7 +15,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ListDeclineVotingRightsRequestsReturn {
-    // TODO: vector< api_decline_voting_rights_request_object > requests;
+    @JsonProperty("requests")
+    private List<DeclineVotingRightsRequestObject> requests;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -19,6 +26,13 @@ public class ListDeclineVotingRightsRequestsReturn {
      * {@link FindDeclineVotingRightsRequestsReturn} class.
      */
     protected ListDeclineVotingRightsRequestsReturn() {
+    }
+
+    /**
+     * @return the requests
+     */
+    public List<DeclineVotingRightsRequestObject> getRequests() {
+        return requests;
     }
 
     @Override

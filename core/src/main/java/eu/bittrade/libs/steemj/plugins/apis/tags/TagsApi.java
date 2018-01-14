@@ -20,7 +20,7 @@ import java.util.List;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -90,7 +90,7 @@ public class TagsApi {
     public static List<Tag> getTrendingTags(CommunicationHandler communicationHandler, String firstTagPattern,
             int limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_TRENDING_TAGS);
+        requestObject.setApiMethod(RequestMethod.GET_TRENDING_TAGS);
         requestObject.setSteemApi(SteemApiType.DATABASE_API);
         String[] parameters = { firstTagPattern, String.valueOf(limit) };
         requestObject.setAdditionalParameters(parameters);
@@ -110,7 +110,7 @@ public class TagsApi {
             GetTagsUsedByAuthorArgs getTagsUsedByAuthorArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
+        requestObject.setApiMethod(RequestMethod.GET_CONTENT_REPLIES);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(getTagsUsedByAuthorArgs);
 
@@ -128,7 +128,7 @@ public class TagsApi {
     public static Discussion getDiscussion(CommunicationHandler communicationHandler,
             GetDiscussionArgs getDiscussionArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_DISCUSSION);
+        requestObject.setApiMethod(RequestMethod.GET_DISCUSSION);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(getDiscussionArgs);
 
@@ -160,7 +160,7 @@ public class TagsApi {
     public static DiscussionQueryResult getContentReplies(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_CONTENT_REPLIES);
+        requestObject.setApiMethod(RequestMethod.GET_CONTENT_REPLIES);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(discussionQuery);
 
@@ -178,7 +178,7 @@ public class TagsApi {
     public static DiscussionQueryResult getPostDiscussionsByPayout(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_POST_DISCUSSIONS_BY_PAYOUT);
+        requestObject.setApiMethod(RequestMethod.GET_POST_DISCUSSIONS_BY_PAYOUT);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(discussionQuery);
 
@@ -196,7 +196,7 @@ public class TagsApi {
     public static DiscussionQueryResult getCommentDiscussionsByPayout(CommunicationHandler communicationHandler,
             DiscussionQuery discussionQuery) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_COMMENT_DISCUSSIONS_BY_PAYOUT);
+        requestObject.setApiMethod(RequestMethod.GET_COMMENT_DISCUSSIONS_BY_PAYOUT);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(discussionQuery);
 
@@ -232,7 +232,7 @@ public class TagsApi {
             DiscussionQuery discussionQuery, DiscussionSortType sortBy)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
+        requestObject.setApiMethod(RequestMethod.valueOf(sortBy.name()));
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(discussionQuery);
 
@@ -266,7 +266,7 @@ public class TagsApi {
             GetRepliesByLastUpdateArgs getRepliesByLastUpdateArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
+        requestObject.setApiMethod(RequestMethod.GET_REPLIES_BY_LAST_UPDATE);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(getRepliesByLastUpdateArgs);
 
@@ -300,7 +300,7 @@ public class TagsApi {
             GetDiscussionsByAuthorBeforeDateArgs getDiscussionsByAuthorBeforeDateArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
+        requestObject.setApiMethod(RequestMethod.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(getDiscussionsByAuthorBeforeDateArgs);
 
@@ -332,7 +332,7 @@ public class TagsApi {
     public static GetActiveVotesReturn getActiveVotes(CommunicationHandler communicationHandler,
             GetActiveVotesArgs getActiveVotesArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_ACTIVE_VOTES);
+        requestObject.setApiMethod(RequestMethod.GET_ACTIVE_VOTES);
         requestObject.setSteemApi(SteemApiType.TAGS_API);
         requestObject.setAdditionalParameters(getActiveVotesArgs);
 

@@ -14,9 +14,10 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.bittrade.libs.steemj.base.models;
+package eu.bittrade.libs.steemj.chain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,12 +26,13 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.Price;
 
 /**
- * This class represents a Graphene Chain "limit_order" object.
+ * This class represents a Graphene Chain "limit_order_object" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class LimitOrder {
-    private int id;
+    // Original type is "id_type".
+    private long id;
     private TimePointSec created;
     private TimePointSec expiration;
     private AccountName seller;
@@ -39,13 +41,9 @@ public class LimitOrder {
     @JsonProperty("for_sale")
     private long forSale;
     @JsonProperty("orderid")
-    private long orderId;
+    private UInteger orderId;
     @JsonProperty("sell_price")
     private Price sellPrice;
-    // Original type is share_type while a share_type is a int64_t so we use
-    // long here.
-    @JsonProperty("deferred_fee")
-    private long deferredFee;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -57,7 +55,7 @@ public class LimitOrder {
     /**
      * @return the id
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -92,7 +90,7 @@ public class LimitOrder {
     /**
      * @return the orderId
      */
-    public long getOrderId() {
+    public UInteger getOrderId() {
         return orderId;
     }
 
@@ -101,13 +99,6 @@ public class LimitOrder {
      */
     public Price getSellPrice() {
         return sellPrice;
-    }
-
-    /**
-     * @return the deferred_fee
-     */
-    public long getDeferredFee() {
-        return deferredFee;
     }
 
     @Override

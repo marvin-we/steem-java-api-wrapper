@@ -21,7 +21,7 @@ import java.util.List;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -86,7 +86,7 @@ public class FollowApi {
     public static GetFollowersReturn getFollowers(CommunicationHandler communicationHandler,
             GetFollowersArgs getFollowersArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_FOLLOWERS);
+        requestObject.setApiMethod(RequestMethod.GET_FOLLOWERS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
         requestObject.setAdditionalParameters(getFollowersArgs);
 
@@ -135,7 +135,7 @@ public class FollowApi {
             AccountName startFollowing, FollowType type, short limit)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_FOLLOWING);
+        requestObject.setApiMethod(RequestMethod.GET_FOLLOWING);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { follower.getName(), startFollowing.getName(), type.toString().toLowerCase(), limit };
@@ -176,7 +176,7 @@ public class FollowApi {
     public static FollowCountApiObject getFollowCount(CommunicationHandler communicationHandler, AccountName account)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_FOLLOW_COUNT);
+        requestObject.setApiMethod(RequestMethod.GET_FOLLOW_COUNT);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { account.getName() };
@@ -224,7 +224,7 @@ public class FollowApi {
     public static List<FeedEntry> getFeedEntries(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_FEED_ENTRIES);
+        requestObject.setApiMethod(RequestMethod.GET_FEED_ENTRIES);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { account.getName(), entryId, limit };
@@ -272,7 +272,7 @@ public class FollowApi {
     public static List<CommentFeedEntry> getFeed(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_FEED);
+        requestObject.setApiMethod(RequestMethod.GET_FEED);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { account.getName(), entryId, limit };
@@ -340,7 +340,7 @@ public class FollowApi {
     public static List<BlogEntry> getBlogEntries(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_BLOG_ENTRIES);
+        requestObject.setApiMethod(RequestMethod.GET_BLOG_ENTRIES);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { account.getName(), entryId, limit };
@@ -388,7 +388,7 @@ public class FollowApi {
     public static List<CommentBlogEntry> getBlog(CommunicationHandler communicationHandler, AccountName account,
             int entryId, short limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_BLOG);
+        requestObject.setApiMethod(RequestMethod.GET_BLOG);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { account.getName(), entryId, limit };
@@ -449,7 +449,7 @@ public class FollowApi {
     public static List<AccountReputation> getAccountReputations(CommunicationHandler communicationHandler,
             AccountName accountName, int limit) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_REPUTATIONS);
+        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_REPUTATIONS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { accountName.getName(), limit };
@@ -489,7 +489,7 @@ public class FollowApi {
     public static List<AccountName> getRebloggedBy(CommunicationHandler communicationHandler, AccountName author,
             Permlink permlink) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_REBLOGGED_BY);
+        requestObject.setApiMethod(RequestMethod.GET_REBLOGGED_BY);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { author.getName(), permlink.getLink() };
@@ -530,7 +530,7 @@ public class FollowApi {
     public static List<PostsPerAuthorPair> getBlogAuthors(CommunicationHandler communicationHandler,
             AccountName blogAccount) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_BLOG_AUTHORS);
+        requestObject.setApiMethod(RequestMethod.GET_BLOG_AUTHORS);
         requestObject.setSteemApi(SteemApiType.FOLLOW_API);
 
         Object[] parameters = { blogAccount.getName() };

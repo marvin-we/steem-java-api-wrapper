@@ -176,7 +176,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<jooq.version>0.9.3</jooq.version>
+		<jooq.version>0.9.1</jooq.version>
 		<crypto.core.version>0.1.0pre1</crypto.core.version>
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>

@@ -2,6 +2,10 @@ package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import eu.bittrade.libs.steemj.chain.ChangeRecoveryAccountRequest;
+
 /**
  * This class represents a Steem "list_change_recovery_account_requests_return"
  * object.
@@ -9,7 +13,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ListChangeRecoveryAccountRequestsReturn {
-    // TODO: vector< api_change_recovery_account_request_object > requests;
+    @JsonProperty("requests")
+    private ChangeRecoveryAccountRequest requests;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -19,6 +24,13 @@ public class ListChangeRecoveryAccountRequestsReturn {
      * {@link FindChangeRecoveryAccountRequestsReturn} class.
      */
     protected ListChangeRecoveryAccountRequestsReturn() {
+    }
+
+    /**
+     * @return the requests
+     */
+    public ChangeRecoveryAccountRequest getRequests() {
+        return requests;
     }
 
     @Override

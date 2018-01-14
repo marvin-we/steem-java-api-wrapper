@@ -18,7 +18,7 @@ package eu.bittrade.libs.steemj.plugins.apis.account.history;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -73,7 +73,7 @@ public class AccountHistoryApi {
     public static GetOpsInBlockReturn getOpsInBlock(CommunicationHandler communicationHandler,
             GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_OPS_IN_BLOCK);
+        requestObject.setApiMethod(RequestMethod.GET_OPS_IN_BLOCK);
         requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
         requestObject.setAdditionalParameters(getOpsInBlockArgs);
 
@@ -110,7 +110,7 @@ public class AccountHistoryApi {
     public static AnnotatedSignedTransaction getTransaction(CommunicationHandler communicationHandler,
             GetAccountHistoryArgs getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_TRANSACTION);
+        requestObject.setApiMethod(RequestMethod.GET_TRANSACTION);
         requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
         requestObject.setAdditionalParameters(getTransactionArgs);
 
@@ -152,7 +152,7 @@ public class AccountHistoryApi {
             GetAccountHistoryArgs getAccountHistoryArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
         requestObject.setSteemApi(SteemApiType.ACCOUNT_HISTORY_API);
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
+        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_HISTORY);
         requestObject.setAdditionalParameters(getAccountHistoryArgs);
 
         return communicationHandler.performRequest(requestObject, GetAccountHistoryReturn.class).get(0);

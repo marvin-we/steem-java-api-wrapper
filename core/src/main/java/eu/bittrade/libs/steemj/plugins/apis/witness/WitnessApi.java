@@ -18,7 +18,7 @@ package eu.bittrade.libs.steemj.plugins.apis.witness;
 
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
-import eu.bittrade.libs.steemj.enums.RequestMethods;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -40,7 +40,7 @@ public class WitnessApi {
             GetAccountBandwidthArgs getAccountBandwidthArgs)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_BANDWIDTH);
+        requestObject.setApiMethod(RequestMethod.GET_ACCOUNT_BANDWIDTH);
         requestObject.setSteemApi(SteemApiType.WITNESS_API);
         requestObject.setAdditionalParameters(getAccountBandwidthArgs);
 
@@ -50,7 +50,7 @@ public class WitnessApi {
     public static ReserveRatioObject getReserveRatio(CommunicationHandler communicationHandler)
             throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_REVERSE_RATIO);
+        requestObject.setApiMethod(RequestMethod.GET_REVERSE_RATIO);
         requestObject.setSteemApi(SteemApiType.WITNESS_API);
         // requestObject.setAdditionalParameters("");
 
