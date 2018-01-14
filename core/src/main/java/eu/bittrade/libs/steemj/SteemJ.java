@@ -107,6 +107,7 @@ import eu.bittrade.libs.steemj.plugins.apis.tags.models.VoteState;
 import eu.bittrade.libs.steemj.plugins.apis.witness.WitnessApi;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.AccountBandwidth;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.GetAccountBandwidthArgs;
+import eu.bittrade.libs.steemj.plugins.apis.witness.models.ReserveRatioObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
@@ -2072,10 +2073,27 @@ public class SteemJ {
         return WitnessApi.getAccountBandwidth(communicationHandler, getAccountBandwidthArgs).getBandwidth();
     }
 
-    // public List<Integer> getMarketHistoryBuckets() throws
-    // SteemCommunicationException, SteemResponseException {
-    // return WitnessApi.getReserveRatio(communicationHandler);
-    // }
+    /**
+     * 
+     * @return
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public ReserveRatioObject getReserveRatio() throws SteemCommunicationException, SteemResponseException {
+        return WitnessApi.getReserveRatio(communicationHandler);
+    }
 
     // #########################################################################
     // ## UTILITY METHODS ######################################################
@@ -2102,6 +2120,7 @@ public class SteemJ {
      */
     public double calculateRemainingBandwidth(AccountName accountName)
             throws SteemCommunicationException, SteemResponseException {
+        // TODO: Use getReserveRatio instead.
         ExtendedDynamicGlobalProperties extendedDynamicGlobalProperties = CondenserApi
                 .getDynamicGlobalProperties(communicationHandler);
         // TODO: Use getAccountBandwidth instead.
