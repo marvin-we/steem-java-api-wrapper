@@ -2819,7 +2819,7 @@ public class SteemJ {
         ArrayList<AccountName> requiredPostingAuths = new ArrayList<>();
         requiredPostingAuths.add(accountThatReblogsThePost);
 
-        CustomJsonOperation customJsonReblogOperation = new CustomJsonOperation(null, requiredPostingAuths, "reblog",
+        CustomJsonOperation customJsonReblogOperation = new CustomJsonOperation(null, requiredPostingAuths, "follow",
                 reblogOperation.toJson());
 
         operations.add(customJsonReblogOperation);
