@@ -297,6 +297,7 @@ public class SteemJ {
     /**
      * Use this method to receive the ID of an API or <code>null</code> if an
      * API with the <code>apiName</code> does not exist or is disabled.
+     * @deprecated This API call is no longer supported.
      * 
      * @param apiName
      *            The name of the API.
@@ -316,10 +317,12 @@ public class SteemJ {
      *             into a Java object.</li>
      *             <li>If the Server returned an error object.</li>
      *             </ul>
+     *             
      */
-    public Integer getApiByName(String apiName) throws SteemCommunicationException, SteemResponseException {
-        return LoginApi.getApiByName(communicationHandler, apiName);
-    }
+//    @Deprecated
+//    public Integer getApiByName(String apiName) throws SteemCommunicationException, SteemResponseException {
+//        return LoginApi.getApiByName(communicationHandler, apiName);
+//    }
 
     /**
      * Use this method to get detailed information about the Steem version of

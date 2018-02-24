@@ -60,7 +60,7 @@ public class LoginApiIT extends BaseIT {
      * Test the
      * {@link eu.bittrade.libs.steemj.apis.login.LoginApi#getApiByName(CommunicationHandler, String)}
      * method.
-     * 
+     * @deprecated Th #getApiByName API call is no longer supported.
      * @throws SteemCommunicationException
      *             If a communication error occurs.
      * @throws SteemResponseException
@@ -69,17 +69,17 @@ public class LoginApiIT extends BaseIT {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetApiByName() throws SteemCommunicationException, SteemResponseException {
-        final Integer bogus = LoginApi.getApiByName(COMMUNICATION_HANDLER, "bogus_api");
-        final Integer database = LoginApi.getApiByName(COMMUNICATION_HANDLER, "database_api");
-        final Integer login = LoginApi.getApiByName(COMMUNICATION_HANDLER, "login_api");
-        final Integer market_history = LoginApi.getApiByName(COMMUNICATION_HANDLER, "market_history_api");
-        final Integer follow = LoginApi.getApiByName(COMMUNICATION_HANDLER, "follow_api");
-
-        assertNull("Expect that bogus api does not exist", bogus);
-        assertNotNull("Expect that database api does exist", database);
-        assertNotNull("Expect that login api does exist", login);
-        assertNotNull("Expect that market_history api does exist", market_history);
-        assertNotNull("Expect that follow api does exist", follow);
+//        final Integer bogus = LoginApi.getApiByName(COMMUNICATION_HANDLER, "bogus_api");
+//        final Integer database = LoginApi.getApiByName(COMMUNICATION_HANDLER, "database_api");
+//        final Integer login = LoginApi.getApiByName(COMMUNICATION_HANDLER, "login_api");
+//        final Integer market_history = LoginApi.getApiByName(COMMUNICATION_HANDLER, "market_history_api");
+//        final Integer follow = LoginApi.getApiByName(COMMUNICATION_HANDLER, "follow_api");
+//
+//        assertNull("Expect that bogus api does not exist", bogus);
+//        assertNotNull("Expect that database api does exist", database);
+//        assertNotNull("Expect that login api does exist", login);
+//        assertNotNull("Expect that market_history api does exist", market_history);
+//        assertNotNull("Expect that follow api does exist", follow);
     }
 
     /**
