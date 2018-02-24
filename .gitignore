@@ -20,3 +20,9 @@ accountDetailsUsedDuringTests.properties
 .settings
 *.project
 *.classpath
+/.gradle/
+/build.gradle
+/gradle/
+/gradlew
+/gradlew.bat
+/settings.gradle
