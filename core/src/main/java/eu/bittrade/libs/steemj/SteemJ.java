@@ -2103,6 +2103,7 @@ public class SteemJ {
     /**
      * Use this method to receive the current order book of the internal
      * SBD:STEEM market.
+     * @deprecated Use {@link #getOrderBookUsingDatabaseApi(int)}
      * 
      * @param limit
      *            The number of orders to have on each side of the order book.
