@@ -151,14 +151,17 @@ public class SteemJ {
             }
         }
 
-        if (SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.FULL)
-                || SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.APIS_ONLY)) {
-            for (SteemApiType steemApi : SteemApiType.values()) {
-                if (getApiByName(steemApi.toString().toLowerCase()) == null) {
-                    LOGGER.debug("The {} is not published by the configured node.", steemApi);
-                }
-            }
-        }
+        /*
+         * This API call is no longer supported.
+         */
+//        if (SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.FULL)
+//                || SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.APIS_ONLY)) {
+//            for (SteemApiType steemApi : SteemApiType.values()) {
+//                if (getApiByName(steemApi.toString().toLowerCase()) == null) {
+//                    LOGGER.debug("The {} is not published by the configured node.", steemApi);
+//                }
+//            }
+//        }
     }
 
     // #########################################################################
