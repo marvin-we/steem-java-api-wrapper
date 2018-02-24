@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.configuration;
 
 import java.net.URI;
@@ -17,13 +33,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.SteemJ;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.AddressPrefixType;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 
 /**
  * This class stores the configuration that is used for the communication to the
@@ -36,7 +52,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 public class SteemJConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(SteemJConfig.class);
     /** The endpoint URI used by default. */
-    private static final String DEFAULT_STEEM_API_URI = "https://api.steemit.com";
+    private static final String DEFAULT_STEEM_API_URI = "https://api.steemitstage.com";
     /** The SteemJ account. */
     private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
     /** The SteemJ version. */

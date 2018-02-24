@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.base.models.operations.virtual;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -10,12 +26,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import eu.bittrade.libs.steemj.BaseITForOperationParsing;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.AuthorRewardOperation;
 
 /**
  * Test that the {@link AuthorRewardOperation} can be parsed.

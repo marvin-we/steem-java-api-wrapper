@@ -1,28 +1,31 @@
 package my.sample.project;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.joou.UInteger;
+import org.joou.ULong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.SteemJ;
-import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.AccountVote;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.VoteState;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CommentOperation;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 
 /**
  * This class provides shows some common SteemJ commands.
@@ -59,12 +62,6 @@ public class SteemJUsageExample {
 
             // Create a new apiWrapper with your config object.
             SteemJ steemJ = new SteemJ();
-            
-            // #########################################################################
-            // ## Use Callbacks to be informed about new blocks ########################
-            // #########################################################################
-            // This is only supported if a websocket connection is used!.
-            steemJ.setBlockAppliedCallback(new MyCustomCallback());
             
             // #########################################################################
             // ## EXECUTE SIMPLYFIED OPERATIONS ########################################
@@ -129,7 +126,7 @@ public class SteemJUsageExample {
             /*
              * Let the default account transfer 1.0 SBD to @dez1337.
              */
-            steemJ.transfer(new AccountName("dez1337"), new Asset(1.0, AssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
+            steemJ.transfer(new AccountName("dez1337"), new Asset(new BigDecimal("1.000"), AssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
             
             /*
              * Let the default account delegate 10.0 VESTS to @dez1337.
@@ -169,8 +166,8 @@ public class SteemJUsageExample {
 
 
             // Let's have a look at the account history of dez1337:
-            Map<Integer, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), 100,
-                    100);
+            Map<UInteger, AppliedOperation> accountHistory = steemJ.getAccountHistory(new AccountName("dez1337"), ULong.valueOf(100),
+                    UInteger.valueOf(100));
             if (accountHistory.get(0).getOp() instanceof AccountCreateOperation) {
                 AccountCreateOperation accountCreateOperation = (AccountCreateOperation) (accountHistory.get(0)
                         .getOp());
