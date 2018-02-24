@@ -1,6 +1,7 @@
 package eu.bittrade.libs.steemj.apis.database.models.state;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -68,7 +69,7 @@ public class Comment {
     @JsonProperty("reward_weight")
     private long rewardWeight;
     @JsonProperty("total_payout_value")
-    private Asset totalPayoutValue;
+    private List<Asset> totalPayoutValue;
     @JsonProperty("curator_payout_value")
     private Asset curatorPayoutValue;
     // Original type is "share_type" which is a "safe<int64_t>".
@@ -276,7 +277,7 @@ public class Comment {
     /**
      * @return the totalPayoutValue
      */
-    public Asset getTotalPayoutValue() {
+    public List<Asset> getTotalPayoutValue() {
         return totalPayoutValue;
     }
 
