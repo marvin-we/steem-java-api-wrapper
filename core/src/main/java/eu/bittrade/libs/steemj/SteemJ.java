@@ -13,14 +13,14 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Sha256Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.Lists;
 
+import eu.bittrade.crypto.core.ECKey;
+import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.apis.database.DatabaseApi;
 import eu.bittrade.libs.steemj.apis.database.models.state.Discussion;
 import eu.bittrade.libs.steemj.apis.database.models.state.State;
@@ -3176,7 +3176,7 @@ public class SteemJ {
 
         // Generate the permanent link by adding the current timestamp and a
         // UUID.
-        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName() + "-"
+        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName().replaceAll("\\.", "") + "-"
                 + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
                 + UUID.randomUUID().toString() + "uid");
 

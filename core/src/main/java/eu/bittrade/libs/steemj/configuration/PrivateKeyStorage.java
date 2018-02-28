@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.bitcoinj.core.DumpedPrivateKey;
-import org.bitcoinj.core.ECKey;
 
+import eu.bittrade.crypto.core.DumpedPrivateKey;
+import eu.bittrade.crypto.core.ECKey;
+import eu.bittrade.crypto.core.base58.Sha256ChecksumProvider;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 
@@ -154,6 +155,6 @@ public class PrivateKeyStorage {
     private ImmutablePair<PrivateKeyType, ECKey> convertWifToECKeyPair(
             ImmutablePair<PrivateKeyType, String> wifPrivateKey) {
         return new ImmutablePair<>(wifPrivateKey.getLeft(),
-                DumpedPrivateKey.fromBase58(null, wifPrivateKey.getRight()).getKey());
+                DumpedPrivateKey.fromBase58(null, wifPrivateKey.getRight(), new Sha256ChecksumProvider()).getKey());
     }
 }

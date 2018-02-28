@@ -5,9 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.security.InvalidParameterException;
 
-import org.bitcoinj.core.Utils;
 import org.junit.Test;
 
+import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.enums.AssetSymbolType;
 
 /**
@@ -34,7 +34,7 @@ public class ChainPropertiesTest {
         ChainProperties chainProperties = new ChainProperties(accountCreationFee, maximumBlockSize, sbdInterestRate);
 
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(chainProperties.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(chainProperties.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
 
     }
 

@@ -4,10 +4,10 @@ import java.math.BigInteger;
 import java.net.URL;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bitcoinj.core.Sha256Hash;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.enums.WitnessScheduleType;
 
 /**

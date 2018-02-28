@@ -3,9 +3,6 @@ package eu.bittrade.libs.steemj.base.models;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.core.Base58;
-import org.bitcoinj.core.ECKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
@@ -15,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.primitives.Bytes;
 
+import eu.bittrade.crypto.core.AddressFormatException;
+import eu.bittrade.crypto.core.ECKey;
+import eu.bittrade.crypto.core.base58.Base58;
 import eu.bittrade.libs.steemj.base.models.serializer.PublicKeySerializer;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;

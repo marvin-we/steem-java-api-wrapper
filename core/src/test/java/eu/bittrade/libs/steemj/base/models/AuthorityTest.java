@@ -8,8 +8,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bitcoinj.core.Utils;
 import org.junit.Test;
+
+import eu.bittrade.crypto.core.CryptoUtils;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -36,7 +37,7 @@ public class AuthorityTest {
         exampleAuthority.setWeightThreshold(6);
 
         assertThat("Expect that the asset object has the given byte representation.",
-                Utils.HEX.encode(exampleAuthority.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(exampleAuthority.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
 
     }
 
@@ -115,6 +116,6 @@ public class AuthorityTest {
         exampleAuthority.setAccountAuths(accountAuths);
         exampleAuthority.setWeightThreshold(1);
 
-        assertThat(exampleAuthority.hashCode(), equalTo(-718348899));
+        assertThat(exampleAuthority.hashCode(), equalTo(390728456));
     }
 }

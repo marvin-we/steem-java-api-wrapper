@@ -5,8 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.security.InvalidParameterException;
 
-import org.bitcoinj.core.Utils;
 import org.junit.Test;
+
+import eu.bittrade.crypto.core.CryptoUtils;
 
 /**
  * Test the Permlink object.
@@ -30,7 +31,7 @@ public class PermlinkTest {
         Permlink customPermlink = new Permlink("steemj-v0-2-4-has-been-released-update-9");
 
         assertThat("Expect that the accountName object has the given byte representation.",
-                Utils.HEX.encode(customPermlink.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(customPermlink.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     /**

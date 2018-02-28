@@ -7,11 +7,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Utils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import eu.bittrade.crypto.core.CryptoUtils;
+import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.BaseTransactionalUT;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
@@ -80,7 +80,7 @@ public class WitnessUpdateOperationTest extends BaseTransactionalUT {
     @Test
     public void testOperationToByteArray() throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("Expect that the operation has the given byte representation.",
-                Utils.HEX.encode(witnessUpdateOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
+                CryptoUtils.HEX.encode(witnessUpdateOperation.toByteArray()), equalTo(EXPECTED_BYTE_REPRESENTATION));
     }
 
     @Override
@@ -88,9 +88,9 @@ public class WitnessUpdateOperationTest extends BaseTransactionalUT {
     public void testTransactionWithOperationToHex()
             throws UnsupportedEncodingException, SteemInvalidTransactionException {
         assertThat("The serialized transaction should look like expected.",
-                Utils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
+                CryptoUtils.HEX.encode(signedTransaction.toByteArray()), equalTo(EXPECTED_TRANSACTION_SERIALIZATION));
         assertThat("Expect that the serialized transaction results in the given hex.",
-                Utils.HEX.encode(Sha256Hash.wrap(Sha256Hash.hash(signedTransaction.toByteArray())).getBytes()),
+                CryptoUtils.HEX.encode(Sha256Hash.of(signedTransaction.toByteArray()).getBytes()),
                 equalTo(EXPECTED_TRANSACTION_HASH));
     }
 }

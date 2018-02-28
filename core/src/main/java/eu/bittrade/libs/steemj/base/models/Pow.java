@@ -1,10 +1,9 @@
 package eu.bittrade.libs.steemj.base.models;
 
-import org.bitcoinj.core.ECKey;
-import org.bitcoinj.core.Sha256Hash;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.crypto.core.ECKey;
+import eu.bittrade.crypto.core.Sha256Hash;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 
