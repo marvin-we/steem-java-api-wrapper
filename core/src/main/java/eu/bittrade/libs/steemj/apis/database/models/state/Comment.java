@@ -1,10 +1,14 @@
 package eu.bittrade.libs.steemj.apis.database.models.state;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.AccountName;
@@ -18,6 +22,17 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Comment {
+	
+	private final Map<String, Object> _properties = new HashMap<>();
+	@JsonAnySetter
+	public void setProperty(String key, Object value) {
+		this._properties.put(key, value);
+	}
+	@JsonAnyGetter
+	public Map<String, Object> getProperties() {
+		return _properties;
+	}
+	
     // Original type is comment_id_type.
     private long id;
     private String category;
@@ -69,7 +84,7 @@ public class Comment {
     @JsonProperty("reward_weight")
     private long rewardWeight;
     @JsonProperty("total_payout_value")
-    private List<Asset> totalPayoutValue;
+    private Asset totalPayoutValue;
     @JsonProperty("curator_payout_value")
     private Asset curatorPayoutValue;
     // Original type is "share_type" which is a "safe<int64_t>".
@@ -277,7 +292,7 @@ public class Comment {
     /**
      * @return the totalPayoutValue
      */
-    public List<Asset> getTotalPayoutValue() {
+    public Asset getTotalPayoutValue() {
         return totalPayoutValue;
     }
 

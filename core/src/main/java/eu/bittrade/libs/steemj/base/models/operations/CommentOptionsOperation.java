@@ -37,7 +37,7 @@ public class CommentOptionsOperation extends Operation {
     @JsonProperty("max_accepted_payout")
     private Asset maxAcceptedPayout;
     @JsonProperty("percent_steem_dollars")
-    private Short percentSteemDollars;
+    private Integer percentSteemDollars;
     @JsonProperty("allow_votes")
     private boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
@@ -311,7 +311,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>percentSteemDollars</code> is higher than 10000
      *             which is equal to 100.00%.
      */
-    public void setPercentSteemDollars(short percentSteemDollars) {
+    public void setPercentSteemDollars(int percentSteemDollars) {
         this.percentSteemDollars = percentSteemDollars;
     }
 
