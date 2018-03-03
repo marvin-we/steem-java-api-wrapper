@@ -74,7 +74,7 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionVerificat
         commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink,
-                new Asset(1000000000, AssetSymbolType.SBD), percentSteemDollars, allowVotes, allowCurationRewards,
+                new Asset(1000000000, AssetSymbolType.SBD), (int) percentSteemDollars, allowVotes, allowCurationRewards,
                 commentOptionsExtensions);
 
         ArrayList<Operation> operations = new ArrayList<>();

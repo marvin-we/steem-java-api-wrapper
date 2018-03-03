@@ -51,7 +51,7 @@ public class CommentOptionsOperationTest extends BaseTransactionalUT {
         short percentSteemDollars = (short) 2471;
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
-        commentOptionsOperation = new CommentOptionsOperation(author, permlink, maxAcceptedPayout, percentSteemDollars,
+        commentOptionsOperation = new CommentOptionsOperation(author, permlink, maxAcceptedPayout, (int) percentSteemDollars,
                 allowVotes, allowCurationRewards, null);
 
         ArrayList<Operation> operations = new ArrayList<>();

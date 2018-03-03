@@ -3035,10 +3035,10 @@ public class SteemJ {
             commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
             commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
-                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
+                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
         } else {
             commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
-                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
+                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards, null);
         }
 
         operations.add(commentOptionsOperation);
@@ -3209,10 +3209,10 @@ public class SteemJ {
             commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
             commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
-                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
+                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
         } else {
             commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
-                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
+                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards, null);
         }
 
         operations.add(commentOptionsOperation);

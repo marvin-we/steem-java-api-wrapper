@@ -58,7 +58,7 @@ public class CommentOptionsOperationIT extends BaseTransactionVerificationIT {
         Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink,
-                maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
+                maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards, null);
 
         ArrayList<Operation> operations = new ArrayList<>();
         operations.add(commentOptionsOperation);
