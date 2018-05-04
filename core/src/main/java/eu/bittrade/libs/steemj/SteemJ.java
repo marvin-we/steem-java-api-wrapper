@@ -2993,7 +2993,7 @@ public class SteemJ {
     public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
             String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
+        if (tags == null || tags.length < 1) {
             throw new InvalidParameterException(TAG_ERROR_MESSAGE);
         }
         ArrayList<Operation> operations = new ArrayList<>();
