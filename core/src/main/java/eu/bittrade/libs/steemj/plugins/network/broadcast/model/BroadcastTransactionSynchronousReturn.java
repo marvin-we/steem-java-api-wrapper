@@ -1,10 +1,14 @@
 package eu.bittrade.libs.steemj.plugins.network.broadcast.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.TransactionId;
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class represents a Steem "broadcast_transaction_synchronous_return"
@@ -12,7 +16,18 @@ import eu.bittrade.libs.steemj.base.models.TransactionId;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class BroadcastTransactionSynchronousReturn {
+public class BroadcastTransactionSynchronousReturn implements HasJsonAnyGetterSetter {
+	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
+	@Override
+	public Map<String, Object> _getter() {
+		return _anyGetterSetterMap;
+	}
+
+	@Override
+	public void _setter(String key, Object value) {
+		_getter().put(key, value);
+	}
+
     @JsonProperty("id")
     private TransactionId id;
     @JsonProperty("block_num")

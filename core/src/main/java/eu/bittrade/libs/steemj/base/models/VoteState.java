@@ -1,15 +1,30 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class represents the Steem data type "vote_state".
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
-public class VoteState {
+public class VoteState implements HasJsonAnyGetterSetter {
+	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
+	@Override
+	public Map<String, Object> _getter() {
+		return _anyGetterSetterMap;
+	}
+
+	@Override
+	public void _setter(String key, Object value) {
+		_getter().put(key, value);
+	}
+
     private AccountName voter;
     // Original type is uint64_t.
     private BigInteger weight;

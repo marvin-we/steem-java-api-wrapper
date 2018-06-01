@@ -18,6 +18,7 @@ import eu.bittrade.libs.steemj.base.models.serializer.AccountAuthHashMapSerializ
 import eu.bittrade.libs.steemj.base.models.serializer.PublicKeyHashMapSerializer;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -26,7 +27,18 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Authority implements ByteTransformable, SignatureObject {
+public class Authority implements ByteTransformable, SignatureObject , HasJsonAnyGetterSetter {
+	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
+	@Override
+	public Map<String, Object> _getter() {
+		return _anyGetterSetterMap;
+	}
+
+	@Override
+	public void _setter(String key, Object value) {
+		_getter().put(key, value);
+	}
+
     // Type is uint32 in the original code.
     @JsonProperty("weight_threshold")
     private long weightThreshold;

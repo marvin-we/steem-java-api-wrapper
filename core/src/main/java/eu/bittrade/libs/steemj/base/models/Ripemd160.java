@@ -3,19 +3,33 @@ package eu.bittrade.libs.steemj.base.models;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.joou.UInteger;
 
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class is a wrapper for ripemd160 hashes.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public abstract class Ripemd160 implements ByteTransformable, Serializable {
+public abstract class Ripemd160 implements ByteTransformable, Serializable , HasJsonAnyGetterSetter {
+	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
+	@Override
+	public Map<String, Object> _getter() {
+		return _anyGetterSetterMap;
+	}
+
+	@Override
+	public void _setter(String key, Object value) {
+		_getter().put(key, value);
+	}
+
     /** Generated serial uid. */
     private static final long serialVersionUID = 7984783145088522082L;
     /**

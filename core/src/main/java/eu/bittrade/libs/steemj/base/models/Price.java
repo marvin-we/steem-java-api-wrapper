@@ -3,6 +3,8 @@ package eu.bittrade.libs.steemj.base.models;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -11,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class is the java implementation of the <a href=
@@ -19,7 +22,18 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Price implements ByteTransformable {
+public class Price implements ByteTransformable , HasJsonAnyGetterSetter {
+	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
+	@Override
+	public Map<String, Object> _getter() {
+		return _anyGetterSetterMap;
+	}
+
+	@Override
+	public void _setter(String key, Object value) {
+		_getter().put(key, value);
+	}
+
     @JsonProperty("base")
     private Asset base;
     @ JsonProperty("quote")
