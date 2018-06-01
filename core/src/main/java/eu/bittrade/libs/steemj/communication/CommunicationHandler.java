@@ -152,7 +152,7 @@ public class CommunicationHandler {
 //            mapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, true);
 //            mapper.configure(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS, true);
             mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY, false);
-            mapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
+//            mapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
             mapper.configure(DeserializationFeature.WRAP_EXCEPTIONS, true);
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
