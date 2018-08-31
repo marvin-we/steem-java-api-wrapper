@@ -85,14 +85,14 @@ public class CondenserUtils {
 	 *            The app name that publishes this comment or post.
 	 * @param format
 	 *            The format used by the comment or post.
-	 * @param extraData
+	 * @param extraMetadata
 	 *            <blockquote>A map of extra metadata to pack into the json metadata. Any values
 	 *            here will <strong>overwrite</strong> any calculated values with
 	 *            the same key!</blockquote>
 	 * @return The json metadata in its String presentation.
 	 */
 	public static String generateSteemitMetadata(String content, String[] tags, String app, String format,
-			Map<String, Object> extraData) {
+			Map<String, Object> extraMetadata) {
 		Map<String, Object> metadata = new LinkedHashMap<>();
 
 		if (tags != null) {
@@ -128,13 +128,13 @@ public class CondenserUtils {
 		metadata.put(APP_FIELD_NAME, app);
 		metadata.put(FORMAT_FIELD_NAME, format);
 
-		if (extraData != null) {
-			for (String key : extraData.keySet()) {
+		if (extraMetadata != null) {
+			for (String key : extraMetadata.keySet()) {
 				key = key.trim();
 				if (key.isEmpty()) {
 					continue;
 				}
-				metadata.put(key, extraData.get(key));
+				metadata.put(key, extraMetadata.get(key));
 			}
 		}
 		ObjectMapper objectMapper = new ObjectMapper();
