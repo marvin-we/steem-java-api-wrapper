@@ -3097,14 +3097,14 @@ public class SteemJ {
 	 */
 	public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
 			Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags, String format,
-			Map<String, Object> extraData)
+			Map<String, Object> extraMetadata)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
 		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
 			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
 		}
 
 		return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
-				permlinkOfThePostOrCommentToReplyTo, content, tags, format, extraData);
+				permlinkOfThePostOrCommentToReplyTo, content, tags, format, extraMetadata);
 	}
 
 	/**
@@ -3275,14 +3275,14 @@ public class SteemJ {
 	 *             requirements described above.
 	 */
 	public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags,
-			String format, Map<String, Object> extraData)
+			String format, Map<String, Object> extraMetadata)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
 		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
 			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
 		}
 
 		return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
-				tags, format, extraData);
+				tags, format, extraMetadata);
 	}
 
 	/**
@@ -3330,7 +3330,7 @@ public class SteemJ {
 	 *             requirements described above.
 	 */
 	public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
-			String title, String content, String[] tags, String format, Map<String, Object> extraData)
+			String title, String content, String[] tags, String format, Map<String, Object> extraMetadata)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
 		if (tags == null || tags.length < 1 || tags.length > 5) {
 			throw new InvalidParameterException(TAG_ERROR_MESSAGE);
@@ -3341,7 +3341,7 @@ public class SteemJ {
 		Permlink parentPermlink = new Permlink(tags[0]);
 
 		String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
-				SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraData);
+				SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraMetadata);
 
 		CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
 				permlinkOfThePostToUpdate, title, content, jsonMetadata);
@@ -3423,14 +3423,14 @@ public class SteemJ {
 	 */
 	public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
 			Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags, String format,
-			Map<String, Object> extraData)
+			Map<String, Object> extraMetadata)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
 		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
 			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
 		}
 
 		return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
-				originalPermlinkOfTheCommentToUpdate, content, tags, format, extraData);
+				originalPermlinkOfTheCommentToUpdate, content, tags, format, extraMetadata);
 	}
 
 	/**
@@ -3480,7 +3480,7 @@ public class SteemJ {
 	 */
 	public CommentOperation updateComment(AccountName originalAuthorOfTheCommentToUpdate, AccountName parentAuthor,
 			Permlink parentPermlink, Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags,
-			String format, Map<String, Object> extraData)
+			String format, Map<String, Object> extraMetadata)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
 		if (tags == null || tags.length < 1 || tags.length > 5) {
 			throw new InvalidParameterException(TAG_ERROR_MESSAGE);
@@ -3488,7 +3488,7 @@ public class SteemJ {
 		ArrayList<Operation> operations = new ArrayList<>();
 
 		String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
-				SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraData);
+				SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraMetadata);
 
 		CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
 				originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content, jsonMetadata);
