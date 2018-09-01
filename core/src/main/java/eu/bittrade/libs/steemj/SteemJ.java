@@ -2869,7 +2869,9 @@ public class SteemJ {
 	}
 
 	/**
-	 * Use this method to create a new post.
+	 * Use this method to create a new post. Supports setting body format and extra
+	 * metadata.<br>
+	 * <br>
 	 * 
 	 * <b>Attention</b>
 	 * <ul>
@@ -2900,6 +2902,14 @@ public class SteemJ {
 	 *            A list of tags while the first tag in this list is the main tag.
 	 *            You can provide up to five tags but at least one needs to be
 	 *            provided.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
@@ -2929,15 +2939,81 @@ public class SteemJ {
 		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
 			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
 		}
-
 		return createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags, format, extraMetadata);
+	}
+
+	/**
+	 * Use this method to create a new post. Supports setting body format and extra
+	 * metadata.<br>
+	 * <br>
+	 * 
+	 * <b>Attention</b>
+	 * <ul>
+	 * <li>This method will write data on the blockchain. As all writing operations,
+	 * a private key is required to sign the transaction. For a create post
+	 * operation the private posting key of the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+	 * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+	 * PrivateKeyStorage}.</li>
+	 * <li>In case the {@link SteemJConfig#getSteemJWeight() SteemJWeight} is set to
+	 * a positive value this method will add a comment options operation. Due to
+	 * this, the {@link SteemJConfig#getSteemJWeight() SteemJWeight} percentage will
+	 * be paid to the SteemJ account.</li>
+	 * <li>This method will automatically use the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account that
+	 * will publish the post - If no default account has been provided, this method
+	 * will throw an error. If you do not want to configure the author account as a
+	 * default account, please use the
+	 * {@link #createPost(AccountName, String, String, String[])} method and provide
+	 * the author account separately.</li>
+	 * </ul>
+	 * 
+	 * @param title
+	 *            The title of the post to publish.
+	 * @param content
+	 *            The content of the post to publish.
+	 * @param tags
+	 *            A list of tags while the first tag in this list is the main tag.
+	 *            You can provide up to five tags but at least one needs to be
+	 *            provided. <strong>format is set to "markdown"</strong><br>
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation createPost(String title, String content, String[] tags)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		return createPost(title, content, tags, MARKDOWN, null);
 	}
 
 	/**
 	 * This method is equivalent to the
 	 * {@link #createPost(String, String, String[])} method, but lets you define the
 	 * <code>authorThatPublishsThePost</code> account separately instead of using
-	 * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+	 * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}. Supports setting
+	 * body format and extra metadata.<br>
+	 * <br>
 	 * 
 	 * @param authorThatPublishsThePost
 	 *            The account who wants to publish the post.
@@ -2949,6 +3025,15 @@ public class SteemJ {
 	 *            A list of tags while the first tag in this list is the main tag.
 	 *            You can provide up to five tags but at least one needs to be
 	 *            provided.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
@@ -3004,7 +3089,7 @@ public class SteemJ {
 		CommentOptionsOperation commentOptionsOperation;
 		// Only add a BeneficiaryRouteType if it makes sense.
 		if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
-			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJForkedAccount(),
 					SteemJConfig.getInstance().getSteemJWeight());
 
 			ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
@@ -3036,6 +3121,131 @@ public class SteemJ {
 		this.broadcastTransaction(signedTransaction);
 
 		return commentOperation;
+	}
+
+	/**
+	 * This method is equivalent to the
+	 * {@link #createPost(String, String, String[])} method, but lets you define the
+	 * <code>authorThatPublishsThePost</code> account separately instead of using
+	 * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+	 * 
+	 * @param authorThatPublishsThePost
+	 *            The account who wants to publish the post.
+	 * @param title
+	 *            The title of the post to publish.
+	 * @param content
+	 *            The content of the post to publish.
+	 * @param tags
+	 *            A list of tags while the first tag in this list is the main tag.
+	 *            You can provide up to five tags but at least one needs to be
+	 *            provided.
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
+			String[] tags)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		return createPost(authorThatPublishsThePost, title, content, tags, MARKDOWN, null);
+	}
+
+	/**
+	 * Use this method to create a new comment. Supports setting body format and
+	 * extra metadata.<br>
+	 * <br>
+	 * 
+	 * <b>Attention</b>
+	 * <ul>
+	 * <li>This method will write data on the blockchain. As all writing operations,
+	 * a private key is required to sign the transaction. For a create comment
+	 * operation the private posting key of the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+	 * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+	 * PrivateKeyStorage}.</li>
+	 * <li>In case the {@link SteemJConfig#getSteemJWeight() SteemJWeight} is set to
+	 * a positive value this method will add a comment options operation. Due to
+	 * this, the {@link SteemJConfig#getSteemJWeight() SteemJWeight} percentage will
+	 * be paid to the SteemJ account.</li>
+	 * <li>This method will automatically use the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account that
+	 * will publish the comment - If no default account has been provided, this
+	 * method will throw an error. If you do not want to configure the author
+	 * account as a default account, please use the
+	 * {@link #createComment(AccountName, AccountName, Permlink, String, String[])}
+	 * method and provide the author account separately.</li>
+	 * </ul>
+	 * 
+	 * @param authorOfThePostOrCommentToReplyTo
+	 *            The author of the post or comment to reply to.
+	 * @param permlinkOfThePostOrCommentToReplyTo
+	 *            The permlink of the post or comment to reply to.
+	 * @param content
+	 *            The content to publish.
+	 * @param tags
+	 *            A list of tags while the first tag in this list is the main tag.
+	 *            You can provide up to five tags but at least one needs to be
+	 *            provided.
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
+			Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags, String format,
+			Map<String, Object> extraMetadata)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+		}
+
+		return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
+				permlinkOfThePostOrCommentToReplyTo, content, tags, format, extraMetadata);
 	}
 
 	/**
@@ -3075,6 +3285,15 @@ public class SteemJ {
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
 	 * @throws SteemCommunicationException
 	 *             <ul>
 	 *             <li>If the server was not able to answer the request in the given
@@ -3096,15 +3315,10 @@ public class SteemJ {
 	 *             requirements described above.
 	 */
 	public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
-			Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags, String format,
-			Map<String, Object> extraMetadata)
+			Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
-		}
-
-		return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
-				permlinkOfThePostOrCommentToReplyTo, content, tags, format, extraMetadata);
+		return createComment(authorOfThePostOrCommentToReplyTo, permlinkOfThePostOrCommentToReplyTo, content, tags,
+				MARKDOWN, null);
 	}
 
 	/**
@@ -3112,7 +3326,8 @@ public class SteemJ {
 	 * {@link #createComment(AccountName, Permlink, String, String[])} method, but
 	 * lets you define the <code>authorThatPublishsTheComment</code> account
 	 * separately instead of using the {@link SteemJConfig#getDefaultAccount()
-	 * DefaultAccount}.
+	 * DefaultAccount}. Supports setting body format and extra metadata.<br>
+	 * <br>
 	 * 
 	 * @param authorThatPublishsTheComment
 	 *            The account that wants to publish the comment.
@@ -3126,6 +3341,15 @@ public class SteemJ {
 	 *            A list of tags while the first tag in this list is the main tag.
 	 *            You can provide up to five tags but at least one needs to be
 	 *            provided.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
@@ -3180,7 +3404,7 @@ public class SteemJ {
 		CommentOptionsOperation commentOptionsOperation;
 		// Only add a BeneficiaryRouteType if it makes sense.
 		if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
-			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJForkedAccount(),
 					SteemJConfig.getInstance().getSteemJWeight());
 
 			ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
@@ -3212,6 +3436,147 @@ public class SteemJ {
 		this.broadcastTransaction(signedTransaction);
 
 		return commentOperation;
+	}
+
+	/**
+	 * This method is equivalent to the
+	 * {@link #createComment(AccountName, Permlink, String, String[])} method, but
+	 * lets you define the <code>authorThatPublishsTheComment</code> account
+	 * separately instead of using the {@link SteemJConfig#getDefaultAccount()
+	 * DefaultAccount}.
+	 * 
+	 * @param authorThatPublishsTheComment
+	 *            The account that wants to publish the comment.
+	 * @param authorOfThePostOrCommentToReplyTo
+	 *            The author of the post or comment to reply to.
+	 * @param permlinkOfThePostOrCommentToReplyTo
+	 *            The permlink of the post or comment to reply to.
+	 * @param content
+	 *            The content to publish.
+	 * @param tags
+	 *            A list of tags while the first tag in this list is the main tag.
+	 *            You can provide up to five tags but at least one needs to be
+	 *            provided.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation createComment(AccountName authorThatPublishsTheComment,
+			AccountName authorOfThePostOrCommentToReplyTo, Permlink permlinkOfThePostOrCommentToReplyTo, String content,
+			String[] tags)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		return createComment(authorThatPublishsTheComment, authorOfThePostOrCommentToReplyTo,
+				permlinkOfThePostOrCommentToReplyTo, content, tags, MARKDOWN, null);
+	}
+
+	/**
+	 * Use this method to update an existing post. Supports setting body format and
+	 * extra metadata.<br>
+	 * <br>
+	 * 
+	 * <b>Attention</b>
+	 * <ul>
+	 * <li>Updating a post only works if Steem can identify the existing post - If
+	 * this is not the case, this operation will create a new post instead of
+	 * updating the existing one. The identification is based on the
+	 * <code>permlinkOfThePostToUpdate</code> and the first tag of the
+	 * <code>tags</code> array to be the same ones as of the post to update.</li>
+	 * <li>This method will write data on the blockchain. As all writing operations,
+	 * a private key is required to sign the transaction. For a update post
+	 * operation the private posting key of the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+	 * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+	 * PrivateKeyStorage}.</li>
+	 * <li>This method will automatically use the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of the
+	 * post to update - If no default account has been provided, this method will
+	 * throw an error. If you do not want to configure the author account as a
+	 * default account, please use the
+	 * {@link #updatePost(AccountName, Permlink, String, String, String[])} method
+	 * and provide the author account separately.</li>
+	 * </ul>
+	 * 
+	 * @param permlinkOfThePostToUpdate
+	 *            The permlink of the post to update. <b>Attention</b> If the
+	 *            permlink is not configured currently, SteemJ could accidently
+	 *            create a new post instead of updating an existing one.
+	 * @param title
+	 *            The new title of the post to set.
+	 * @param content
+	 *            The new content of the post to set.
+	 * @param tags
+	 *            The new tags of the post. <b>Attention</b> The first tag still
+	 *            needs to be the same as before otherwise SteemJ could accidently
+	 *            create a new post instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags,
+			String format, Map<String, Object> extraMetadata)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+		}
+
+		return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
+				tags, format, extraMetadata);
 	}
 
 	/**
@@ -3251,6 +3616,15 @@ public class SteemJ {
 	 *            The new tags of the post. <b>Attention</b> The first tag still
 	 *            needs to be the same as before otherwise SteemJ could accidently
 	 *            create a new post instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
@@ -3274,22 +3648,18 @@ public class SteemJ {
 	 *             If one of the provided parameters does not fulfill the
 	 *             requirements described above.
 	 */
-	public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags,
-			String format, Map<String, Object> extraMetadata)
+	public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
-		}
-
-		return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
-				tags, format, extraMetadata);
+		return updatePost(permlinkOfThePostToUpdate, title, content, tags, MARKDOWN, null);
 	}
 
 	/**
 	 * This method is equivalent to the
 	 * {@link #updatePost(Permlink, String, String, String[])} method, but lets you
 	 * define the <code>authorOfThePostToUpdate</code> account separately instead of
-	 * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+	 * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}. Supports
+	 * setting body format and extra metadata.<br>
+	 * <br>
 	 * 
 	 * @param authorOfThePostToUpdate
 	 *            The account that wants to perform the update. In most cases, this
@@ -3306,6 +3676,15 @@ public class SteemJ {
 	 *            The new tags of the post. <b>Attention</b> The first tag still
 	 *            needs to be the same as before otherwise SteemJ could accidently
 	 *            create a new post instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
@@ -3361,6 +3740,149 @@ public class SteemJ {
 	}
 
 	/**
+	 * This method is equivalent to the
+	 * {@link #updatePost(Permlink, String, String, String[])} method, but lets you
+	 * define the <code>authorOfThePostToUpdate</code> account separately instead of
+	 * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+	 * 
+	 * @param authorOfThePostToUpdate
+	 *            The account that wants to perform the update. In most cases, this
+	 *            should be the author of the already existing post.
+	 * @param permlinkOfThePostToUpdate
+	 *            The permlink of the post to update. <b>Attention</b> If the
+	 *            permlink is not configured currently, SteemJ could accidently
+	 *            create a new post instead of updating an existing one.
+	 * @param title
+	 *            The new title of the post to set.
+	 * @param content
+	 *            The new content of the post to set.
+	 * @param tags
+	 *            The new tags of the post. <b>Attention</b> The first tag still
+	 *            needs to be the same as before otherwise SteemJ could accidently
+	 *            create a new post instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
+			String title, String content, String[] tags)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		return updatePost(authorOfThePostToUpdate, permlinkOfThePostToUpdate, title, content, tags, MARKDOWN, null);
+	}
+
+	/**
+	 * Use this method to update an existing comment. Supports setting body format
+	 * and extra metadata.<br>
+	 * <br>
+	 * 
+	 * <b>Attention</b>
+	 * <ul>
+	 * <li>Updating a comment only works if Steem can identify the existing comment
+	 * - If this is not the case, this operation will create a new comment instead
+	 * of updating the existing one. The identification is based on the
+	 * <code>originalPermlinkOfYourComment</code>, the <code>parentAuthor</code>,
+	 * the <code>parentPermlink</code> and the first tag of the <code>tags</code>
+	 * array to be the same ones as of the post to update.</li>
+	 * <li>This method will write data on the blockchain. As all writing operations,
+	 * a private key is required to sign the transaction. For a update comment
+	 * operation the private posting key of the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+	 * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+	 * PrivateKeyStorage}.</li>
+	 * <li>This method will automatically use the
+	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of the
+	 * comment to update - If no default account has been provided, this method will
+	 * throw an error. If you do not want to configure the author account as a
+	 * default account, please use the
+	 * {@link #updateComment(AccountName, AccountName, Permlink, Permlink, String, String[])}
+	 * method and provide the author account separately.</li>
+	 * </ul>
+	 * 
+	 * @param parentAuthor
+	 *            The author of the post or comment that you initially replied to.
+	 * @param parentPermlink
+	 *            The permlink of the post or comment that you initially replied to.
+	 * @param originalPermlinkOfTheCommentToUpdate
+	 *            The permlink of the comment to update.
+	 * @param content
+	 *            The new content of the comment to set.
+	 * @param tags
+	 *            The new tags of the comment. <b>Attention</b> The first tag still
+	 *            needs to be the same as before otherwise SteemJ could accidently
+	 *            create a new comment instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
+			Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags, String format,
+			Map<String, Object> extraMetadata)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+		}
+
+		return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
+				originalPermlinkOfTheCommentToUpdate, content, tags, format, extraMetadata);
+	}
+
+	/**
 	 * Use this method to update an existing comment.
 	 * 
 	 * <b>Attention</b>
@@ -3398,6 +3920,15 @@ public class SteemJ {
 	 *            The new tags of the comment. <b>Attention</b> The first tag still
 	 *            needs to be the same as before otherwise SteemJ could accidently
 	 *            create a new comment instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
@@ -3422,15 +3953,10 @@ public class SteemJ {
 	 *             requirements described above.
 	 */
 	public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
-			Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags, String format,
-			Map<String, Object> extraMetadata)
+			Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
 			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
-		}
-
-		return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
-				originalPermlinkOfTheCommentToUpdate, content, tags, format, extraMetadata);
+		return updateComment(parentAuthor, parentPermlink, originalPermlinkOfTheCommentToUpdate, content, tags,
+				MARKDOWN, null);
 	}
 
 	/**
@@ -3438,7 +3964,9 @@ public class SteemJ {
 	 * {@link #updateComment(AccountName, Permlink, Permlink, String, String[])}
 	 * method, but allows you to define the
 	 * <code>originalAuthorOfTheCommentToUpdate</code> account separately instead of
-	 * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+	 * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}. Supports
+	 * setting body format and extra metadata.<br>
+	 * <br>
 	 * 
 	 * @param originalAuthorOfTheCommentToUpdate
 	 *            The account that wants to perform the update. In most cases, this
@@ -3455,6 +3983,15 @@ public class SteemJ {
 	 *            The new tags of the comment. <b>Attention</b> The first tag still
 	 *            needs to be the same as before otherwise SteemJ could accidently
 	 *            create a new comment instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
 	 * @return The {@link CommentOperation} which has been created within this
 	 *         method. The returned Operation allows you to access the generated
 	 *         values.
@@ -3504,6 +4041,67 @@ public class SteemJ {
 		this.broadcastTransaction(signedTransaction);
 
 		return commentOperation;
+	}
+
+	/**
+	 * This method is like the
+	 * {@link #updateComment(AccountName, Permlink, Permlink, String, String[])}
+	 * method, but allows you to define the
+	 * <code>originalAuthorOfTheCommentToUpdate</code> account separately instead of
+	 * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+	 * 
+	 * @param originalAuthorOfTheCommentToUpdate
+	 *            The account that wants to perform the update. In most cases, this
+	 *            should be the author of the already existing comment.
+	 * @param parentAuthor
+	 *            The author of the post or comment that you initially replied to.
+	 * @param parentPermlink
+	 *            The permlink of the post or comment that you initially replied to.
+	 * @param originalPermlinkOfTheCommentToUpdate
+	 *            The permlink of the comment to update.
+	 * @param content
+	 *            The new content of the comment to set.
+	 * @param tags
+	 *            The new tags of the comment. <b>Attention</b> The first tag still
+	 *            needs to be the same as before otherwise SteemJ could accidently
+	 *            create a new comment instead of updating an existing one.
+	 * @param format
+	 *            Declared format of message body. Usually one of
+	 *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
+	 *            <strong>text/html</strong>.
+	 * @param extraMetadata
+	 *            Additional jsonMetadata to be added to post. Entries here
+	 *            <strong>supersede</strong> any SteemJ autocalculated jsonMetadata
+	 *            values.
+	 * 
+	 * @return The {@link CommentOperation} which has been created within this
+	 *         method. The returned Operation allows you to access the generated
+	 *         values.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 * @throws SteemInvalidTransactionException
+	 *             If there is a problem while signing the transaction.
+	 * @throws InvalidParameterException
+	 *             If one of the provided parameters does not fulfill the
+	 *             requirements described above.
+	 */
+	public CommentOperation updateComment(AccountName originalAuthorOfTheCommentToUpdate, AccountName parentAuthor,
+			Permlink parentPermlink, Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
+			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+		return updateComment(originalAuthorOfTheCommentToUpdate, parentAuthor, parentPermlink,
+				originalPermlinkOfTheCommentToUpdate, content, tags, MARKDOWN, null);
 	}
 
 	/**

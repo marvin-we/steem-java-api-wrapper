@@ -1,7 +1,6 @@
 package eu.bittrade.libs.steemj.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +9,6 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 
 /**
  * This class contains several utility methods required for Condenser
