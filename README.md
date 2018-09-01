@@ -23,6 +23,8 @@ As something bad must have happened to <a href="https://steemit.com/@dez1337">@d
 # Binaries
 SteemJ binaries are pushed into the maven central repository and can be integrated with a bunch of build management tools like Maven.
 
+[![](https://jitpack.io/v/muksihs/steem-java-api-wrapper.svg)](https://jitpack.io/#muksihs/steem-java-api-wrapper)
+
 ## Gradle
 ```Gradle
 	allprojects {
