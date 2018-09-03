@@ -34,7 +34,7 @@ SteemJ binaries are pushed into the maven central repository and can be integrat
 		}
 	}
     dependencies {
-	        compile 'com.github.muksihs.steem-java-api-wrapper:steemj-core:0.4.5'
+	        compile 'com.github.muksihs.steem-java-api-wrapper:steemj-core:0.4.6-20180903-00'
 	}
 ```
 
@@ -51,7 +51,7 @@ File: <i>pom.xml</i>
 	<dependency>
 	    <groupId>com.github.muksihs.steem-java-api-wrapper</groupId>
 	    <artifactId>steemj-core</artifactId>
-	    <version>0.4.6-20180901-00</version>
+	    <version>0.4.6-20180903-00</version>
 	</dependency>
 ```
 
