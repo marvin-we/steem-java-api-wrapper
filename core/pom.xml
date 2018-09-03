@@ -70,7 +70,7 @@
 			<version>${apache.commons.io.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.muksihs</groupId>
+			<groupId>eu.bittrade.libs</groupId>
 			<artifactId>crypto-core</artifactId>
 			<version>${crypto.core.version}</version>
 		</dependency>
