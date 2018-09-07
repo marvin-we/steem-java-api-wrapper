@@ -3088,9 +3088,10 @@ public class SteemJ {
 
 		CommentOptionsOperation commentOptionsOperation;
 		// Only add a BeneficiaryRouteType if it makes sense.
-		if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
-			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJForkedAccount(),
-					SteemJConfig.getInstance().getSteemJWeight());
+		SteemJConfig config = SteemJConfig.getInstance();
+		if (config.getSteemJWeight() > 0) {
+			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(config.getBeneficiaryAccount(),
+					config.getSteemJWeight());
 
 			ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
 			beneficiaryRouteTypes.add(beneficiaryRouteType);
@@ -3403,9 +3404,10 @@ public class SteemJ {
 
 		CommentOptionsOperation commentOptionsOperation;
 		// Only add a BeneficiaryRouteType if it makes sense.
-		if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
-			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJForkedAccount(),
-					SteemJConfig.getInstance().getSteemJWeight());
+		SteemJConfig config = SteemJConfig.getInstance();
+		if (config.getSteemJWeight() > 0) {
+			BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(config.getBeneficiaryAccount(),
+					config.getSteemJWeight());
 
 			ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
 			beneficiaryRouteTypes.add(beneficiaryRouteType);

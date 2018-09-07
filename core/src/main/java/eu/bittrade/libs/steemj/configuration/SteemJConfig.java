@@ -38,9 +38,11 @@ public class SteemJConfig {
 	/** The endpoint URI used by default. */
 	private static final String DEFAULT_STEEM_API_URI = "https://api.steemit.com";
 	/** The SteemJ account. */
-	 private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
-	/** The Muksihs FORK SteemJ account. */
-	private static final AccountName STEEMJ_FORKED_ACCOUNT = new AccountName("muksihs");
+	private static final AccountName STEEMJ_ACCOUNT = new AccountName("steemj");
+	/**
+	 * The default beneficiary account.
+	 */
+	private AccountName beneficiaryAccount = STEEMJ_ACCOUNT;
 	/** The SteemJ version. */
 	private static final String STEEMJ_VERSION = SteemJ.class.getPackage().getImplementationVersion();
 	/** The SteemJ App-Name */
@@ -630,9 +632,25 @@ public class SteemJConfig {
 		return STEEMJ_ACCOUNT;
 	}
 
-	public static AccountName getSteemJForkedAccount() {
-		return STEEMJ_FORKED_ACCOUNT;
+	/**
+	 * Return the current default beneficiary account. (Defaults to
+	 * {@link #getSteemJAccount})
+	 * 
+	 * @return
+	 */
+	public AccountName getBeneficiaryAccount() {
+		return beneficiaryAccount;
 	}
+
+	/**
+	 * Set a new default beneficiary account. If you don't want any beneficiary
+	 * being set, use {@link #setSteemJWeight} and set the weight to 0}.
+	 * 
+	 * @param beneficiaryAccount
+	 */
+	public void setBeneficiaryAccount(AccountName beneficiaryAccount) {
+		this.beneficiaryAccount = beneficiaryAccount;
+	}	
 
 	/**
 	 * Get the version of SteemJ that is currently used. This parameter is set
