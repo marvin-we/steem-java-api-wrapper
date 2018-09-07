@@ -2,7 +2,7 @@
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
-# The <a href="https://steemit.com/@muksihs">@muksihs</a> fork can be obtain via jitpack.io:
+#### The <a href="https://steemit.com/@muksihs">@muksihs</a> fork can be obtain via jitpack.io:
 
 [![](https://jitpack.io/v/muksihs/steem-java-api-wrapper.svg)](https://jitpack.io/#muksihs/steem-java-api-wrapper)
 
