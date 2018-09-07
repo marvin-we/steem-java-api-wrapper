@@ -2,7 +2,39 @@
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
-As something bad must have happened to <a href="https://steemit.com/@dez1337">@dez1337</a> this custom FORK is now made available by <a href="https://steemit.com/@muksihs">@muksihs</a> and is available via <a href="https://jitpack.io/#muksihs/steem-java-api-wrapper">jitpack.io</a>. NOTE: The original library has a default beneficiary payout for new posts as does this fork. To check or change the beneficiary payout value see SteemJConfig#getSteemJWeight and SteemJConfig#setSteemJWeight.
+# The <a href="https://steemit.com/@muksihs">@muksihs</a> fork can be obtain via jitpack.io:
+
+[![](https://jitpack.io/v/muksihs/steem-java-api-wrapper.svg)](https://jitpack.io/#muksihs/steem-java-api-wrapper)
+
+## Gradle
+```Gradle
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+    dependencies {
+	        compile 'com.github.muksihs.steem-java-api-wrapper:steemj-core:0.4.6-20180907-00'
+	}
+```
+
+## Maven
+File: <i>pom.xml</i>
+```Xml
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+    ...
+	<dependency>
+	    <groupId>com.github.muksihs.steem-java-api-wrapper</groupId>
+	    <artifactId>steemj-core</artifactId>
+	    <version>0.4.6-20180907-00</version>
+	</dependency>
+```
 
 # Full Documentation
 - Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki) for full documentation, examples, operational details and other information.
@@ -22,38 +54,6 @@ As something bad must have happened to <a href="https://steemit.com/@dez1337">@d
 
 # Binaries
 SteemJ binaries are pushed into the maven central repository and can be integrated with a bunch of build management tools like Maven.
-
-[![](https://jitpack.io/v/muksihs/steem-java-api-wrapper.svg)](https://jitpack.io/#muksihs/steem-java-api-wrapper)
-
-## Gradle
-```Gradle
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
-    dependencies {
-	        compile 'com.github.muksihs.steem-java-api-wrapper:steemj-core:0.4.6-20180903-00'
-	}
-```
-
-## Maven
-File: <i>pom.xml</i>
-```Xml
-	<repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
-    ...
-	<dependency>
-	    <groupId>com.github.muksihs.steem-java-api-wrapper</groupId>
-	    <artifactId>steemj-core</artifactId>
-	    <version>0.4.6-20180903-00</version>
-	</dependency>
-```
 
 Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki/How-to-add-SteemJ-to-your-project) to find examples for Maven, Ivy, Gradle and others.
 
