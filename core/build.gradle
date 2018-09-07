@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'maven'
 
 group = 'com.github.muksihs'
-version = '0.4.6-20180901-02'
+version = '0.4.6-20180907-00'
 
 description = "SteemJ-Core"
 
