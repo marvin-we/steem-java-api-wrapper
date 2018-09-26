@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -5,7 +21,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -16,7 +31,6 @@ import static org.junit.Assert.fail;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.logging.log4j.LogManager;
@@ -26,37 +40,34 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import eu.bittrade.libs.steemj.apis.database.models.state.Discussion;
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.AccountVote;
-import eu.bittrade.libs.steemj.base.models.AppliedOperation;
-import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.base.models.Config;
-import eu.bittrade.libs.steemj.base.models.DiscussionQuery;
-import eu.bittrade.libs.steemj.base.models.DynamicGlobalProperty;
-import eu.bittrade.libs.steemj.base.models.ExtendedAccount;
-import eu.bittrade.libs.steemj.base.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
 import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
-import eu.bittrade.libs.steemj.base.models.OrderBook;
 import eu.bittrade.libs.steemj.base.models.Permlink;
-import eu.bittrade.libs.steemj.base.models.RewardFund;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.base.models.VoteState;
-import eu.bittrade.libs.steemj.base.models.Witness;
-import eu.bittrade.libs.steemj.base.models.WitnessSchedule;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateOperation;
-import eu.bittrade.libs.steemj.base.models.operations.AccountCreateWithDelegationOperation;
-import eu.bittrade.libs.steemj.base.models.operations.Operation;
-import eu.bittrade.libs.steemj.base.models.operations.TransferOperation;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.AccountVote;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedAccount;
+import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedLimitOrder;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Config;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.DynamicGlobalProperty;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.OrderBook;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.RewardFund;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Witness;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.WitnessSchedule;
+import eu.bittrade.libs.steemj.plugins.apis.tags.enums.DiscussionSortType;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.Discussion;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery;
+import eu.bittrade.libs.steemj.plugins.apis.tags.models.VoteState;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.TransferOperation;
 import eu.bittrade.libs.steemj.util.KeyGenerator;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -102,24 +113,6 @@ public class SteemJIT extends BaseIT {
         final int accountCount = steemJ.getAccountCount();
 
         assertThat("expect the number of accounts greater than 122908", accountCount, greaterThan(122908));
-    }
-
-    @Category({ IntegrationTest.class })
-    @Test
-    public void testGetAccountHistory() throws Exception {
-        final Map<Integer, AppliedOperation> accountHistorySetOne = steemJ.getAccountHistory(ACCOUNT, 10, 10);
-        assertEquals("expect response to contain 10 results", 11, accountHistorySetOne.size());
-
-        Operation firstOperation = accountHistorySetOne.get(0).getOp();
-        assertTrue("the first operation for each account is the 'account_create_operation'",
-                firstOperation instanceof AccountCreateOperation);
-
-        final Map<Integer, AppliedOperation> accountHistorySetTwo = steemJ.getAccountHistory(ACCOUNT_TWO, 1000, 1000);
-        assertEquals("expect response to contain 1001 results", 1001, accountHistorySetTwo.size());
-
-        assertThat(accountHistorySetTwo.get(0).getOp(), instanceOf(AccountCreateWithDelegationOperation.class));
-        assertThat(((AccountCreateWithDelegationOperation) accountHistorySetTwo.get(0).getOp()).getCreator().getName(),
-                equalTo(new AccountName("anonsteem").getName()));
     }
 
     @Category({ IntegrationTest.class })

@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.communication.jrpc;
 
 import java.util.ArrayList;
@@ -9,12 +25,8 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import eu.bittrade.libs.steemj.base.models.SignedBlockHeader;
-import eu.bittrade.libs.steemj.communication.BlockAppliedCallback;
-import eu.bittrade.libs.steemj.communication.CallbackHub;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -110,11 +122,11 @@ public class JsonRPCResponse {
     private boolean isResultEmpty() {
         ObjectNode responseAsObject = ObjectNode.class.cast(rawJsonResponse);
 
-        if (isFieldNullOrEmpty(RESULT_FIELD_NAME, responseAsObject))
-            return true;
+        if (!isFieldNullOrEmpty(RESULT_FIELD_NAME, responseAsObject))
+            return false;
 
         LOGGER.debug("The response is empty.");
-        return false;
+        return true;
     }
 
     /**
@@ -167,65 +179,6 @@ public class JsonRPCResponse {
         }
 
         return new ArrayList<>();
-    }
-
-    // #########################################################################
-    // ## HANDLE CALLBACKS #####################################################
-    // #########################################################################
-
-    /**
-     * Check if the {@link #getRawJsonResponse()} contains the expected fields
-     * of a callback response.
-     * 
-     * @return <code>true</code> if the response contains the expected fields,
-     *         <code>false</code> otherwise.
-     */
-    public boolean isCallback() {
-        return rawJsonResponse.has(METHOD_FIELD_NAME) && rawJsonResponse.get(METHOD_FIELD_NAME) != null
-                && !rawJsonResponse.get(METHOD_FIELD_NAME).isNull()
-                && rawJsonResponse.get(METHOD_FIELD_NAME).asText().equals(CALLBACK_METHOD_NAME);
-    }
-
-    /**
-     * This method will try to find the matching callback class and call it.
-     * 
-     * @throws SteemCommunicationException
-     *             If the response is no callback or if no matching callback
-     *             instance could be found.
-     */
-    public void handleCallback() throws SteemCommunicationException {
-        if (isResponseValid()) {
-            if (!isCallback()) {
-                throw new SteemCommunicationException("The result is not a callback.");
-            }
-
-            ObjectNode responseAsObject = ObjectNode.class.cast(rawJsonResponse);
-
-            if (!isFieldNullOrEmpty(PARAMETERS_FIELD_NAME, responseAsObject)) {
-                JsonNode parametersNode = responseAsObject.get(PARAMETERS_FIELD_NAME);
-
-                if (parametersNode.isArray()) {
-                    ArrayNode parameters = ArrayNode.class.cast(parametersNode);
-
-                    BlockAppliedCallback callbackInstance = CallbackHub.getInstance()
-                            .getCallbackByUuid(Integer.valueOf(parameters.get(0).toString()));
-
-                    if (callbackInstance != null && parameters.get(1).isArray()) {
-                        ArrayNode payload = ArrayNode.class.cast(parameters.get(1));
-
-                        callbackInstance.onNewBlock(CommunicationHandler.getObjectMapper().convertValue(payload.get(0),
-                                SignedBlockHeader.class));
-                        return;
-                    }
-                }
-                // The parameter is not an array as expected - Do nothing so
-                // that the exception at the bottom of the method is thrown.
-            } else {
-                LOGGER.info("Detected a callback but its payload was empty.");
-            }
-        }
-
-        throw new SteemCommunicationException("Tried to handle a callback based on an unexpected Json structure.");
     }
 
     // #########################################################################

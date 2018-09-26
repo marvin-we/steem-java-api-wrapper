@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.communication;
 
 import java.io.IOException;
@@ -12,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCResponse;
-import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
 /**
@@ -85,21 +100,9 @@ public class WebsocketEndpoint extends Endpoint implements MessageHandler.Whole<
         if (this.websocketClient.getResponseCountDownLatch().getCount() > 0) {
             this.websocketClient.getResponseCountDownLatch().countDown();
         } else {
-            /*
-             * The client does not wait for an answer so this is probably a
-             * callback.
-             */
-            try {
-                JsonRPCResponse response = getLatestResponse();
-
-                if (response.isCallback()) {
-                    this.websocketClient.handleCallback(response);
-                }
-            } catch (SteemCommunicationException | SteemResponseException e) {
-                // Sadly it is not possible to throw an exception here, so the
-                // only useful thing we can do is to log it.
-                LOGGER.error("Tried to handle a potential callback and failed.", e);
-            }
+            // Sadly it is not possible to throw an exception here, so the
+            // only useful thing we can do is to log it.
+            LOGGER.error("Received an unexpected message.");
         }
     }
 }
