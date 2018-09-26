@@ -2,9 +2,11 @@
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
-#### The <a href="https://steemit.com/@muksihs">@muksihs</a> fork can be obtained via jitpack.io:
+#### The latest 0.4.x-SNAPSHOT can be obtained via jitpack.io:
 
-[![](https://jitpack.io/v/muksihs/steem-java-api-wrapper.svg)](https://jitpack.io/#muksihs/steem-java-api-wrapper)
+[![](https://jitpack.io/v/marvin-we/steem-java-api-wrapper.svg)](https://jitpack.io/#marvin-we/steem-java-api-wrapper/0.4.x-SNAPSHOT)
+
+Example below is for latest 0.4.x-SNAPSHOT. Visit https://jitpack.io/#marvin-we/steem-java-api-wrapper/0.4.x-SNAPSHOT to get a list of available commits.
 
 ## Gradle
 ```Gradle
@@ -15,7 +17,7 @@ This project allows you to easily access data stored in the Steem blockchain. Th
 		}
 	}
     dependencies {
-	        compile 'com.github.muksihs.steem-java-api-wrapper:steemj-core:0.4.6-20180907-00'
+	        compile 'com.github.marvin-we:steem-java-api-wrapper:0.4.x-SNAPSHOT'
 	}
 ```
 
@@ -30,9 +32,9 @@ File: <i>pom.xml</i>
 	</repositories>
     ...
 	<dependency>
-	    <groupId>com.github.muksihs.steem-java-api-wrapper</groupId>
-	    <artifactId>steemj-core</artifactId>
-	    <version>0.4.6-20180907-00</version>
+	    <groupId>com.github.marvin-we</groupId>
+	    <artifactId>steem-java-api-wrapper</artifactId>
+	    <version>0.4.x-SNAPSHOT</version>
 	</dependency>
 ```
 
