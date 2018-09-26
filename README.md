@@ -4,7 +4,7 @@ This project allows you to easily access data stored in the Steem blockchain. Th
 
 #### The latest 0.4.x STABLE can be obtained via jitpack.io:
 
-[![](https://jitpack.io/v/marvin-we/steem-java-api-wrapper.svg)](hhttps://jitpack.io/#marvin-we/steem-java-api-wrapper/0.4.6-20180926-01PRE/steemj-core)
+[![](https://jitpack.io/v/marvin-we/steem-java-api-wrapper.svg)](https://jitpack.io/#marvin-we/steem-java-api-wrapper/0.4.6-20180926-01PRE/steemj-core)
 
 Example below is for latest 0.4.x. Visit https://jitpack.io/#marvin-we/steem-java-api-wrapper/0.4.6-20180926-01PRE/steemj-core to get a list of available builds.
 
