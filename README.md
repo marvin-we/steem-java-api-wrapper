@@ -17,7 +17,7 @@ Example below is for latest 0.4.x-SNAPSHOT. Visit https://jitpack.io/#marvin-we/
 		}
 	}
     dependencies {
-	        compile 'com.github.marvin-we:steem-java-api-wrapper:0.4.x-SNAPSHOT'
+	        compile 'com.github.marvin-we.steem-java-api-wrapper:steemj-core:0.4.x-SNAPSHOT'
 	}
 ```
 
@@ -32,8 +32,8 @@ File: <i>pom.xml</i>
 	</repositories>
     ...
 	<dependency>
-	    <groupId>com.github.marvin-we</groupId>
-	    <artifactId>steem-java-api-wrapper</artifactId>
+	    <groupId>com.github.marvin-we.steem-java-api-wrapper</groupId>
+	    <artifactId>steemj-core</artifactId>
 	    <version>0.4.x-SNAPSHOT</version>
 	</dependency>
 ```
