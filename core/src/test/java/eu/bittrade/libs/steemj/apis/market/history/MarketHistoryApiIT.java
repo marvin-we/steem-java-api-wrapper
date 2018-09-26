@@ -180,7 +180,7 @@ public class MarketHistoryApiIT extends BaseIT {
     @Category({ IntegrationTest.class })
     public void testGetMarketHistory() throws SteemCommunicationException, SteemResponseException {
         List<Bucket> marketHistory = MarketHistoryApi.getMarketHistory(COMMUNICATION_HANDLER, 3600,
-                new TimePointSec(1504885989), new TimePointSec(System.currentTimeMillis()));
+                new TimePointSec(System.currentTimeMillis()-1000l*60l*60l*24l*7l), new TimePointSec(System.currentTimeMillis()));
 
         assertThat(marketHistory.size(), greaterThan(0));
         assertThat(marketHistory.get(0).getCloseSbd(), greaterThan(0L));

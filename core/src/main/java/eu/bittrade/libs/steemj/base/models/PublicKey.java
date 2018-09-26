@@ -1,6 +1,8 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import eu.bittrade.libs.steemj.base.models.serializer.PublicKeySerializer;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class is the java implementation of the <a href=
@@ -28,7 +31,18 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 @JsonSerialize(using = PublicKeySerializer.class)
-public class PublicKey implements ByteTransformable {
+public class PublicKey implements ByteTransformable , HasJsonAnyGetterSetter {
+	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
+	@Override
+	public Map<String, Object> _getter() {
+		return _anyGetterSetterMap;
+	}
+
+	@Override
+	public void _setter(String key, Object value) {
+		_getter().put(key, value);
+	}
+
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicKey.class);
 
     private static final int CHECKSUM_BYTES = 4;

@@ -37,7 +37,7 @@ public class CommentOptionsOperation extends Operation {
     @JsonProperty("max_accepted_payout")
     private Asset maxAcceptedPayout;
     @JsonProperty("percent_steem_dollars")
-    private Short percentSteemDollars;
+    private Integer percentSteemDollars;
     @JsonProperty("allow_votes")
     private boolean allowVotes;
     @JsonProperty("allow_curation_rewards")
@@ -70,7 +70,7 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setMaxAcceptedPayout(Asset)}).
      * @param percentSteemDollars
      *            The percent of Steem dollars the reward should be paid in (see
-     *            {@link #setPercentSteemDollars(short)}).
+     *            {@link #setPercentSteemDollars(int)}).
      * @param allowVotes
      *            Define if votes are allowed (see
      *            {@link #setAllowVotes(boolean)}).
@@ -86,7 +86,7 @@ public class CommentOptionsOperation extends Operation {
     @JsonCreator
     public CommentOptionsOperation(@JsonProperty("author") AccountName author,
             @JsonProperty("permlink") Permlink permlink, @JsonProperty("max_accepted_payout") Asset maxAcceptedPayout,
-            @JsonProperty("percent_steem_dollars") Short percentSteemDollars,
+            @JsonProperty("percent_steem_dollars") Integer percentSteemDollars,
             @JsonProperty("allow_votes") boolean allowVotes,
             @JsonProperty("allow_curation_rewards") boolean allowCurationRewards,
             @JsonProperty("extensions") List<CommentOptionsExtension> extensions) {
@@ -104,7 +104,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, boolean, boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Integer, boolean, boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes
      * and curation rewards.
      * 
@@ -116,14 +116,14 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setPermlink(Permlink)}).
      * @param percentSteemDollars
      *            The percent of Steem dollars the reward should be paid in (see
-     *            {@link #setPercentSteemDollars(short)}).
+     *            {@link #setPercentSteemDollars(int)}).
      * @param extensions
      *            Additional extensions to set (see
      *            {@link #setExtensions(List)}.
      * @throws InvalidParameterException
      *             If one of the parameters does not fulfill the requirements.
      */
-    public CommentOptionsOperation(AccountName author, Permlink permlink, short percentSteemDollars,
+    public CommentOptionsOperation(AccountName author, Permlink permlink, int percentSteemDollars,
             List<CommentOptionsExtension> extensions) {
         this(author, permlink, new Asset(1000000000, SteemJConfig.getInstance().getDollarSymbol()), percentSteemDollars,
                 true, true, extensions);
@@ -131,7 +131,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, short, List)}, but
+     * {@link #CommentOptionsOperation(AccountName, Permlink, int, List)}, but
      * does not require extensions.
      * 
      * @param author
@@ -142,17 +142,17 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setPermlink(Permlink)}).
      * @param percentSteemDollars
      *            The percent of Steem dollars the reward should be paid in (see
-     *            {@link #setPercentSteemDollars(short)}).
+     *            {@link #setPercentSteemDollars(int)}).
      * @throws InvalidParameterException
      *             If one of the parameters does not fulfill the requirements.
      */
-    public CommentOptionsOperation(AccountName author, Permlink permlink, Short percentSteemDollars) {
+    public CommentOptionsOperation(AccountName author, Permlink permlink, Integer percentSteemDollars) {
         this(author, permlink, percentSteemDollars, new ArrayList<CommentOptionsExtension>());
     }
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Short, boolean, boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Integer, boolean, boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes,
      * allows curation rewards and sets the <code>percentSteemDollars</code> to
      * 100.0%.
@@ -170,7 +170,7 @@ public class CommentOptionsOperation extends Operation {
      *             If one of the parameters does not fulfill the requirements.
      */
     public CommentOptionsOperation(AccountName author, Permlink permlink, List<CommentOptionsExtension> extensions) {
-        this(author, permlink, (short) 10000, extensions);
+        this(author, permlink, (int) 10000, extensions);
     }
 
     /**
@@ -311,7 +311,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>percentSteemDollars</code> is higher than 10000
      *             which is equal to 100.00%.
      */
-    public void setPercentSteemDollars(short percentSteemDollars) {
+    public void setPercentSteemDollars(int percentSteemDollars) {
         this.percentSteemDollars = percentSteemDollars;
     }
 

@@ -1,7 +1,5 @@
 package eu.bittrade.libs.steemj.apis.login;
 
-import java.util.List;
-
 import eu.bittrade.libs.steemj.apis.login.models.SteemVersionInfo;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
@@ -71,7 +69,7 @@ public class LoginApi {
     /**
      * Use this method to receive the ID of an API or <code>null</code> if an
      * API with the <code>apiName</code> does not exist or is disabled.
-     * 
+     * @deprecated This API call is no longer supported.
      * @param communicationHandler
      *            A
      *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
@@ -96,21 +94,21 @@ public class LoginApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public static Integer getApiByName(CommunicationHandler communicationHandler, String apiName)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_API_BY_NAME);
-        requestObject.setSteemApi(SteemApiType.LOGIN_API);
-        String[] parameters = { apiName };
-        requestObject.setAdditionalParameters(parameters);
-
-        List<Integer> response = communicationHandler.performRequest(requestObject, Integer.class);
-        if (!response.isEmpty()) {
-            return response.get(0);
-        }
-
-        return null;
-    }
+//    public static Integer getApiByName(CommunicationHandler communicationHandler, String apiName)
+//            throws SteemCommunicationException, SteemResponseException {
+//        JsonRPCRequest requestObject = new JsonRPCRequest();
+//        requestObject.setApiMethod(RequestMethods.GET_API_BY_NAME);
+//        requestObject.setSteemApi(SteemApiType.LOGIN_API);
+//        String[] parameters = { apiName };
+//        requestObject.setAdditionalParameters(parameters);
+//
+//        List<Integer> response = communicationHandler.performRequest(requestObject, Integer.class);
+//        if (!response.isEmpty()) {
+//            return response.get(0);
+//        }
+//
+//        return null;
+//    }
 
     /**
      * Use this method to get detailed information about the Steem version of

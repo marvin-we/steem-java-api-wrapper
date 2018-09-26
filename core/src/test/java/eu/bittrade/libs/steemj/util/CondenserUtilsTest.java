@@ -51,6 +51,6 @@ public class CondenserUtilsTest {
     @Test
     public void testGenerateSteemitMetadata() {
         assertThat(CondenserUtils.generateSteemitMetadata(DUMMY_TEXT_LINKS + DUMMY_TEXT_USER,
-                new String[] { "test", "dontvote" }, "steemj/0.4.1", "markdown"), equalTo(EXPECTED_JSON));
+                new String[] { "test", "dontvote" }, "steemj/0.4.1", "markdown", null), equalTo(EXPECTED_JSON));
     }
 }

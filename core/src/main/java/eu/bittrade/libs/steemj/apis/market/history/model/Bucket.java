@@ -1,10 +1,14 @@
 package eu.bittrade.libs.steemj.apis.market.history.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.TimePointSec;
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class represents a Steem "bucket_object" object of the
@@ -12,7 +16,18 @@ import eu.bittrade.libs.steemj.base.models.TimePointSec;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Bucket {
+public class Bucket implements HasJsonAnyGetterSetter {
+	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
+	@Override
+	public Map<String, Object> _getter() {
+		return _anyGetterSetterMap;
+	}
+
+	@Override
+	public void _setter(String key, Object value) {
+		_getter().put(key, value);
+	}
+
     // Original type is "id_type".
     private long id;
     private TimePointSec open;

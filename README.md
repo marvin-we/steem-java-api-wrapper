@@ -2,6 +2,40 @@
 
 This project allows you to easily access data stored in the Steem blockchain. The project has been initialized by <a href="https://steemit.com/@dez1337">dez1337 on steemit.com</a>.
 
+#### The <a href="https://steemit.com/@muksihs">@muksihs</a> fork can be obtained via jitpack.io:
+
+[![](https://jitpack.io/v/muksihs/steem-java-api-wrapper.svg)](https://jitpack.io/#muksihs/steem-java-api-wrapper)
+
+## Gradle
+```Gradle
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+    dependencies {
+	        compile 'com.github.muksihs.steem-java-api-wrapper:steemj-core:0.4.6-20180907-00'
+	}
+```
+
+## Maven
+File: <i>pom.xml</i>
+```Xml
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+    ...
+	<dependency>
+	    <groupId>com.github.muksihs.steem-java-api-wrapper</groupId>
+	    <artifactId>steemj-core</artifactId>
+	    <version>0.4.6-20180907-00</version>
+	</dependency>
+```
+
 # Full Documentation
 - Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki) for full documentation, examples, operational details and other information.
 - Or have a look at the JavaDoc.
@@ -20,16 +54,6 @@ This project allows you to easily access data stored in the Steem blockchain. Th
 
 # Binaries
 SteemJ binaries are pushed into the maven central repository and can be integrated with a bunch of build management tools like Maven.
-
-## Maven
-File: <i>pom.xml</i>
-```Xml
-<dependency>
-    <groupId>eu.bittrade.libs</groupId>
-    <artifactId>steemj-core</artifactId>
-    <version>0.4.3</version>
-</dependency>
-```
 
 Please have a look at the [Wiki](https://github.com/marvin-we/steem-java-api-wrapper/wiki/How-to-add-SteemJ-to-your-project) to find examples for Maven, Ivy, Gradle and others.
 

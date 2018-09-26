@@ -78,7 +78,9 @@ public class DatabaseApiIT extends BaseIT {
         assertThat(trendingTags.get(0).getComments(), greaterThan(0L));
         assertThat(trendingTags.get(0).getNetVotes(), greaterThan(0L));
         assertThat(trendingTags.get(0).getTopPosts(), greaterThan(0L));
-        assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(AssetSymbolType.VESTS));
+        //seems that payout asset report has changed
+        //assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(AssetSymbolType.VESTS));
+        assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(AssetSymbolType.SBD));
         assertThat(trendingTags.get(0).getTotalPayouts().getAmount(), greaterThan(0L));
         assertThat(trendingTags.get(0).getTrending().intValue(), greaterThan(0));
     }

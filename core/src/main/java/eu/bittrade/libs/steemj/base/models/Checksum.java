@@ -1,11 +1,17 @@
 package eu.bittrade.libs.steemj.base.models;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
+
 /**
  * This class is the java implementation of the Steem "checksum_type" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Checksum extends Ripemd160 {
+
     /** Generated serial version uid. */
     private static final long serialVersionUID = 4420141835144717006L;
 
