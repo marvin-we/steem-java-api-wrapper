@@ -1,0 +1,75 @@
+package eu.bittrade.libs.steemj.base.models.operations;
+
+import eu.bittrade.libs.steemj.base.models.AccountName;
+import eu.bittrade.libs.steemj.base.models.Asset;
+import eu.bittrade.libs.steemj.base.models.Authority;
+import eu.bittrade.libs.steemj.base.models.PublicKey;
+import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+/**
+ * This class represents the Steem "create_claimed_account_operation" object.
+ *
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
+public class CreateClaimedAccountOperation extends AccountCreateOperation {
+
+    /**
+     * Create a claim created account operation. Use this operation to claim an account.
+     * This operation is the same as {@link AccountCreateOperation}
+     *
+     * @param creator        Set the account that will pay the <code>fee</code> to create
+     *                       the <code>newAccountName</code> (see
+     *                       {@link #setCreator(AccountName)}).
+     * @param fee            Set the fee the <code>creator</code> will pay (see
+     *                       {@link #setFee(Asset)}).
+     * @param newAccountName Set the new account name (see
+     *                       {@link #setNewAccountName(AccountName)}).
+     * @param owner          The new owner authority or null if the owner authority should
+     *                       not be updated (see {@link #setOwner(Authority)}).
+     * @param active         The new active authority or null if the active authority
+     *                       should not be updated (see {@link #setActive(Authority)}).
+     * @param posting        The new posting authority or null if the posting authority
+     *                       should not be updated (see {@link #setPosting(Authority)}).
+     * @param memoKey        The new memo key or null if the memo key should not be updated
+     *                       (see {@link #setMemoKey(PublicKey)}).
+     * @param jsonMetadata   Set the additional information for the <code>account</code>
+     *                       (see {@link #setJsonMetadata(String)}).
+     * @throws InvalidParameterException If one of the arguments does not fulfill the requirements.
+     */
+    public CreateClaimedAccountOperation(AccountName creator,
+                                         Asset fee,
+                                         AccountName newAccountName,
+                                         Authority owner,
+                                         Authority active,
+                                         Authority posting,
+                                         PublicKey memoKey, String jsonMetadata) {
+        super(creator, fee, newAccountName, owner, active, posting, memoKey, jsonMetadata);
+    }
+
+    @Override
+    public byte[] toByteArray() throws SteemInvalidTransactionException {
+        try (ByteArrayOutputStream serializedAccountCreateOperation = new ByteArrayOutputStream()) {
+            serializedAccountCreateOperation.write(
+                    SteemJUtils.transformIntToVarIntByteArray(OperationType.CREATE_CLAIMED_ACCOUNT_OPERATION.getOrderId()));
+            serializedAccountCreateOperation.write(this.getFee().toByteArray());
+            serializedAccountCreateOperation.write(this.getCreator().toByteArray());
+            serializedAccountCreateOperation.write(this.getNewAccountName().toByteArray());
+            serializedAccountCreateOperation.write(this.getOwner().toByteArray());
+            serializedAccountCreateOperation.write(this.getActive().toByteArray());
+            serializedAccountCreateOperation.write(this.getPosting().toByteArray());
+            serializedAccountCreateOperation.write(this.getMemoKey().toByteArray());
+            serializedAccountCreateOperation
+                    .write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));
+
+            return serializedAccountCreateOperation.toByteArray();
+        } catch (IOException e) {
+            throw new SteemInvalidTransactionException(
+                    "A problem occured while transforming the operation into a byte array.", e);
+        }
+    }
+}

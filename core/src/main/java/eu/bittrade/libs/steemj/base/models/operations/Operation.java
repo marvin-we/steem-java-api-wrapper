@@ -1,16 +1,9 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
@@ -30,6 +23,11 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.interfaces.Validatable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user
@@ -79,6 +77,8 @@ import eu.bittrade.libs.steemj.interfaces.Validatable;
         @Type(value = ClaimRewardBalanceOperation.class, name = "claim_reward_balance"),
         @Type(value = DelegateVestingSharesOperation.class, name = "delegate_vesting_shares"),
         @Type(value = AccountCreateWithDelegationOperation.class, name = "account_create_with_delegation"),
+        @Type(value = ClaimAccountOperation.class, name = "claim_account"),
+        @Type(value = CreateClaimedAccountOperation.class, name = "create_claimed_account"),
         // Virtual Operations
         @Type(value = AuthorRewardOperation.class, name = "author_reward"),
         @Type(value = CommentBenefactorRewardOperation.class, name = "comment_benefactor_reward"),

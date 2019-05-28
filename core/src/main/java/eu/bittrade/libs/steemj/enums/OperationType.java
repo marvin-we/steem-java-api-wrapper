@@ -89,7 +89,11 @@ public enum OperationType {
     /** The delegate_vesting_shares_operation type. */
     DELEGATE_VESTING_SHARES_OPERATION(40),
     /** The account_create_with_delegation_operation type. */
-    ACCOUNT_CREATE_WITH_DELEGATION_OPERATION(41);
+    ACCOUNT_CREATE_WITH_DELEGATION_OPERATION(41),
+    /** The claim_account_operation type */
+    CLAIM_ACCOUNT_OPERATION(42),
+    /** The create_claimed_account_operation type */
+    CREATE_CLAIMED_ACCOUNT_OPERATION(43);
 
     /**
      * The id of an operation. The id is used for the byte transformation and
