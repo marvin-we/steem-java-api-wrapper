@@ -1,5 +1,7 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.base.models.AccountName;
 import eu.bittrade.libs.steemj.base.models.Asset;
 import eu.bittrade.libs.steemj.base.models.Authority;
@@ -41,13 +43,14 @@ public class CreateClaimedAccountOperation extends AccountCreateOperation {
      *                       (see {@link #setJsonMetadata(String)}).
      * @throws InvalidParameterException If one of the arguments does not fulfill the requirements.
      */
-    public CreateClaimedAccountOperation(AccountName creator,
-                                         Asset fee,
-                                         AccountName newAccountName,
-                                         Authority owner,
-                                         Authority active,
-                                         Authority posting,
-                                         PublicKey memoKey, String jsonMetadata) {
+    @JsonCreator
+    public CreateClaimedAccountOperation(@JsonProperty("creator") AccountName creator,
+                                         @JsonProperty("fee") Asset fee,
+                                         @JsonProperty("new_account_name") AccountName newAccountName,
+                                         @JsonProperty("owner") Authority owner,
+                                         @JsonProperty("active") Authority active,
+                                         @JsonProperty("posting") Authority posting,
+                                         @JsonProperty("memo_key") PublicKey memoKey, @JsonProperty("json_metadata") String jsonMetadata) {
         super(creator, fee, newAccountName, owner, active, posting, memoKey, jsonMetadata);
     }
 
