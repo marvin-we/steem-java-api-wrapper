@@ -56,20 +56,20 @@ public class CreateClaimedAccountOperation extends AccountCreateOperation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedAccountCreateOperation = new ByteArrayOutputStream()) {
-            serializedAccountCreateOperation.write(
+        try (ByteArrayOutputStream serializedCreateClaimedAccountOperation = new ByteArrayOutputStream()) {
+            serializedCreateClaimedAccountOperation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.CREATE_CLAIMED_ACCOUNT_OPERATION.getOrderId()));
-            serializedAccountCreateOperation.write(this.getFee().toByteArray());
-            serializedAccountCreateOperation.write(this.getCreator().toByteArray());
-            serializedAccountCreateOperation.write(this.getNewAccountName().toByteArray());
-            serializedAccountCreateOperation.write(this.getOwner().toByteArray());
-            serializedAccountCreateOperation.write(this.getActive().toByteArray());
-            serializedAccountCreateOperation.write(this.getPosting().toByteArray());
-            serializedAccountCreateOperation.write(this.getMemoKey().toByteArray());
-            serializedAccountCreateOperation
+            serializedCreateClaimedAccountOperation.write(this.getFee().toByteArray());
+            serializedCreateClaimedAccountOperation.write(this.getCreator().toByteArray());
+            serializedCreateClaimedAccountOperation.write(this.getNewAccountName().toByteArray());
+            serializedCreateClaimedAccountOperation.write(this.getOwner().toByteArray());
+            serializedCreateClaimedAccountOperation.write(this.getActive().toByteArray());
+            serializedCreateClaimedAccountOperation.write(this.getPosting().toByteArray());
+            serializedCreateClaimedAccountOperation.write(this.getMemoKey().toByteArray());
+            serializedCreateClaimedAccountOperation
                     .write(SteemJUtils.transformStringToVarIntByteArray(this.getJsonMetadata()));
 
-            return serializedAccountCreateOperation.toByteArray();
+            return serializedCreateClaimedAccountOperation.toByteArray();
         } catch (IOException e) {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);

@@ -136,19 +136,19 @@ public class ClaimAccountOperation extends Operation {
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
-        try (ByteArrayOutputStream serializedRecoverAccountOperation = new ByteArrayOutputStream()) {
-            serializedRecoverAccountOperation.write(
+        try (ByteArrayOutputStream serializedClaimAccountOperation = new ByteArrayOutputStream()) {
+            serializedClaimAccountOperation.write(
                     SteemJUtils.transformIntToVarIntByteArray(OperationType.CLAIM_ACCOUNT_OPERATION.getOrderId()));
-            serializedRecoverAccountOperation.write(this.getCreator().toByteArray());
-            serializedRecoverAccountOperation.write(this.getFee().toByteArray());
+            serializedClaimAccountOperation.write(this.getCreator().toByteArray());
+            serializedClaimAccountOperation.write(this.getFee().toByteArray());
 
-            serializedRecoverAccountOperation
+            serializedClaimAccountOperation
                     .write(SteemJUtils.transformIntToVarIntByteArray(this.getExtensions().size()));
             for (FutureExtensions futureExtensions : this.getExtensions()) {
-                serializedRecoverAccountOperation.write(futureExtensions.toByteArray());
+                serializedClaimAccountOperation.write(futureExtensions.toByteArray());
             }
 
-            return serializedRecoverAccountOperation.toByteArray();
+            return serializedClaimAccountOperation.toByteArray();
         } catch (IOException e) {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming the operation into a byte array.", e);

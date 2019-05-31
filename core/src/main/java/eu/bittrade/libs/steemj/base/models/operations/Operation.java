@@ -48,6 +48,7 @@ import java.util.Map;
         @Type(value = AccountCreateOperation.class, name = "account_create"),
         @Type(value = AccountUpdateOperation.class, name = "account_update"),
         @Type(value = WitnessUpdateOperation.class, name = "witness_update"),
+        @Type(value = WitnessSetPropertiesOperation.class, name = "witness_set_properties"),
         @Type(value = AccountWitnessVoteOperation.class, name = "account_witness_vote"),
         @Type(value = AccountWitnessProxyOperation.class, name = "account_witness_proxy"),
         @Type(value = PowOperation.class, name = "pow"), @Type(value = CustomOperation.class, name = "custom"),

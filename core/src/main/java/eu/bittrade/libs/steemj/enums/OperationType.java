@@ -93,7 +93,9 @@ public enum OperationType {
     /** The claim_account_operation type */
     CLAIM_ACCOUNT_OPERATION(42),
     /** The create_claimed_account_operation type */
-    CREATE_CLAIMED_ACCOUNT_OPERATION(43);
+    CREATE_CLAIMED_ACCOUNT_OPERATION(43),
+    /** The witness_set_properties_operation type */
+    WITNESS_SET_PROPERTIES_OPERATION(44);
 
     /**
      * The id of an operation. The id is used for the byte transformation and
