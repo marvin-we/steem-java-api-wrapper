@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models.operations;
+package eu.bittrade.libs.steemj.protocol.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,8 +10,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.Authority;
-import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**

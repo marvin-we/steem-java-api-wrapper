@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models.operations;
+package eu.bittrade.libs.steemj.protocol.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,6 +21,8 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -145,7 +147,7 @@ public class WitnessSetPropertiesOperation extends Operation {
      *             If the owner is null.
      */
     public void setOwner(AccountName owner) {
-        this.owner = setIfNotNull(owner, "The owner can't be null.");
+        this.owner = SteemJUtils.setIfNotNull(owner, "The owner can't be null.");
     }
 
     /**
@@ -169,7 +171,7 @@ public class WitnessSetPropertiesOperation extends Operation {
      *             If the url is null or empty.
      */
     public void setUrl(URL url) {
-        this.url = setIfNotNull(url, "You need to provide a URL.");
+        this.url = SteemJUtils.setIfNotNull(url, "You need to provide a URL.");
     }
 
     /**
@@ -191,7 +193,7 @@ public class WitnessSetPropertiesOperation extends Operation {
      *             If the blockSigningKey is null.
      */
     public void setNewSigningKey(PublicKey blockSigningKey) {
-        this.newSigningKey = setIfNotNull(blockSigningKey, "You need to provide a new signing key.");
+        this.newSigningKey = SteemJUtils.setIfNotNull(blockSigningKey, "You need to provide a new signing key.");
     }
 
     /**
@@ -212,7 +214,7 @@ public class WitnessSetPropertiesOperation extends Operation {
      *             If the properties are null.
      */
     public void setProperties(ChainProperties properties) {
-        this.properties = setIfNotNull(properties, "You need to provide the blockchain properties.");
+        this.properties = SteemJUtils.setIfNotNull(properties, "You need to provide the blockchain properties.");
     }
 
     /**
@@ -235,7 +237,7 @@ public class WitnessSetPropertiesOperation extends Operation {
      *             If the provided asset object is null.
      */
     public void setFee(Asset fee) {
-        this.fee = setIfNotNull(fee, "The fee can't be null.");
+        this.fee = SteemJUtils.setIfNotNull(fee, "The fee can't be null.");
     }
 
     /**

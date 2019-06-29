@@ -12,20 +12,15 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj;
 
 import java.security.InvalidParameterException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -34,7 +29,6 @@ import org.joou.ULong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
@@ -46,21 +40,16 @@ import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
-import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
-import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
-import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
-import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.AccountByKeyApi;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.models.GetKeyReferencesArgs;
@@ -79,7 +68,6 @@ import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlob
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
-import eu.bittrade.libs.steemj.plugins.apis.database.models.Config;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.OrderBook;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.RewardFund;
@@ -125,12 +113,14 @@ import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.Price;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
+import eu.bittrade.libs.steemj.protocol.SignedBlock;
 import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
 import eu.bittrade.libs.steemj.protocol.operations.DelegateVestingSharesOperation;
+import eu.bittrade.libs.steemj.protocol.operations.DeleteCommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.TransferOperation;
 import eu.bittrade.libs.steemj.protocol.operations.VoteOperation;
@@ -173,34 +163,6 @@ public class SteemJ {
      */
     public SteemJ() throws SteemCommunicationException, SteemResponseException {
         this.communicationHandler = new CommunicationHandler();
-
-        if (!("").equals(String.valueOf(SteemJConfig.getInstance().getApiPassword()))
-                && !SteemJConfig.getInstance().getApiUsername().isEmpty()) {
-
-            LOGGER.info("Credentials have been provided - Trying to login.");
-            if (login(SteemJConfig.getInstance().getApiUsername(),
-                    String.valueOf(SteemJConfig.getInstance().getApiPassword()))) {
-                LOGGER.info("Login successful.");
-            } else {
-                LOGGER.error("Login failed.");
-            }
-        }
-
-        /*
-         * This API call is no longer supported.
-         */
-        // if
-        // (SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.FULL)
-        // ||
-        // SteemJConfig.getInstance().getSynchronizationLevel().equals(SynchronizationType.APIS_ONLY))
-        // {
-        // for (SteemApiType steemApi : SteemApiType.values()) {
-        // if (getApiByName(steemApi.toString().toLowerCase()) == null) {
-        // LOGGER.debug("The {} is not published by the configured node.",
-        // steemApi);
-        // }
-        // }
-        // }
     }
 
     // #########################################################################
@@ -308,6 +270,7 @@ public class SteemJ {
                 .getAccountHistory(communicationHandler, new GetAccountHistoryArgs(accountName, start, limit))
                 .getHistory();
     }
+
     // #########################################################################
     // ## BLOCK API ############################################################
     // #########################################################################
@@ -438,25 +401,10 @@ public class SteemJ {
     }
 
     /**
-     * Use this method to get detailed values and metrics for tags. The methods
-     * accepts a String as a search pattern and a number to limit the results.
+     * Broadcast a whole block.
      * 
-     * <b>Example</b>
-     * <p>
-     * <code>getTrendingTags(communicationHandler, "steem", 2);</code> <br>
-     * Will return two tags whose name has the biggest match with the String
-     * "steem". An example response could contain the metrics and values for the
-     * tag "steem" and "steemit", while "steem" would be the first entry in the
-     * list as it has a bigger match than "steemit".
-     * </p>
-     * 
-     * @param firstTagPattern
-     *            The search pattern used to build the resulting list of tags.
-     * @param limit
-     *            The maximum number of results.
-     * @return A list of the tags. The first entry in the list is the tag that
-     *         has the biggest match with the <code>firstTagPattern</code>.
-     *         while the last tag in the last has the smallest match.
+     * @param signedBlock
+     *            The {@link SignedBlock} object to broadcast.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -472,9 +420,8 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<Tag> getTrendingTags(String firstTagPattern, int limit)
-            throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getTrendingTags(communicationHandler, firstTagPattern, limit);
+    public void broadcastBlock(SignedBlock signedBlock) throws SteemCommunicationException, SteemResponseException {
+        NetworkBroadcastApi.broadcastBlock(communicationHandler, signedBlock);
     }
 
     // #########################################################################
@@ -533,12 +480,9 @@ public class SteemJ {
     }
 
     /**
-     * Use this method to get the current miner queue. <b>Attention:</b> Please
-     * be aware that mining has been disabled for the Steem Blockchain.
-     * Therefore this method will return an empty list for the original Steem
-     * Blockchain.
+     * Get the global properties.
      * 
-     * @return A list of account names that are in the mining queue.
+     * @return The dynamic global properties.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -554,95 +498,9 @@ public class SteemJ {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
-    public List<AccountName> getMinerQueue() throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getMinerQueue(communicationHandler);
-    }
-
-    /**
-     * Get a full, signed block by providing its <code>blockNumber</code>. The
-     * returned object contains all information related to the block (e.g.
-     * processed transactions, the witness and the creation time).
-     * 
-     * @param blockNumber
-     *            Height of the block to be returned.
-     * @return The referenced full, signed block, or <code>null</code> if no
-     *         matching block was found.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public SignedBlockWithInfo getBlock(long blockNumber) throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getBlock(communicationHandler, blockNumber);
-    }
-
-    /**
-     * Like {@link #getBlock(long)}, but will only return the header of the
-     * requested block instead of the full, signed one.
-     * 
-     * @param blockNumber
-     *            Height of the block to be returned.
-     * @return The referenced full, signed block, or <code>null</code> if no
-     *         matching block was found.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public BlockHeader getBlockHeader(long blockNumber) throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getBlockHeader(communicationHandler, blockNumber);
-    }
-
-    /**
-     * Get a sequence of operations included/generated within a particular
-     * block.
-     * 
-     * @param blockNumber
-     *            Height of the block whose generated virtual operations should
-     *            be returned.
-     * @param onlyVirtual
-     *            Define if only virtual operations should be returned
-     *            (<code>true</code>) or not (<code>false</code>).
-     * @return A sequence of operations included/generated within a particular
-     *         block.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public List<AppliedOperation> getOpsInBlock(int blockNumber, boolean onlyVirtual)
+    public DynamicGlobalProperty getDynamicGlobalProperties()
             throws SteemCommunicationException, SteemResponseException {
-        return DatabaseApi.getOpsInBlock(communicationHandler, blockNumber, onlyVirtual);
+        return DatabaseApi.getDynamicGlobalProperties(communicationHandler);
     }
 
     /**
@@ -665,58 +523,7 @@ public class SteemJ {
      *             </ul>
      */
     public int getAccountCount() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_COUNT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
-    }
-
-    /**
-     * Get all operations performed by the specified account.
-     * 
-     * @param accountName
-     *            The user name of the account.
-     * @param from
-     *            The starting point.
-     * @param limit
-     *            The maximum number of entries.
-     * @return A map containing the activities. The key is the id of the
-     *         activity.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public Map<Integer, AppliedOperation> getAccountHistory(AccountName accountName, int from, int limit)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNT_HISTORY);
-        String[] parameters = { accountName.getName(), String.valueOf(from), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        Map<Integer, AppliedOperation> accountActivities = new HashMap<>();
-
-        for (Object[] accountActivity : communicationHandler.performRequest(requestObject, Object[].class)) {
-            accountActivities.put((Integer) accountActivity[0], (AppliedOperation) CommunicationHandler
-                    .getObjectMapper().convertValue(accountActivity[1], new TypeReference<AppliedOperation>() {
-                    }));
-        }
-
-        return accountActivities;
+        return 0;
     }
 
     /**
@@ -741,20 +548,23 @@ public class SteemJ {
      */
     public List<ExtendedAccount> getAccounts(List<AccountName> accountNames)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        requestObject.setApiMethod(RequestMethods.GET_ACCOUNTS);
-
-        // The API expects an array of arrays here.
-        String[] innerParameters = new String[accountNames.size()];
-        for (int i = 0; i < accountNames.size(); i++) {
-            innerParameters[i] = accountNames.get(i).getName();
-        }
-
-        String[][] parameters = { innerParameters };
-
-        requestObject.setAdditionalParameters(parameters);
-        return communicationHandler.performRequest(requestObject, ExtendedAccount.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API);
+         * requestObject.setApiMethod(RequestMethod.GET_ACCOUNTS);
+         * 
+         * // The API expects an array of arrays here. String[] innerParameters
+         * = new String[accountNames.size()]; for (int i = 0; i <
+         * accountNames.size(); i++) { innerParameters[i] =
+         * accountNames.get(i).getName(); }
+         * 
+         * String[][] parameters = { innerParameters };
+         * 
+         * requestObject.setAdditionalParameters(parameters); return
+         * communicationHandler.performRequest(requestObject,
+         * ExtendedAccount.class);
+         */
+        return null;
     }
 
     /**
@@ -841,42 +651,16 @@ public class SteemJ {
      *             </ul>
      */
     public ChainProperties getChainProperties() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_CHAIN_PROPERTIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, ChainProperties.class).get(0);
-    }
-
-    /**
-     * Get the configuration.
-     * 
-     * @return The steem configuration.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public Config getConfig() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_CONFIG);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Config.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_CHAIN_PROPERTIES);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * ChainProperties.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -904,13 +688,17 @@ public class SteemJ {
      */
     public Discussion getContent(AccountName author, Permlink permlink)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_CONTENT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { author.getName(), permlink.getLink() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_CONTENT);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { author.getName(), permlink.getLink() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1047,12 +835,18 @@ public class SteemJ {
     public List<Discussion> getDiscussionsBy(DiscussionQuery discussionQuery, DiscussionSortType sortBy)
             throws SteemCommunicationException, SteemResponseException {
 
-        requestObject.setApiMethod(RequestMethods.valueOf(sortBy.name()));
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { discussionQuery };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * 
+         * requestObject.setApiMethod(RequestMethod.valueOf(sortBy.name()));
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); Object[]
+         * parameters = { discussionQuery };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class);
+         */
+        return null;
     }
 
     /**
@@ -1085,56 +879,30 @@ public class SteemJ {
      */
     public List<Discussion> getDiscussionsByAuthorBeforeDate(AccountName author, Permlink permlink, String date,
             int limit) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-
-        requestObject.setApiMethod(RequestMethods.GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-
-        // Verify that the date has the correct format.
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
-        Date beforeDate;
-        try {
-            beforeDate = simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            throw new SteemTransformationException("Could not parse the received date to a Date object.", e);
-        }
-
-        String[] parameters = { author.getName(), permlink.getLink(), simpleDateFormat.format(beforeDate),
-                String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
-    }
-
-    /**
-     * Get the global properties.
-     * 
-     * @return The dynamic global properties.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public DynamicGlobalProperty getDynamicGlobalProperties()
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_DYNAMIC_GLOBAL_PROPERTIES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, DynamicGlobalProperty.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * 
+         * requestObject.setApiMethod(RequestMethod.
+         * GET_DISCUSSIONS_BY_AUTHOR_BEFORE_DATE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API);
+         * 
+         * // Verify that the date has the correct format. SimpleDateFormat
+         * simpleDateFormat = new
+         * SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
+         * simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.
+         * getInstance().getTimeZoneId())); Date beforeDate; try { beforeDate =
+         * simpleDateFormat.parse(date); } catch (ParseException e) { throw new
+         * SteemTransformationException("Could not parse the received date to a Date object."
+         * , e); }
+         * 
+         * String[] parameters = { author.getName(), permlink.getLink(),
+         * simpleDateFormat.format(beforeDate), String.valueOf(limit) };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class);
+         */
+        return null;
     }
 
     /**
@@ -1158,109 +926,16 @@ public class SteemJ {
      *             </ul>
      */
     public FeedHistory getFeedHistory() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_FEED_HISTORY);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, FeedHistory.class).get(0);
-    }
-
-    /**
-     * Get the hardfork version the node you are connected to is using.
-     * 
-     * @return The hardfork version that the connected node is running on.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public String getHardforkVersion() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_HARDFORK_VERSION);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class).get(0);
-    }
-
-    /**
-     * Search for users under the use of their public key(s).
-     * 
-     * @param publicKeys
-     *            An array containing one or more public keys.
-     * @return A list of arrays containing the matching account names.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public List<String[]> getKeyReferences(String[] publicKeys)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_KEY_REFERENCES);
-        requestObject.setSteemApi(SteemApiType.ACCOUNT_BY_KEY_API);
-        Object[] parameters = { publicKeys };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String[].class);
-    }
-
-    /**
-     * Get the liquidity queue for a specified account.
-     * 
-     * @param accoutName
-     *            The name of the account you want to request the queue entries
-     *            for.
-     * @param limit
-     *            Number of results.
-     * @return A list of liquidity queue entries.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     */
-    public List<LiquidityBalance> getLiquidityQueue(AccountName accoutName, int limit)
-            throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_LIQUIDITY_QUEUE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { accoutName.getName(), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, LiquidityBalance.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_FEED_HISTORY);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * FeedHistory.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1284,13 +959,16 @@ public class SteemJ {
      *             </ul>
      */
     public ScheduledHardfork getNextScheduledHarfork() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_NEXT_SCHEDULED_HARDFORK);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, ScheduledHardfork.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_NEXT_SCHEDULED_HARDFORK)
+         * ; requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * ScheduledHardfork.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1407,13 +1085,17 @@ public class SteemJ {
      */
     public List<Discussion> getRepliesByLastUpdate(AccountName username, Permlink permlink, int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_REPLIES_BY_LAST_UPDATE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        Object[] parameters = { username, permlink.getLink(), String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Discussion.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_REPLIES_BY_LAST_UPDATE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); Object[]
+         * parameters = { username, permlink.getLink(), String.valueOf(limit) };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Discussion.class);
+         */
+        return null;
     }
 
     /**
@@ -1469,14 +1151,18 @@ public class SteemJ {
      */
     public String getTransactionHex(SignedTransaction signedTransaction)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_TRANSACTION_HEX);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-
-        Object[] parameters = { signedTransaction };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_TRANSACTION_HEX);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API);
+         * 
+         * Object[] parameters = { signedTransaction };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * String.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1502,13 +1188,17 @@ public class SteemJ {
      */
     public Witness getWitnessByAccount(AccountName witnessName)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESS_BY_ACCOUNT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { witnessName.getName() };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Witness.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESS_BY_ACCOUNT);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = { witnessName.getName() };
+         * requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Witness.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1571,13 +1261,16 @@ public class SteemJ {
      *             </ul>
      */
     public int getWitnessCount() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESS_COUNT);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Integer.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESS_COUNT);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Integer.class).get(0);
+         */
+        return 0;
     }
 
     /**
@@ -1600,13 +1293,16 @@ public class SteemJ {
      *             </ul>
      */
     public List<Witness> getWitnesses() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESSES);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, Witness.class);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESSES);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * Witness.class);
+         */
+        return null;
     }
 
     /**
@@ -1629,13 +1325,16 @@ public class SteemJ {
      *             </ul>
      */
     public WitnessSchedule getWitnessSchedule() throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.GET_WITNESS_SCHEDULE);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = {};
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, WitnessSchedule.class).get(0);
+        /*
+         * JsonRPCRequest requestObject = new JsonRPCRequest();
+         * requestObject.setApiMethod(RequestMethod.GET_WITNESS_SCHEDULE);
+         * requestObject.setSteemApi(SteemApiType.DATABASE_API); String[]
+         * parameters = {}; requestObject.setAdditionalParameters(parameters);
+         * 
+         * return communicationHandler.performRequest(requestObject,
+         * WitnessSchedule.class).get(0);
+         */
+        return null;
     }
 
     /**
@@ -1663,13 +1362,9 @@ public class SteemJ {
      */
     public List<String> lookupAccounts(String pattern, int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.LOOKUP_ACCOUNTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { pattern, String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class);
+        // return DatabaseApi.findAccounts(communicationHandler,
+        // findAccountsArgs);
+        return null;
     }
 
     /**
@@ -1697,13 +1392,9 @@ public class SteemJ {
      */
     public List<String> lookupWitnessAccounts(String pattern, int limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest();
-        requestObject.setApiMethod(RequestMethods.LOOKUP_WITNESS_ACCOUNTS);
-        requestObject.setSteemApi(SteemApiType.DATABASE_API);
-        String[] parameters = { pattern, String.valueOf(limit) };
-        requestObject.setAdditionalParameters(parameters);
-
-        return communicationHandler.performRequest(requestObject, String.class);
+        // return
+        // DatabaseApi.findWitnesses(communicationHandler).getWitnesses();
+        return null;
     }
 
     /**
@@ -3144,9 +2835,7 @@ public class SteemJ {
     }
 
     /**
-     * Use this method to create a new post. Supports setting body format and
-     * extra metadata.<br>
-     * <br>
+     * Use this method to create a new post.
      * 
      * <b>Attention</b>
      * <ul>
@@ -3177,83 +2866,6 @@ public class SteemJ {
      *            A list of tags while the first tag in this list is the main
      *            tag. You can provide up to five tags but at least one needs to
      *            be provided.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation createPost(String title, String content, String[] tags, String format,
-            Map<String, Object> extraMetadata)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
-        }
-        return createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags, format, extraMetadata);
-    }
-
-    /**
-     * Use this method to create a new post. Supports setting body format and
-     * extra metadata.<br>
-     * <br>
-     * 
-     * <b>Attention</b>
-     * <ul>
-     * <li>This method will write data on the blockchain. As all writing
-     * operations, a private key is required to sign the transaction. For a
-     * create post operation the private posting key of the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
-     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.</li>
-     * <li>In case the {@link SteemJConfig#getSteemJWeight() SteemJWeight} is
-     * set to a positive value this method will add a comment options operation.
-     * Due to this, the {@link SteemJConfig#getSteemJWeight() SteemJWeight}
-     * percentage will be paid to the SteemJ account.</li>
-     * <li>This method will automatically use the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
-     * that will publish the post - If no default account has been provided,
-     * this method will throw an error. If you do not want to configure the
-     * author account as a default account, please use the
-     * {@link #createPost(AccountName, String, String, String[])} method and
-     * provide the author account separately.</li>
-     * </ul>
-     * 
-     * @param title
-     *            The title of the post to publish.
-     * @param content
-     *            The content of the post to publish.
-     * @param tags
-     *            A list of tags while the first tag in this list is the main
-     *            tag. You can provide up to five tags but at least one needs to
-     *            be provided. <strong>format is set to "markdown"</strong><br>
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
@@ -3279,7 +2891,13 @@ public class SteemJ {
      */
     public CommentOperation createPost(String title, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return createPost(title, content, tags, MARKDOWN, null);
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        }
+
+        // TODO: Readd 
+        // return createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags);
+        return null;
     }
 
     /**
@@ -3287,8 +2905,6 @@ public class SteemJ {
      * {@link #createPost(String, String, String[])} method, but lets you define
      * the <code>authorThatPublishsThePost</code> account separately instead of
      * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
-     * Supports setting body format and extra metadata.<br>
-     * <br>
      * 
      * @param authorThatPublishsThePost
      *            The account who wants to publish the post.
@@ -3300,15 +2916,6 @@ public class SteemJ {
      *            A list of tags while the first tag in this list is the main
      *            tag. You can provide up to five tags but at least one needs to
      *            be provided.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
@@ -3332,10 +2939,11 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
-            String[] tags, String format, Map<String, Object> extraMetadata)
+    /* TODO: Readd
+   
+            String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1) {
+        if (tags == null || tags.length < 1 || tags.length > 5) {
             throw new InvalidParameterException(TAG_ERROR_MESSAGE);
         }
         ArrayList<Operation> operations = new ArrayList<>();
@@ -3349,7 +2957,7 @@ public class SteemJ {
         AccountName parentAuthor = new AccountName("");
 
         String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
-                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraMetadata);
+                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), MARKDOWN);
 
         CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
                 authorThatPublishsThePost, permlink, title, content, jsonMetadata);
@@ -3363,10 +2971,9 @@ public class SteemJ {
 
         CommentOptionsOperation commentOptionsOperation;
         // Only add a BeneficiaryRouteType if it makes sense.
-        SteemJConfig config = SteemJConfig.getInstance();
-        if (config.getSteemJWeight() > 0) {
-            BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(config.getBeneficiaryAccount(),
-                    config.getSteemJWeight());
+        if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
+            BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+                    SteemJConfig.getInstance().getSteemJWeight());
 
             ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
             beneficiaryRouteTypes.add(beneficiaryRouteType);
@@ -3378,11 +2985,10 @@ public class SteemJ {
             commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
             commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
-                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards,
-                    commentOptionsExtensions);
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
         } else {
             commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsThePost, permlink,
-                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards, null);
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
         }
 
         operations.add(commentOptionsOperation);
@@ -3398,131 +3004,7 @@ public class SteemJ {
 
         return commentOperation;
     }
-
-    /**
-     * This method is equivalent to the
-     * {@link #createPost(String, String, String[])} method, but lets you define
-     * the <code>authorThatPublishsThePost</code> account separately instead of
-     * using the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
-     * 
-     * @param authorThatPublishsThePost
-     *            The account who wants to publish the post.
-     * @param title
-     *            The title of the post to publish.
-     * @param content
-     *            The content of the post to publish.
-     * @param tags
-     *            A list of tags while the first tag in this list is the main
-     *            tag. You can provide up to five tags but at least one needs to
-     *            be provided.
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
-            String[] tags)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return createPost(authorThatPublishsThePost, title, content, tags, MARKDOWN, null);
-    }
-
-    /**
-     * Use this method to create a new comment. Supports setting body format and
-     * extra metadata.<br>
-     * <br>
-     * 
-     * <b>Attention</b>
-     * <ul>
-     * <li>This method will write data on the blockchain. As all writing
-     * operations, a private key is required to sign the transaction. For a
-     * create comment operation the private posting key of the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
-     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.</li>
-     * <li>In case the {@link SteemJConfig#getSteemJWeight() SteemJWeight} is
-     * set to a positive value this method will add a comment options operation.
-     * Due to this, the {@link SteemJConfig#getSteemJWeight() SteemJWeight}
-     * percentage will be paid to the SteemJ account.</li>
-     * <li>This method will automatically use the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account
-     * that will publish the comment - If no default account has been provided,
-     * this method will throw an error. If you do not want to configure the
-     * author account as a default account, please use the
-     * {@link #createComment(AccountName, AccountName, Permlink, String, String[])}
-     * method and provide the author account separately.</li>
-     * </ul>
-     * 
-     * @param authorOfThePostOrCommentToReplyTo
-     *            The author of the post or comment to reply to.
-     * @param permlinkOfThePostOrCommentToReplyTo
-     *            The permlink of the post or comment to reply to.
-     * @param content
-     *            The content to publish.
-     * @param tags
-     *            A list of tags while the first tag in this list is the main
-     *            tag. You can provide up to five tags but at least one needs to
-     *            be provided.
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
-            Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags, String format,
-            Map<String, Object> extraMetadata)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
-        }
-
-        return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
-                permlinkOfThePostOrCommentToReplyTo, content, tags, format, extraMetadata);
-    }
+      */
 
     /**
      * Use this method to create a new comment.
@@ -3561,15 +3043,6 @@ public class SteemJ {
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -3593,126 +3066,12 @@ public class SteemJ {
     public CommentOperation createComment(AccountName authorOfThePostOrCommentToReplyTo,
             Permlink permlinkOfThePostOrCommentToReplyTo, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return createComment(authorOfThePostOrCommentToReplyTo, permlinkOfThePostOrCommentToReplyTo, content, tags,
-                MARKDOWN, null);
-    }
-
-    /**
-     * This method is equivalent to the
-     * {@link #createComment(AccountName, Permlink, String, String[])} method,
-     * but lets you define the <code>authorThatPublishsTheComment</code> account
-     * separately instead of using the {@link SteemJConfig#getDefaultAccount()
-     * DefaultAccount}. Supports setting body format and extra metadata.<br>
-     * <br>
-     * 
-     * @param authorThatPublishsTheComment
-     *            The account that wants to publish the comment.
-     * @param authorOfThePostOrCommentToReplyTo
-     *            The author of the post or comment to reply to.
-     * @param permlinkOfThePostOrCommentToReplyTo
-     *            The permlink of the post or comment to reply to.
-     * @param content
-     *            The content to publish.
-     * @param tags
-     *            A list of tags while the first tag in this list is the main
-     *            tag. You can provide up to five tags but at least one needs to
-     *            be provided.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation createComment(AccountName authorThatPublishsTheComment,
-            AccountName authorOfThePostOrCommentToReplyTo, Permlink permlinkOfThePostOrCommentToReplyTo, String content,
-            String[] tags, String format, Map<String, Object> extraMetadata)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
-        }
-        ArrayList<Operation> operations = new ArrayList<>();
-
-        // Generate the permanent link by adding the current timestamp and a
-        // UUID.
-        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName().replaceAll("\\.", "") + "-"
-                + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
-                + UUID.randomUUID().toString() + "uid");
-
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
-                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraMetadata);
-
-        CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
-                permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content, jsonMetadata);
-
-        operations.add(commentOperation);
-
-        boolean allowVotes = true;
-        boolean allowCurationRewards = true;
-        short percentSteemDollars = (short) 10000;
-        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
-
-        CommentOptionsOperation commentOptionsOperation;
-        // Only add a BeneficiaryRouteType if it makes sense.
-        SteemJConfig config = SteemJConfig.getInstance();
-        if (config.getSteemJWeight() > 0) {
-            BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(config.getBeneficiaryAccount(),
-                    config.getSteemJWeight());
-
-            ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
-            beneficiaryRouteTypes.add(beneficiaryRouteType);
-
-            CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
-            commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
-
-            ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
-            commentOptionsExtensions.add(commentPayoutBeneficiaries);
-
-            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
-                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards,
-                    commentOptionsExtensions);
-        } else {
-            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
-                    maxAcceptedPayout, (int) percentSteemDollars, allowVotes, allowCurationRewards, null);
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        operations.add(commentOptionsOperation);
-
-        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
-
-        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                null);
-
-        signedTransaction.sign();
-
-        this.broadcastTransaction(signedTransaction);
-
-        return commentOperation;
+        return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
+                permlinkOfThePostOrCommentToReplyTo, content, tags);
     }
 
     /**
@@ -3734,15 +3093,6 @@ public class SteemJ {
      *            A list of tags while the first tag in this list is the main
      *            tag. You can provide up to five tags but at least one needs to
      *            be provided.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
@@ -3766,97 +3116,72 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
+    // TODO: Readd 
+    /*
     public CommentOperation createComment(AccountName authorThatPublishsTheComment,
             AccountName authorOfThePostOrCommentToReplyTo, Permlink permlinkOfThePostOrCommentToReplyTo, String content,
             String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return createComment(authorThatPublishsTheComment, authorOfThePostOrCommentToReplyTo,
-                permlinkOfThePostOrCommentToReplyTo, content, tags, MARKDOWN, null);
-    }
+        if (tags == null || tags.length < 1 || tags.length > 5) {
+            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
+        }
+        ArrayList<Operation> operations = new ArrayList<>();
 
-    /**
-     * Use this method to update an existing post. Supports setting body format
-     * and extra metadata.<br>
-     * <br>
-     * 
-     * <b>Attention</b>
-     * <ul>
-     * <li>Updating a post only works if Steem can identify the existing post -
-     * If this is not the case, this operation will create a new post instead of
-     * updating the existing one. The identification is based on the
-     * <code>permlinkOfThePostToUpdate</code> and the first tag of the
-     * <code>tags</code> array to be the same ones as of the post to
-     * update.</li>
-     * <li>This method will write data on the blockchain. As all writing
-     * operations, a private key is required to sign the transaction. For a
-     * update post operation the private posting key of the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
-     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.</li>
-     * <li>This method will automatically use the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of
-     * the post to update - If no default account has been provided, this method
-     * will throw an error. If you do not want to configure the author account
-     * as a default account, please use the
-     * {@link #updatePost(AccountName, Permlink, String, String, String[])}
-     * method and provide the author account separately.</li>
-     * </ul>
-     * 
-     * @param permlinkOfThePostToUpdate
-     *            The permlink of the post to update. <b>Attention</b> If the
-     *            permlink is not configured currently, SteemJ could accidently
-     *            create a new post instead of updating an existing one.
-     * @param title
-     *            The new title of the post to set.
-     * @param content
-     *            The new content of the post to set.
-     * @param tags
-     *            The new tags of the post. <b>Attention</b> The first tag still
-     *            needs to be the same as before otherwise SteemJ could
-     *            accidently create a new post instead of updating an existing
-     *            one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags,
-            String format, Map<String, Object> extraMetadata)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        // Generate the permanent link by adding the current timestamp and a
+        // UUID.
+        Permlink permlink = new Permlink("re-" + authorOfThePostOrCommentToReplyTo.getName().replaceAll("\\.", "") + "-"
+                + permlinkOfThePostOrCommentToReplyTo.getLink() + "-" + System.currentTimeMillis() + "t"
+                + UUID.randomUUID().toString() + "uid");
+
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
+                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), MARKDOWN);
+
+        CommentOperation commentOperation = new CommentOperation(authorOfThePostOrCommentToReplyTo,
+                permlinkOfThePostOrCommentToReplyTo, authorThatPublishsTheComment, permlink, "", content, jsonMetadata);
+
+        operations.add(commentOperation);
+
+        boolean allowVotes = true;
+        boolean allowCurationRewards = true;
+        short percentSteemDollars = (short) 10000;
+        Asset maxAcceptedPayout = new Asset(1000000000, AssetSymbolType.SBD);
+
+        CommentOptionsOperation commentOptionsOperation;
+        // Only add a BeneficiaryRouteType if it makes sense.
+        if (SteemJConfig.getInstance().getSteemJWeight() > 0) {
+            BeneficiaryRouteType beneficiaryRouteType = new BeneficiaryRouteType(SteemJConfig.getSteemJAccount(),
+                    SteemJConfig.getInstance().getSteemJWeight());
+
+            ArrayList<BeneficiaryRouteType> beneficiaryRouteTypes = new ArrayList<>();
+            beneficiaryRouteTypes.add(beneficiaryRouteType);
+
+            CommentPayoutBeneficiaries commentPayoutBeneficiaries = new CommentPayoutBeneficiaries();
+            commentPayoutBeneficiaries.setBeneficiaries(beneficiaryRouteTypes);
+
+            ArrayList<CommentOptionsExtension> commentOptionsExtensions = new ArrayList<>();
+            commentOptionsExtensions.add(commentPayoutBeneficiaries);
+
+            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, commentOptionsExtensions);
+        } else {
+            commentOptionsOperation = new CommentOptionsOperation(authorThatPublishsTheComment, permlink,
+                    maxAcceptedPayout, percentSteemDollars, allowVotes, allowCurationRewards, null);
         }
 
-        return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
-                tags, format, extraMetadata);
+        operations.add(commentOptionsOperation);
+
+        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
+
+        return commentOperation;
     }
+    */
 
     /**
      * Use this method to update an existing post.
@@ -3867,8 +3192,8 @@ public class SteemJ {
      * If this is not the case, this operation will create a new post instead of
      * updating the existing one. The identification is based on the
      * <code>permlinkOfThePostToUpdate</code> and the first tag of the
-     * <code>tags</code> array to be the same ones as of the post to
-     * update.</li>
+     * <code>tags</code> array to be the same ones as of the post to update.
+     * </li>
      * <li>This method will write data on the blockchain. As all writing
      * operations, a private key is required to sign the transaction. For a
      * update post operation the private posting key of the
@@ -3897,15 +3222,6 @@ public class SteemJ {
      *            needs to be the same as before otherwise SteemJ could
      *            accidently create a new post instead of updating an existing
      *            one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
@@ -3931,94 +3247,12 @@ public class SteemJ {
      */
     public CommentOperation updatePost(Permlink permlinkOfThePostToUpdate, String title, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return updatePost(permlinkOfThePostToUpdate, title, content, tags, MARKDOWN, null);
-    }
-
-    /**
-     * This method is equivalent to the
-     * {@link #updatePost(Permlink, String, String, String[])} method, but lets
-     * you define the <code>authorOfThePostToUpdate</code> account separately
-     * instead of using the {@link SteemJConfig#getDefaultAccount()
-     * DefaultAccount}. Supports setting body format and extra metadata.<br>
-     * <br>
-     * 
-     * @param authorOfThePostToUpdate
-     *            The account that wants to perform the update. In most cases,
-     *            this should be the author of the already existing post.
-     * @param permlinkOfThePostToUpdate
-     *            The permlink of the post to update. <b>Attention</b> If the
-     *            permlink is not configured currently, SteemJ could accidently
-     *            create a new post instead of updating an existing one.
-     * @param title
-     *            The new title of the post to set.
-     * @param content
-     *            The new content of the post to set.
-     * @param tags
-     *            The new tags of the post. <b>Attention</b> The first tag still
-     *            needs to be the same as before otherwise SteemJ could
-     *            accidently create a new post instead of updating an existing
-     *            one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
-            String title, String content, String[] tags, String format, Map<String, Object> extraMetadata)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        ArrayList<Operation> operations = new ArrayList<>();
-        AccountName parentAuthor = new AccountName("");
-        Permlink parentPermlink = new Permlink(tags[0]);
-
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
-                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraMetadata);
-
-        CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
-                permlinkOfThePostToUpdate, title, content, jsonMetadata);
-
-        operations.add(commentOperation);
-
-        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
-
-        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                null);
-
-        signedTransaction.sign();
-
-        this.broadcastTransaction(signedTransaction);
-
-        return commentOperation;
+        return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
+                tags);
     }
 
     /**
@@ -4044,15 +3278,6 @@ public class SteemJ {
      *            needs to be the same as before otherwise SteemJ could
      *            accidently create a new post instead of updating an existing
      *            one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
@@ -4079,95 +3304,32 @@ public class SteemJ {
     public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
             String title, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return updatePost(authorOfThePostToUpdate, permlinkOfThePostToUpdate, title, content, tags, MARKDOWN, null);
-    }
-
-    /**
-     * Use this method to update an existing comment. Supports setting body
-     * format and extra metadata.<br>
-     * <br>
-     * 
-     * <b>Attention</b>
-     * <ul>
-     * <li>Updating a comment only works if Steem can identify the existing
-     * comment - If this is not the case, this operation will create a new
-     * comment instead of updating the existing one. The identification is based
-     * on the <code>originalPermlinkOfYourComment</code>, the
-     * <code>parentAuthor</code>, the <code>parentPermlink</code> and the first
-     * tag of the <code>tags</code> array to be the same ones as of the post to
-     * update.</li>
-     * <li>This method will write data on the blockchain. As all writing
-     * operations, a private key is required to sign the transaction. For a
-     * update comment operation the private posting key of the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
-     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.</li>
-     * <li>This method will automatically use the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of
-     * the comment to update - If no default account has been provided, this
-     * method will throw an error. If you do not want to configure the author
-     * account as a default account, please use the
-     * {@link #updateComment(AccountName, AccountName, Permlink, Permlink, String, String[])}
-     * method and provide the author account separately.</li>
-     * </ul>
-     * 
-     * @param parentAuthor
-     *            The author of the post or comment that you initially replied
-     *            to.
-     * @param parentPermlink
-     *            The permlink of the post or comment that you initially replied
-     *            to.
-     * @param originalPermlinkOfTheCommentToUpdate
-     *            The permlink of the comment to update.
-     * @param content
-     *            The new content of the comment to set.
-     * @param tags
-     *            The new tags of the comment. <b>Attention</b> The first tag
-     *            still needs to be the same as before otherwise SteemJ could
-     *            accidently create a new comment instead of updating an
-     *            existing one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
-            Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags, String format,
-            Map<String, Object> extraMetadata)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        if (tags == null || tags.length < 1 || tags.length > 5) {
+            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
         }
 
-        return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
-                originalPermlinkOfTheCommentToUpdate, content, tags, format, extraMetadata);
+        ArrayList<Operation> operations = new ArrayList<>();
+        AccountName parentAuthor = new AccountName("");
+        Permlink parentPermlink = new Permlink(tags[0]);
+
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
+                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), MARKDOWN);
+
+        CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink, authorOfThePostToUpdate,
+                permlinkOfThePostToUpdate, title, content, jsonMetadata);
+
+        operations.add(commentOperation);
+
+        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
+
+        return commentOperation;
     }
 
     /**
@@ -4212,15 +3374,6 @@ public class SteemJ {
      *            still needs to be the same as before otherwise SteemJ could
      *            accidently create a new comment instead of updating an
      *            existing one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
@@ -4247,95 +3400,12 @@ public class SteemJ {
     public CommentOperation updateComment(AccountName parentAuthor, Permlink parentPermlink,
             Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return updateComment(parentAuthor, parentPermlink, originalPermlinkOfTheCommentToUpdate, content, tags,
-                MARKDOWN, null);
-    }
-
-    /**
-     * This method is like the
-     * {@link #updateComment(AccountName, Permlink, Permlink, String, String[])}
-     * method, but allows you to define the
-     * <code>originalAuthorOfTheCommentToUpdate</code> account separately
-     * instead of using the {@link SteemJConfig#getDefaultAccount()
-     * DefaultAccount}. Supports setting body format and extra metadata.<br>
-     * <br>
-     * 
-     * @param originalAuthorOfTheCommentToUpdate
-     *            The account that wants to perform the update. In most cases,
-     *            this should be the author of the already existing comment.
-     * @param parentAuthor
-     *            The author of the post or comment that you initially replied
-     *            to.
-     * @param parentPermlink
-     *            The permlink of the post or comment that you initially replied
-     *            to.
-     * @param originalPermlinkOfTheCommentToUpdate
-     *            The permlink of the comment to update.
-     * @param content
-     *            The new content of the comment to set.
-     * @param tags
-     *            The new tags of the comment. <b>Attention</b> The first tag
-     *            still needs to be the same as before otherwise SteemJ could
-     *            accidently create a new comment instead of updating an
-     *            existing one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
-     * @return The {@link CommentOperation} which has been created within this
-     *         method. The returned Operation allows you to access the generated
-     *         values.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public CommentOperation updateComment(AccountName originalAuthorOfTheCommentToUpdate, AccountName parentAuthor,
-            Permlink parentPermlink, Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags,
-            String format, Map<String, Object> extraMetadata)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        if (tags == null || tags.length < 1 || tags.length > 5) {
-            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
-        ArrayList<Operation> operations = new ArrayList<>();
 
-        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
-                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), format, extraMetadata);
-
-        CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
-                originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content, jsonMetadata);
-
-        operations.add(commentOperation);
-        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
-
-        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                null);
-
-        signedTransaction.sign();
-
-        this.broadcastTransaction(signedTransaction);
-
-        return commentOperation;
+        return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
+                originalPermlinkOfTheCommentToUpdate, content, tags);
     }
 
     /**
@@ -4364,15 +3434,6 @@ public class SteemJ {
      *            still needs to be the same as before otherwise SteemJ could
      *            accidently create a new comment instead of updating an
      *            existing one.
-     * @param format
-     *            Declared format of message body. Usually one of
-     *            <strong>markdown</strong>, <strong>markdown+html</strong>, or
-     *            <strong>text/html</strong>.
-     * @param extraMetadata
-     *            Additional jsonMetadata to be added to post. Entries here
-     *            <strong>supersede</strong> any SteemJ autocalculated
-     *            jsonMetadata values.
-     * 
      * @return The {@link CommentOperation} which has been created within this
      *         method. The returned Operation allows you to access the generated
      *         values.
@@ -4399,8 +3460,28 @@ public class SteemJ {
     public CommentOperation updateComment(AccountName originalAuthorOfTheCommentToUpdate, AccountName parentAuthor,
             Permlink parentPermlink, Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        return updateComment(originalAuthorOfTheCommentToUpdate, parentAuthor, parentPermlink,
-                originalPermlinkOfTheCommentToUpdate, content, tags, MARKDOWN, null);
+        if (tags == null || tags.length < 1 || tags.length > 5) {
+            throw new InvalidParameterException(TAG_ERROR_MESSAGE);
+        }
+        ArrayList<Operation> operations = new ArrayList<>();
+
+        String jsonMetadata = CondenserUtils.generateSteemitMetadata(content, tags,
+                SteemJConfig.getSteemJAppName() + "/" + SteemJConfig.getSteemJVersion(), MARKDOWN);
+
+        CommentOperation commentOperation = new CommentOperation(parentAuthor, parentPermlink,
+                originalAuthorOfTheCommentToUpdate, originalPermlinkOfTheCommentToUpdate, "", content, jsonMetadata);
+
+        operations.add(commentOperation);
+        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
+
+        return commentOperation;
     }
 
     /**
@@ -4455,6 +3536,8 @@ public class SteemJ {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
+
+        deletePostOrComment(SteemJConfig.getInstance().getDefaultAccount(), postOrCommentPermlink);
     }
 
     /**
@@ -4496,9 +3579,20 @@ public class SteemJ {
      */
     public void deletePostOrComment(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        // DeleteCommentOperation deleteCommentOperation = new
-        // DeleteCommentOperation(postOrCommentAuthor,
-        // postOrCommentPermlink);
+        DeleteCommentOperation deleteCommentOperation = new DeleteCommentOperation(postOrCommentAuthor,
+                postOrCommentPermlink);
+
+        ArrayList<Operation> operations = new ArrayList<>();
+        operations.add(deleteCommentOperation);
+
+        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
+
+        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
+                null);
+
+        signedTransaction.sign();
+
+        this.broadcastTransaction(signedTransaction);
     }
 
     /**

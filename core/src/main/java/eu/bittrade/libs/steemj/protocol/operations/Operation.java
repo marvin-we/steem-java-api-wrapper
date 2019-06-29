@@ -27,9 +27,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import eu.bittrade.libs.steemj.base.models.operations.ClaimAccountOperation;
-import eu.bittrade.libs.steemj.base.models.operations.CreateClaimedAccountOperation;
-import eu.bittrade.libs.steemj.base.models.operations.WitnessSetPropertiesOperation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;

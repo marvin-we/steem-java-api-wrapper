@@ -1,4 +1,4 @@
-package eu.bittrade.libs.steemj.base.models.operations;
+package eu.bittrade.libs.steemj.protocol.operations;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,6 +19,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**

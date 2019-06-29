@@ -21,6 +21,7 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
+import eu.bittrade.libs.steemj.protocol.operations.CreateClaimedAccountOperation;
 
 /**
  * Test the transformation of the {@link AccountCreateOperation}.
