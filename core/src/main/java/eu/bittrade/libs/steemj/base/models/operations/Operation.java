@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import eu.bittrade.libs.steemj.base.models.deserializer.OperationDeserializer;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
