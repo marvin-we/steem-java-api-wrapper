@@ -60,6 +60,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<log4j.version>2.10.0</log4j.version>
+		<log4j.version>2.12.0</log4j.version>
 	</properties>
 </project>
