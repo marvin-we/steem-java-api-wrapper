@@ -70,7 +70,7 @@ The resulting JAR can be found in the target directory as usual. Please notice t
 For bugs or feature requests please create a [GitHub Issue](https://github.com/marvin-we/steem-java-api-wrapper/issues). 
 
 For general discussions or questions you can also:
-* Post your questions in the [Discord Java Channel](https://discord.gg/fsJjr3Q)
+* Post your questions in the [Discord Java Channel](https://discord.gg/9jZQHv)
 * Reply to one of the SteemJ update posts on [Steemit.com](https://steemit.com/@dez1337)
 * Contact me on [steemit.chat](https://steemit.chat/channel/dev)
 

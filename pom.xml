@@ -53,6 +53,11 @@
 		<url>https://github.com/marvin-we/steem-java-api-wrapper/tree/master</url>
 	</scm>
 
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/marvin-we/steem-java-api-wrapper/issues</url>
+	</issueManagement>
+
 	<profiles>
 		<profile>
 			<id>release</id>

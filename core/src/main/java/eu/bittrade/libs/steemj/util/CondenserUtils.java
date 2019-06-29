@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.util;
 
 import java.util.ArrayList;
@@ -139,4 +155,21 @@ public class CondenserUtils {
 			throw new RuntimeException("Unable to create JSON metadata string", e);
 		}
 	}
+
+    /**
+     * Create a permlink string from the given <code>title</code>:
+     * <ol>
+     * <li>The title is trimmed and converted to lowercase</li>
+     * <li>Spaces are converted to hyphens</li>
+     * <li>Disallowed characters are removed</li>
+     * <li>Contiguous hyphens are replaced with a single hyphen</li>
+     * </ol>
+     *
+     * @param title
+     *            The string to convert
+     * @return The generated permlink
+     */
+    public static String createPermlinkString(String title) {
+        return title.trim().toLowerCase().replaceAll(" ", "-").replaceAll("[^a-z0-9-]+", "").replaceAll("-+", "-");
+    }
 }
