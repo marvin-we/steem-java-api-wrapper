@@ -1,10 +1,25 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.communication;
 
 import java.io.IOException;
 import java.net.URI;
 import java.security.GeneralSecurityException;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,12 +73,6 @@ public class HttpClient extends AbstractClient {
         } catch (GeneralSecurityException | IOException e) {
             throw new SteemCommunicationException("A problem occured while processing the request.", e);
         }
-    }
-
-    @Override
-    protected void handleCallback(JsonRPCResponse rawJsonResponse) {
-        // See https://github.com/steemit/steem/issues/1197 for further details.
-        throw new NotImplementedException("Callbacks are not supported when HTTP is used.");
     }
 
     @Override

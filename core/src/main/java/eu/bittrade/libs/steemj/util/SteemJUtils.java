@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.util;
 
 import java.io.ByteArrayOutputStream;
@@ -7,11 +23,15 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
+
+import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -265,19 +285,98 @@ public class SteemJUtils {
     }
 
     /**
-     * Create a permlink string from the given <code>title</code>:
-     * <ol>
-     * <li>The title is trimmed and converted to lowercase</li>
-     * <li>Spaces are converted to hyphens</li>
-     * <li>Disallowed characters are removed</li>
-     * <li>Contiguous hyphens are replaced with a single hyphen</li>
-     * </ol>
-     *
-     * @param title
-     *            The string to convert
-     * @return The generated permlink
+     * Like {@link #setIfNotNull(Object, String, Object)}, but does not require
+     * a default value.
+     * 
+     * This method will check if given <code>objectToSet</code> is
+     * <code>null</code> and throw an {@link InvalidParameterException} if this
+     * is the case.
+     * 
+     * @param <T>
+     *            The type of the <code>objectToSet</code>.
+     * @param objectToSet
+     *            The object to check.
+     * @param message
+     *            The message of the generated exception.
+     * @return The given <code>objectToSet</code> if its not <code>null</code>.
+     * @throws InvalidParameterException
+     *             If the <code>objectToSet</code> is <code>null</code>.
      */
-    public static String createPermlinkString(String title) {
-        return title.trim().toLowerCase().replaceAll(" ", "-").replaceAll("[^a-z0-9-]+", "").replaceAll("-+", "-");
+    public static <T> T setIfNotNull(T objectToSet, String message) {
+        return setIfNotNull(objectToSet, message, null);
+    }
+
+    /**
+     * This method will check if given <code>objectToSet</code> is
+     * <code>null</code>.
+     * 
+     * In case <code>objectToSet</code> is not <code>null</code>, the
+     * <code>objectToSet</code> will be returned. Otherwise the method will
+     * check the <code>defaultValue</code>. The method will return the
+     * <code>defaultValue</code> if one has been provided.
+     * 
+     * If all values are not set the method will throw an
+     * {@link InvalidParameterException}.
+     * 
+     * @param <T>
+     *            The type of the <code>objectToSet</code>.
+     * @param objectToSet
+     *            The object to check.
+     * @param message
+     *            The message of the generated exception.
+     * @param defaultValue
+     *            The default value to apply in case the
+     *            <code>objectToSet</code> is <code>null</code>.
+     * @return The given <code>objectToSet</code> if its not <code>null</code>.
+     *         Otherwise the <code>defaultValue</code> will be returned.
+     * @throws InvalidParameterException
+     *             If the <code>objectToSet</code> is <code>null</code> and, in
+     *             addition, no <code>defaultValue</code> has been provided.
+     */
+    public static <T> T setIfNotNull(T objectToSet, String message, @Nullable T defaultValue) {
+        if (objectToSet == null) {
+            if (defaultValue != null) {
+                return defaultValue;
+            }
+
+            throw new InvalidParameterException(message);
+        }
+
+        return objectToSet;
+    }
+
+    /**
+     * Like {@link #setIfNotNull(Object, String, Object)}, but the generated
+     * exception will contain a static text.
+     * 
+     * @param <T>
+     *            The type of the <code>objectToSet</code>.
+     * @param objectToSet
+     *            The object to check.
+     * @param defaultValue
+     *            The default value to apply in case the
+     *            <code>objectToSet</code> is <code>null</code>.
+     * @return The given <code>objectToSet</code> if its not <code>null</code>.
+     *         Otherwise the <code>defaultValue</code> will be returned.
+     * @throws InvalidParameterException
+     *             If the <code>objectToSet</code> is <code>null</code> and, in
+     *             addition, no <code>defaultValue</code> has been provided.
+     */
+    public static <T> T setIfNotNull(T objectToSet, @Nullable T defaultValue) {
+        return setIfNotNull(objectToSet, "Both, the objectToSet and the default value are null.", defaultValue);
+    }
+
+    /**
+     * 
+     * @param collectionToSet
+     * @param message
+     * @return
+     */
+    public static <T> List<T> setIfNotNullAndNotEmpty(List<T> collectionToSet, String message) {
+        if (collectionToSet == null || collectionToSet.isEmpty()) {
+            throw new InvalidParameterException(message);
+        }
+
+        return collectionToSet;
     }
 }

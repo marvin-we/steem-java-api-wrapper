@@ -29,6 +29,17 @@
 		</developer>
 	</developers>
 
+	<scm>
+		<connection>scm:git:git://github.com/marvin-we/steem-java-api-wrapper.git</connection>
+		<developerConnection>scm:git:ssh://github.com/marvin-we/steem-java-api-wrapper.git</developerConnection>
+		<url>https://github.com/marvin-we/steem-java-api-wrapper/tree/master</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/marvin-we/steem-java-api-wrapper/issues</url>
+	</issueManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.github.muksihs</groupId>

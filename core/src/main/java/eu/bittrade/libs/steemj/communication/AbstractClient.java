@@ -1,3 +1,19 @@
+/*
+ *     This file is part of SteemJ (formerly known as 'Steem-Java-Api-Wrapper')
+ * 
+ *     SteemJ is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ * 
+ *     SteemJ is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ * 
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package eu.bittrade.libs.steemj.communication;
 
 import java.io.IOException;
@@ -33,17 +49,6 @@ public abstract class AbstractClient {
      */
     public abstract JsonRPCResponse invokeAndReadResponse(JsonRPCRequest requestObject, URI endpointUri,
             boolean sslVerificationDisabled) throws SteemCommunicationException, SteemResponseException;
-
-    /**
-     * Use this method to handle callbacks.
-     * 
-     * @param rawJsonResponse
-     *            A {@link JsonRPCResponse} instance wrapping a potential
-     *            callback.
-     * @throws SteemCommunicationException
-     *             If the <code>rawJsonResponse</code> is not a callback.
-     */
-    protected abstract void handleCallback(JsonRPCResponse rawJsonResponse) throws SteemCommunicationException;
 
     /**
      * Use this method to close the connection of this client.
