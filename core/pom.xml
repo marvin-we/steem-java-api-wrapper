@@ -9,7 +9,7 @@
 	<url>http://www.steemit.com/@dez1337</url>
 
 	<parent>
-		<groupId>com.github.muksihs</groupId>
+		<groupId>eu.bittrade.libs</groupId>
 		<artifactId>steemj-parent</artifactId>
 		<version>0.5.0-SNAPSHOT</version>
 	</parent>
@@ -122,36 +122,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.2</version>
-				<executions>
-				<execution>
-					<id>attach-javadocs</id>
-					<goals>
-						<goal>jar</goal>
-					</goals>
-				</execution>
-			</executions>
-				<configuration>
-					<failOnError>false</failOnError>
-					<failOnWarnings>false</failOnWarnings>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 			</plugin>
 			<plugin>
@@ -161,7 +131,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.github.muksihs.steemj.SteemJ</mainClass>
+							<mainClass>eu.bittrade.libs.steemj.SteemJ</mainClass>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
 						</manifest>
@@ -177,7 +147,7 @@
 				<configuration>
 					<argLine>${failsafeArgLine}</argLine>
 					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-					<groups>com.github.muksihs.steemj.IntegrationTest</groups>
+					<groups>eu.bittrade.libs.steemj.IntegrationTest</groups>
 					<systemPropertiesFile>${project.build.testOutputDirectory}/accountDetailsUsedDuringTests.properties</systemPropertiesFile>
 				</configuration>
 				<executions>
@@ -197,7 +167,7 @@
 					<includes>
 						<include>**/*.*</include>
 					</includes>
-					<excludedGroups>com.github.muksihs.steemj.IntegrationTest</excludedGroups>
+					<excludedGroups>eu.bittrade.libs.steemj.IntegrationTest</excludedGroups>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -214,7 +184,7 @@
 		<hamcrest.date.version>2.0.5</hamcrest.date.version>
 		<tyrus.client.version>1.15</tyrus.client.version>
 		<jackson.version>2.9.9</jackson.version>
-		<apache.commons.lang.version>3.9</apache.commons.lang.version>
+		<apache.commons.lang.version>3.5</apache.commons.lang.version>
 		<apache.commons.io.version>2.6</apache.commons.io.version>
 		<slf4j.version>1.7.26</slf4j.version>
 		<log4j.version>2.12.0</log4j.version>
