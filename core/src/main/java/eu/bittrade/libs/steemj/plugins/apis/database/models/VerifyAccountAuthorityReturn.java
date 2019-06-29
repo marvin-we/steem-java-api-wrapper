@@ -14,7 +14,7 @@ public class VerifyAccountAuthorityReturn extends VerifyAuthorityReturn {
      */
     private VerifyAccountAuthorityReturn() {
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

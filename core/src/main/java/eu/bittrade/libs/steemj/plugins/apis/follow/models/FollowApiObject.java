@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 import eu.bittrade.libs.steemj.plugins.apis.follow.enums.FollowType;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
@@ -31,17 +30,18 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class FollowApiObject implements HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
+public class FollowApiObject {
+    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
 
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
+    @Override
+    public Map<String, Object> _getter() {
+        return _anyGetterSetterMap;
+    }
+
+    @Override
+    public void _setter(String key, Object value) {
+        _getter().put(key, value);
+    }
 
     private AccountName follower;
     private AccountName following;

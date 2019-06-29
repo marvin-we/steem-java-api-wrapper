@@ -25,24 +25,24 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class represents a Steem "witness_schedule_object" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class WitnessSchedule implements HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
+public class WitnessSchedule {
+    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
 
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
+    @Override
+    public Map<String, Object> _getter() {
+        return _anyGetterSetterMap;
+    }
+
+    @Override
+    public void _setter(String key, Object value) {
+        _getter().put(key, value);
+    }
 
     // Original type is "id_type".
     private long id;

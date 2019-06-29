@@ -1,9 +1,16 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Asset;
+
 import eu.bittrade.libs.steemj.base.models.FutureExtensions;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.OperationType;
@@ -11,14 +18,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.security.InvalidParameterException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class represents the Steem "claim_account_operation" object.
@@ -36,7 +37,6 @@ public class ClaimAccountOperation extends Operation {
     @JsonProperty("extensions")
     private List<FutureExtensions> extensions;
 
-
     /**
      * Create a new Operation object by providing the operation type.
      *
@@ -51,7 +51,7 @@ public class ClaimAccountOperation extends Operation {
 
     @JsonCreator
     public ClaimAccountOperation(@JsonProperty("fee") Asset fee, @JsonProperty("creator") AccountName creator,
-                                 @JsonProperty("extensions") List<FutureExtensions> extensions) {
+            @JsonProperty("extensions") List<FutureExtensions> extensions) {
         super(false);
         this.fee = fee;
         this.creator = creator;
@@ -59,7 +59,8 @@ public class ClaimAccountOperation extends Operation {
     }
 
     /**
-     * Get the fee the {@link #getCreator() creator} has paid to claim this account.
+     * Get the fee the {@link #getCreator() creator} has paid to claim this
+     * account.
      *
      * @return The fee.
      */
@@ -68,7 +69,8 @@ public class ClaimAccountOperation extends Operation {
     }
 
     /**
-     * Set the fee the {@link #getCreator() creator} will pay to claim an account.
+     * Set the fee the {@link #getCreator() creator} will pay to claim an
+     * account.
      *
      * @param fee
      *            The fee.
@@ -90,8 +92,8 @@ public class ClaimAccountOperation extends Operation {
     }
 
     /**
-     * Set the user who claimed an account. <b>Notice:</b> The private active and owner
-     * keys of this account needs to be stored in the key storage.
+     * Set the user who claimed an account. <b>Notice:</b> The private active
+     * and owner keys of this account needs to be stored in the key storage.
      *
      * @param creator
      *            The the user who claims an account.
@@ -126,10 +128,8 @@ public class ClaimAccountOperation extends Operation {
             Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         Map<SignatureObject, PrivateKeyType> requiredAuthorities = requiredAuthoritiesBase;
 
-        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getCreator(),
-                                                       PrivateKeyType.ACTIVE);
-        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getCreator(),
-                                                       PrivateKeyType.OWNER);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getCreator(), PrivateKeyType.ACTIVE);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getCreator(), PrivateKeyType.OWNER);
 
         return requiredAuthorities;
     }

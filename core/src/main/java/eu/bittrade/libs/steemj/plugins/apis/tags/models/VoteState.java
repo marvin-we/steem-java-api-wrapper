@@ -23,7 +23,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.ULong;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
-import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 
 /**
@@ -31,17 +30,18 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
-public class VoteState implements HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
+public class VoteState {
+    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
 
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
+    @Override
+    public Map<String, Object> _getter() {
+        return _anyGetterSetterMap;
+    }
+
+    @Override
+    public void _setter(String key, Object value) {
+        _getter().put(key, value);
+    }
 
     private AccountName voter;
     // Original type is uint64_t.

@@ -41,17 +41,19 @@ import eu.bittrade.libs.steemj.protocol.Asset;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Comment {
-	
-	private final Map<String, Object> _properties = new HashMap<>();
-	@JsonAnySetter
-	public void setProperty(String key, Object value) {
-		this._properties.put(key, value);
-	}
-	@JsonAnyGetter
-	public Map<String, Object> getProperties() {
-		return _properties;
-	}
-	
+
+    private final Map<String, Object> _properties = new HashMap<>();
+
+    @JsonAnySetter
+    public void setProperty(String key, Object value) {
+        this._properties.put(key, value);
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getProperties() {
+        return _properties;
+    }
+
     // Original type is comment_id_type.
     private long id;
     private String category;

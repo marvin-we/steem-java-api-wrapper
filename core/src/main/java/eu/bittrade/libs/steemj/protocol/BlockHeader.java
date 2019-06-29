@@ -36,17 +36,18 @@ import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class BlockHeader implements ByteTransformable , HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
+public class BlockHeader implements ByteTransformable, HasJsonAnyGetterSetter {
+    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
 
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
+    @Override
+    public Map<String, Object> _getter() {
+        return _anyGetterSetterMap;
+    }
+
+    @Override
+    public void _setter(String key, Object value) {
+        _getter().put(key, value);
+    }
 
     protected BlockId previous;
     protected TimePointSec timestamp;

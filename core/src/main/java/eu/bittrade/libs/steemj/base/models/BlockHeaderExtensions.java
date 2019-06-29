@@ -44,17 +44,18 @@ import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
  */
 @JsonSerialize(using = BlockHeaderExtensionsSerializer.class)
 @JsonDeserialize(using = BlockHeaderExtensionsDeserializer.class)
-public abstract class BlockHeaderExtensions implements ByteTransformable , HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
+public abstract class BlockHeaderExtensions implements ByteTransformable, HasJsonAnyGetterSetter {
+    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
 
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
+    @Override
+    public Map<String, Object> _getter() {
+        return _anyGetterSetterMap;
+    }
+
+    @Override
+    public void _setter(String key, Object value) {
+        _getter().put(key, value);
+    }
 
     @Override
     public String toString() {

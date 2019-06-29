@@ -49,17 +49,18 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * 
  * @author <a href="http://Steemit.com/@dez1337">dez1337</a>
  */
-public class Transaction implements Serializable , HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
+public class Transaction implements Serializable, HasJsonAnyGetterSetter {
+    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
 
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
+    @Override
+    public Map<String, Object> _getter() {
+        return _anyGetterSetterMap;
+    }
+
+    @Override
+    public void _setter(String key, Object value) {
+        _getter().put(key, value);
+    }
 
     /** Generated serial version uid. */
     private static final long serialVersionUID = -3834759301983200246L;

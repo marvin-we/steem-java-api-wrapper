@@ -1,26 +1,26 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import eu.bittrade.crypto.core.CryptoUtils;
-import eu.bittrade.crypto.core.Sha256Hash;
-import eu.bittrade.libs.steemj.BaseTransactionalUT;
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.Authority;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.base.models.SignedTransaction;
-import eu.bittrade.libs.steemj.base.models.TimePointSec;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import org.junit.BeforeClass;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import org.junit.BeforeClass;
+
+import eu.bittrade.crypto.core.CryptoUtils;
+import eu.bittrade.crypto.core.Sha256Hash;
+import eu.bittrade.libs.steemj.BaseTransactionalUT;
+import eu.bittrade.libs.steemj.chain.SignedTransaction;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Authority;
+import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
 
 /**
  * Test the transformation of the {@link AccountCreateOperation}.

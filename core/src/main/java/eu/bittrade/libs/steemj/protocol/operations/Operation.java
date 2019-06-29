@@ -16,19 +16,39 @@
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+import eu.bittrade.libs.steemj.base.models.operations.ClaimAccountOperation;
+import eu.bittrade.libs.steemj.base.models.operations.CreateClaimedAccountOperation;
+import eu.bittrade.libs.steemj.base.models.operations.WitnessSetPropertiesOperation;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.interfaces.Validatable;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.AuthorRewardOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.CommentBenefactorRewardOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.CommentPayoutUpdateOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.CommentRewardOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.CurationRewardOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.FillConvertRequestOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.FillOrderOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.FillTransferFromSavingsOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.FillVestingWithdrawOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.HardforkOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.InterestOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.LiquidityRewardOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.ReturnVestingDelegationOperation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.ShutdownWitnessOpeartion;
 
 /**
  * This class is a wrapper for the different kinds of operations that an user

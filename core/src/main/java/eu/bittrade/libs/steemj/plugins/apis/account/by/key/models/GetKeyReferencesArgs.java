@@ -69,7 +69,7 @@ public class GetKeyReferencesArgs {
     public void setKeys(List<PublicKey> keys) {
         this.keys = keys;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

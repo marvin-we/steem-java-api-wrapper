@@ -1,27 +1,27 @@
 package eu.bittrade.libs.steemj.base.models.operations;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import eu.bittrade.libs.steemj.base.models.AccountName;
-import eu.bittrade.libs.steemj.base.models.Asset;
-import eu.bittrade.libs.steemj.base.models.ChainProperties;
-import eu.bittrade.libs.steemj.base.models.FutureExtensions;
-import eu.bittrade.libs.steemj.base.models.PublicKey;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
-import eu.bittrade.libs.steemj.enums.OperationType;
-import eu.bittrade.libs.steemj.enums.PrivateKeyType;
-import eu.bittrade.libs.steemj.enums.ValidationType;
-import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
-import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import eu.bittrade.libs.steemj.base.models.ChainProperties;
+import eu.bittrade.libs.steemj.base.models.FutureExtensions;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.OperationType;
+import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.ValidationType;
+import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
+import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class represents the Steem "witness_update_operation" object.
@@ -42,7 +42,6 @@ public class WitnessSetPropertiesOperation extends Operation {
     @JsonProperty("extensions")
     private List<FutureExtensions> extensions;
 
-
     /**
      * Create a new witness update operation.
      *
@@ -55,9 +54,9 @@ public class WitnessSetPropertiesOperation extends Operation {
      * pay which in turn is derived from the current share supply. The fee is
      * only applied if the owner is not already a witness.
      *
-     * If the {@link #getNewSigningKey() newSigningKey} is null then the
-     * witness is removed from contention. The network will pick the top 21
-     * witnesses for producing blocks.
+     * If the {@link #getNewSigningKey() newSigningKey} is null then the witness
+     * is removed from contention. The network will pick the top 21 witnesses
+     * for producing blocks.
      *
      * @param owner
      *            The Witness account name to set (see
@@ -75,10 +74,9 @@ public class WitnessSetPropertiesOperation extends Operation {
      */
     @JsonCreator
     public WitnessSetPropertiesOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("url") URL url,
-                                         @JsonProperty("block_signing_key") PublicKey newSigningKey,
-                                         @JsonProperty("props") ChainProperties properties,
-                                         @JsonProperty("fee") Asset fee,
-                                         @JsonProperty("extensions") List<FutureExtensions> extensions) {
+            @JsonProperty("block_signing_key") PublicKey newSigningKey,
+            @JsonProperty("props") ChainProperties properties, @JsonProperty("fee") Asset fee,
+            @JsonProperty("extensions") List<FutureExtensions> extensions) {
         super(false);
 
         this.setOwner(owner);
@@ -90,11 +88,11 @@ public class WitnessSetPropertiesOperation extends Operation {
     }
 
     /**
-     * Like
-     * {@link #WitnessSetPropertiesOperation(AccountName, URL, PublicKey, ChainProperties, Asset, List<FutureExtensions>)},
-     * but creates a new ChainProperties object with default values (Account
-     * creation fee = 0.001 STEEM, maximum block size = minimum block size * 2,
-     * SBD interest rate = 10%).
+     * Like {@link #WitnessSetPropertiesOperation(AccountName, URL, PublicKey,
+     * ChainProperties, Asset, List<FutureExtensions>)}, but creates a new
+     * ChainProperties object with default values (Account creation fee = 0.001
+     * STEEM, maximum block size = minimum block size * 2, SBD interest rate =
+     * 10%).
      *
      * @param owner
      *            The Witness account name to set (see
@@ -107,7 +105,8 @@ public class WitnessSetPropertiesOperation extends Operation {
      * @param fee
      *            The fee to pay for this update (see {@link #setFee(Asset)}).
      */
-    public WitnessSetPropertiesOperation(AccountName owner, URL url, PublicKey blockSigningKey, Asset fee, List<FutureExtensions> extensions) {
+    public WitnessSetPropertiesOperation(AccountName owner, URL url, PublicKey blockSigningKey, Asset fee,
+            List<FutureExtensions> extensions) {
         super(false);
 
         this.setOwner(owner);
@@ -261,8 +260,8 @@ public class WitnessSetPropertiesOperation extends Operation {
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedWitnessSetPropertesOperation = new ByteArrayOutputStream()) {
-            serializedWitnessSetPropertesOperation.write(
-                    SteemJUtils.transformIntToVarIntByteArray(OperationType.WITNESS_SET_PROPERTIES_OPERATION.getOrderId()));
+            serializedWitnessSetPropertesOperation.write(SteemJUtils
+                    .transformIntToVarIntByteArray(OperationType.WITNESS_SET_PROPERTIES_OPERATION.getOrderId()));
             serializedWitnessSetPropertesOperation.write(this.getOwner().toByteArray());
             serializedWitnessSetPropertesOperation
                     .write(SteemJUtils.transformStringToVarIntByteArray(this.getUrl().toString()));
@@ -293,10 +292,8 @@ public class WitnessSetPropertiesOperation extends Operation {
             Map<SignatureObject, PrivateKeyType> requiredAuthoritiesBase) {
         Map<SignatureObject, PrivateKeyType> requiredAuthorities = requiredAuthoritiesBase;
 
-        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getOwner(),
-                                                       PrivateKeyType.ACTIVE);
-        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getOwner(),
-                                                       PrivateKeyType.OWNER);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getOwner(), PrivateKeyType.ACTIVE);
+        requiredAuthorities = mergeRequiredAuthorities(requiredAuthorities, this.getOwner(), PrivateKeyType.OWNER);
 
         return requiredAuthorities;
     }

@@ -39,8 +39,8 @@ public class AssetDeserializer extends JsonDeserializer<Asset> {
 
             if (assetFields.length == 2) {
                 /*
-                 * Set the symbol first which calculates the precision internally.
-                 * internally.
+                 * Set the symbol first which calculates the precision
+                 * internally. internally.
                  *
                  * The amount is provided as a double value while we need a long
                  * value for the byte representation so we transform the amount

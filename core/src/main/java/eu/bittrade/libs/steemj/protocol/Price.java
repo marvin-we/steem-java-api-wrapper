@@ -39,21 +39,22 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Price implements ByteTransformable , HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
+public class Price implements ByteTransformable, HasJsonAnyGetterSetter {
+    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
 
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
+    @Override
+    public Map<String, Object> _getter() {
+        return _anyGetterSetterMap;
+    }
+
+    @Override
+    public void _setter(String key, Object value) {
+        _getter().put(key, value);
+    }
 
     @JsonProperty("base")
     private Asset base;
-    @ JsonProperty("quote")
+    @JsonProperty("quote")
     private Asset quote;
 
     /**
@@ -84,7 +85,7 @@ public class Price implements ByteTransformable , HasJsonAnyGetterSetter {
      *             have an amount less than 1.
      */
     @JsonCreator
-    public Price(@JsonProperty("base") Asset base, @ JsonProperty("quote") Asset quote) {
+    public Price(@JsonProperty("base") Asset base, @JsonProperty("quote") Asset quote) {
         this.base = base;
         this.quote = quote;
 

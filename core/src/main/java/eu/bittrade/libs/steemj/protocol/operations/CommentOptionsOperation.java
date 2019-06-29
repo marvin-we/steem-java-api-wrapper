@@ -146,9 +146,8 @@ public class CommentOptionsOperation extends Operation {
     }
 
     /**
-     * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, int, List)}, but
-     * does not require extensions.
+     * Like {@link #CommentOptionsOperation(AccountName, Permlink, int, List)},
+     * but does not require extensions.
      * 
      * @param author
      *            The author of the post this operation should apply to (see
