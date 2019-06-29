@@ -17,8 +17,6 @@
 package eu.bittrade.libs.steemj.plugins.apis.tags.models;
 
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;
@@ -33,18 +31,6 @@ import eu.bittrade.libs.steemj.protocol.Asset;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Tag {
-    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-
-    @Override
-    public Map<String, Object> _getter() {
-        return _anyGetterSetterMap;
-    }
-
-    @Override
-    public void _setter(String key, Object value) {
-        _getter().put(key, value);
-    }
-
     /** The name of the tag. */
     @JsonProperty("name")
     private String name;

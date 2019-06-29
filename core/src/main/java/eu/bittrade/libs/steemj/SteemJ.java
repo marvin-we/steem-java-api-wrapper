@@ -17,10 +17,15 @@
 package eu.bittrade.libs.steemj;
 
 import java.security.InvalidParameterException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -29,6 +34,7 @@ import org.joou.ULong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 
@@ -40,16 +46,21 @@ import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
+import eu.bittrade.libs.steemj.base.models.SignedBlockWithInfo;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
+import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.exceptions.SteemTransformationException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.AccountByKeyApi;
 import eu.bittrade.libs.steemj.plugins.apis.account.by.key.models.GetKeyReferencesArgs;
@@ -68,6 +79,7 @@ import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlob
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Config;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.OrderBook;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.RewardFund;
@@ -113,14 +125,12 @@ import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.Price;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
-import eu.bittrade.libs.steemj.protocol.SignedBlock;
 import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CustomJsonOperation;
 import eu.bittrade.libs.steemj.protocol.operations.DelegateVestingSharesOperation;
-import eu.bittrade.libs.steemj.protocol.operations.DeleteCommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.TransferOperation;
 import eu.bittrade.libs.steemj.protocol.operations.VoteOperation;
@@ -4394,56 +4404,102 @@ public class SteemJ {
     }
 
     /**
-	 * Use this method to remove a comment or a post.
-	 * 
-	 * <b>Attention</b>
-	 * <ul>
-	 * <li>This method will write data on the blockchain. As all writing operations,
-	 * a private key is required to sign the transaction. For a voting operation the
-	 * private posting key of the {@link SteemJConfig#getDefaultAccount()
-	 * DefaultAccount} needs to be configured in the
-	 * {@link SteemJConfig#getPrivateKeyStorage() PrivateKeyStorage}.</li>
-	 * <li>This method will automatically use the
-	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of the
-	 * comment or post to remove - If no default account has been provided, this
-	 * method will throw an error. If you do not want to configure the author as a
-	 * default account, please use the
-	 * {@link #deletePostOrComment(AccountName, Permlink)} method and provide the
-	 * author account separately.</li>
-	 * </ul>
-	 * 
-	 * 
-	 * @param postOrCommentPermlink
-	 *            The permanent link of the post or the comment to delete.
-	 *            <p>
-	 *            Example:<br>
-	 *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
-	 *            </p>
-	 * @throws SteemCommunicationException
-	 *             <ul>
-	 *             <li>If the server was not able to answer the request in the given
-	 *             time (see
-	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-	 *             setResponseTimeout}).</li>
-	 *             <li>If there is a connection problem.</li>
-	 *             </ul>
-	 * @throws SteemResponseException
-	 *             <ul>
-	 *             <li>If the SteemJ is unable to transform the JSON response into a
-	 *             Java object.</li>
-	 *             <li>If the Server returned an error object.</li>
-	 *             </ul>
-	 * @throws SteemInvalidTransactionException
-	 *             If there is a problem while signing the transaction.
-	 * @throws InvalidParameterException
-	 *             If one of the provided parameters does not fulfill the
-	 *             requirements described above.
-	 */
-	public void deletePostOrComment(Permlink postOrCommentPermlink)
-			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
-		}
+     * Use this method to remove a comment or a post.
+     * 
+     * <b>Attention</b>
+     * <ul>
+     * <li>This method will write data on the blockchain. As all writing
+     * operations, a private key is required to sign the transaction. For a
+     * voting operation the private posting key of the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
+     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
+     * PrivateKeyStorage}.</li>
+     * <li>This method will automatically use the
+     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the author of
+     * the comment or post to remove - If no default account has been provided,
+     * this method will throw an error. If you do not want to configure the
+     * author as a default account, please use the
+     * {@link #deletePostOrComment(AccountName, Permlink)} method and provide
+     * the author account separately.</li>
+     * </ul>
+     * 
+     * 
+     * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to delete.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void deletePostOrComment(Permlink postOrCommentPermlink)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
+            throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * This method is like the {@link #deletePostOrComment(Permlink)} method,
+     * but allows you to define the author account separately instead of using
+     * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
+     * 
+     * @param postOrCommentAuthor
+     *            The author of the post or the comment to vote for.
+     *            <p>
+     *            Example:<br>
+     *            <code>new AccountName("dez1337")</code>
+     *            </p>
+     * @param postOrCommentPermlink
+     *            The permanent link of the post or the comment to delete.
+     *            <p>
+     *            Example:<br>
+     *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
+     *            </p>
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     * @throws SteemInvalidTransactionException
+     *             If there is a problem while signing the transaction.
+     * @throws InvalidParameterException
+     *             If one of the provided parameters does not fulfill the
+     *             requirements described above.
+     */
+    public void deletePostOrComment(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
+            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
+        // DeleteCommentOperation deleteCommentOperation = new
+        // DeleteCommentOperation(postOrCommentAuthor,
+        // postOrCommentPermlink);
+    }
 
     /**
      * Transfer the currency of your choice from
@@ -4507,47 +4563,8 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-    /**
-	 * This method is like the {@link #deletePostOrComment(Permlink)} method, but
-	 * allows you to define the author account separately instead of using the
-	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
-	 * 
-	 * @param postOrCommentAuthor
-	 *            The author of the post or the comment to vote for.
-	 *            <p>
-	 *            Example:<br>
-	 *            <code>new AccountName("dez1337")</code>
-	 *            </p>
-	 * @param postOrCommentPermlink
-	 *            The permanent link of the post or the comment to delete.
-	 *            <p>
-	 *            Example:<br>
-	 *            <code>new Permlink("steemj-v0-2-4-has-been-released-update-9")</code>
-	 *            </p>
-	 * @throws SteemCommunicationException
-	 *             <ul>
-	 *             <li>If the server was not able to answer the request in the given
-	 *             time (see
-	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-	 *             setResponseTimeout}).</li>
-	 *             <li>If there is a connection problem.</li>
-	 *             </ul>
-	 * @throws SteemResponseException
-	 *             <ul>
-	 *             <li>If the SteemJ is unable to transform the JSON response into a
-	 *             Java object.</li>
-	 *             <li>If the Server returned an error object.</li>
-	 *             </ul>
-	 * @throws SteemInvalidTransactionException
-	 *             If there is a problem while signing the transaction.
-	 * @throws InvalidParameterException
-	 *             If one of the provided parameters does not fulfill the
-	 *             requirements described above.
-	 */
-	public void deletePostOrComment(AccountName postOrCommentAuthor, Permlink postOrCommentPermlink)
-			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-		DeleteCommentOperation deleteCommentOperation = new DeleteCommentOperation(postOrCommentAuthor,
-				postOrCommentPermlink);
+        return transfer(SteemJConfig.getInstance().getDefaultAccount(), to, amount, memo);
+    }
 
     /**
      * Transfer currency from specified account to recipient. Amount is
@@ -4571,137 +4588,6 @@ public class SteemJ {
      *            An {@link Asset} object containing the Asset type (see
      *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType}
      *            and the amount to transfer.
-     * @param memo
-     *            Message include with transfer (255 char max)
-     * @return The TransferOperation broadcast.
-     * @throws SteemCommunicationException
-     *             <ul>
-     *             <li>If the server was not able to answer the request in the
-     *             given time (see
-     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-     *             setResponseTimeout}).</li>
-     *             <li>If there is a connection problem.</li>
-     *             </ul>
-     * @throws SteemResponseException
-     *             <ul>
-     *             <li>If the SteemJ is unable to transform the JSON response
-     *             into a Java object.</li>
-     *             <li>If the Server returned an error object.</li>
-     *             </ul>
-     * @throws SteemInvalidTransactionException
-     *             If there is a problem while signing the transaction.
-     * @throws InvalidParameterException
-     *             If one of the provided parameters does not fulfill the
-     *             requirements described above.
-     */
-    public TransferOperation transfer(AccountName from, AccountName to, Asset amount, String memo)
-            throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-        TransferOperation transferOperation = new TransferOperation(from, to, amount, memo);
-        ArrayList<Operation> operations = new ArrayList<>();
-        operations.add(transferOperation);
-        DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
-        SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations,
-                null);
-        signedTransaction.sign();
-        this.broadcastTransaction(signedTransaction);
-        return transferOperation;
-    }
-
-    DynamicGlobalProperty globalProperties = this.getDynamicGlobalProperties();
-
-    SignedTransaction signedTransaction = new SignedTransaction(globalProperties.getHeadBlockId(), operations, null);
-
-    signedTransaction.sign();
-
-    this.broadcastTransaction(signedTransaction);
-    }
-
-    /**
-	 * Transfer the currency of your choice from
-	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} to recipient. Amount
-	 * is automatically converted from normalized representation to base
-	 * representation. For example, to transfer 1.00 SBD to another account, simply
-	 * use:
-	 * <code>SteemJ.transfer(new AccountName("accountb"), new Asset(1.0, AssetSymbolType.SBD), "My memo");</code>
-	 *
-	 * <b>Attention</b>
-	 * <ul>
-	 * <li>This method will write data on the blockchain. As all writing operations,
-	 * a private key is required to sign the transaction. For a transfer operation
-	 * the private active key of the {@link SteemJConfig#getDefaultAccount()
-	 * DefaultAccount} needs to be configured in the
-	 * {@link SteemJConfig#getPrivateKeyStorage() PrivateKeyStorage}.</li>
-	 * <li>This method will automatically use the
-	 * {@link SteemJConfig#getDefaultAccount() DefaultAccount} as the account to
-	 * transfer from. If no default account has been provided, this method will
-	 * throw an error. If you do not want to configure the following account as a
-	 * default account, please use the
-	 * {@link #transfer(AccountName, AccountName, Asset, String)} method and provide
-	 * the <code>from</code> account separately.</li>
-	 * </ul>
-	 *
-	 * @param to
-	 *            The account name of the account the
-	 *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
-	 *            transfer currency to.
-	 * @param amount
-	 *            An {@link Asset} object containing the Asset type (see
-	 *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType} and the
-	 *            amount to transfer.
-	 * @param memo
-	 *            Message include with transfer (255 char max)
-	 * @return The TransferOperation broadcast.
-	 * @throws SteemCommunicationException
-	 *             <ul>
-	 *             <li>If the server was not able to answer the request in the given
-	 *             time (see
-	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
-	 *             setResponseTimeout}).</li>
-	 *             <li>If there is a connection problem.</li>
-	 *             </ul>
-	 * @throws SteemResponseException
-	 *             <ul>
-	 *             <li>If the SteemJ is unable to transform the JSON response into a
-	 *             Java object.</li>
-	 *             <li>If the Server returned an error object.</li>
-	 *             </ul>
-	 * @throws SteemInvalidTransactionException
-	 *             If there is a problem while signing the transaction.
-	 * @throws InvalidParameterException
-	 *             If one of the provided parameters does not fulfill the
-	 *             requirements described above.
-	 */
-	public TransferOperation transfer(AccountName to, Asset amount, String memo)
-			throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
-		if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
-			throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
-		}
-
-		return transfer(SteemJConfig.getInstance().getDefaultAccount(), to, amount, memo);
-	}
-
-    /**
-     * Transfer currency from specified account to recipient. Amount is
-     * automatically converted from normalized representation to base
-     * representation. For example, to transfer 1.00 SBD to another account,
-     * simply use:
-     * <code>SteemJ.transfer(new AccountName("accounta"), new AccountName("accountb"), AssetSymbolType.SBD, 1.0, "My memo");</code>
-     *
-     * <b>Attention</b> This method will write data on the blockchain. As all
-     * writing operations, a private key is required to sign the transaction.
-     * For a transfer operation the private active key of the
-     * {@link SteemJConfig#getDefaultAccount() DefaultAccount} needs to be
-     * configured in the {@link SteemJConfig#getPrivateKeyStorage()
-     * PrivateKeyStorage}.
-     *
-     * @param from
-     *            The account from which to transfer currency.
-     * @param to
-     *            The account to which to transfer currency.
-     * @param amount
-     *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.enums.AssetSymbolType} and the
-     *            amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
      * @return The TransferOperation broadcast.

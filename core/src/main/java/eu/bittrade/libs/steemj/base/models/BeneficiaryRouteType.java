@@ -19,8 +19,6 @@ package eu.bittrade.libs.steemj.base.models;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -30,7 +28,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 import eu.bittrade.libs.steemj.interfaces.Validatable;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -40,9 +37,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class BeneficiaryRouteType implements ByteTransformable, Validatable, HasJsonAnyGetterSetter {
-    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-
+public class BeneficiaryRouteType implements ByteTransformable, Validatable {
     @JsonProperty("account")
     private AccountName account;
     // Original type is uint16_t.

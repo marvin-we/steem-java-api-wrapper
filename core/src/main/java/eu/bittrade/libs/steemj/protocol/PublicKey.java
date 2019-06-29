@@ -16,22 +16,24 @@
  */
 package eu.bittrade.libs.steemj.protocol;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongycastle.crypto.digests.RIPEMD160Digest;
+import org.spongycastle.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.primitives.Bytes;
 
 import eu.bittrade.crypto.core.AddressFormatException;
 import eu.bittrade.crypto.core.ECKey;
+import eu.bittrade.crypto.core.base58.Base58;
 import eu.bittrade.libs.steemj.base.models.serializer.PublicKeySerializer;
+import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class is the java implementation of the <a href=
@@ -41,19 +43,7 @@ import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 @JsonSerialize(using = PublicKeySerializer.class)
-public class PublicKey implements ByteTransformable, HasJsonAnyGetterSetter {
-    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-
-    @Override
-    public Map<String, Object> _getter() {
-        return _anyGetterSetterMap;
-    }
-
-    @Override
-    public void _setter(String key, Object value) {
-        _getter().put(key, value);
-    }
-
+public class PublicKey implements ByteTransformable {
     private static final Logger LOGGER = LoggerFactory.getLogger(PublicKey.class);
 
     private static final int CHECKSUM_BYTES = 4;

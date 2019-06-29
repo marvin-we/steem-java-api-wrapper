@@ -17,9 +17,7 @@
 package eu.bittrade.libs.steemj.plugins.apis.tags.models;
 
 import java.security.InvalidParameterException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -37,18 +35,6 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
  */
 @JsonInclude(Include.NON_NULL)
 public class DiscussionQuery {
-    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-
-    @Override
-    public Map<String, Object> _getter() {
-        return _anyGetterSetterMap;
-    }
-
-    @Override
-    public void _setter(String key, Object value) {
-        _getter().put(key, value);
-    }
-
     private String tag;
     private int limit;
     @JsonProperty("filter_tags")

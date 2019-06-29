@@ -17,33 +17,17 @@
 package eu.bittrade.libs.steemj.protocol;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 
 /**
  * This class represents a Steem "annotated_signed_transaction" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AnnotatedSignedTransaction implements Serializable, HasJsonAnyGetterSetter {
-    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-
-    @Override
-    public Map<String, Object> _getter() {
-        return _anyGetterSetterMap;
-    }
-
-    @Override
-    public void _setter(String key, Object value) {
-        _getter().put(key, value);
-    }
-
+public class AnnotatedSignedTransaction implements Serializable {
     /** Generated serial version uid. */
     private static final long serialVersionUID = 1737019021825341056L;
     @JsonProperty("transaction_id")

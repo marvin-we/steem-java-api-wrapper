@@ -17,16 +17,13 @@
 package eu.bittrade.libs.steemj.base.models;
 
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
-import eu.bittrade.libs.steemj.interfaces.HasJsonAnyGetterSetter;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.Authority;
@@ -37,18 +34,7 @@ import eu.bittrade.libs.steemj.protocol.PublicKey;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class Account implements HasJsonAnyGetterSetter {
-	private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-	@Override
-	public Map<String, Object> _getter() {
-		return _anyGetterSetterMap;
-	}
-
-	@Override
-	public void _setter(String key, Object value) {
-		_getter().put(key, value);
-	}
-
+public class Account {
     // TODO: Original type is "account_id_type".
     private long id;
     private AccountName name;

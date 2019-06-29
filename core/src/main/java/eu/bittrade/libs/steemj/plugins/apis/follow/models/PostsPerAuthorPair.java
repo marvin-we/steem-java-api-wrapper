@@ -16,9 +16,6 @@
  */
 package eu.bittrade.libs.steemj.plugins.apis.follow.models;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -34,18 +31,6 @@ import eu.bittrade.libs.steemj.protocol.AccountName;
  */
 @JsonFormat(shape = JsonFormat.Shape.ARRAY)
 public class PostsPerAuthorPair {
-    private final Map<String, Object> _anyGetterSetterMap = new HashMap<>();
-
-    @Override
-    public Map<String, Object> _getter() {
-        return _anyGetterSetterMap;
-    }
-
-    @Override
-    public void _setter(String key, Object value) {
-        _getter().put(key, value);
-    }
-
     private AccountName account;
     private int numberOfPosts;
 
