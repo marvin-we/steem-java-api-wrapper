@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.AuthorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.base.models.operations.virtual.CommentPayoutUpdateOperation;
@@ -96,6 +97,7 @@ import java.util.Map;
         @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
         @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
         @Type(value = ProducerRewardOperation.class, name = "producer_reward") })
+@JsonDeserialize(using = OperationDeserializer.class)
 public abstract class Operation extends BaseOperation implements ByteTransformable, Validatable {
     /**
      * This field is used to store the operation type.
