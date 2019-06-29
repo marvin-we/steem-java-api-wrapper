@@ -3070,8 +3070,10 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
-                permlinkOfThePostOrCommentToReplyTo, content, tags);
+        // TODO: Readd 
+        //return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
+        //        permlinkOfThePostOrCommentToReplyTo, content, tags);
+        return null;
     }
 
     /**
@@ -3251,8 +3253,10 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
-                tags);
+        // TODO: Readd 
+        //return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
+        //        tags);
+        return null;
     }
 
     /**
@@ -3301,6 +3305,8 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
+    // TODO: Readd 
+    /*
     public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
             String title, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
@@ -3331,6 +3337,7 @@ public class SteemJ {
 
         return commentOperation;
     }
+    */
 
     /**
      * Use this method to update an existing comment.
@@ -3404,8 +3411,10 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
-                originalPermlinkOfTheCommentToUpdate, content, tags);
+        // TODO: Readd 
+        //return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
+         //       originalPermlinkOfTheCommentToUpdate, content, tags);
+        return null;
     }
 
     /**
@@ -3457,6 +3466,8 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
+    // TODO: Readd 
+    /*
     public CommentOperation updateComment(AccountName originalAuthorOfTheCommentToUpdate, AccountName parentAuthor,
             Permlink parentPermlink, Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
@@ -3483,6 +3494,7 @@ public class SteemJ {
 
         return commentOperation;
     }
+    */
 
     /**
      * Use this method to remove a comment or a post.
