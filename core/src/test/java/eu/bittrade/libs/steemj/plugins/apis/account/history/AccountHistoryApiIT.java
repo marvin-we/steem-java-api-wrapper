@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.joou.UInteger;
@@ -83,7 +84,7 @@ public class AccountHistoryApiIT extends BaseIT {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetOpsInBlock() throws SteemCommunicationException, SteemResponseException {
-        final ArrayList<Operation> operations = AccountHistoryApi
+        final List<AppliedOperation> operations = AccountHistoryApi
                 .getOpsInBlock(COMMUNICATION_HANDLER, new GetOpsInBlockArgs(UInteger.valueOf(13310401), true))
                 .getOperations();
 
@@ -107,10 +108,13 @@ public class AccountHistoryApiIT extends BaseIT {
     @Test
     public void testGetTransaction() throws SteemCommunicationException, SteemResponseException {
         // TODO: Check also null case of optional
-        final AnnotatedSignedTransaction annotatedSignedTransaction = AccountHistoryApi.getTransaction(
-                COMMUNICATION_HANDLER,
-                new GetAccountHistoryArgsTest(new TransactionId("bd8069e6544f658da560b72e93b605dfe2cb0aaf")));
-
+      //  final AnnotatedSignedTransaction annotatedSignedTransaction = AccountHistoryApi.getTransaction(
+      //          COMMUNICATION_HANDLER,
+       //         new GetAccountHistoryArgsTest(new TransactionId("bd8069e6544f658da560b72e93b605dfe2cb0aaf")));
+    	AccountName account = new AccountName("dez1337");
+        ULong start = ULong.valueOf(20);
+        UInteger limit = UInteger.valueOf(10);
+    	final AnnotatedSignedTransaction annotatedSignedTransaction = AccountHistoryApi.getTransaction(COMMUNICATION_HANDLER, new GetAccountHistoryArgs(account, start, limit));
         // assertThat(annotatedSignedTransaction.getTimestamp().getDateTime(),
         // equalTo("2017-07-02T19:15:06"));
         // assertThat(blockHeader.getWitness(), equalTo(new

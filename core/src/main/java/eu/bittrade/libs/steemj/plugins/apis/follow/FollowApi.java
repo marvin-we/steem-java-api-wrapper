@@ -18,6 +18,8 @@ package eu.bittrade.libs.steemj.plugins.apis.follow;
 
 import java.util.List;
 
+import org.joou.UInteger;
+
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
@@ -498,4 +500,11 @@ public class FollowApi {
 
         return communicationHandler.performRequest(requestObject, PostsPerAuthorPair.class);
     }
+
+	public static List<FollowApiObject> getFollowers(CommunicationHandler cOMMUNICATION_HANDLER,
+			AccountName accountName, AccountName accountName2, FollowType blog, short s) {
+	//	GetFollowersArgs getFollowersArgs = new GetFollowersArgs(accountName, accountName2, blog, (UInteger)s);
+	//	JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_FOLLOWERS,getFollowersArgs);
+		return null;
+	}
 }

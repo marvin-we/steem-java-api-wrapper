@@ -28,9 +28,6 @@ import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
-/**
- * @author Anthony Martin
- */
 public abstract class BaseIT extends BaseTest {
     protected static SteemJConfig config;
     protected static SteemJ steemJ;

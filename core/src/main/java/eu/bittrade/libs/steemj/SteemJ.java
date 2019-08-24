@@ -40,13 +40,17 @@ import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
+import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -68,6 +72,7 @@ import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlob
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Config;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.OrderBook;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.RewardFund;
@@ -141,7 +146,7 @@ public class SteemJ {
     private static final String NO_DEFAULT_ACCOUNT_ERROR_MESSAGE = "You try to use a simplified operation without having a default account configured in SteemJConfig. Please configure a default account or use another method.";
     private static final String MARKDOWN = "markdown";
 
-    private CommunicationHandler communicationHandler;
+    private static CommunicationHandler communicationHandler;
 
     /**
      * Initialize the SteemJ.
@@ -3915,4 +3920,84 @@ public class SteemJ {
         signedTransaction.sign();
         this.broadcastTransaction(signedTransaction);
     }
+
+	/**
+	 * Get the configuration.
+	 * 
+	 * @return The steem configuration.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 */
+	public static Config getConfig() throws SteemCommunicationException, SteemResponseException {
+		String[] parameters = {};
+		JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_CONFIG, parameters);
+
+		return communicationHandler.performRequest(requestObject, Config.class).get(0);
+	}
+
+	/**
+	 * Get the liquidity queue for a specified account.
+	 * 
+	 * @param accoutName
+	 *            The name of the account you want to request the queue entries for.
+	 * @param limit
+	 *            Number of results.
+	 * @return A list of liquidity queue entries.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 */
+	public static List<LiquidityBalance> getLiquidityQueue(AccountName accoutName, int limit) throws SteemCommunicationException, SteemResponseException {
+		Object[] parameters = { accoutName.getName(), String.valueOf(limit) };
+		JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_LIQUIDITY_QUEUE, parameters);
+		return communicationHandler.performRequest(requestObject, LiquidityBalance.class);
+	}
+
+	/**
+	 * Get the hardfork version the node you are connected to is using.
+	 * 
+	 * @return The hardfork version that the connected node is running on.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 */
+	public String getHardforkVersion() throws SteemCommunicationException, SteemResponseException {
+		String[] parameters = {};
+		JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_HARDFORK_VERSION, parameters);
+		return communicationHandler.performRequest(requestObject, String.class).get(0);
+	}
 }
