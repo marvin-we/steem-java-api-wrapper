@@ -110,12 +110,6 @@
 			<version>${hamcrest.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.exparity</groupId>
-			<artifactId>hamcrest-date</artifactId>
-			<version>${hamcrest.date.version}</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -181,7 +175,6 @@
 		<crypto.core.version>0.1.0pre1</crypto.core.version>
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>2.1</hamcrest.version>
-		<hamcrest.date.version>2.0.5</hamcrest.date.version>
 		<tyrus.client.version>1.15</tyrus.client.version>
 		<jackson.version>2.9.9</jackson.version>
 		<apache.commons.lang.version>3.5</apache.commons.lang.version>
