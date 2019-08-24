@@ -272,5 +272,7 @@ public enum RequestMethod {
     /** */
     GET_ACCOUNT_BANDWIDTH,
     /** */
-    GET_REVERSE_RATIO
+    GET_REVERSE_RATIO,
+    
+    GET_LIQUIDITY_QUEUE
 }
