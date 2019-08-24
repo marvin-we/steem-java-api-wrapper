@@ -19,8 +19,9 @@ package eu.bittrade.libs.steemj.plugins.apis.database;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.emptyOrNullString;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -33,19 +34,15 @@ import org.junit.experimental.categories.Category;
 
 import eu.bittrade.libs.steemj.BaseIT;
 import eu.bittrade.libs.steemj.IntegrationTest;
-import eu.bittrade.libs.steemj.SteemJ;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
-import eu.bittrade.libs.steemj.plugins.apis.account.history.AccountHistoryApi;
-import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.plugins.apis.block.BlockApi;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.DynamicGlobalProperty;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.HardforkProperty;
 import eu.bittrade.libs.steemj.plugins.apis.tags.TagsApi;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
-import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
-import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
 
 /**
  * This class contains all test connected to the
@@ -72,7 +69,7 @@ public class DatabaseApiIT extends BaseIT {
 
     /**
      * Test the
-     * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi#getTrendingTags(CommunicationHandler, String, int)}
+     * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi#getHardforkProperties(CommunicationHandler)}
      * method.
      * 
      * @throws SteemCommunicationException
@@ -83,7 +80,32 @@ public class DatabaseApiIT extends BaseIT {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetHardforkProperties() throws SteemCommunicationException, SteemResponseException {
-        DatabaseApi.getHardforkProperties(COMMUNICATION_HANDLER);
+        HardforkProperty hardforkProperty = DatabaseApi.getHardforkProperties(COMMUNICATION_HANDLER);
+        assertThat(hardforkProperty.getCurrentHardforkVersion().toString(), matchesPattern("^[0-9]+\\.[0-9]+\\.[0-9]+"));
+        assertThat(hardforkProperty.getId(), greaterThanOrEqualTo(0L));
+        assertThat(hardforkProperty.getLastHardfork().longValue(), greaterThanOrEqualTo(0L));
+        assertThat(hardforkProperty.getNextHardfork().toString(), matchesPattern("^[0-9]+\\.[0-9]+\\.[0-9]+"));
+        assertThat(hardforkProperty.getNextHardforkTime().getDateTimeAsTimestamp(), greaterThanOrEqualTo(0L));
+        assertThat(hardforkProperty.getProcessedHardforks().size(), greaterThan(19));
+        assertThat(hardforkProperty.getProcessedHardforks().get(0).getDateTimeAsTimestamp(), equalTo(1458835200000L));
+    }
+
+    /**
+     * Test the
+     * {@link eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi#getDynamicGlobalProperties(CommunicationHandler)}
+     * method.
+     * 
+     * @throws SteemCommunicationException
+     *             If a communication error occurs.
+     * @throws SteemResponseException
+     *             If the response is an error.
+     */
+    @Category({ IntegrationTest.class })
+    @Test
+    public void testGetDynamicGlobalProperties() throws SteemCommunicationException, SteemResponseException {
+        DynamicGlobalProperty dynamicGlobalProperty = DatabaseApi.getDynamicGlobalProperties(COMMUNICATION_HANDLER);
+        
+        assertThat(dynamicGlobalProperty.getCurrentSdbSupply().getAmount(), greaterThan(100000000000L));
     }
 
     /**
@@ -109,8 +131,9 @@ public class DatabaseApiIT extends BaseIT {
         assertThat(trendingTags.get(0).getComments(), greaterThan(0L));
         assertThat(trendingTags.get(0).getNetVotes(), greaterThan(0L));
         assertThat(trendingTags.get(0).getTopPosts(), greaterThan(0L));
-        //seems that payout asset report has changed
-        //assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(AssetSymbolType.VESTS));
+        // seems that payout asset report has changed
+        // assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(),
+        // equalTo(AssetSymbolType.VESTS));
         assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(LegacyAssetSymbolType.SBD));
         assertThat(trendingTags.get(0).getTotalPayouts().getAmount(), greaterThan(0L));
         assertThat(trendingTags.get(0).getTrending().intValue(), greaterThan(0));
@@ -150,7 +173,7 @@ public class DatabaseApiIT extends BaseIT {
         // The active witness changes from time to time, so we just check if
         // something is returned.
         assertThat(activeWitnesses.size(), greaterThan(0));
-        assertThat(activeWitnesses.get(0).getName(), not(isEmptyOrNullString()));
+        assertThat(activeWitnesses.get(0).getName(), not(emptyOrNullString()));
     }
 
     /**
@@ -166,23 +189,30 @@ public class DatabaseApiIT extends BaseIT {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetOpsInBlock() throws SteemCommunicationException, SteemResponseException {
-    /*    final List<AppliedOperation> appliedOperationsOnlyVirtual = AccountHistoryApi.getOpsInBlock(COMMUNICATION_HANDLER,
-                13138393, true);
-
-        assertThat(appliedOperationsOnlyVirtual.size(), equalTo(6));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx(), equalTo(1));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(), equalTo(41));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(), equalTo(0L));
-        assertThat(appliedOperationsOnlyVirtual.get(0).getOp(), instanceOf(ProducerRewardOperation.class));
-
-        final List<AppliedOperation> appliedOperations = DatabaseApi.getOpsInBlock(COMMUNICATION_HANDLER, 13138393,
-                false);
-
-        assertThat(appliedOperations.size(), equalTo(51));
-        assertThat(appliedOperations.get(1).getOpInTrx(), equalTo(0));
-        assertThat(appliedOperations.get(1).getTrxInBlock(), equalTo(1));
-        assertThat(appliedOperations.get(1).getVirtualOp(), equalTo(0L));
-        assertThat(appliedOperations.get(1).getOp(), instanceOf(CommentOperation.class));*/
+        /*
+         * final List<AppliedOperation> appliedOperationsOnlyVirtual =
+         * AccountHistoryApi.getOpsInBlock(COMMUNICATION_HANDLER, 13138393,
+         * true);
+         * 
+         * assertThat(appliedOperationsOnlyVirtual.size(), equalTo(6));
+         * assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx(),
+         * equalTo(1));
+         * assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(),
+         * equalTo(41));
+         * assertThat(appliedOperationsOnlyVirtual.get(0).getVirtualOp(),
+         * equalTo(0L)); assertThat(appliedOperationsOnlyVirtual.get(0).getOp(),
+         * instanceOf(ProducerRewardOperation.class));
+         * 
+         * final List<AppliedOperation> appliedOperations =
+         * DatabaseApi.getOpsInBlock(COMMUNICATION_HANDLER, 13138393, false);
+         * 
+         * assertThat(appliedOperations.size(), equalTo(51));
+         * assertThat(appliedOperations.get(1).getOpInTrx(), equalTo(0));
+         * assertThat(appliedOperations.get(1).getTrxInBlock(), equalTo(1));
+         * assertThat(appliedOperations.get(1).getVirtualOp(), equalTo(0L));
+         * assertThat(appliedOperations.get(1).getOp(),
+         * instanceOf(CommentOperation.class));
+         */
     }
 
 }
