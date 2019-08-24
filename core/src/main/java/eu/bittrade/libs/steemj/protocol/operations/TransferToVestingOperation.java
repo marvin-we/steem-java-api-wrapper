@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -56,13 +56,13 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
      *            {@link #setTo(AccountName)}).
      * @param amount
      *            The amount of vests to transfer (see
-     *            {@link #setAmount(Asset)}).
+     *            {@link #setAmount(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
     public TransferToVestingOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
-            @JsonProperty("amount") Asset amount) {
+            @JsonProperty("amount") LegacyAsset amount) {
         super(false);
 
         this.setFrom(from);
@@ -72,7 +72,7 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
 
     /**
      * Like
-     * {@link #TransferToVestingOperation(AccountName, AccountName, Asset)}, but
+     * {@link #TransferToVestingOperation(AccountName, AccountName, LegacyAsset)}, but
      * will transform the <code>asset</code> from the <code>from</code> account
      * to the <code>from</code> account.
      * 
@@ -81,11 +81,11 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
      *            {@link #setFrom(AccountName)}).
      * @param amount
      *            The amount of vests to transfer (see
-     *            {@link #setAmount(Asset)}).
+     *            {@link #setAmount(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public TransferToVestingOperation(AccountName from, Asset amount) {
+    public TransferToVestingOperation(AccountName from, LegacyAsset amount) {
         this(from, from, amount);
     }
 
@@ -116,7 +116,7 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
      *             or less than 1.
      */
     @Override
-    public void setAmount(Asset amount) {
+    public void setAmount(LegacyAsset amount) {
         this.amount = SteemJUtils.setIfNotNull(amount, "The amount can't be null.");
     }
 

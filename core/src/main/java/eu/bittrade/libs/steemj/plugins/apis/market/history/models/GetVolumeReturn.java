@@ -20,7 +20,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "get_volume_return" object of the
@@ -30,9 +30,9 @@ import eu.bittrade.libs.steemj.protocol.Asset;
  */
 public class GetVolumeReturn {
     @JsonProperty("steem_volume")
-    private Asset steemVolume;
+    private LegacyAsset steemVolume;
     @JsonProperty("sbd_volume")
-    private Asset sbdVolume;
+    private LegacyAsset sbdVolume;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -44,14 +44,14 @@ public class GetVolumeReturn {
     /**
      * @return the steemVolume
      */
-    public Asset getSteemVolume() {
+    public LegacyAsset getSteemVolume() {
         return steemVolume;
     }
 
     /**
      * @return the sbdVolume
      */
-    public Asset getSbdVolume() {
+    public LegacyAsset getSbdVolume() {
         return sbdVolume;
     }
 

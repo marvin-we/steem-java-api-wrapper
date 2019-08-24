@@ -29,9 +29,9 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Price;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.FeedPublishOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -59,8 +59,8 @@ public class FeedPublishOperationParsingIT extends BaseITForOperationParsing {
         setupIntegrationTestEnvironment();
 
         // Set expected objects.
-        Asset expectedBase = new Asset(283, AssetSymbolType.SBD);
-        Asset expectedQuote = new Asset(1000, AssetSymbolType.STEEM);
+        LegacyAsset expectedBase = new LegacyAsset(283, LegacyAssetSymbolType.SBD);
+        LegacyAsset expectedQuote = new LegacyAsset(1000, LegacyAssetSymbolType.STEEM);
 
         EXPECTED_PRICE = new Price(expectedBase, expectedQuote);
     }

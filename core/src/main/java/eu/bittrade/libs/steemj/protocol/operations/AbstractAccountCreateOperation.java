@@ -26,7 +26,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -39,7 +39,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public abstract class AbstractAccountCreateOperation extends AbstractAccountOperation {
     @JsonProperty("fee")
-    protected Asset fee;
+    protected LegacyAsset fee;
     @JsonProperty("creator")
     protected AccountName creator;
     @JsonProperty("new_account_name")
@@ -63,7 +63,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      * 
      * @return The fee.
      */
-    public Asset getFee() {
+    public LegacyAsset getFee() {
         return fee;
     }
 
@@ -77,7 +77,7 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
      *             If the <code>fee</code> is null, of symbol type STEEM or less
      *             than 0.
      */
-    public void setFee(Asset fee) {
+    public void setFee(LegacyAsset fee) {
         this.fee = SteemJUtils.setIfNotNull(fee, "The fee can't be null.");
     }
 

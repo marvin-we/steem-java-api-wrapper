@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.FillOrderOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
@@ -48,10 +48,10 @@ public class FillOrderOperationIT extends BaseITForOperationParsing {
     private static final AccountName EXPECTED_OPEN_OWNER = new AccountName("oscarps");
     private static final int EXPECTED_CURRENT_ORDER_ID = 1507078540;
     private static final long EXPECTED_OPEN_ORDER_ID = 1507059984L;
-    private static final AssetSymbolType EXPECTED_OPEN_PAYS_SYMBOL = AssetSymbolType.STEEM;
+    private static final LegacyAssetSymbolType EXPECTED_OPEN_PAYS_SYMBOL = LegacyAssetSymbolType.STEEM;
     private static final BigDecimal EXPECTED_OPEN_PAYS_VALUE_REAL = BigDecimal.valueOf(0.015);
     private static final long EXPECTED_OPEN_PAYS_VALUE = 15L;
-    private static final AssetSymbolType EXPECTED_CURRENT_PAYS_SYMBOL = AssetSymbolType.SBD;
+    private static final LegacyAssetSymbolType EXPECTED_CURRENT_PAYS_SYMBOL = LegacyAssetSymbolType.SBD;
     private static final BigDecimal EXPECTED_CURRENT_PAYS_VALUE_REAL = BigDecimal.valueOf(0.02);
     private static final long EXPECTED_CURRENT_PAYS_VALUE = 20L;
 

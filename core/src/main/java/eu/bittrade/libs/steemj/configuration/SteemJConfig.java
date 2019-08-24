@@ -39,7 +39,7 @@ import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 
 /**
  * This class stores the configuration that is used for the communication to the
@@ -105,9 +105,9 @@ public class SteemJConfig {
     private short steemJWeight;
     private ValidationType validationLevel;
     private SynchronizationType synchronizationLevel;
-    private AssetSymbolType dollarSymbol;
-    private AssetSymbolType tokenSymbol;
-    private AssetSymbolType vestsSymbol;
+    private LegacyAssetSymbolType dollarSymbol;
+    private LegacyAssetSymbolType tokenSymbol;
+    private LegacyAssetSymbolType vestsSymbol;
 
     /**
      * Default constructor that will set all default values.
@@ -136,9 +136,9 @@ public class SteemJConfig {
         this.steemJWeight = 250;
         this.validationLevel = ValidationType.ALL;
         this.synchronizationLevel = SynchronizationType.FULL;
-        this.dollarSymbol = AssetSymbolType.SBD;
-        this.tokenSymbol = AssetSymbolType.STEEM;
-        this.vestsSymbol = AssetSymbolType.VESTS;
+        this.dollarSymbol = LegacyAssetSymbolType.SBD;
+        this.tokenSymbol = LegacyAssetSymbolType.STEEM;
+        this.vestsSymbol = LegacyAssetSymbolType.VESTS;
 
         // Fill the key store with the provided accountName and private keys.
         this.defaultAccount = new AccountName(System.getProperty("steemj.default.account", ""));
@@ -580,13 +580,13 @@ public class SteemJConfig {
     }
 
     /**
-     * Get the currently configured {@link AssetSymbolType} for dollars (e.g.
+     * Get the currently configured {@link LegacyAssetSymbolType} for dollars (e.g.
      * SBD). The configured symbol type is used to validate VESTS fields of
      * operations.
      * 
-     * @return The currently configured {@link AssetSymbolType} for dollars.
+     * @return The currently configured {@link LegacyAssetSymbolType} for dollars.
      */
-    public AssetSymbolType getDollarSymbol() {
+    public LegacyAssetSymbolType getDollarSymbol() {
         return dollarSymbol;
     }
 
@@ -595,20 +595,20 @@ public class SteemJConfig {
      * type is used to validate VESTS fields of operations.
      * 
      * @param dollarSymbol
-     *            The {@link AssetSymbolType} for dollars to set.
+     *            The {@link LegacyAssetSymbolType} for dollars to set.
      */
-    public void setDollarSymbol(AssetSymbolType dollarSymbol) {
+    public void setDollarSymbol(LegacyAssetSymbolType dollarSymbol) {
         this.dollarSymbol = dollarSymbol;
     }
 
     /**
-     * Get the currently configured {@link AssetSymbolType} for tokens (e.g.
+     * Get the currently configured {@link LegacyAssetSymbolType} for tokens (e.g.
      * STEEM). The configured symbol type is used to validate VESTS fields of
      * operations.
      * 
-     * @return The currently configured {@link AssetSymbolType} for tokens.
+     * @return The currently configured {@link LegacyAssetSymbolType} for tokens.
      */
-    public AssetSymbolType getTokenSymbol() {
+    public LegacyAssetSymbolType getTokenSymbol() {
         return tokenSymbol;
     }
 
@@ -617,19 +617,19 @@ public class SteemJConfig {
      * is used to validate token fields of operations.
      * 
      * @param tokenSymbol
-     *            The {@link AssetSymbolType} for tokens to set.
+     *            The {@link LegacyAssetSymbolType} for tokens to set.
      */
-    public void setTokenSymbol(AssetSymbolType tokenSymbol) {
+    public void setTokenSymbol(LegacyAssetSymbolType tokenSymbol) {
         this.tokenSymbol = tokenSymbol;
     }
 
     /**
-     * Get the currently configured {@link AssetSymbolType} for VESTS. The
+     * Get the currently configured {@link LegacyAssetSymbolType} for VESTS. The
      * configured symbol type is used to validate VESTS fields of operations.
      * 
-     * @return The currently configured {@link AssetSymbolType} for VESTS.
+     * @return The currently configured {@link LegacyAssetSymbolType} for VESTS.
      */
-    public AssetSymbolType getVestsSymbol() {
+    public LegacyAssetSymbolType getVestsSymbol() {
         return vestsSymbol;
     }
 
@@ -638,9 +638,9 @@ public class SteemJConfig {
      * is used to validate VESTS fields of operations.
      * 
      * @param vestsSymbol
-     *            The {@link AssetSymbolType} for VESTS to set.
+     *            The {@link LegacyAssetSymbolType} for VESTS to set.
      */
-    public void setVestsSymbol(AssetSymbolType vestsSymbol) {
+    public void setVestsSymbol(LegacyAssetSymbolType vestsSymbol) {
         this.vestsSymbol = vestsSymbol;
     }
 

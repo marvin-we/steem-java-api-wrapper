@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -41,7 +41,7 @@ public class ProducerRewardOperation extends Operation {
     @JsonProperty("producer")
     private AccountName producer;
     @JsonProperty("vesting_shares")
-    private Asset vestingShares;
+    private LegacyAsset vestingShares;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -65,7 +65,7 @@ public class ProducerRewardOperation extends Operation {
      * 
      * @return The vesting shares paid to the <code>producer</code>.
      */
-    public Asset getVestingShares() {
+    public LegacyAsset getVestingShares() {
         return vestingShares;
     }
 

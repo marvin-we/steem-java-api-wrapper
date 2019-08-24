@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.WithdrawVestingOperation;
 
@@ -65,7 +65,7 @@ public class WithdrawVestingOperationIT extends BaseTransactionVerificationIT {
 
         AccountName account = new AccountName("dez1337");
 
-        Asset vestingShares = new Asset(1000, AssetSymbolType.VESTS);
+        LegacyAsset vestingShares = new LegacyAsset(1000, LegacyAssetSymbolType.VESTS);
 
         WithdrawVestingOperation withdrawVestingOperation = new WithdrawVestingOperation(account, vestingShares);
 

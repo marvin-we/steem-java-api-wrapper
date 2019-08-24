@@ -25,7 +25,7 @@ import java.security.InvalidParameterException;
 import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 
 /**
  * Test the Price object.
@@ -45,8 +45,8 @@ public class PriceTest {
      */
     @Test
     public void testPriceToByteArray() throws Exception {
-        Asset base = new Asset(115, AssetSymbolType.SBD);
-        Asset quote = new Asset(100, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         Price price = new Price(base, quote);
 
@@ -60,18 +60,18 @@ public class PriceTest {
      */
     @Test
     public void testPriceEqualsMethod() {
-        Asset base = new Asset(115, AssetSymbolType.SBD);
-        Asset quote = new Asset(100, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         Price price = new Price(base, quote);
 
-        Asset anotherBase = new Asset(115, AssetSymbolType.SBD);
-        Asset anotherQuote = new Asset(100, AssetSymbolType.STEEM);
+        LegacyAsset anotherBase = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
+        LegacyAsset anotherQuote = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         Price anotherPrice = new Price(anotherBase, anotherQuote);
 
-        Asset defferentBase = new Asset(115, AssetSymbolType.SBD);
-        Asset differentQuote = new Asset(1230, AssetSymbolType.STEEM);
+        LegacyAsset defferentBase = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
+        LegacyAsset differentQuote = new LegacyAsset(1230, LegacyAssetSymbolType.STEEM);
 
         Price differentPrice = new Price(defferentBase, differentQuote);
 
@@ -86,10 +86,10 @@ public class PriceTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testPriceValidationNegativeBaseAsset() {
-        Asset base = new Asset(-1, AssetSymbolType.SBD);
+        LegacyAsset base = new LegacyAsset(-1, LegacyAssetSymbolType.SBD);
         base.setAmount(-1);
-        base.setSymbol(AssetSymbolType.SBD);
-        Asset quote = new Asset(100, AssetSymbolType.STEEM);
+        base.setSymbol(LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
@@ -101,8 +101,8 @@ public class PriceTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testPriceValidationNegativeQuoteAsset() {
-        Asset base = new Asset(115, AssetSymbolType.SBD);
-        Asset quote = new Asset(-1, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(-1, LegacyAssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
@@ -114,8 +114,8 @@ public class PriceTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testPriceValidationNegativeSameSymbols() {
-        Asset base = new Asset(115, AssetSymbolType.STEEM);
-        Asset quote = new Asset(100, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(115, LegacyAssetSymbolType.STEEM);
+        LegacyAsset quote = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
@@ -127,25 +127,25 @@ public class PriceTest {
      */
     @Test
     public void testPriceValidation() {
-        Asset base = new Asset(115, AssetSymbolType.SBD);
-        Asset quote = new Asset(100, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         new Price(base, quote);
     }
 
     /**
-     * Test the {@link Price#multiply(Asset)} method.
+     * Test the {@link Price#multiply(LegacyAsset)} method.
      */
     @Test
     public void testMultiply() {
-        Asset base = new Asset(50L, AssetSymbolType.SBD);
-        Asset quote = new Asset(100L, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(50L, LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(100L, LegacyAssetSymbolType.STEEM);
 
         Price exchangeRate = new Price(base, quote);
 
-        Asset amountToSell = new Asset(2L, AssetSymbolType.SBD);
+        LegacyAsset amountToSell = new LegacyAsset(2L, LegacyAssetSymbolType.SBD);
 
         assertTrue(exchangeRate.multiply(amountToSell).getAmount().equals(4L));
-        assertTrue(exchangeRate.multiply(amountToSell).getSymbol().equals(AssetSymbolType.STEEM));
+        assertTrue(exchangeRate.multiply(amountToSell).getSymbol().equals(LegacyAssetSymbolType.STEEM));
     }
 }

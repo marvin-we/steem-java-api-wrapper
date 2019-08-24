@@ -32,8 +32,8 @@ import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.TransferOperation;
 
@@ -65,8 +65,8 @@ public class TransferOperationTest extends BaseTransactionalUT {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        Asset sbdAmount = new Asset(1L, AssetSymbolType.SBD);
-        Asset steemAmount = new Asset(1L, AssetSymbolType.STEEM);
+        LegacyAsset sbdAmount = new LegacyAsset(1L, LegacyAssetSymbolType.SBD);
+        LegacyAsset steemAmount = new LegacyAsset(1L, LegacyAssetSymbolType.STEEM);
 
         AccountName from = new AccountName("dez1337");
         AccountName to = new AccountName("steemj");

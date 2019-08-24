@@ -126,12 +126,12 @@ public class SteemJUsageExample {
             /*
              * Let the default account transfer 1.0 SBD to @dez1337.
              */
-            steemJ.transfer(new AccountName("dez1337"), new Asset(new BigDecimal("1.000"), AssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
+            steemJ.transfer(new AccountName("dez1337"), new LegacyAsset(new BigDecimal("1.000"), AssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
             
             /*
              * Let the default account delegate 10.0 VESTS to @dez1337.
              */
-            steemJ.delegateVestingShares(new AccountName("dez1337"), new Asset(10L, AssetSymbolType.VESTS));
+            steemJ.delegateVestingShares(new AccountName("dez1337"), new LegacyAsset(10L, AssetSymbolType.VESTS));
             
             /*
              * Claim the rewards of the default account.

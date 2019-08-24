@@ -29,8 +29,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.LimitOrderCreateOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -44,7 +44,7 @@ public class LimitOrderCreateOperationParsingIT extends BaseITForOperationParsin
     private static final long BLOCK_NUMBER_CONTAINING_OPERATION = 5681453;
     private static final int TRANSACTION_INDEX = 3;
     private static final int OPERATION_INDEX = 0;
-    private static final Asset EXPECTED_BASE_AMOUNT = new Asset(41554, AssetSymbolType.SBD);
+    private static final LegacyAsset EXPECTED_BASE_AMOUNT = new LegacyAsset(41554, LegacyAssetSymbolType.SBD);
     private static final boolean EXPECTED_FILL_OR_KILL = false;
 
     /**

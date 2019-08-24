@@ -25,7 +25,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -35,7 +35,7 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  */
 public class LiquidityRewardOperation extends Operation {
     private AccountName owner;
-    private Asset payout;
+    private LegacyAsset payout;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -55,7 +55,7 @@ public class LiquidityRewardOperation extends Operation {
     /**
      * @return the payout
      */
-    public Asset getPayout() {
+    public LegacyAsset getPayout() {
         return payout;
     }
 

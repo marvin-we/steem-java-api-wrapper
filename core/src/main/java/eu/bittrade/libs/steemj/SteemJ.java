@@ -109,12 +109,12 @@ import eu.bittrade.libs.steemj.plugins.apis.witness.models.AccountBandwidth;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.GetAccountBandwidthArgs;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.ReserveRatioObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.Price;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.protocol.SignedBlock;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
@@ -2099,25 +2099,25 @@ public class SteemJ {
     // ## UTILITY METHODS ######################################################
     // #########################################################################
 
-    public static Asset steemToSbd(Price price, Asset steemAsset) {
-        if (steemAsset == null || !steemAsset.getSymbol().equals(AssetSymbolType.STEEM)) {
+    public static LegacyAsset steemToSbd(Price price, LegacyAsset steemAsset) {
+        if (steemAsset == null || !steemAsset.getSymbol().equals(LegacyAssetSymbolType.STEEM)) {
             throw new InvalidParameterException("The asset needs be of SymbolType STEEM.");
         }
 
         if (price == null) {
-            return new Asset(0, AssetSymbolType.SBD);
+            return new LegacyAsset(0, LegacyAssetSymbolType.SBD);
         }
 
         return price.multiply(steemAsset);
     }
 
-    public static Asset sbdToSteem(Price price, Asset sbdAsset) {
-        if (sbdAsset == null || !sbdAsset.getSymbol().equals(AssetSymbolType.SBD)) {
+    public static LegacyAsset sbdToSteem(Price price, LegacyAsset sbdAsset) {
+        if (sbdAsset == null || !sbdAsset.getSymbol().equals(LegacyAssetSymbolType.SBD)) {
             throw new InvalidParameterException("The asset needs be of SymbolType STEEM.");
         }
 
         if (price == null) {
-            return new Asset(0, AssetSymbolType.STEEM);
+            return new LegacyAsset(0, LegacyAssetSymbolType.STEEM);
         }
 
         return price.multiply(sbdAsset);
@@ -3628,7 +3628,7 @@ public class SteemJ {
      * transfer from. If no default account has been provided, this method will
      * throw an error. If you do not want to configure the following account as
      * a default account, please use the
-     * {@link #transfer(AccountName, AccountName, Asset, String)} method and
+     * {@link #transfer(AccountName, AccountName, LegacyAsset, String)} method and
      * provide the <code>from</code> account separately.</li>
      * </ul>
      *
@@ -3637,8 +3637,8 @@ public class SteemJ {
      *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
      *            transfer currency to.
      * @param amount
-     *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType}
+     *            An {@link LegacyAsset} object containing the Asset type (see
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType}
      *            and the amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
@@ -3663,7 +3663,7 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public TransferOperation transfer(AccountName to, Asset amount, String memo)
+    public TransferOperation transfer(AccountName to, LegacyAsset amount, String memo)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
@@ -3691,8 +3691,8 @@ public class SteemJ {
      * @param to
      *            The account to which to transfer currency.
      * @param amount
-     *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType}
+     *            An {@link LegacyAsset} object containing the Asset type (see
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType}
      *            and the amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
@@ -3717,7 +3717,7 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public TransferOperation transfer(AccountName from, AccountName to, Asset amount, String memo)
+    public TransferOperation transfer(AccountName from, AccountName to, LegacyAsset amount, String memo)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         TransferOperation transferOperation = new TransferOperation(from, to, amount, memo);
         ArrayList<Operation> operations = new ArrayList<>();
@@ -3811,9 +3811,9 @@ public class SteemJ {
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         // Get extended account info to determine reward balances
         ExtendedAccount extendedAccount = this.getAccounts(Lists.newArrayList(accountName)).get(0);
-        Asset steemReward = extendedAccount.getRewardSteemBalance();
-        Asset sbdReward = extendedAccount.getRewardSdbBalance();
-        Asset vestingReward = extendedAccount.getRewardVestingBalance();
+        LegacyAsset steemReward = extendedAccount.getRewardSteemBalance();
+        LegacyAsset sbdReward = extendedAccount.getRewardSdbBalance();
+        LegacyAsset vestingReward = extendedAccount.getRewardVestingBalance();
 
         // Create claim operation based on available reward balances
         ClaimRewardBalanceOperation claimOperation = new ClaimRewardBalanceOperation(accountName, steemReward,
@@ -3864,7 +3864,7 @@ public class SteemJ {
      * @throws SteemInvalidTransactionException
      *             If there is a problem while signing the transaction.
      */
-    public void delegateVestingShares(AccountName delegatee, Asset vestingShares)
+    public void delegateVestingShares(AccountName delegatee, LegacyAsset vestingShares)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
@@ -3875,7 +3875,7 @@ public class SteemJ {
 
     /**
      * This method is like the
-     * {@link #delegateVestingShares(AccountName, AccountName, Asset)} method,
+     * {@link #delegateVestingShares(AccountName, AccountName, LegacyAsset)} method,
      * but allows you to define the author account separately instead of using
      * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
      * 
@@ -3902,7 +3902,7 @@ public class SteemJ {
      * @throws SteemInvalidTransactionException
      *             If there is a problem while signing the transaction.
      */
-    public void delegateVestingShares(AccountName delegator, AccountName delegatee, Asset vestingShares)
+    public void delegateVestingShares(AccountName delegator, AccountName delegatee, LegacyAsset vestingShares)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         DelegateVestingSharesOperation delegateVestingSharesOperation = new DelegateVestingSharesOperation(delegator,
                 delegatee, vestingShares);

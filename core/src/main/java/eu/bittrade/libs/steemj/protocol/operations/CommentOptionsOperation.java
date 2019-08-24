@@ -37,7 +37,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -51,7 +51,7 @@ public class CommentOptionsOperation extends Operation {
     @JsonProperty("permlink")
     private Permlink permlink;
     @JsonProperty("max_accepted_payout")
-    private Asset maxAcceptedPayout;
+    private LegacyAsset maxAcceptedPayout;
     @JsonProperty("percent_steem_dollars")
     private Integer percentSteemDollars;
     @JsonProperty("allow_votes")
@@ -83,7 +83,7 @@ public class CommentOptionsOperation extends Operation {
      *            {@link #setPermlink(Permlink)}).
      * @param maxAcceptedPayout
      *            The maximal excepted payout (see
-     *            {@link #setMaxAcceptedPayout(Asset)}).
+     *            {@link #setMaxAcceptedPayout(LegacyAsset)}).
      * @param percentSteemDollars
      *            The percent of Steem dollars the reward should be paid in (see
      *            {@link #setPercentSteemDollars(int)}).
@@ -101,7 +101,7 @@ public class CommentOptionsOperation extends Operation {
      */
     @JsonCreator
     public CommentOptionsOperation(@JsonProperty("author") AccountName author,
-            @JsonProperty("permlink") Permlink permlink, @JsonProperty("max_accepted_payout") Asset maxAcceptedPayout,
+            @JsonProperty("permlink") Permlink permlink, @JsonProperty("max_accepted_payout") LegacyAsset maxAcceptedPayout,
             @JsonProperty("percent_steem_dollars") Integer percentSteemDollars,
             @JsonProperty("allow_votes") boolean allowVotes,
             @JsonProperty("allow_curation_rewards") boolean allowCurationRewards,
@@ -120,7 +120,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Integer, boolean, boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, LegacyAsset, Integer, boolean, boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes
      * and curation rewards.
      * 
@@ -141,7 +141,7 @@ public class CommentOptionsOperation extends Operation {
      */
     public CommentOptionsOperation(AccountName author, Permlink permlink, int percentSteemDollars,
             List<CommentOptionsExtension> extensions) {
-        this(author, permlink, new Asset(1000000000, SteemJConfig.getInstance().getDollarSymbol()), percentSteemDollars,
+        this(author, permlink, new LegacyAsset(1000000000, SteemJConfig.getInstance().getDollarSymbol()), percentSteemDollars,
                 true, true, extensions);
     }
 
@@ -167,7 +167,7 @@ public class CommentOptionsOperation extends Operation {
 
     /**
      * Like
-     * {@link #CommentOptionsOperation(AccountName, Permlink, Asset, Integer, boolean, boolean, List)},
+     * {@link #CommentOptionsOperation(AccountName, Permlink, LegacyAsset, Integer, boolean, boolean, List)},
      * but sets the maximum payout to the highest possible value, allows votes,
      * allows curation rewards and sets the <code>percentSteemDollars</code> to
      * 100.0%.
@@ -253,7 +253,7 @@ public class CommentOptionsOperation extends Operation {
      * 
      * @return The SBD value of the maximum payout this post will receive.
      */
-    public Asset getMaxAcceptedPayout() {
+    public LegacyAsset getMaxAcceptedPayout() {
         return maxAcceptedPayout;
     }
 
@@ -266,7 +266,7 @@ public class CommentOptionsOperation extends Operation {
      *             If the <code>maxAcceptedPayout</code> is null, has a
      *             different symbol than SBD or the amount is less than 0.
      */
-    public void setMaxAcceptedPayout(Asset maxAcceptedPayout) {
+    public void setMaxAcceptedPayout(LegacyAsset maxAcceptedPayout) {
         this.maxAcceptedPayout = SteemJUtils.setIfNotNull(maxAcceptedPayout,
                 "The maximal accepted payout can't be null.");
     }

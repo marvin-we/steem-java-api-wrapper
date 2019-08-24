@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.FillConvertRequestOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
@@ -45,10 +45,10 @@ public class FillConvertRequestOperationIT extends BaseITForOperationParsing {
     private static final int OPERATION_INDEX = 1;
     private static final String EXPECTED_OWNER = "jiminykricket";
     private static final long EXPECTED_REQUEST_ID = 1506775956L;
-    private static final AssetSymbolType EXPECTED_AMOUNT_IN_SYMBOL = AssetSymbolType.SBD;
+    private static final LegacyAssetSymbolType EXPECTED_AMOUNT_IN_SYMBOL = LegacyAssetSymbolType.SBD;
     private static final BigDecimal EXPECTED_AMOUNT_IN_VALUE_REAL = BigDecimal.valueOf(0.024);
     private static final long EXPECTED_AMOUNT_IN_VALUE = 24L;
-    private static final AssetSymbolType EXPECTED_AMOUNT_OUT_SYMBOL = AssetSymbolType.STEEM;
+    private static final LegacyAssetSymbolType EXPECTED_AMOUNT_OUT_SYMBOL = LegacyAssetSymbolType.STEEM;
     private static final BigDecimal EXPECTED_AMOUNT_OUT_VALUE_REAL = BigDecimal.valueOf(0.017);
     private static final long EXPECTED_AMOUNT_OUT_VALUE = 17L;
 

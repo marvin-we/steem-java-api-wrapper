@@ -24,7 +24,7 @@ import org.joou.UShort;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.enums.CurveId;
 
 /**
@@ -38,7 +38,7 @@ public class RewardFund {
     // Original type is "reward_fund_name_type".
     private String name;
     @JsonProperty("reward_balance")
-    private Asset rewardBalance;
+    private LegacyAsset rewardBalance;
     // Original type is uint128_t so we use BigInteger here.
     @JsonProperty("recent_claims")
     private BigInteger recentClaims;
@@ -82,7 +82,7 @@ public class RewardFund {
     /**
      * @return the rewardBalance
      */
-    public Asset getRewardBalance() {
+    public LegacyAsset getRewardBalance() {
         return rewardBalance;
     }
 

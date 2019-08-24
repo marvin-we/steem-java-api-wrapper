@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "vesting_delegation_expiration_object" object.
@@ -36,7 +36,7 @@ public class VestingDelegationExpiration {
     @JsonProperty("delegator")
     private AccountName delegator;
     @JsonProperty("vesting_shares")
-    private Asset vestingShares;
+    private LegacyAsset vestingShares;
     @JsonProperty("expiration")
     private TimePointSec expiration;
 
@@ -80,7 +80,7 @@ public class VestingDelegationExpiration {
     /**
      * @return the vestingShares
      */
-    public Asset getVestingShares() {
+    public LegacyAsset getVestingShares() {
         return vestingShares;
     }
 
@@ -88,7 +88,7 @@ public class VestingDelegationExpiration {
      * @param vestingShares
      *            the vestingShares to set
      */
-    public void setVestingShares(Asset vestingShares) {
+    public void setVestingShares(LegacyAsset vestingShares) {
         this.vestingShares = vestingShares;
     }
 

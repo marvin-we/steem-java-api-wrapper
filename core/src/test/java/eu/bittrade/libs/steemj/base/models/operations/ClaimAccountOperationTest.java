@@ -17,7 +17,7 @@ import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ClaimAccountOperation;
 
 public class ClaimAccountOperationTest extends BaseTransactionalUT {
@@ -38,7 +38,7 @@ public class ClaimAccountOperationTest extends BaseTransactionalUT {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        Asset fee = new Asset(10000, AssetSymbolType.STEEM);
+        LegacyAsset fee = new LegacyAsset(10000, LegacyAssetSymbolType.STEEM);
         AccountName creator = new AccountName("dez1337");
         List<FutureExtensions> extensions = new ArrayList<>();
 

@@ -26,7 +26,7 @@ import eu.bittrade.libs.steemj.base.models.BlockId;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlobalProperties;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents the Steem "dynamic_global_property_api_obj" object.
@@ -52,28 +52,28 @@ public class DynamicGlobalProperty {
     @JsonProperty("num_pow_witnesses")
     private long numPowWitnesses;
     @JsonProperty("virtual_supply")
-    private Asset virtualSupply;
+    private LegacyAsset virtualSupply;
     @JsonProperty("current_supply")
-    private Asset currentSupply;
+    private LegacyAsset currentSupply;
     @JsonProperty("confidential_supply")
-    private Asset confidentialSupply;
+    private LegacyAsset confidentialSupply;
     @JsonProperty("current_sbd_supply")
-    private Asset currentSdbSupply;
+    private LegacyAsset currentSdbSupply;
     @JsonProperty("confidential_sbd_supply")
-    private Asset confientialSdbSupply;
+    private LegacyAsset confientialSdbSupply;
     @JsonProperty("total_vesting_fund_steem")
-    private Asset totalVestingFundSteem;
+    private LegacyAsset totalVestingFundSteem;
     @JsonProperty("total_vesting_shares")
-    private Asset totalVestingShares;
+    private LegacyAsset totalVestingShares;
     @JsonProperty("total_reward_fund_steem")
-    private Asset totalRewardFundSteem;
+    private LegacyAsset totalRewardFundSteem;
     // Original type is uint128 so we use BigInteger here.
     @JsonProperty("total_reward_shares2")
     private BigInteger totalRewardShares2;
     @JsonProperty("pending_rewarded_vesting_shares")
-    private Asset pendingRewardedVestingShares;
+    private LegacyAsset pendingRewardedVestingShares;
     @JsonProperty("pending_rewarded_vesting_steem")
-    private Asset pendingRewardedVestingSteem;
+    private LegacyAsset pendingRewardedVestingSteem;
     // Original type is uint16_t so we use int here.
     @JsonProperty("sbd_interest_rate")
     private int sdbInterestRate;
@@ -163,56 +163,56 @@ public class DynamicGlobalProperty {
     /**
      * @return the virtualSupply
      */
-    public Asset getVirtualSupply() {
+    public LegacyAsset getVirtualSupply() {
         return virtualSupply;
     }
 
     /**
      * @return the currentSupply
      */
-    public Asset getCurrentSupply() {
+    public LegacyAsset getCurrentSupply() {
         return currentSupply;
     }
 
     /**
      * @return the confidentialSupply
      */
-    public Asset getConfidentialSupply() {
+    public LegacyAsset getConfidentialSupply() {
         return confidentialSupply;
     }
 
     /**
      * @return the currentSdbSupply
      */
-    public Asset getCurrentSdbSupply() {
+    public LegacyAsset getCurrentSdbSupply() {
         return currentSdbSupply;
     }
 
     /**
      * @return the confientialSdbSupply
      */
-    public Asset getConfientialSdbSupply() {
+    public LegacyAsset getConfientialSdbSupply() {
         return confientialSdbSupply;
     }
 
     /**
      * @return the totalVestingFundSteem
      */
-    public Asset getTotalVestingFundSteem() {
+    public LegacyAsset getTotalVestingFundSteem() {
         return totalVestingFundSteem;
     }
 
     /**
      * @return the totalVestingShares
      */
-    public Asset getTotalVestingShares() {
+    public LegacyAsset getTotalVestingShares() {
         return totalVestingShares;
     }
 
     /**
      * @return the totalRewardFundSteem
      */
-    public Asset getTotalRewardFundSteem() {
+    public LegacyAsset getTotalRewardFundSteem() {
         return totalRewardFundSteem;
     }
 
@@ -226,14 +226,14 @@ public class DynamicGlobalProperty {
     /**
      * @return the pendingRewardedVestingShares
      */
-    public Asset getPendingRewardedVestingShares() {
+    public LegacyAsset getPendingRewardedVestingShares() {
         return pendingRewardedVestingShares;
     }
 
     /**
      * @return the pendingRewardedVestingSteem
      */
-    public Asset getPendingRewardedVestingSteem() {
+    public LegacyAsset getPendingRewardedVestingSteem() {
         return pendingRewardedVestingSteem;
     }
 

@@ -47,7 +47,7 @@ import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTickerRetur
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetTradeHistoryArgs;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetVolumeReturn;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.MarketTrade;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 
 /**
  * This class contains all test connected to the
@@ -92,7 +92,7 @@ public class MarketHistoryApiIT extends BaseIT {
         assertThat(marketTicker.getLatest(), greaterThan(0.0));
         assertThat(marketTicker.getLowestAsk(), greaterThan(0.0));
         assertThat(marketTicker.getPercentChange(), allOf(greaterThan(-100.0), lessThan(100.0)));
-        assertThat(marketTicker.getSbdVolume().getSymbol(), equalTo(AssetSymbolType.SBD));
+        assertThat(marketTicker.getSbdVolume().getSymbol(), equalTo(LegacyAssetSymbolType.SBD));
         assertThat(marketTicker.getSteemVolume().toReal(), greaterThan(BigDecimal.valueOf(1.0)));
     }
 
@@ -112,9 +112,9 @@ public class MarketHistoryApiIT extends BaseIT {
         GetVolumeReturn marketVolume = MarketHistoryApi.getVolume(COMMUNICATION_HANDLER);
 
         assertThat(marketVolume.getSbdVolume().toReal(), greaterThan(BigDecimal.valueOf(0.0)));
-        assertThat(marketVolume.getSbdVolume().getSymbol(), equalTo(AssetSymbolType.SBD));
+        assertThat(marketVolume.getSbdVolume().getSymbol(), equalTo(LegacyAssetSymbolType.SBD));
         assertThat(marketVolume.getSteemVolume().toReal(), greaterThan(BigDecimal.valueOf(0.0)));
-        assertThat(marketVolume.getSteemVolume().getSymbol(), equalTo(AssetSymbolType.STEEM));
+        assertThat(marketVolume.getSteemVolume().getSymbol(), equalTo(LegacyAssetSymbolType.STEEM));
     }
 
     /**
@@ -164,8 +164,8 @@ public class MarketHistoryApiIT extends BaseIT {
         assertThat(marketTrades.size(), lessThanOrEqualTo(10));
         assertThat(marketTrades.get(0).getDate().getDateTimeAsTimestamp(), greaterThanOrEqualTo(1441903217L));
         assertThat(marketTrades.get(0).getCurrentPays().getSymbol(),
-                isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
-        assertThat(marketTrades.get(0).getOpenPays().getSymbol(), isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
+                isOneOf(LegacyAssetSymbolType.STEEM, LegacyAssetSymbolType.SBD));
+        assertThat(marketTrades.get(0).getOpenPays().getSymbol(), isOneOf(LegacyAssetSymbolType.STEEM, LegacyAssetSymbolType.SBD));
     }
 
     /**
@@ -187,8 +187,8 @@ public class MarketHistoryApiIT extends BaseIT {
         assertThat(marketTrades.size(), lessThanOrEqualTo(30));
         assertThat(marketTrades.get(0).getDate().getDateTimeAsTimestamp(), greaterThanOrEqualTo(1441903217L));
         assertThat(marketTrades.get(0).getCurrentPays().getSymbol(),
-                isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
-        assertThat(marketTrades.get(0).getOpenPays().getSymbol(), isOneOf(AssetSymbolType.STEEM, AssetSymbolType.SBD));
+                isOneOf(LegacyAssetSymbolType.STEEM, LegacyAssetSymbolType.SBD));
+        assertThat(marketTrades.get(0).getOpenPays().getSymbol(), isOneOf(LegacyAssetSymbolType.STEEM, LegacyAssetSymbolType.SBD));
     }
 
     /**

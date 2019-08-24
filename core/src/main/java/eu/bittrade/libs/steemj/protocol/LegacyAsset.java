@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.base.models.serializer.AssetSerializer;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -43,11 +43,11 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 @JsonDeserialize(using = AssetDeserializer.class)
 @JsonSerialize(using = AssetSerializer.class)
-public class Asset implements ByteTransformable {
+public class LegacyAsset implements ByteTransformable {
     // Original type is "share_type" which is a "safe<int64_t>".
     private long amount;
     // Type us uint64_t in the original code.
-    private AssetSymbolType symbol;
+    private LegacyAssetSymbolType symbol;
     private byte precision;
 
     /**
@@ -57,10 +57,10 @@ public class Asset implements ByteTransformable {
      *            The amount.
      * @param symbol
      *            One type of
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType
      *            AssetSymbolType}.
      */
-    public Asset(BigDecimal amount, AssetSymbolType symbol) {
+    public LegacyAsset(BigDecimal amount, LegacyAssetSymbolType symbol) {
         this.setSymbol(symbol);
         this.setAmount(amount);
     }
@@ -72,10 +72,10 @@ public class Asset implements ByteTransformable {
      *            The amount.
      * @param symbol
      *            One type of
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType
      *            AssetSymbolType}.
      */
-    public Asset(long amount, AssetSymbolType symbol) {
+    public LegacyAsset(long amount, LegacyAssetSymbolType symbol) {
         this.setSymbol(symbol);
         this.setAmount(amount);
     }
@@ -102,10 +102,10 @@ public class Asset implements ByteTransformable {
      * Get the symbol for this asset object.
      * 
      * @return One type of
-     *         {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
+     *         {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType
      *         AssetSymbolType}.
      */
-    public AssetSymbolType getSymbol() {
+    public LegacyAssetSymbolType getSymbol() {
         return symbol;
     }
 
@@ -140,11 +140,11 @@ public class Asset implements ByteTransformable {
      * 
      * @param symbol
      *            One type of
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType
      *            AssetSymbolType}.
      */
-    public void setSymbol(AssetSymbolType symbol) {
-        if (symbol.equals(AssetSymbolType.VESTS)) {
+    public void setSymbol(LegacyAssetSymbolType symbol) {
+        if (symbol.equals(LegacyAssetSymbolType.VESTS)) {
             this.precision = 6;
         } else {
             this.precision = 3;
@@ -193,9 +193,9 @@ public class Asset implements ByteTransformable {
     public boolean equals(Object otherAsset) {
         if (this == otherAsset)
             return true;
-        if (otherAsset == null || !(otherAsset instanceof Asset))
+        if (otherAsset == null || !(otherAsset instanceof LegacyAsset))
             return false;
-        Asset other = (Asset) otherAsset;
+        LegacyAsset other = (LegacyAsset) otherAsset;
         return (this.getAmount().equals(other.getAmount()) && this.getSymbol().equals(other.getSymbol())
                 && this.getPrecision().equals(other.getPrecision()));
     }

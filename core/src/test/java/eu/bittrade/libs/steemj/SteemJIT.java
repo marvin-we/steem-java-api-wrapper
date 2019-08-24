@@ -64,8 +64,8 @@ import eu.bittrade.libs.steemj.plugins.apis.tags.models.Discussion;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.DiscussionQuery;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.VoteState;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.TransferOperation;
 import eu.bittrade.libs.steemj.util.KeyGenerator;
@@ -155,13 +155,13 @@ public class SteemJIT extends BaseIT {
     @Category({ IntegrationTest.class })
     @Test
     public void testGetCurrentMedianHistoryPrice() throws Exception {
-        final Asset base = steemJ.getCurrentMedianHistoryPrice().getBase();
-        final Asset quote = steemJ.getCurrentMedianHistoryPrice().getQuote();
+        final LegacyAsset base = steemJ.getCurrentMedianHistoryPrice().getBase();
+        final LegacyAsset quote = steemJ.getCurrentMedianHistoryPrice().getQuote();
 
         assertThat("expect current median price greater than zero", base.getAmount(), greaterThan(0L));
-        assertEquals("expect current median price symbol", AssetSymbolType.SBD, base.getSymbol());
+        assertEquals("expect current median price symbol", LegacyAssetSymbolType.SBD, base.getSymbol());
         assertThat("expect current median price greater than zero", quote.getAmount(), greaterThan(0L));
-        assertEquals("expect current median price symbol", AssetSymbolType.STEEM, quote.getSymbol());
+        assertEquals("expect current median price symbol", LegacyAssetSymbolType.STEEM, quote.getSymbol());
     }
 
     /**
@@ -423,7 +423,7 @@ public class SteemJIT extends BaseIT {
         assertThat(openOrders.get(0).getId(), equalTo(675734));
         assertThat(openOrders.get(0).getOrderId(), equalTo(1500579025L));
         assertThat(openOrders.get(0).getSeller(), equalTo(ACCOUNT));
-        assertThat(openOrders.get(0).getSellPrice().getBase(), equalTo(new Asset(1, AssetSymbolType.SBD)));
+        assertThat(openOrders.get(0).getSellPrice().getBase(), equalTo(new LegacyAsset(1, LegacyAssetSymbolType.SBD)));
     }
 
     @Category({ IntegrationTest.class })
@@ -454,7 +454,7 @@ public class SteemJIT extends BaseIT {
 
         config.getPrivateKeyStorage().addAccount(new AccountName("dez1337"), privateKeys);
 
-        Asset steemAmount = new Asset(1L, AssetSymbolType.STEEM);
+        LegacyAsset steemAmount = new LegacyAsset(1L, LegacyAssetSymbolType.STEEM);
 
         AccountName from = new AccountName("dez1337");
         AccountName to = new AccountName("steemj");

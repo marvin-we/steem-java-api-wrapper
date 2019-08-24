@@ -28,7 +28,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -45,11 +45,11 @@ public class AuthorRewardOperation extends Operation {
     @JsonProperty("permlink")
     private Permlink permlink;
     @JsonProperty("sbd_payout")
-    private Asset sbdPayout;
+    private LegacyAsset sbdPayout;
     @JsonProperty("steem_payout")
-    private Asset steemPayout;
+    private LegacyAsset steemPayout;
     @JsonProperty("vesting_payout")
-    private Asset vestingPayout;
+    private LegacyAsset vestingPayout;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -82,7 +82,7 @@ public class AuthorRewardOperation extends Operation {
      * 
      * @return The amount of SBD.
      */
-    public Asset getSbdPayout() {
+    public LegacyAsset getSbdPayout() {
         return sbdPayout;
     }
 
@@ -91,7 +91,7 @@ public class AuthorRewardOperation extends Operation {
      * 
      * @return The amount of Steem.
      */
-    public Asset getSteemPayout() {
+    public LegacyAsset getSteemPayout() {
         return steemPayout;
     }
 
@@ -100,7 +100,7 @@ public class AuthorRewardOperation extends Operation {
      * 
      * @return The amount of Vests.
      */
-    public Asset getVestingPayout() {
+    public LegacyAsset getVestingPayout() {
         return vestingPayout;
     }
 

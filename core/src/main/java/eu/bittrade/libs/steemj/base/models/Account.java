@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 
@@ -79,11 +79,11 @@ public class Account {
     private int votingPower;
     @JsonProperty("last_vote_time")
     private TimePointSec lastVoteTime;
-    private Asset balance;
+    private LegacyAsset balance;
     @JsonProperty("savings_balance")
-    private Asset savingsBalance;
+    private LegacyAsset savingsBalance;
     @JsonProperty("sbd_balance")
-    private Asset sbdBalance;
+    private LegacyAsset sbdBalance;
     @JsonProperty("sbd_seconds")
     private BigInteger sbdSeconds;
     @JsonProperty("sbd_seconds_last_update")
@@ -91,7 +91,7 @@ public class Account {
     @JsonProperty("sbd_last_interest_payment")
     private TimePointSec sbdLastInterestPayment;
     @JsonProperty("savings_sbd_balance")
-    private Asset savingsSbdBalance;
+    private LegacyAsset savingsSbdBalance;
     @JsonProperty("savings_sbd_seconds")
     private BigInteger savingsSbdSeconds;
     @JsonProperty("savings_sbd_seconds_last_update")
@@ -102,13 +102,13 @@ public class Account {
     @JsonProperty("savings_withdraw_requests")
     private short savingWithdrawRequests;
     @JsonProperty("reward_sbd_balance")
-    private Asset rewardSdbBalance;
+    private LegacyAsset rewardSdbBalance;
     @JsonProperty("reward_steem_balance")
-    private Asset rewardSteemBalance;
+    private LegacyAsset rewardSteemBalance;
     @JsonProperty("reward_vesting_balance")
-    private Asset rewardVestingBalance;
+    private LegacyAsset rewardVestingBalance;
     @JsonProperty("reward_vesting_steem")
-    private Asset rewardVestingSteem;
+    private LegacyAsset rewardVestingSteem;
     // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("curation_rewards")
     private long curationRewards;
@@ -116,13 +116,13 @@ public class Account {
     @JsonProperty("posting_rewards")
     private long postingRewards;
     @JsonProperty("vesting_shares")
-    private Asset vestingShares;
+    private LegacyAsset vestingShares;
     @JsonProperty("delegated_vesting_shares")
-    private Asset delegatedVestingShares;
+    private LegacyAsset delegatedVestingShares;
     @JsonProperty("received_vesting_shares")
-    private Asset receivedVestingShares;
+    private LegacyAsset receivedVestingShares;
     @JsonProperty("vesting_withdraw_rate")
-    private Asset vestingWithdrawRate;
+    private LegacyAsset vestingWithdrawRate;
     @JsonProperty("next_vesting_withdrawal")
     private TimePointSec nextVestingWithdrawal;
     // Original type is "share_type" which is a "safe<int64_t>".
@@ -347,21 +347,21 @@ public class Account {
     /**
      * @return the balance
      */
-    public Asset getBalance() {
+    public LegacyAsset getBalance() {
         return balance;
     }
 
     /**
      * @return the savingsBalance
      */
-    public Asset getSavingsBalance() {
+    public LegacyAsset getSavingsBalance() {
         return savingsBalance;
     }
 
     /**
      * @return the sbdBalance
      */
-    public Asset getSbdBalance() {
+    public LegacyAsset getSbdBalance() {
         return sbdBalance;
     }
 
@@ -389,7 +389,7 @@ public class Account {
     /**
      * @return the savingsSbdBalance
      */
-    public Asset getSavingsSbdBalance() {
+    public LegacyAsset getSavingsSbdBalance() {
         return savingsSbdBalance;
     }
 
@@ -424,28 +424,28 @@ public class Account {
     /**
      * @return the rewardSdbBalance
      */
-    public Asset getRewardSdbBalance() {
+    public LegacyAsset getRewardSdbBalance() {
         return rewardSdbBalance;
     }
 
     /**
      * @return the rewardSteemBalance
      */
-    public Asset getRewardSteemBalance() {
+    public LegacyAsset getRewardSteemBalance() {
         return rewardSteemBalance;
     }
 
     /**
      * @return the rewardVestingBalance
      */
-    public Asset getRewardVestingBalance() {
+    public LegacyAsset getRewardVestingBalance() {
         return rewardVestingBalance;
     }
 
     /**
      * @return the rewardVestingSteem
      */
-    public Asset getRewardVestingSteem() {
+    public LegacyAsset getRewardVestingSteem() {
         return rewardVestingSteem;
     }
 
@@ -466,28 +466,28 @@ public class Account {
     /**
      * @return the vestingShares
      */
-    public Asset getVestingShares() {
+    public LegacyAsset getVestingShares() {
         return vestingShares;
     }
 
     /**
      * @return the delegatedVestingShares
      */
-    public Asset getDelegatedVestingShares() {
+    public LegacyAsset getDelegatedVestingShares() {
         return delegatedVestingShares;
     }
 
     /**
      * @return the receivedVestingShares
      */
-    public Asset getReceivedVestingShares() {
+    public LegacyAsset getReceivedVestingShares() {
         return receivedVestingShares;
     }
 
     /**
      * @return the vestingWithdrawRate
      */
-    public Asset getVestingWithdrawRate() {
+    public LegacyAsset getVestingWithdrawRate() {
         return vestingWithdrawRate;
     }
 

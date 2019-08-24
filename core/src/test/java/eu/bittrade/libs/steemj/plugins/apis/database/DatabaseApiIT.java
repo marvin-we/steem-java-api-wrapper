@@ -39,7 +39,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
 
@@ -107,7 +107,7 @@ public class DatabaseApiIT extends BaseIT {
         assertThat(trendingTags.get(0).getTopPosts(), greaterThan(0L));
         //seems that payout asset report has changed
         //assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(AssetSymbolType.VESTS));
-        assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(AssetSymbolType.SBD));
+        assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(LegacyAssetSymbolType.SBD));
         assertThat(trendingTags.get(0).getTotalPayouts().getAmount(), greaterThan(0L));
         assertThat(trendingTags.get(0).getTrending().intValue(), greaterThan(0));
     }

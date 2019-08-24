@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.FillVestingWithdrawOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
@@ -46,10 +46,10 @@ public class FillVestingWithdrawOperationIT extends BaseITForOperationParsing {
     private static final int OPERATION_INDEX = 3;
     private static final String EXPECTED_FROM = "chessmonster";
     private static final AccountName EXPECTED_TO = new AccountName("chessmonster");
-    private static final AssetSymbolType EXPECTED_DEPOSIT_SYMBOL = AssetSymbolType.STEEM;
+    private static final LegacyAssetSymbolType EXPECTED_DEPOSIT_SYMBOL = LegacyAssetSymbolType.STEEM;
     private static final BigDecimal EXPECTED_DEPOSIT_VALUE_REAL = BigDecimal.valueOf(926.471);
     private static final long EXPECTED_DEPOSIT_VALUE = 926471;
-    private static final AssetSymbolType EXPECTED_WITHDRAWN_SYMBOL = AssetSymbolType.VESTS;
+    private static final LegacyAssetSymbolType EXPECTED_WITHDRAWN_SYMBOL = LegacyAssetSymbolType.VESTS;
     private static final BigDecimal EXPECTED_WITHDRAWN_VALUE_REAL = BigDecimal.valueOf(1907116.401647);
     private static final long EXPECTED_WITHDRAWN_VALUE = 1907116401647L;
 

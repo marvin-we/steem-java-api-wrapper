@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ConvertOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -66,7 +66,7 @@ public class ConvertOperationIT extends BaseTransactionVerificationIT {
         AccountName owner = new AccountName("dez1337");
         long requestId = 1337L;
 
-        Asset amount = new Asset(1L, AssetSymbolType.SBD);
+        LegacyAsset amount = new LegacyAsset(1L, LegacyAssetSymbolType.SBD);
 
         ConvertOperation convertOperation = new ConvertOperation(owner, requestId, amount);
 

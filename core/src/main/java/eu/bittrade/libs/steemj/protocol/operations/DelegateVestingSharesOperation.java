@@ -33,7 +33,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -47,7 +47,7 @@ public class DelegateVestingSharesOperation extends Operation {
     @JsonProperty("delegatee")
     private AccountName delegatee;
     @JsonProperty("vesting_shares")
-    private Asset vestingShares;
+    private LegacyAsset vestingShares;
 
     /**
      * Create a new delegate vesting shares operation.
@@ -68,13 +68,13 @@ public class DelegateVestingSharesOperation extends Operation {
      *            The account to send the <code>vestingShares</code> to (see
      *            {@link #setDelegatee(AccountName)}).
      * @param vestingShares
-     *            The amount to deletage (see {@link #setVestingShares(Asset)}).
+     *            The amount to deletage (see {@link #setVestingShares(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
     public DelegateVestingSharesOperation(@JsonProperty("delegator") AccountName delegator,
-            @JsonProperty("delegatee") AccountName delegatee, @JsonProperty("vesting_shares") Asset vestingShares) {
+            @JsonProperty("delegatee") AccountName delegatee, @JsonProperty("vesting_shares") LegacyAsset vestingShares) {
         super(false);
 
         this.setDelegator(delegator);
@@ -133,7 +133,7 @@ public class DelegateVestingSharesOperation extends Operation {
      * 
      * @return The amount of vesting shares delegated.
      */
-    public Asset getVestingShares() {
+    public LegacyAsset getVestingShares() {
         return vestingShares;
     }
 
@@ -146,7 +146,7 @@ public class DelegateVestingSharesOperation extends Operation {
      *             If the provided <code>vestingShares</code> is null, the asset
      *             symbol is not VESTS or the amount is negative.
      */
-    public void setVestingShares(Asset vestingShares) {
+    public void setVestingShares(LegacyAsset vestingShares) {
         this.vestingShares = SteemJUtils.setIfNotNull(vestingShares, "The vesting shares to delegate can't be null.");
     }
 

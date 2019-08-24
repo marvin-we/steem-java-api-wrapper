@@ -19,7 +19,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 public class ClaimAccountOperation extends Operation {
 
     @JsonProperty("fee")
-    private Asset fee;
+    private LegacyAsset fee;
 
     @JsonProperty("creator")
     private AccountName creator;
@@ -51,7 +51,7 @@ public class ClaimAccountOperation extends Operation {
     }
 
     @JsonCreator
-    public ClaimAccountOperation(@JsonProperty("fee") Asset fee, @JsonProperty("creator") AccountName creator,
+    public ClaimAccountOperation(@JsonProperty("fee") LegacyAsset fee, @JsonProperty("creator") AccountName creator,
             @JsonProperty("extensions") List<FutureExtensions> extensions) {
         super(false);
         this.fee = fee;
@@ -65,7 +65,7 @@ public class ClaimAccountOperation extends Operation {
      *
      * @return The fee.
      */
-    public Asset getFee() {
+    public LegacyAsset getFee() {
         return fee;
     }
 
@@ -79,7 +79,7 @@ public class ClaimAccountOperation extends Operation {
      *             If the <code>fee</code> is null, of symbol type STEEM or less
      *             than 0.
      */
-    public void setFee(Asset fee) {
+    public void setFee(LegacyAsset fee) {
         this.fee = fee;
     }
 

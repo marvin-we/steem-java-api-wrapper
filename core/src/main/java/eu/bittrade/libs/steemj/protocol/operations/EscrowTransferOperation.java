@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -41,11 +41,11 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class EscrowTransferOperation extends AbstractEscrowOperation {
     @JsonProperty("sbd_amount")
-    private Asset sbdAmount;
+    private LegacyAsset sbdAmount;
     @JsonProperty("steem_amount")
-    private Asset steemAmount;
+    private LegacyAsset steemAmount;
     @JsonProperty("fee")
-    private Asset fee;
+    private LegacyAsset fee;
     @JsonProperty("ratification_deadline")
     private TimePointSec ratificationDeadlineDate;
     @JsonProperty("escrow_expiration")
@@ -91,13 +91,13 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *            {@link #setEscrowId(long)}).
      * @param sbdAmount
      *            Set the SDB amount that should be transfered (see
-     *            {@link #setSbdAmount(Asset)}).
+     *            {@link #setSbdAmount(LegacyAsset)}).
      * @param steemAmount
      *            Set the STEEM amount that has been transfered (see
-     *            {@link #setSteemAmount(Asset)}).
+     *            {@link #setSteemAmount(LegacyAsset)}).
      * @param fee
      *            Set the fee that will be paid to the agent (see
-     *            {@link #setFee(Asset)}).
+     *            {@link #setFee(LegacyAsset)}).
      * @param ratificationDeadlineDate
      *            Define until when the escrow opperation needs to be approved
      *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
@@ -113,8 +113,8 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     @JsonCreator
     public EscrowTransferOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
             @JsonProperty("agent") AccountName agent, @JsonProperty("escrow_id") long escrowId,
-            @JsonProperty("sbd_amount") Asset sbdAmount, @JsonProperty("steem_amount") Asset steemAmount,
-            @JsonProperty("fee") Asset fee,
+            @JsonProperty("sbd_amount") LegacyAsset sbdAmount, @JsonProperty("steem_amount") LegacyAsset steemAmount,
+            @JsonProperty("fee") LegacyAsset fee,
             @JsonProperty("ratification_deadline") TimePointSec ratificationDeadlineDate,
             @JsonProperty("escrow_expiration") TimePointSec escrowExpirationDate,
             @JsonProperty("json_meta") String jsonMeta) {
@@ -134,7 +134,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
 
     /**
      * Like
-     * {@link #EscrowTransferOperation(AccountName, AccountName, AccountName, long, Asset, Asset, Asset, TimePointSec, TimePointSec, String)},
+     * {@link #EscrowTransferOperation(AccountName, AccountName, AccountName, long, LegacyAsset, LegacyAsset, LegacyAsset, TimePointSec, TimePointSec, String)},
      * but sets the <code>sbdAmount</code> and the <code>steemAmount</code> to
      * their default values (0).
      * 
@@ -152,7 +152,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *            {@link #setEscrowId(long)}).
      * @param fee
      *            Set the fee that will be paid to the agent (see
-     *            {@link #setFee(Asset)}).
+     *            {@link #setFee(LegacyAsset)}).
      * @param ratificationDeadlineDate
      *            Define until when the escrow operation needs to be approved
      *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
@@ -165,16 +165,16 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, long escrowId, Asset fee,
+    public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, long escrowId, LegacyAsset fee,
             TimePointSec ratificationDeadlineDate, TimePointSec escrowExpirationDate, String jsonMeta) {
-        this(from, to, agent, escrowId, new Asset(0, SteemJConfig.getInstance().getDollarSymbol()),
-                new Asset(0, SteemJConfig.getInstance().getTokenSymbol()), fee, ratificationDeadlineDate,
+        this(from, to, agent, escrowId, new LegacyAsset(0, SteemJConfig.getInstance().getDollarSymbol()),
+                new LegacyAsset(0, SteemJConfig.getInstance().getTokenSymbol()), fee, ratificationDeadlineDate,
                 escrowExpirationDate, jsonMeta);
     }
 
     /**
      * Like
-     * {@link #EscrowTransferOperation(AccountName, AccountName, AccountName, Asset, TimePointSec, TimePointSec, String)},
+     * {@link #EscrowTransferOperation(AccountName, AccountName, AccountName, LegacyAsset, TimePointSec, TimePointSec, String)},
      * but also sets the <code>escrowId</code> to its default value (30).
      * 
      * @param from
@@ -188,7 +188,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *            {@link #setAgent(AccountName)}).
      * @param fee
      *            Set the fee that will be paid to the agent (see
-     *            {@link #setFee(Asset)}).
+     *            {@link #setFee(LegacyAsset)}).
      * @param ratificationDeadlineDate
      *            Define until when the escrow operation needs to be approved
      *            (see {@link #setRatificationDeadlineDate(TimePointSec)}).
@@ -201,7 +201,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, Asset fee,
+    public EscrowTransferOperation(AccountName from, AccountName to, AccountName agent, LegacyAsset fee,
             TimePointSec ratificationDeadlineDate, TimePointSec escrowExpirationDate, String jsonMeta) {
         this(from, to, agent, 30, fee, ratificationDeadlineDate, escrowExpirationDate, jsonMeta);
     }
@@ -255,7 +255,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @return The SDB amount that has been transfered.
      */
-    public Asset getSbdAmount() {
+    public LegacyAsset getSbdAmount() {
         return sbdAmount;
     }
 
@@ -270,7 +270,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             <code>sbdAmount</code> <b>and</b> {@link #getSteemAmount()}
      *             both have an amount of 0.
      */
-    public void setSbdAmount(Asset sbdAmount) {
+    public void setSbdAmount(LegacyAsset sbdAmount) {
         this.sbdAmount = SteemJUtils.setIfNotNull(sbdAmount, "The sbd amount can't be null.");
     }
 
@@ -279,7 +279,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @return The STEEM amount that has been transfered.
      */
-    public Asset getSteemAmount() {
+    public LegacyAsset getSteemAmount() {
         return steemAmount;
     }
 
@@ -294,7 +294,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             <code>steemAmount</code> <b>and</b> {@link #getSbdAmount()}
      *             both have an amount of 0.
      */
-    public void setSteemAmount(Asset steemAmount) {
+    public void setSteemAmount(LegacyAsset steemAmount) {
         this.steemAmount = SteemJUtils.setIfNotNull(steemAmount, "The steem amount can't be null.");
     }
 
@@ -303,7 +303,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      * 
      * @return The fee that will be paid to the agent.
      */
-    public Asset getFee() {
+    public LegacyAsset getFee() {
         return fee;
     }
 
@@ -316,7 +316,7 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
      *             If the <code>fee</code> is null, has a negative amount or a
      *             different symbol than STEEM or SBD.
      */
-    public void setFee(Asset fee) {
+    public void setFee(LegacyAsset fee) {
         this.fee = SteemJUtils.setIfNotNull(fee, "The fee can't be null.");
     }
 

@@ -21,7 +21,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "market_trade" object of the
@@ -33,9 +33,9 @@ public class MarketTrade {
     @JsonProperty("date")
     private TimePointSec date;
     @JsonProperty("current_pays")
-    private Asset currentPays;
+    private LegacyAsset currentPays;
     @JsonProperty("open_pays")
-    private Asset openPays;
+    private LegacyAsset openPays;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -54,14 +54,14 @@ public class MarketTrade {
     /**
      * @return the currentPays
      */
-    public Asset getCurrentPays() {
+    public LegacyAsset getCurrentPays() {
         return currentPays;
     }
 
     /**
      * @return the openPays
      */
-    public Asset getOpenPays() {
+    public LegacyAsset getOpenPays() {
         return openPays;
     }
 

@@ -31,9 +31,9 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Price;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.LimitOrderCreate2Operation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -67,12 +67,12 @@ public class LimitOrderCreate2OperationIT extends BaseTransactionVerificationIT 
         setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
                 STEEMNET_ENDPOINT_IDENTIFIER);
 
-        Asset base = new Asset(1L, AssetSymbolType.SBD);
-        Asset quote = new Asset(10L, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(1L, LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(10L, LegacyAssetSymbolType.STEEM);
 
         Price exchangeRate = new Price(base, quote);
 
-        Asset amountToSell = new Asset(1L, AssetSymbolType.SBD);
+        LegacyAsset amountToSell = new LegacyAsset(1L, LegacyAssetSymbolType.SBD);
 
         TimePointSec expirationDate = new TimePointSec(EXPIRATION_DATE);
         boolean fillOrKill = false;

@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.TransferToSavingsOperation;
 
@@ -69,7 +69,7 @@ public class TransferToSavingsOperationIT extends BaseTransactionVerificationIT 
         AccountName to = new AccountName("steemj");
         String memo = "";
 
-        Asset amount = new Asset(56660L, AssetSymbolType.STEEM);
+        LegacyAsset amount = new LegacyAsset(56660L, LegacyAssetSymbolType.STEEM);
 
         TransferToSavingsOperation transferFromSavingsOperation = new TransferToSavingsOperation(from, to, amount,
                 memo);

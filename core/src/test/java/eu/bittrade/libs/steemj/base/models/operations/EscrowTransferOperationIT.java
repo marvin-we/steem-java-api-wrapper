@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.EscrowTransferOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -67,9 +67,9 @@ public class EscrowTransferOperationIT extends BaseTransactionVerificationIT {
         TimePointSec ratificationDeadlineDate = new TimePointSec(1506966866);
         String jsonMeta = "";
 
-        Asset sbdAmount = new Asset(1L, AssetSymbolType.SBD);
-        Asset steemAmount = new Asset(10L, AssetSymbolType.STEEM);
-        Asset fee = new Asset(1L, AssetSymbolType.STEEM);
+        LegacyAsset sbdAmount = new LegacyAsset(1L, LegacyAssetSymbolType.SBD);
+        LegacyAsset steemAmount = new LegacyAsset(10L, LegacyAssetSymbolType.STEEM);
+        LegacyAsset fee = new LegacyAsset(1L, LegacyAssetSymbolType.STEEM);
 
         EscrowTransferOperation escrowTransferOperation = new EscrowTransferOperation(from, to, agent, escrowId,
                 sbdAmount, steemAmount, fee, ratificationDeadlineDate, escrowExpirationDate, jsonMeta);

@@ -21,7 +21,7 @@ package eu.bittrade.libs.steemj.protocol.enums;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public enum AssetSymbolType {
+public enum LegacyAssetSymbolType {
     /** Steem Power (SP) Symbol */
     VESTS,
     /** Steem Sybol */

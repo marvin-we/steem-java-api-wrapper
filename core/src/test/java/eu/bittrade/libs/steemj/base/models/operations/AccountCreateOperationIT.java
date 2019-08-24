@@ -33,10 +33,10 @@ import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -73,7 +73,7 @@ public class AccountCreateOperationIT extends BaseTransactionVerificationIT {
         setupIntegrationTestEnvironmentForTransactionVerificationTests(HTTP_MODE_IDENTIFIER,
                 STEEMNET_ENDPOINT_IDENTIFIER);
 
-        Asset fee = new Asset(10000, AssetSymbolType.STEEM);
+        LegacyAsset fee = new LegacyAsset(10000, LegacyAssetSymbolType.STEEM);
         AccountName creator = new AccountName("dez1337");
         String jsonMetadata = "";
         PublicKey memoKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()

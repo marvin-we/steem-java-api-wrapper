@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -54,7 +54,7 @@ public class TransferOperation extends AbstractTransferOperation {
      *            {@link #setTo(AccountName)}).
      * @param amount
      *            The amount of vests to transfer (see
-     *            {@link #setAmount(Asset)}).
+     *            {@link #setAmount(LegacyAsset)}).
      * @param memo
      *            An additional message added to the operation (see
      *            {@link #setMemo(String)}).
@@ -63,7 +63,7 @@ public class TransferOperation extends AbstractTransferOperation {
      */
     @JsonCreator
     public TransferOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
-            @JsonProperty("amount") Asset amount, @JsonProperty("memo") String memo) {
+            @JsonProperty("amount") LegacyAsset amount, @JsonProperty("memo") String memo) {
         super(false);
 
         this.setFrom(from);
@@ -82,7 +82,7 @@ public class TransferOperation extends AbstractTransferOperation {
      *             less than 1.
      */
     @Override
-    public void setAmount(Asset amount) {
+    public void setAmount(LegacyAsset amount) {
         this.amount = SteemJUtils.setIfNotNull(amount, "The amount can't be null.");
     }
 

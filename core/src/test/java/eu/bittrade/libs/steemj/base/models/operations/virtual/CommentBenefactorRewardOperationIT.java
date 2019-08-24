@@ -32,7 +32,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.CommentBenefactorRewardOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
@@ -49,7 +49,7 @@ public class CommentBenefactorRewardOperationIT extends BaseITForOperationParsin
     private static final AccountName EXPECTED_BENEFACTOR = new AccountName("chainbb");
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-mayvil-que-hacer-cuando-no-sabemos-de-edicion-2017926t205055909z");
-    private static final AssetSymbolType EXPECTED_REWARD_VESTS_SYMBOL = AssetSymbolType.VESTS;
+    private static final LegacyAssetSymbolType EXPECTED_REWARD_VESTS_SYMBOL = LegacyAssetSymbolType.VESTS;
     private static final BigDecimal EXPECTED_REWARD_VESTS_VALUE_REAL = BigDecimal.valueOf(4.116952);
     private static final long EXPECTED_REWARD_VESTS_VALUE = 4116952L;
 

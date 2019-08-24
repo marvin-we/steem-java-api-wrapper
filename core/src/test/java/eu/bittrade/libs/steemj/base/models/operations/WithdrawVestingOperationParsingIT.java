@@ -29,7 +29,7 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.WithdrawVestingOperation;
 
@@ -44,7 +44,7 @@ public class WithdrawVestingOperationParsingIT extends BaseITForOperationParsing
     private static final int TRANSACTION_INDEX = 2;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_ACCOUNT = "alex90342fastn1";
-    private static final AssetSymbolType EXPECTED_ASSET_SYMBOL = AssetSymbolType.VESTS;
+    private static final LegacyAssetSymbolType EXPECTED_ASSET_SYMBOL = LegacyAssetSymbolType.VESTS;
 
     /**
      * Prepare all required fields used by this test class.

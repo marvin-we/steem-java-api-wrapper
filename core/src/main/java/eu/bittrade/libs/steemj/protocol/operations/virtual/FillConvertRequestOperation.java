@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -45,9 +45,9 @@ public class FillConvertRequestOperation extends Operation {
     @JsonProperty("requestid")
     private long requestId;
     @JsonProperty("amount_in")
-    private Asset amountIn;
+    private LegacyAsset amountIn;
     @JsonProperty("amount_out")
-    private Asset amountOut;
+    private LegacyAsset amountOut;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -81,7 +81,7 @@ public class FillConvertRequestOperation extends Operation {
      * 
      * @return The source asset.
      */
-    public Asset getAmountIn() {
+    public LegacyAsset getAmountIn() {
         return amountIn;
     }
 
@@ -90,7 +90,7 @@ public class FillConvertRequestOperation extends Operation {
      * 
      * @return The target asset.
      */
-    public Asset getAmountOut() {
+    public LegacyAsset getAmountOut() {
         return amountOut;
     }
 

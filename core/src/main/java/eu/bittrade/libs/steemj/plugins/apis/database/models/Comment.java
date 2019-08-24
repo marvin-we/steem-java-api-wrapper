@@ -33,7 +33,7 @@ import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents the Steem "api_comment_object".
@@ -99,9 +99,9 @@ public class Comment {
     @JsonProperty("reward_weight")
     private UShort rewardWeight;
     @JsonProperty("total_payout_value")
-    private Asset totalPayoutValue;
+    private LegacyAsset totalPayoutValue;
     @JsonProperty("curator_payout_value")
-    private Asset curatorPayoutValue;
+    private LegacyAsset curatorPayoutValue;
     // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("author_rewards")
     private long authorRewards;
@@ -112,7 +112,7 @@ public class Comment {
     @JsonProperty("root_comment")
     private long rootComment;
     @JsonProperty("max_accepted_payout")
-    private Asset maxAcceptedPayout;
+    private LegacyAsset maxAcceptedPayout;
     // Original type is uint16_t.
     @JsonProperty("percent_steem_dollars")
     private UShort percentSteemDollars;
@@ -288,14 +288,14 @@ public class Comment {
     /**
      * @return the totalPayoutValue
      */
-    public Asset getTotalPayoutValue() {
+    public LegacyAsset getTotalPayoutValue() {
         return totalPayoutValue;
     }
 
     /**
      * @return the curatorPayoutValue
      */
-    public Asset getCuratorPayoutValue() {
+    public LegacyAsset getCuratorPayoutValue() {
         return curatorPayoutValue;
     }
 
@@ -323,7 +323,7 @@ public class Comment {
     /**
      * @return the maxAcceptedPayout
      */
-    public Asset getMaxAcceptedPayout() {
+    public LegacyAsset getMaxAcceptedPayout() {
         return maxAcceptedPayout;
     }
 

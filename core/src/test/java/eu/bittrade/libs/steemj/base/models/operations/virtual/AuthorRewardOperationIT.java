@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.AuthorRewardOperation;
 
@@ -45,9 +45,9 @@ public class AuthorRewardOperationIT extends BaseITForOperationParsing {
     private static final String EXPECTED_AUTHOR = "joearnold";
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-quinneaker-re-joearnold-re-quinneaker-bounties-of-the-land-episode-7-preparing-for-winter-final-harvests-soon-20171003t161412134z");
-    private static final AssetSymbolType EXPECTED_SBD_ASSET_SYMBOL = AssetSymbolType.SBD;
-    private static final AssetSymbolType EXPECTED_STEEM_ASSET_SYMBOL = AssetSymbolType.STEEM;
-    private static final AssetSymbolType EXPECTED_VESTS_ASSET_SYMBOL = AssetSymbolType.VESTS;
+    private static final LegacyAssetSymbolType EXPECTED_SBD_ASSET_SYMBOL = LegacyAssetSymbolType.SBD;
+    private static final LegacyAssetSymbolType EXPECTED_STEEM_ASSET_SYMBOL = LegacyAssetSymbolType.STEEM;
+    private static final LegacyAssetSymbolType EXPECTED_VESTS_ASSET_SYMBOL = LegacyAssetSymbolType.VESTS;
 
     /**
      * Prepare the environment for this specific test.

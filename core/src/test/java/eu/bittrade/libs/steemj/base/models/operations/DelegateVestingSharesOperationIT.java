@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.DelegateVestingSharesOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -65,7 +65,7 @@ public class DelegateVestingSharesOperationIT extends BaseTransactionVerificatio
 
         AccountName delegator = new AccountName("dez1337");
         AccountName delegatee = new AccountName("steemj");
-        Asset vestingShares = new Asset(418772164L, AssetSymbolType.VESTS);
+        LegacyAsset vestingShares = new LegacyAsset(418772164L, LegacyAssetSymbolType.VESTS);
 
         DelegateVestingSharesOperation delegateVestingSharesOperation = new DelegateVestingSharesOperation(delegator,
                 delegatee, vestingShares);

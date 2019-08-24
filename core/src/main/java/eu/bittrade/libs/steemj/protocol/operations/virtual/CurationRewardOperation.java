@@ -28,7 +28,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -43,7 +43,7 @@ public class CurationRewardOperation extends Operation {
     @JsonProperty("curator")
     private AccountName curator;
     @JsonProperty("reward")
-    private Asset reward;
+    private LegacyAsset reward;
     @JsonProperty("comment_author")
     private AccountName commentAuthor;
     @JsonProperty("comment_permlink")
@@ -71,7 +71,7 @@ public class CurationRewardOperation extends Operation {
      * 
      * @return The reward.
      */
-    public Asset getReward() {
+    public LegacyAsset getReward() {
         return reward;
     }
 

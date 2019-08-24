@@ -34,8 +34,8 @@ import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -92,7 +92,7 @@ public class CommentOptionsOperationExtensionIT extends BaseTransactionVerificat
         commentOptionsExtensions.add(commentPayoutBeneficiaries);
 
         CommentOptionsOperation commentOptionsOperation = new CommentOptionsOperation(author, permlink,
-                new Asset(1000000000, AssetSymbolType.SBD), (int) percentSteemDollars, allowVotes, allowCurationRewards,
+                new LegacyAsset(1000000000, LegacyAssetSymbolType.SBD), (int) percentSteemDollars, allowVotes, allowCurationRewards,
                 commentOptionsExtensions);
 
         ArrayList<Operation> operations = new ArrayList<>();

@@ -35,10 +35,10 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.AccountCreateWithDelegationOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -73,8 +73,8 @@ public class AccountCreateWithDelegationOperationTest extends BaseTransactionalU
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        Asset fee = new Asset(500, AssetSymbolType.STEEM);
-        Asset delegation = new Asset(155440933151L, AssetSymbolType.VESTS);
+        LegacyAsset fee = new LegacyAsset(500, LegacyAssetSymbolType.STEEM);
+        LegacyAsset delegation = new LegacyAsset(155440933151L, LegacyAssetSymbolType.VESTS);
         AccountName creator = new AccountName("dez1337");
         String jsonMetadata = "";
         PublicKey memoKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()

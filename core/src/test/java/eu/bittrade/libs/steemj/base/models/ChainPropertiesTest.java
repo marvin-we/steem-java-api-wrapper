@@ -25,8 +25,8 @@ import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 
 /**
  * Test the ChainProperties object.
@@ -44,7 +44,7 @@ public class ChainPropertiesTest {
      */
     @Test
     public void testSteemChainPropertiesToByteArray() throws Exception {
-        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
+        LegacyAsset accountCreationFee = new LegacyAsset(5000, LegacyAssetSymbolType.STEEM);
 
         long maximumBlockSize = 65536;
         int sbdInterestRate = 0;
@@ -62,7 +62,7 @@ public class ChainPropertiesTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testChainPropertiesValidationInterestRate() {
-        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
+        LegacyAsset accountCreationFee = new LegacyAsset(5000, LegacyAssetSymbolType.STEEM);
 
         long maximumBlockSize = 65570;
         int sbdInterestRate = -1;
@@ -76,7 +76,7 @@ public class ChainPropertiesTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testChainPropertiesValidationBlockSize() {
-        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
+        LegacyAsset accountCreationFee = new LegacyAsset(5000, LegacyAssetSymbolType.STEEM);
 
         long maximumBlockSize = 5215;
         int sbdInterestRate = 0;
@@ -90,7 +90,7 @@ public class ChainPropertiesTest {
      */
     @Test(expected = InvalidParameterException.class)
     public void testChainPropertiesValidationAccountCreationFee() {
-        Asset accountCreationFee = new Asset(5000, AssetSymbolType.STEEM);
+        LegacyAsset accountCreationFee = new LegacyAsset(5000, LegacyAssetSymbolType.STEEM);
 
         long maximumBlockSize = 65535;
         int sbdInterestRate = 5;
@@ -109,7 +109,7 @@ public class ChainPropertiesTest {
         new AccountName("dez");
         new AccountName("dez1337-steemj");
 
-        Asset accountCreationFee = new Asset(3, AssetSymbolType.STEEM);
+        LegacyAsset accountCreationFee = new LegacyAsset(3, LegacyAssetSymbolType.STEEM);
 
         long maximumBlockSize = 65536;
         int sbdInterestRate = 5;

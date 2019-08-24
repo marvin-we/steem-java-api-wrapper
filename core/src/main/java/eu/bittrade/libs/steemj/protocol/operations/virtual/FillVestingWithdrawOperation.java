@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -40,8 +40,8 @@ public class FillVestingWithdrawOperation extends Operation {
     private AccountName fromAccount;
     @JsonProperty("to_account")
     private AccountName toAccount;
-    private Asset withdrawn;
-    private Asset deposited;
+    private LegacyAsset withdrawn;
+    private LegacyAsset deposited;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -68,14 +68,14 @@ public class FillVestingWithdrawOperation extends Operation {
     /**
      * @return the withdrawn
      */
-    public Asset getWithdrawn() {
+    public LegacyAsset getWithdrawn() {
         return withdrawn;
     }
 
     /**
      * @return the deposited
      */
-    public Asset getDeposited() {
+    public LegacyAsset getDeposited() {
         return deposited;
     }
 

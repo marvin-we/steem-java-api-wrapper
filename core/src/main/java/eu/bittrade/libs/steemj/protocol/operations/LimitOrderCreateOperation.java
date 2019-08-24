@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -43,9 +43,9 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     @JsonProperty("amount_to_sell")
-    private Asset amountToSell;
+    private LegacyAsset amountToSell;
     @JsonProperty("min_to_receive")
-    private Asset minToReceive;
+    private LegacyAsset minToReceive;
     @JsonProperty("fill_or_kill")
     private boolean fillOrKill;
     @JsonProperty("expiration")
@@ -60,10 +60,10 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @param orderId
      *            The id of this order (see {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
      * @param minToReceive
      *            The minimal amount to receive for the offered asset (see
-     *            {@link #setMinToReceive(Asset)}).
+     *            {@link #setMinToReceive(LegacyAsset)}).
      * @param fillOrKill
      *            Define if this order is a fill or kill order (see
      *            {@link #setFillOrKill(boolean)}).
@@ -74,8 +74,8 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *             If one of the arguments does not fulfill the requirements.
      */
     public LimitOrderCreateOperation(@JsonProperty("owner") AccountName owner,
-            @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") Asset amountToSell,
-            @JsonProperty("min_to_receive") Asset minToReceive, @JsonProperty("fill_or_kill") boolean fillOrKill,
+            @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") LegacyAsset amountToSell,
+            @JsonProperty("min_to_receive") LegacyAsset minToReceive, @JsonProperty("fill_or_kill") boolean fillOrKill,
             @JsonProperty("expiration") TimePointSec expirationDate) {
         super(false);
 
@@ -89,7 +89,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
 
     /**
      * Like
-     * {@link #LimitOrderCreateOperation(AccountName, UInteger, Asset, Asset)},
+     * {@link #LimitOrderCreateOperation(AccountName, UInteger, LegacyAsset, LegacyAsset)},
      * but this constructor applies default values for the
      * <code>fillOrKill</code> and the <code>expirationDate</code> parameters.
      * The <code>fillOrKill</code> parameter is set to false and the
@@ -102,34 +102,34 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @param orderId
      *            The id of this order (see {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
      * @param minToReceive
      *            The minimal amount to receive for the offered asset (see
-     *            {@link #setMinToReceive(Asset)}).
+     *            {@link #setMinToReceive(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreateOperation(AccountName owner, UInteger orderId, Asset amountToSell, Asset minToReceive) {
+    public LimitOrderCreateOperation(AccountName owner, UInteger orderId, LegacyAsset amountToSell, LegacyAsset minToReceive) {
         this(owner, orderId, amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
     }
 
     /**
      * Like
-     * {@link #LimitOrderCreateOperation(AccountName, UInteger, Asset, Asset)},
+     * {@link #LimitOrderCreateOperation(AccountName, UInteger, LegacyAsset, LegacyAsset)},
      * but also sets the <code>orderId</code> to its default value (0).
      * 
      * @param owner
      *            The account to create the operation for (see
      *            {@link #setOwner(AccountName)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
      * @param minToReceive
      *            The minimal amount to receive for the offered asset (see
-     *            {@link #setMinToReceive(Asset)}).
+     *            {@link #setMinToReceive(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreateOperation(AccountName owner, Asset amountToSell, Asset minToReceive) {
+    public LimitOrderCreateOperation(AccountName owner, LegacyAsset amountToSell, LegacyAsset minToReceive) {
         this(owner, UInteger.valueOf(0), amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
     }
 
@@ -182,7 +182,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * 
      * @return The amount to sell within this order.
      */
-    public Asset getAmountToSell() {
+    public LegacyAsset getAmountToSell() {
         return amountToSell;
     }
 
@@ -194,7 +194,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @throws InvalidParameterException
      *             If the <code>amountToSell</code> is null.
      */
-    public void setAmountToSell(Asset amountToSell) {
+    public void setAmountToSell(LegacyAsset amountToSell) {
         this.amountToSell = SteemJUtils.setIfNotNull(amountToSell, "The amount to sell owner can't be null.");
     }
 
@@ -203,7 +203,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * 
      * @return The amount that the owner has received.
      */
-    public Asset getMinToReceive() {
+    public LegacyAsset getMinToReceive() {
         return minToReceive;
     }
 
@@ -216,7 +216,7 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @throws InvalidParameterException
      *             If the <code>minToReceive</code> is null.
      */
-    public void setMinToReceive(Asset minToReceive) {
+    public void setMinToReceive(LegacyAsset minToReceive) {
         this.minToReceive = SteemJUtils.setIfNotNull(minToReceive, "The min to receive owner can't be null.");
     }
 

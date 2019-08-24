@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -32,7 +32,7 @@ public class CreateClaimedAccountOperation extends AccountCreateOperation {
      *            {@link #setCreator(AccountName)}).
      * @param fee
      *            Set the fee the <code>creator</code> will pay (see
-     *            {@link #setFee(Asset)}).
+     *            {@link #setFee(LegacyAsset)}).
      * @param newAccountName
      *            Set the new account name (see
      *            {@link #setNewAccountName(AccountName)}).
@@ -55,7 +55,7 @@ public class CreateClaimedAccountOperation extends AccountCreateOperation {
      *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
-    public CreateClaimedAccountOperation(@JsonProperty("creator") AccountName creator, @JsonProperty("fee") Asset fee,
+    public CreateClaimedAccountOperation(@JsonProperty("creator") AccountName creator, @JsonProperty("fee") LegacyAsset fee,
             @JsonProperty("new_account_name") AccountName newAccountName, @JsonProperty("owner") Authority owner,
             @JsonProperty("active") Authority active, @JsonProperty("posting") Authority posting,
             @JsonProperty("memo_key") PublicKey memoKey, @JsonProperty("json_metadata") String jsonMetadata) {

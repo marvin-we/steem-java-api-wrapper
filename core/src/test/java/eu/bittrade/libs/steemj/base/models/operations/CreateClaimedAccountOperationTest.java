@@ -19,7 +19,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.Authority;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CreateClaimedAccountOperation;
 
@@ -45,7 +45,7 @@ public class CreateClaimedAccountOperationTest extends BaseTransactionalUT {
     public static void prepareTestClass() throws Exception {
         setupUnitTestEnvironmentForTransactionalTests();
 
-        Asset fee = new Asset(10000, AssetSymbolType.STEEM);
+        LegacyAsset fee = new LegacyAsset(10000, LegacyAssetSymbolType.STEEM);
         AccountName creator = new AccountName("dez1337");
         String jsonMetadata = "";
         PublicKey memoKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()

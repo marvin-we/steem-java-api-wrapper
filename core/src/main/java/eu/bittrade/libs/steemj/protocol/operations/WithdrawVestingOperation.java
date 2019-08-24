@@ -33,7 +33,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -45,7 +45,7 @@ public class WithdrawVestingOperation extends Operation {
     @JsonProperty("account")
     private AccountName account;
     @JsonProperty("vesting_shares")
-    private Asset vestingShares;
+    private LegacyAsset vestingShares;
 
     /**
      * Create a new withdraw vesting operation.
@@ -66,11 +66,11 @@ public class WithdrawVestingOperation extends Operation {
      *            {@link #setAccount(AccountName)}).
      * @param vestingShares
      *            Set the amount of VESTS to power down (see
-     *            {@link #setVestingShares(Asset)}).
+     *            {@link #setVestingShares(LegacyAsset)}).
      */
     @JsonCreator
     public WithdrawVestingOperation(@JsonProperty("account") AccountName account,
-            @JsonProperty("vesting_shares") Asset vestingShares) {
+            @JsonProperty("vesting_shares") LegacyAsset vestingShares) {
         super(false);
 
         this.setAccount(account);
@@ -109,7 +109,7 @@ public class WithdrawVestingOperation extends Operation {
      * @return the vestingShares The amount that has been requested for
      *         withdrawing.
      */
-    public Asset getVestingShares() {
+    public LegacyAsset getVestingShares() {
         return vestingShares;
     }
 
@@ -121,7 +121,7 @@ public class WithdrawVestingOperation extends Operation {
      * @throws InvalidParameterException
      *             If the asset type is null.
      */
-    public void setVestingShares(Asset vestingShares) {
+    public void setVestingShares(LegacyAsset vestingShares) {
         this.vestingShares = SteemJUtils.setIfNotNull(vestingShares, "The vesting shares can't be null.");
     }
 
