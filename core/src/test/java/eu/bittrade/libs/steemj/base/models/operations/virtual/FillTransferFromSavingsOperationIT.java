@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations.virtual;
 
@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.FillTransferFromSavingsOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
@@ -48,7 +48,7 @@ public class FillTransferFromSavingsOperationIT extends BaseITForOperationParsin
     private static final AccountName EXPECTED_TO = new AccountName("anonimous");
     private static final String EXPECTED_MEMO = "";
     private static final long EXPECTED_REQUEST_ID = 1506820294L;
-    private static final AssetSymbolType EXPECTED_AMOUNT_SYMBOL = AssetSymbolType.SBD;
+    private static final LegacyAssetSymbolType EXPECTED_AMOUNT_SYMBOL = LegacyAssetSymbolType.SBD;
     private static final BigDecimal EXPECTED_AMOUNT_VALUE_REAL = BigDecimal.valueOf(7.5);
     private static final long EXPECTED_AMOUNT_VALUE = 7500L;
 

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations.virtual;
 
@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -45,14 +45,14 @@ public class FillOrderOperation extends Operation {
     // Original type is uint32_t here so we have to use long.
     private int currentOrderId;
     @JsonProperty("current_pays")
-    private Asset currentPays;
+    private LegacyAsset currentPays;
     @JsonProperty("open_owner")
     private AccountName openOwner;
     @JsonProperty("open_orderid")
     // Original type is uint32_t here so we have to use long.
     private long openOrderId;
     @JsonProperty("open_pays")
-    private Asset openPays;
+    private LegacyAsset openPays;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -79,7 +79,7 @@ public class FillOrderOperation extends Operation {
     /**
      * @return The current pays.
      */
-    public Asset getCurrentPays() {
+    public LegacyAsset getCurrentPays() {
         return currentPays;
     }
 
@@ -100,7 +100,7 @@ public class FillOrderOperation extends Operation {
     /**
      * @return The open pays.
      */
-    public Asset getOpenPays() {
+    public LegacyAsset getOpenPays() {
         return openPays;
     }
 

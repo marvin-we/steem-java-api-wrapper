@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.chain;
 
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "escrow_object" object.
@@ -47,11 +47,11 @@ public class EscrowObject {
     @JsonProperty("escrow_expiration")
     private TimePointSec escrowExpiration;
     @JsonProperty("sbd_balance")
-    private Asset sbdBalance;
+    private LegacyAsset sbdBalance;
     @JsonProperty("steem_balance")
-    private Asset steemBalance;
+    private LegacyAsset steemBalance;
     @JsonProperty("pending_fee")
-    private Asset pendingFee;
+    private LegacyAsset pendingFee;
     @JsonProperty("to_approved")
     private boolean toApproved;
     @JsonProperty("agent_approved")
@@ -124,21 +124,21 @@ public class EscrowObject {
     /**
      * @return the sbdBalance
      */
-    public Asset getSbdBalance() {
+    public LegacyAsset getSbdBalance() {
         return sbdBalance;
     }
 
     /**
      * @return the steemBalance
      */
-    public Asset getSteemBalance() {
+    public LegacyAsset getSteemBalance() {
         return steemBalance;
     }
 
     /**
      * @return the pendingFee
      */
-    public Asset getPendingFee() {
+    public LegacyAsset getPendingFee() {
         return pendingFee;
     }
 

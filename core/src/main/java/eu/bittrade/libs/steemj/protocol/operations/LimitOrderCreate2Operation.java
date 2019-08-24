@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -32,7 +32,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Price;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -45,7 +45,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
     @JsonProperty("amount_to_sell")
-    private Asset amountToSell;
+    private LegacyAsset amountToSell;
     @JsonProperty("fill_or_kill")
     private boolean fillOrKill;
     @JsonProperty("exchange_rate")
@@ -67,7 +67,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The order id for this order (see
      *            {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
      * @param fillOrKill
      *            Define if this order is a "fillOrKill" order (see
      *            {@link #setFillOrKill(boolean)}).
@@ -82,7 +82,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      */
     @JsonCreator
     public LimitOrderCreate2Operation(@JsonProperty("owner") AccountName owner,
-            @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") Asset amountToSell,
+            @JsonProperty("orderid") UInteger orderId, @JsonProperty("amount_to_sell") LegacyAsset amountToSell,
             @JsonProperty("fill_or_kill") boolean fillOrKill, @JsonProperty("exchange_rate") Price exchangeRate,
             @JsonProperty("expiration") TimePointSec expirationDate) {
         super(false);
@@ -97,7 +97,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
 
     /**
      * Like
-     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, Asset, boolean, Price, TimePointSec)},
+     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, LegacyAsset, boolean, Price, TimePointSec)},
      * but this constructor applies default values for the
      * <code>fillOrKill</code> and the <code>expirationDate</code> parameters.
      * The <code>fillOrKill</code> parameter is set to false and the
@@ -111,34 +111,34 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The order id for this order (see
      *            {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
      * @param exchangeRate
      *            The exchange rate to set (see
      *            {@link #setExchangeRate(Price)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreate2Operation(AccountName owner, UInteger orderId, Asset amountToSell, Price exchangeRate) {
+    public LimitOrderCreate2Operation(AccountName owner, UInteger orderId, LegacyAsset amountToSell, Price exchangeRate) {
         this(owner, orderId, amountToSell, false, exchangeRate, new TimePointSec(Long.MAX_VALUE));
     }
 
     /**
      * Like
-     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, Asset, Price)},
+     * {@link #LimitOrderCreate2Operation(AccountName, UInteger, LegacyAsset, Price)},
      * but also sets the <code>orderId</code> to its default value (0).
      * 
      * @param owner
      *            The owner of the order that should be created (see
      *            {@link #setOwner(AccountName)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(Asset)}).
+     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
      * @param exchangeRate
      *            The exchange rate to set (see
      *            {@link #setExchangeRate(Price)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreate2Operation(AccountName owner, Asset amountToSell, Price exchangeRate) {
+    public LimitOrderCreate2Operation(AccountName owner, LegacyAsset amountToSell, Price exchangeRate) {
         this(owner, UInteger.valueOf(0), amountToSell, false, exchangeRate, new TimePointSec(Long.MAX_VALUE));
     }
 
@@ -191,7 +191,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * 
      * @return The amount to sell within this order.
      */
-    public Asset getAmountToSell() {
+    public LegacyAsset getAmountToSell() {
         return amountToSell;
     }
 
@@ -203,7 +203,7 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      * @throws InvalidParameterException
      *             If the <code>amountToSell</code> is null.
      */
-    public void setAmountToSell(Asset amountToSell) {
+    public void setAmountToSell(LegacyAsset amountToSell) {
         this.amountToSell = SteemJUtils.setIfNotNull(amountToSell, "The amount to sell can't be null.");
     }
 

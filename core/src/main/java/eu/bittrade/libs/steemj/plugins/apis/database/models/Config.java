@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
@@ -44,7 +44,7 @@ public class Config {
     @JsonProperty("STEEMIT_ACTIVE_CHALLENGE_COOLDOWN")
     private String steemitActiveChallengeCooldown;
     @JsonProperty("STEEMIT_ACTIVE_CHALLENGE_FEE")
-    private Asset steemitActiveChallengeFee;
+    private LegacyAsset steemitActiveChallengeFee;
     @JsonProperty("STEEMIT_ADDRESS_PREFIX")
     private String steemitAddressPrefix;
     @JsonProperty("STEEMIT_APR_PERCENT_MULTIPLY_PER_BLOCK")
@@ -271,7 +271,7 @@ public class Config {
     @JsonProperty("STEEMIT_OWNER_CHALLENGE_COOLDOWN")
     private long steemitOwnerChallengeCooldown;
     @JsonProperty("STEEMIT_OWNER_CHALLENGE_FEE")
-    private Asset steemitOwnerChallengeFee;
+    private LegacyAsset steemitOwnerChallengeFee;
     @JsonProperty("STEEMIT_OWNER_UPDATE_LIMIT")
     private int steemitOwnerUpdateLimit;
     @JsonProperty("STEEMIT_POST_AVERAGE_WINDOW")
@@ -408,7 +408,7 @@ public class Config {
     /**
      * @return the steemitActiveChallengeFee
      */
-    public Asset getSteemitActiveChallengeFee() {
+    public LegacyAsset getSteemitActiveChallengeFee() {
         return steemitActiveChallengeFee;
     }
 
@@ -1206,7 +1206,7 @@ public class Config {
     /**
      * @return the steemitOwnerChallengeFee
      */
-    public Asset getSteemitOwnerChallengeFee() {
+    public LegacyAsset getSteemitOwnerChallengeFee() {
         return steemitOwnerChallengeFee;
     }
 

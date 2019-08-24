@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.database;
 
@@ -43,7 +43,7 @@ import eu.bittrade.libs.steemj.plugins.apis.block.BlockApi;
 import eu.bittrade.libs.steemj.plugins.apis.tags.TagsApi;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.Tag;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
 
@@ -106,10 +106,12 @@ public class DatabaseApiIT extends BaseIT {
         assertNotNull(trendingTags);
         assertThat(trendingTags.size(), greaterThan(0));
         assertTrue(trendingTags.get(0).getName().equals(REQUESTED_TAG));
-        //assertThat(trendingTags.get(0).getComments(), greaterThan(0L));
-        //assertThat(trendingTags.get(0).getNetVotes(), greaterThan(0L));
-        //assertThat(trendingTags.get(0).getTopPosts(), greaterThan(0L));
+        assertThat(trendingTags.get(0).getComments(), greaterThan(0L));
+        assertThat(trendingTags.get(0).getNetVotes(), greaterThan(0L));
+        assertThat(trendingTags.get(0).getTopPosts(), greaterThan(0L));
+        //seems that payout asset report has changed
         //assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(AssetSymbolType.VESTS));
+        assertThat(trendingTags.get(0).getTotalPayouts().getSymbol(), equalTo(LegacyAssetSymbolType.SBD));
         assertThat(trendingTags.get(0).getTotalPayouts().getAmount(), greaterThan(0L));
         assertThat(trendingTags.get(0).getTrending().intValue(), greaterThan(0));
     }

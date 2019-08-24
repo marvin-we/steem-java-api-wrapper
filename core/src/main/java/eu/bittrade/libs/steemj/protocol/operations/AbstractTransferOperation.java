@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -25,7 +25,7 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -40,7 +40,7 @@ abstract class AbstractTransferOperation extends Operation {
     @JsonProperty("to")
     protected AccountName to;
     @JsonProperty("amount")
-    protected Asset amount;
+    protected LegacyAsset amount;
 
     /**
      * Create a new Operation object by providing the operation type.
@@ -107,7 +107,7 @@ abstract class AbstractTransferOperation extends Operation {
      * 
      * @return The <code>amount</code> of that has been send.
      */
-    public Asset getAmount() {
+    public LegacyAsset getAmount() {
         return amount;
     }
 
@@ -119,7 +119,7 @@ abstract class AbstractTransferOperation extends Operation {
      * @throws InvalidParameterException
      *             If the <code>amount</code> is null.
      */
-    public void setAmount(Asset amount) {
+    public void setAmount(LegacyAsset amount) {
         this.amount = SteemJUtils.setIfNotNull(amount, "The amount can't be null.");
     }
 

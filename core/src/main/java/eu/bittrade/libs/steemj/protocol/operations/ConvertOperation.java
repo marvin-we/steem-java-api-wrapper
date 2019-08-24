@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -33,7 +33,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -48,7 +48,7 @@ public class ConvertOperation extends Operation {
     @JsonProperty("requestid")
     private long requestId;
     @JsonProperty("amount")
-    private Asset amount;
+    private LegacyAsset amount;
 
     /**
      * Create a new convert operation. This operation instructs the blockchain
@@ -62,13 +62,13 @@ public class ConvertOperation extends Operation {
      *            The request id of this transaction (see
      *            {@link #setRequestId(long)}).
      * @param amount
-     *            The amount to convert (see {@link #setAmount(Asset)}).
+     *            The amount to convert (see {@link #setAmount(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
     public ConvertOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("requestid") long requestId,
-            @JsonProperty("amount") Asset amount) {
+            @JsonProperty("amount") LegacyAsset amount) {
         super(false);
 
         this.setOwner(owner);
@@ -77,18 +77,18 @@ public class ConvertOperation extends Operation {
     }
 
     /**
-     * Like {@link #ConvertOperation(AccountName, long, Asset)}, but
+     * Like {@link #ConvertOperation(AccountName, long, LegacyAsset)}, but
      * automatically sets the request id to 0.
      * 
      * @param owner
      *            The account to covert the asset for (see
      *            {@link #setOwner(AccountName)}).
      * @param amount
-     *            The amount to convert (see {@link #setAmount(Asset)}).
+     *            The amount to convert (see {@link #setAmount(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public ConvertOperation(AccountName owner, Asset amount) {
+    public ConvertOperation(AccountName owner, LegacyAsset amount) {
         this(owner, 0, amount);
     }
 
@@ -139,7 +139,7 @@ public class ConvertOperation extends Operation {
      * 
      * @return The SBD or STEEM amount that has been converted.
      */
-    public Asset getAmount() {
+    public LegacyAsset getAmount() {
         return amount;
     }
 
@@ -152,7 +152,7 @@ public class ConvertOperation extends Operation {
      *             If the provided <code>amount</code> is null, the symbol type
      *             is not SBD or the amount is less than 1.
      */
-    public void setAmount(Asset amount) {
+    public void setAmount(LegacyAsset amount) {
         this.amount = SteemJUtils.setIfNotNull(amount, "The amount to convert can't be null.");
     }
 

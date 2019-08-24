@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations;
 
@@ -35,9 +35,9 @@ import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.WitnessUpdateOperation;
 
@@ -71,11 +71,11 @@ public class WitnessUpdateOperationTest extends BaseTransactionalUT {
         PublicKey blockSigningKey = new PublicKey(SteemJConfig.getInstance().getAddressPrefix().name().toUpperCase()
                 + "6dNhJF7K7MnVvrjvb9x6B6FP5ztr4pkq9JXyzG9PQHdhsYeLkb");
 
-        Asset fee = new Asset(1L, AssetSymbolType.STEEM);
+        LegacyAsset fee = new LegacyAsset(1L, LegacyAssetSymbolType.STEEM);
 
         AccountName owner = new AccountName("dez1337");
 
-        Asset accountCreationFee = new Asset(5000L, AssetSymbolType.STEEM);
+        LegacyAsset accountCreationFee = new LegacyAsset(5000L, LegacyAssetSymbolType.STEEM);
 
         long maximumBlockSize = 65536;
         int sbdInterestRate = 0;

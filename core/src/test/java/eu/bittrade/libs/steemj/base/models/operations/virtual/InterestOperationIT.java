@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations.virtual;
 
@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.CurationRewardOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.InterestOperation;
@@ -44,7 +44,7 @@ public class InterestOperationIT extends BaseITForOperationParsing {
     private static final int BLOCK_NUMBER_CONTAINING_OPERATION = 16022103;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_OWNER = "eric818";
-    private static final AssetSymbolType EXPECTED_INTEREST_SYMBOL = AssetSymbolType.SBD;
+    private static final LegacyAssetSymbolType EXPECTED_INTEREST_SYMBOL = LegacyAssetSymbolType.SBD;
     private static final BigDecimal EXPECTED_INTEREST_VALUE_REAL = BigDecimal.valueOf(0.003);
     private static final long EXPECTED_INTEREST_VALUE = 3L;
 

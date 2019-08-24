@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -58,7 +58,7 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
      *            {@link #setTo(AccountName)}).
      * @param amount
      *            The amount of vests to transfer (see
-     *            {@link #setAmount(Asset)}).
+     *            {@link #setAmount(LegacyAsset)}).
      * @param requestId
      *            The id of this request to set (see
      *            {@link #setRequestId(long)}).
@@ -70,7 +70,7 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
      */
     @JsonCreator
     public TransferFromSavingsOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
-            @JsonProperty("amount") Asset amount, @JsonProperty("request_id") long requestId,
+            @JsonProperty("amount") LegacyAsset amount, @JsonProperty("request_id") long requestId,
             @JsonProperty("memo") String memo) {
         super(false);
 
@@ -83,7 +83,7 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
 
     /**
      * Like
-     * {@link #TransferFromSavingsOperation(AccountName, AccountName, Asset, long, String)},
+     * {@link #TransferFromSavingsOperation(AccountName, AccountName, LegacyAsset, long, String)},
      * but sets the request id to its default value (0).
      * 
      * @param from
@@ -94,14 +94,14 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
      *            {@link #setTo(AccountName)}).
      * @param amount
      *            The amount of vests to transfer (see
-     *            {@link #setAmount(Asset)}).
+     *            {@link #setAmount(LegacyAsset)}).
      * @param memo
      *            An additional message added to the operation (see
      *            {@link #setMemo(String)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public TransferFromSavingsOperation(AccountName from, AccountName to, Asset amount, String memo) {
+    public TransferFromSavingsOperation(AccountName from, AccountName to, LegacyAsset amount, String memo) {
         this(from, to, amount, 0, memo);
     }
 
@@ -134,7 +134,7 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
      *             STEEM/SBD or less than 1.
      */
     @Override
-    public void setAmount(Asset amount) {
+    public void setAmount(LegacyAsset amount) {
         this.amount = SteemJUtils.setIfNotNull(amount, "The amount can't be null.");
     }
 

@@ -12,18 +12,19 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.util;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * This class contains several utility methods required for Condenser
@@ -95,34 +96,32 @@ public class CondenserUtils {
      *            The app name that publishes this comment or post.
      * @param format
      *            The format used by the comment or post.
+     * @param extraMetadata
+     *            <blockquote>A map of extra metadata to pack into the json
+     *            metadata. Any values here will <strong>overwrite</strong> any
+     *            calculated values with the same key!</blockquote>
      * @return The json metadata in its String presentation.
      */
-    public static String generateSteemitMetadata(String content, String[] tags, String app, String format) {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static String generateSteemitMetadata(String content, String[] tags, String app, String format,
+            Map<String, Object> extraMetadata) {
+        Map<String, Object> metadata = new LinkedHashMap<>();
 
-        ObjectNode jsonMetadata = objectMapper.createObjectNode();
-        ArrayNode tagArray = jsonMetadata.arrayNode();
-        for (String tag : tags) {
-            tagArray.add(tag);
+        if (tags != null) {
+            metadata.put(TAGS_FIELD_NAME, tags);
         }
-        jsonMetadata.set(TAGS_FIELD_NAME, tagArray);
 
-        ArrayNode userArray = jsonMetadata.arrayNode();
         List<String> users = extractUsersFromContent(content);
-        for (String user : users) {
-            userArray.add(user);
+        if (users != null && !users.isEmpty()) {
+            metadata.put(USERS_FIELD_NAME, users);
         }
 
-        if (userArray.size() > 0) {
-            jsonMetadata.set(USERS_FIELD_NAME, userArray);
-        }
-
-        ArrayNode imageArray = jsonMetadata.arrayNode();
-        ArrayNode linksArray = jsonMetadata.arrayNode();
+        List<String> imageArray = new ArrayList<>();
+        List<String> linksArray = new ArrayList<>();
         List<String> links = extractLinksFromContent(content);
 
         for (String link : links) {
-            if (link.matches("/(https?:\\/\\/.*\\.(?:png|jpg))/i")) {
+            String lcLink = link.toLowerCase();
+            if (lcLink.endsWith("jpg") || lcLink.endsWith("jpeg") || lcLink.endsWith("png") || lcLink.endsWith("gif")) {
                 imageArray.add(link);
             } else {
                 linksArray.add(link);
@@ -130,17 +129,31 @@ public class CondenserUtils {
         }
 
         if (imageArray.size() > 0) {
-            jsonMetadata.set(IMAGES_FIELD_NAME, imageArray);
+            metadata.put(IMAGES_FIELD_NAME, imageArray);
         }
 
         if (linksArray.size() > 0) {
-            jsonMetadata.set(LINKS_FIELD_NAME, linksArray);
+            metadata.put(LINKS_FIELD_NAME, linksArray);
         }
 
-        jsonMetadata.put(APP_FIELD_NAME, app);
-        jsonMetadata.put(FORMAT_FIELD_NAME, format);
+        metadata.put(APP_FIELD_NAME, app);
+        metadata.put(FORMAT_FIELD_NAME, format);
 
-        return jsonMetadata.toString();
+        if (extraMetadata != null) {
+            for (String key : extraMetadata.keySet()) {
+                key = key.trim();
+                if (key.isEmpty()) {
+                    continue;
+                }
+                metadata.put(key, extraMetadata.get(key));
+            }
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(metadata);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Unable to create JSON metadata string", e);
+        }
     }
 
     /**

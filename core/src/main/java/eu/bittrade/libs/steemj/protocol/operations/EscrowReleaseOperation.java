@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -33,7 +33,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -47,9 +47,9 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     @JsonProperty("receiver")
     private AccountName receiver;
     @JsonProperty("sbd_amount")
-    private Asset sbdAmount;
+    private LegacyAsset sbdAmount;
     @JsonProperty("steem_amount")
-    private Asset steemAmount;
+    private LegacyAsset steemAmount;
 
     /**
      * Create a new escrow release operation. This operation can be used by
@@ -84,7 +84,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
     public EscrowReleaseOperation(@JsonProperty("from") AccountName from, @JsonProperty("to") AccountName to,
             @JsonProperty("agent") AccountName agent, @JsonProperty("escrow_id") long escrowId,
             @JsonProperty("who") AccountName who, @JsonProperty("receiver") AccountName receiver,
-            @JsonProperty("sbd_amount") Asset sbdAmount, @JsonProperty("steem_amount") Asset steemAmount) {
+            @JsonProperty("sbd_amount") LegacyAsset sbdAmount, @JsonProperty("steem_amount") LegacyAsset steemAmount) {
         super(false);
 
         this.setFrom(from);
@@ -110,8 +110,8 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      */
     public EscrowReleaseOperation(AccountName from, AccountName to, AccountName agent, long escrowId, AccountName who,
             AccountName receiver) {
-        this(from, to, agent, escrowId, who, receiver, new Asset(0, SteemJConfig.getInstance().getDollarSymbol()),
-                new Asset(0, SteemJConfig.getInstance().getTokenSymbol()));
+        this(from, to, agent, escrowId, who, receiver, new LegacyAsset(0, SteemJConfig.getInstance().getDollarSymbol()),
+                new LegacyAsset(0, SteemJConfig.getInstance().getTokenSymbol()));
     }
 
     /**
@@ -224,7 +224,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      * 
      * @return The amount of SBD to release.
      */
-    public Asset getSbdAmount() {
+    public LegacyAsset getSbdAmount() {
         return sbdAmount;
     }
 
@@ -239,7 +239,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      *             <code>sbdAmount</code> <b>and</b> {@link #getSteemAmount()}
      *             both have an amount of 0.
      */
-    public void setSbdAmount(Asset sbdAmount) {
+    public void setSbdAmount(LegacyAsset sbdAmount) {
         this.sbdAmount = SteemJUtils.setIfNotNull(sbdAmount, "The sbd amount can't be null.");
     }
 
@@ -248,7 +248,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      * 
      * @return The amount of STEEM to release.
      */
-    public Asset getSteemAmount() {
+    public LegacyAsset getSteemAmount() {
         return steemAmount;
     }
 
@@ -263,7 +263,7 @@ public class EscrowReleaseOperation extends AbstractEscrowOperation {
      *             <code>steemAmount</code> <b>and</b> {@link #getSbdAmount()}
      *             both have an amount of 0.
      */
-    public void setSteemAmount(Asset steemAmount) {
+    public void setSteemAmount(LegacyAsset steemAmount) {
         this.steemAmount = SteemJUtils.setIfNotNull(steemAmount, "The steem amount can't be null.");
     }
 

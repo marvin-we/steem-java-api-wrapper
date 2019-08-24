@@ -12,27 +12,21 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.security.InvalidParameterException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.deserializer.AssetDeserializer;
-import eu.bittrade.libs.steemj.base.models.serializer.AssetSerializer;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
-import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class is the java implementation of the <a href=
@@ -41,142 +35,78 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@JsonDeserialize(using = AssetDeserializer.class)
-@JsonSerialize(using = AssetSerializer.class)
 public class Asset implements ByteTransformable {
     // Original type is "share_type" which is a "safe<int64_t>".
+    @JsonIgnore
     private long amount;
-    // Type us uint64_t in the original code.
-    private AssetSymbolType symbol;
-    private byte precision;
+    @JsonIgnore
+    private AssetSymbolType assetSymbolType;
 
     /**
-     * Create a new asset object by providing all required fields.
+     * Constructs a new Asset object based on the given <code>amount</code>,
+     * <code>precision</code> and the <code>nai</code>.
+     * 
+     * A sample JSON String can look like this:
+     * 
+     * <code>"asset": { "amount": "0", "precision": 3, "nai": "@@000000021" }</code>
      * 
      * @param amount
-     *            The amount.
-     * @param symbol
-     *            One type of
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
-     *            AssetSymbolType}.
+     * @param precision
+     * @param nai
      */
-    public Asset(BigDecimal amount, AssetSymbolType symbol) {
-        this.setSymbol(symbol);
-        this.setAmount(amount);
+    @JsonCreator
+    public Asset(@JsonProperty("amount") long amount, @JsonProperty("precision") byte precision,
+            @JsonProperty("nai") String nai) {
+        this.amount = amount;
+        this.assetSymbolType = new AssetSymbolType(nai, precision);
     }
 
     /**
-     * Create a new asset object by providing all required fields.
+     * TODO
      * 
      * @param amount
-     *            The amount.
-     * @param symbol
-     *            One type of
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
-     *            AssetSymbolType}.
+     * @param assetSymbolType
      */
-    public Asset(long amount, AssetSymbolType symbol) {
-        this.setSymbol(symbol);
-        this.setAmount(amount);
+    public Asset(long amount, AssetSymbolType assetSymbolType) {
+        this.amount = amount;
+        this.assetSymbolType = assetSymbolType;
     }
 
     /**
-     * Get the amount stored in this asset object.
-     * 
-     * @return The amount.
+     * @return the amount
      */
-    public Long getAmount() {
+    public long getAmount() {
         return amount;
     }
 
     /**
-     * Get the precision of this asset object.
-     * 
-     * @return The precision.
-     */
-    public Integer getPrecision() {
-        return (int) precision;
-    }
-
-    /**
-     * Get the symbol for this asset object.
-     * 
-     * @return One type of {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
-     *         AssetSymbolType}.
-     */
-    public AssetSymbolType getSymbol() {
-        return symbol;
-    }
-
-    /**
-     * Set the amount of this asset.
-     * 
      * @param amount
-     *            The amount.
+     *            the amount to set
      */
     public void setAmount(long amount) {
         this.amount = amount;
     }
 
     /**
-     * Set the amount of this asset.
-     * 
-     * @param amount
-     *            The amount.
+     * @return the assetSymbolType
      */
-    public void setAmount(BigDecimal amount) {
-        if (amount.scale() > this.getPrecision()) {
-            throw new InvalidParameterException("The provided 'amount' has a 'scale' of " + amount.scale()
-                    + ", but needs to have a 'scale' of " + this.getPrecision() + " when " + this.getSymbol().name()
-                    + " is used as a AssetSymbolType.");
-        }
-
-        this.amount = amount.multiply(BigDecimal.valueOf(Math.pow(10, this.getPrecision()))).longValue();
+    public AssetSymbolType getAssetSymbolType() {
+        return assetSymbolType;
     }
 
     /**
-     * Set the symbol of this asset.
-     * 
-     * @param symbol
-     *            One type of
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType
-     *            AssetSymbolType}.
+     * @param assetSymbolType
+     *            the assetSymbolType to set
      */
-    public void setSymbol(AssetSymbolType symbol) {
-        if (symbol.equals(AssetSymbolType.VESTS)) {
-            this.precision = 6;
-        } else {
-            this.precision = 3;
-        }
-
-        this.symbol = symbol;
-    }
-
-    /**
-     * Transform this asset into its {@link BigDecimal} representation.
-     * 
-     * @return The value of this asset in its {@link BigDecimal} representation.
-     */
-    public BigDecimal toReal() {
-        BigDecimal transformedValue = new BigDecimal(this.getAmount());
-        return transformedValue.setScale(this.getPrecision());
+    public void setAssetSymbolType(AssetSymbolType assetSymbolType) {
+        this.assetSymbolType = assetSymbolType;
     }
 
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedAsset = new ByteArrayOutputStream()) {
-            serializedAsset.write(SteemJUtils.transformLongToByteArray(this.amount));
-            serializedAsset.write(SteemJUtils.transformByteToLittleEndian(this.precision));
-
-            serializedAsset
-                    .write(this.symbol.name().toUpperCase().getBytes(SteemJConfig.getInstance().getEncodingCharset()));
-            String filledAssetSymbol = this.symbol.name().toUpperCase();
-
-            for (int i = filledAssetSymbol.length(); i < 7; i++) {
-                serializedAsset.write(0x00);
-            }
-
-            return serializedAsset.toByteArray();
+            // TODO
+            return null;
         } catch (IOException e) {
             throw new SteemInvalidTransactionException(
                     "A problem occured while transforming an asset into a byte array.", e);
@@ -190,21 +120,13 @@ public class Asset implements ByteTransformable {
 
     @Override
     public boolean equals(Object otherAsset) {
-        if (this == otherAsset)
-            return true;
-        if (otherAsset == null || !(otherAsset instanceof Asset))
-            return false;
-        Asset other = (Asset) otherAsset;
-        return (this.getAmount().equals(other.getAmount()) && this.getSymbol().equals(other.getSymbol())
-                && this.getPrecision().equals(other.getPrecision()));
+        // TODO
+        return false;
     }
 
     @Override
     public int hashCode() {
-        int hashCode = 1;
-        hashCode = 31 * hashCode + (this.getAmount() == null ? 0 : this.getAmount().hashCode());
-        hashCode = 31 * hashCode + (this.getSymbol() == null ? 0 : this.getSymbol().hashCode());
-        hashCode = 31 * hashCode + (this.getPrecision() == null ? 0 : this.getPrecision().hashCode());
-        return hashCode;
+        // TODO
+        return 0;
     }
 }

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations.virtual;
 
@@ -27,7 +27,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -38,7 +38,7 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
 public class ReturnVestingDelegationOperation extends Operation {
     private AccountName account;
     @JsonProperty("vesting_shares")
-    private Asset vestingShares;
+    private LegacyAsset vestingShares;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -58,7 +58,7 @@ public class ReturnVestingDelegationOperation extends Operation {
     /**
      * @return the vestingShares
      */
-    public Asset getVestingShares() {
+    public LegacyAsset getVestingShares() {
         return vestingShares;
     }
 

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "api_savings_withdraw_object" object.
@@ -43,7 +43,7 @@ public class SavingsWithdraw {
     @JsonProperty("request_id")
     private UInteger requestId;
     @JsonProperty("amount")
-    private Asset amount;
+    private LegacyAsset amount;
     @JsonProperty("complete")
     private TimePointSec complete;
 
@@ -93,7 +93,7 @@ public class SavingsWithdraw {
     /**
      * @return the amount
      */
-    public Asset getAmount() {
+    public LegacyAsset getAmount() {
         return amount;
     }
 

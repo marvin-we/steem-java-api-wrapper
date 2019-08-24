@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol;
 
@@ -38,9 +38,9 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class Price implements ByteTransformable {
     @JsonProperty("base")
-    private Asset base;
-    @ JsonProperty("quote")
-    private Asset quote;
+    private LegacyAsset base;
+    @JsonProperty("quote")
+    private LegacyAsset quote;
 
     /**
      * Create a new price object by providing a <code>base</code> and a
@@ -70,7 +70,7 @@ public class Price implements ByteTransformable {
      *             have an amount less than 1.
      */
     @JsonCreator
-    public Price(@JsonProperty("base") Asset base, @ JsonProperty("quote") Asset quote) {
+    public Price(@JsonProperty("base") LegacyAsset base, @JsonProperty("quote") LegacyAsset quote) {
         this.base = base;
         this.quote = quote;
 
@@ -80,7 +80,7 @@ public class Price implements ByteTransformable {
     /**
      * @return The base asset.
      */
-    public Asset getBase() {
+    public LegacyAsset getBase() {
         return base;
     }
 
@@ -92,7 +92,7 @@ public class Price implements ByteTransformable {
      *             objects have not been provided, contain the same symbol or
      *             have an amount less than 1.
      */
-    public void setBase(Asset base) {
+    public void setBase(LegacyAsset base) {
         this.base = base;
 
         validate();
@@ -101,7 +101,7 @@ public class Price implements ByteTransformable {
     /**
      * @return The quote asset.
      */
-    public Asset getQuote() {
+    public LegacyAsset getQuote() {
         return quote;
     }
 
@@ -113,7 +113,7 @@ public class Price implements ByteTransformable {
      *             objects have not been provided, contain the same symbol or
      *             have an amount less than 1.
      */
-    public void setQuote(Asset quote) {
+    public void setQuote(LegacyAsset quote) {
         this.quote = quote;
 
         validate();
@@ -126,7 +126,7 @@ public class Price implements ByteTransformable {
      *            The asset to multiply.
      * @return The <code>asset</code> multiplied with this price.
      */
-    public Asset multiply(Asset asset) {
+    public LegacyAsset multiply(LegacyAsset asset) {
         if (asset == null) {
             throw new InvalidParameterException("The asset can't be null");
         } else if (asset.getSymbol().equals(this.getBase().getSymbol())) {
@@ -134,14 +134,14 @@ public class Price implements ByteTransformable {
                 throw new InvalidParameterException("Can't multiply as the price base is 0.");
             }
 
-            return new Asset((long) ((asset.getAmount() * this.getQuote().getAmount()) / this.getBase().getAmount()),
+            return new LegacyAsset((long) ((asset.getAmount() * this.getQuote().getAmount()) / this.getBase().getAmount()),
                     this.getQuote().getSymbol());
         } else if (asset.getSymbol().equals(this.getQuote().getSymbol())) {
             if (this.getQuote().getAmount() == 0) {
                 throw new InvalidParameterException("Can't multiply as the price quote is 0.");
             }
 
-            return new Asset((long) ((asset.getAmount() * this.getBase().getAmount()) / this.getQuote().getAmount()),
+            return new LegacyAsset((long) ((asset.getAmount() * this.getBase().getAmount()) / this.getQuote().getAmount()),
                     this.getBase().getSymbol());
         } else {
             throw new InvalidParameterException(

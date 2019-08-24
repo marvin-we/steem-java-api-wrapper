@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations;
 
@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.TransferFromSavingsOperation;
 
@@ -70,7 +70,7 @@ public class TransferFromSavingsOperationIT extends BaseTransactionVerificationI
         String memo = "";
         long requestId = 587;
 
-        Asset amount = new Asset(56660L, AssetSymbolType.STEEM);
+        LegacyAsset amount = new LegacyAsset(56660L, LegacyAssetSymbolType.STEEM);
 
         TransferFromSavingsOperation transferFromSavingsOperation = new TransferFromSavingsOperation(from, to, amount,
                 requestId, memo);

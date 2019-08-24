@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.util;
 
@@ -68,7 +68,7 @@ public class CondenserUtilsTest {
     @Test
     public void testGenerateSteemitMetadata() {
         assertThat(CondenserUtils.generateSteemitMetadata(DUMMY_TEXT_LINKS + DUMMY_TEXT_USER,
-                new String[] { "test", "dontvote" }, "steemj/0.4.1", "markdown"), equalTo(EXPECTED_JSON));
+                new String[] { "test", "dontvote" }, "steemj/0.4.1", "markdown", null), equalTo(EXPECTED_JSON));
     }
 
     /**

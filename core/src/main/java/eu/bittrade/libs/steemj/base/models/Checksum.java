@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models;
 
@@ -22,6 +22,7 @@ package eu.bittrade.libs.steemj.base.models;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Checksum extends Ripemd160 {
+
     /** Generated serial version uid. */
     private static final long serialVersionUID = 4420141835144717006L;
 

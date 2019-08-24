@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.condenser.models;
 
@@ -32,7 +32,7 @@ import eu.bittrade.libs.steemj.base.models.deserializer.OperationHistoryHashMapD
 import eu.bittrade.libs.steemj.base.models.deserializer.TagUsagePairDeserializer;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "extended_account" object.
@@ -42,7 +42,7 @@ import eu.bittrade.libs.steemj.protocol.Asset;
 public class ExtendedAccount extends Account {
     /** Convert vesting_shares to vesting Steem. */
     @JsonProperty("vesting_balance")
-    private Asset vestingBalance;
+    private LegacyAsset vestingBalance;
     // Original type is "share_type" which is a "safe<int64_t>".
     private long reputation;
     // The original tpye is map<uint64_t,applied_operation>
@@ -112,7 +112,7 @@ public class ExtendedAccount extends Account {
     /**
      * @return the vestingBalance
      */
-    public Asset getVestingBalance() {
+    public LegacyAsset getVestingBalance() {
         return vestingBalance;
     }
 
@@ -183,7 +183,7 @@ public class ExtendedAccount extends Account {
      * @param vestingBalance
      *            the vestingBalance to set
      */
-    public void setVestingBalance(Asset vestingBalance) {
+    public void setVestingBalance(LegacyAsset vestingBalance) {
         this.vestingBalance = vestingBalance;
     }
 

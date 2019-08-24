@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.deserializer;
 
@@ -24,15 +24,15 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AssetDeserializer extends JsonDeserializer<Asset> {
+public class AssetDeserializer extends JsonDeserializer<LegacyAsset> {
     @Override
-    public Asset deserialize(JsonParser jasonParser, DeserializationContext deserializationContext) throws IOException {
+    public LegacyAsset deserialize(JsonParser jasonParser, DeserializationContext deserializationContext) throws IOException {
         JsonToken currentToken = jasonParser.currentToken();
         if (currentToken != null && JsonToken.VALUE_STRING.equals(currentToken)) {
             String[] assetFields = jasonParser.getText().split(" ");
@@ -40,13 +40,13 @@ public class AssetDeserializer extends JsonDeserializer<Asset> {
             if (assetFields.length == 2) {
                 /*
                  * Set the symbol first which calculates the precision
-                 * internally.
+                 * internally. internally.
                  *
                  * The amount is provided as a double value while we need a long
                  * value for the byte representation so we transform the amount
                  * into a long value here.
                  */
-                return new Asset(new BigDecimal(assetFields[0]), AssetSymbolType.valueOf(assetFields[1]));
+                return new LegacyAsset(new BigDecimal(assetFields[0]), LegacyAssetSymbolType.valueOf(assetFields[1]));
             }
         }
 

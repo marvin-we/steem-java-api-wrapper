@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.account.by.key.models;
 
@@ -69,7 +69,7 @@ public class GetKeyReferencesArgs {
     public void setKeys(List<PublicKey> keys) {
         this.keys = keys;
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

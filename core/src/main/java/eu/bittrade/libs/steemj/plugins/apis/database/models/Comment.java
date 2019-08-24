@@ -12,24 +12,28 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;
 import org.joou.ULong;
 import org.joou.UShort;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.base.models.BeneficiaryRouteType;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents the Steem "api_comment_object".
@@ -37,6 +41,19 @@ import eu.bittrade.libs.steemj.protocol.Asset;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class Comment {
+
+    private final Map<String, Object> _properties = new HashMap<>();
+
+    @JsonAnySetter
+    public void setProperty(String key, Object value) {
+        this._properties.put(key, value);
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getProperties() {
+        return _properties;
+    }
+
     // Original type is comment_id_type.
     private long id;
     private String category;
@@ -82,9 +99,9 @@ public class Comment {
     @JsonProperty("reward_weight")
     private UShort rewardWeight;
     @JsonProperty("total_payout_value")
-    private Asset totalPayoutValue;
+    private LegacyAsset totalPayoutValue;
     @JsonProperty("curator_payout_value")
-    private Asset curatorPayoutValue;
+    private LegacyAsset curatorPayoutValue;
     // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("author_rewards")
     private long authorRewards;
@@ -95,7 +112,7 @@ public class Comment {
     @JsonProperty("root_comment")
     private long rootComment;
     @JsonProperty("max_accepted_payout")
-    private Asset maxAcceptedPayout;
+    private LegacyAsset maxAcceptedPayout;
     // Original type is uint16_t.
     @JsonProperty("percent_steem_dollars")
     private UShort percentSteemDollars;
@@ -271,14 +288,14 @@ public class Comment {
     /**
      * @return the totalPayoutValue
      */
-    public Asset getTotalPayoutValue() {
+    public LegacyAsset getTotalPayoutValue() {
         return totalPayoutValue;
     }
 
     /**
      * @return the curatorPayoutValue
      */
-    public Asset getCuratorPayoutValue() {
+    public LegacyAsset getCuratorPayoutValue() {
         return curatorPayoutValue;
     }
 
@@ -306,7 +323,7 @@ public class Comment {
     /**
      * @return the maxAcceptedPayout
      */
-    public Asset getMaxAcceptedPayout() {
+    public LegacyAsset getMaxAcceptedPayout() {
         return maxAcceptedPayout;
     }
 

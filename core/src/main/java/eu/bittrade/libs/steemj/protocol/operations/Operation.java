@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -66,6 +66,7 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.ShutdownWitnessOpeart
         @Type(value = AccountCreateOperation.class, name = "account_create"),
         @Type(value = AccountUpdateOperation.class, name = "account_update"),
         @Type(value = WitnessUpdateOperation.class, name = "witness_update"),
+        @Type(value = WitnessSetPropertiesOperation.class, name = "witness_set_properties"),
         @Type(value = AccountWitnessVoteOperation.class, name = "account_witness_vote"),
         @Type(value = AccountWitnessProxyOperation.class, name = "account_witness_proxy"),
         @Type(value = PowOperation.class, name = "pow"), @Type(value = CustomOperation.class, name = "custom"),
@@ -95,6 +96,8 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.ShutdownWitnessOpeart
         @Type(value = ClaimRewardBalanceOperation.class, name = "claim_reward_balance"),
         @Type(value = DelegateVestingSharesOperation.class, name = "delegate_vesting_shares"),
         @Type(value = AccountCreateWithDelegationOperation.class, name = "account_create_with_delegation"),
+        @Type(value = ClaimAccountOperation.class, name = "claim_account"),
+        @Type(value = CreateClaimedAccountOperation.class, name = "create_claimed_account"),
         // Virtual Operations
         @Type(value = AuthorRewardOperation.class, name = "author_reward"),
         @Type(value = CommentBenefactorRewardOperation.class, name = "comment_benefactor_reward"),
