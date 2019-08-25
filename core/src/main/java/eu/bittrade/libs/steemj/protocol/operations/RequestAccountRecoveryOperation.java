@@ -264,7 +264,7 @@ public class RequestAccountRecoveryOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
+    public void validate(List<ValidationType> validationsToSkip) {
         return;
     }
 }

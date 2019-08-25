@@ -103,7 +103,7 @@ public class SteemJConfig {
     private AddressPrefixType addressPrefix;
     private String chainId;
     private short steemJWeight;
-    private ValidationType validationLevel;
+    private List<ValidationType> validationsToSkip;
     private SynchronizationType synchronizationLevel;
     private LegacyAssetSymbolType dollarSymbol;
     private LegacyAssetSymbolType tokenSymbol;
@@ -134,7 +134,7 @@ public class SteemJConfig {
         this.addressPrefix = AddressPrefixType.STM;
         this.chainId = "0000000000000000000000000000000000000000000000000000000000000000";
         this.steemJWeight = 250;
-        this.validationLevel = ValidationType.ALL;
+        this.validationsToSkip = new ArrayList<>();
         this.synchronizationLevel = SynchronizationType.FULL;
         this.dollarSymbol = LegacyAssetSymbolType.SBD;
         this.tokenSymbol = LegacyAssetSymbolType.STEEM;
@@ -481,15 +481,17 @@ public class SteemJConfig {
     }
 
     /**
-     * Override the default validation level that SteemJ will use to validate if
-     * an Object contains valid information before broadcasting it to the Steem
-     * Node. By default SteemJ will validate as much as possible.
+     * By default, SteemJ will run some verification methods in several places.
+     * This e.g. includes the validation of JSON responses received from an API
+     * endpoint or the validation of Assets. This methods allows to specify
+     * which validations should be skipped (by default SteemJ will validate
+     * everything it can validate).
      * 
-     * @param validationLevel
-     *            The validation level to set.
+     * @param validationsToSkip
+     *            A list of validations SteemJ should not perform.
      */
-    public void setValidationLevel(ValidationType validationLevel) {
-        this.validationLevel = validationLevel;
+    public void setValidationsToSkip(List<ValidationType> validationsToSkip) {
+        this.validationsToSkip = validationsToSkip;
     }
 
     /**
@@ -575,16 +577,17 @@ public class SteemJConfig {
      * 
      * @return The currently configured validation level.
      */
-    public ValidationType getValidationLevel() {
-        return validationLevel;
+    public List<ValidationType> getValidationsToSkip() {
+        return validationsToSkip;
     }
 
     /**
-     * Get the currently configured {@link LegacyAssetSymbolType} for dollars (e.g.
-     * SBD). The configured symbol type is used to validate VESTS fields of
-     * operations.
+     * Get the currently configured {@link LegacyAssetSymbolType} for dollars
+     * (e.g. SBD). The configured symbol type is used to validate VESTS fields
+     * of operations.
      * 
-     * @return The currently configured {@link LegacyAssetSymbolType} for dollars.
+     * @return The currently configured {@link LegacyAssetSymbolType} for
+     *         dollars.
      */
     public LegacyAssetSymbolType getDollarSymbol() {
         return dollarSymbol;
@@ -602,11 +605,12 @@ public class SteemJConfig {
     }
 
     /**
-     * Get the currently configured {@link LegacyAssetSymbolType} for tokens (e.g.
-     * STEEM). The configured symbol type is used to validate VESTS fields of
-     * operations.
+     * Get the currently configured {@link LegacyAssetSymbolType} for tokens
+     * (e.g. STEEM). The configured symbol type is used to validate VESTS fields
+     * of operations.
      * 
-     * @return The currently configured {@link LegacyAssetSymbolType} for tokens.
+     * @return The currently configured {@link LegacyAssetSymbolType} for
+     *         tokens.
      */
     public LegacyAssetSymbolType getTokenSymbol() {
         return tokenSymbol;

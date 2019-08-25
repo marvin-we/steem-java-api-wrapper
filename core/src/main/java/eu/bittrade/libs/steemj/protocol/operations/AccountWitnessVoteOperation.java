@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -185,7 +186,7 @@ public class AccountWitnessVoteOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
+    public void validate(List<ValidationType> validationsToSkip) {
         return;
     }
 }

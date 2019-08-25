@@ -17,6 +17,7 @@
 package eu.bittrade.libs.steemj.interfaces;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import eu.bittrade.libs.steemj.enums.ValidationType;
 
@@ -29,10 +30,10 @@ public interface Validatable {
     /**
      * Use this method to verify that this object is valid.
      * 
-     * @param validationType
+     * @param validationsToSkip
      *            An indicator telling the method what should be validated.
      * @throws InvalidParameterException
      *             If a field does not fulfill the requirements.
      */
-    public void validate(ValidationType validationType);
+    public void validate(List<ValidationType> validationsToSkip);
 }

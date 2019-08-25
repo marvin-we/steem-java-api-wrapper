@@ -101,7 +101,8 @@ public class CommentOptionsOperation extends Operation {
      */
     @JsonCreator
     public CommentOptionsOperation(@JsonProperty("author") AccountName author,
-            @JsonProperty("permlink") Permlink permlink, @JsonProperty("max_accepted_payout") LegacyAsset maxAcceptedPayout,
+            @JsonProperty("permlink") Permlink permlink,
+            @JsonProperty("max_accepted_payout") LegacyAsset maxAcceptedPayout,
             @JsonProperty("percent_steem_dollars") Integer percentSteemDollars,
             @JsonProperty("allow_votes") boolean allowVotes,
             @JsonProperty("allow_curation_rewards") boolean allowCurationRewards,
@@ -141,8 +142,8 @@ public class CommentOptionsOperation extends Operation {
      */
     public CommentOptionsOperation(AccountName author, Permlink permlink, int percentSteemDollars,
             List<CommentOptionsExtension> extensions) {
-        this(author, permlink, new LegacyAsset(1000000000, SteemJConfig.getInstance().getDollarSymbol()), percentSteemDollars,
-                true, true, extensions);
+        this(author, permlink, new LegacyAsset(1000000000, SteemJConfig.getInstance().getDollarSymbol()),
+                percentSteemDollars, true, true, extensions);
     }
 
     /**
@@ -395,9 +396,9 @@ public class CommentOptionsOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
-            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
+            if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
                 if (!maxAcceptedPayout.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The maximal accepted payout must be in SBD.");
                 } else if (maxAcceptedPayout.getAmount() < 0) {
@@ -412,7 +413,7 @@ public class CommentOptionsOperation extends Operation {
 
             if (extensions != null) {
                 for (CommentOptionsExtension commentOptionsExtension : extensions) {
-                    commentOptionsExtension.validate(validationType);
+                    commentOptionsExtension.validate(validationsToSkip);
                 }
             }
         }

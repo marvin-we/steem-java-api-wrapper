@@ -190,8 +190,8 @@ public class CustomOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType) && requiredAuths.isEmpty()) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION) && requiredAuths.isEmpty()) {
             throw new InvalidParameterException("At least on account must be specified.");
         }
     }

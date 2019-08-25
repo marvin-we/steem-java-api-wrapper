@@ -37,6 +37,7 @@ import eu.bittrade.libs.steemj.base.models.serializer.BooleanSerializer;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCResponse;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
+import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.exceptions.SteemTimeoutException;
@@ -156,30 +157,25 @@ public class CommunicationHandler {
         if (mapper == null) {
             mapper = new ObjectMapper();
 
-            // mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT,
-            // true);
-            mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
-            mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
-            mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-            mapper.configure(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS, false);
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.configure(DeserializationFeature.FAIL_ON_UNRESOLVED_OBJECT_IDS, false);
-            mapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
-            // mapper.configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS,
-            // true);
-            // mapper.configure(DeserializationFeature.USE_BIG_INTEGER_FOR_INTS,
-            // true);
-            // mapper.configure(DeserializationFeature.USE_JAVA_ARRAY_FOR_JSON_ARRAY,
-            // false);
-            // mapper.configure(DeserializationFeature.USE_LONG_FOR_INTS, true);
-            mapper.configure(DeserializationFeature.WRAP_EXCEPTIONS, true);
-
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(SteemJConfig.getInstance().getDateTimePattern());
             simpleDateFormat.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
 
             mapper.setDateFormat(simpleDateFormat);
             mapper.setTimeZone(TimeZone.getTimeZone(SteemJConfig.getInstance().getTimeZoneId()));
             mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+
+            // In case JSON validation is skipped, the ObjectMapper should
+            // accept
+            // nearly everything.
+            if (SteemJConfig.getInstance().getValidationsToSkip().contains(ValidationType.SKIP_JSON_VALIDATION)) {
+                mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+                mapper.configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false);
+                mapper.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+                mapper.configure(DeserializationFeature.FAIL_ON_NUMBERS_FOR_ENUMS, false);
+                mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                mapper.configure(DeserializationFeature.FAIL_ON_UNRESOLVED_OBJECT_IDS, false);
+                mapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
+            }
 
             SimpleModule simpleModule = new SimpleModule("BooleanAsString", new Version(1, 0, 0, null, null, null));
             simpleModule.addSerializer(Boolean.class, new BooleanSerializer());

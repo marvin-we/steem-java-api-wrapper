@@ -270,11 +270,11 @@ public class SteemJIT extends BaseIT {
         final DynamicGlobalProperty properties = steemJ.getDynamicGlobalProperties();
 
         assertNotNull("expect properties", properties);
-        assertThat("expect head block number", properties.getHeadBlockNumber(), greaterThan(6000000L));
+        assertThat(properties.getHeadBlockNumber().longValue(), greaterThan(6000000L));
         assertTrue(properties.getHeadBlockId().toString().matches("[0-9a-f]{40}"));
         assertThat(properties.getHeadBlockId().getHashValue().longValue(), greaterThan(123L));
         assertThat(properties.getHeadBlockId().getNumberFromHash(), greaterThan(123));
-        assertThat(properties.getTotalPow(), greaterThan(new BigInteger("123")));
+        assertThat(properties.getTotalPow().toBigInteger(), greaterThan(new BigInteger("123")));
     }
 
     @Category({ IntegrationTest.class })

@@ -17,6 +17,7 @@
 package eu.bittrade.libs.steemj.protocol.operations;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -130,9 +131,9 @@ abstract class AbstractTransferOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_VALIDATION.equals(validationType) && amount.getAmount() <= 0) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)
+                && !validationsToSkip.contains(ValidationType.SKIP_VALIDATION) && amount.getAmount() <= 0) {
             throw new InvalidParameterException("Must transfer a nonzero amount.");
         }
     }

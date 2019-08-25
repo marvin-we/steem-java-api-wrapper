@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -418,9 +419,9 @@ public class EscrowTransferOperation extends AbstractEscrowOperation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
-            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
+            if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
                 if (fee.getAmount() < 0) {
                     throw new InvalidParameterException("The fee cannot be negative.");
                 } else if (sbdAmount.getAmount() < 0) {

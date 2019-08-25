@@ -82,8 +82,8 @@ public class CommentPayoutBeneficiaries extends CommentOptionsExtension {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!validationType.equals(ValidationType.SKIP_VALIDATION)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (this.getBeneficiaries().isEmpty()) {
                 throw new InvalidParameterException("Must specify at least one beneficiary.");
             } else if (this.getBeneficiaries().size() >= 128) {

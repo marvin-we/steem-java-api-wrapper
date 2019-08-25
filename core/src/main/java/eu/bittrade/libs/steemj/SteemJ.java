@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.joou.UByte;
 import org.joou.UInteger;
 import org.joou.ULong;
 import org.slf4j.Logger;
@@ -1506,8 +1507,8 @@ public class SteemJ {
      *             </ul>
      */
     public List<FollowApiObject> getFollowing(AccountName follower, AccountName startFollowing, FollowType type,
-            short limit) throws SteemCommunicationException, SteemResponseException {
-        return FollowApi.getFollowing(communicationHandler, follower, startFollowing, type, limit);
+            long limit) throws SteemCommunicationException, SteemResponseException {
+        return FollowApi.getFollowing(communicationHandler, follower, startFollowing, type, UInteger.valueOf(limit));
     }
 
     /**

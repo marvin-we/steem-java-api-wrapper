@@ -157,9 +157,9 @@ public class ClaimAccountOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
-            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
+            if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
                 if (!fee.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())) {
                     throw new InvalidParameterException("The fee must be paid in STEEM.");
                 } else if (fee.getAmount() < 0) {

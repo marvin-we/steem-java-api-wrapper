@@ -72,7 +72,8 @@ public class WitnessSetPropertiesOperation extends Operation {
      *            The chain properties the witness is voting for (see
      *            {@link #setProperties(ChainProperties)}).
      * @param fee
-     *            The fee to pay for this update (see {@link #setFee(LegacyAsset)}).
+     *            The fee to pay for this update (see
+     *            {@link #setFee(LegacyAsset)}).
      */
     @JsonCreator
     public WitnessSetPropertiesOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("url") URL url,
@@ -90,11 +91,11 @@ public class WitnessSetPropertiesOperation extends Operation {
     }
 
     /**
-     * Like {@link #WitnessSetPropertiesOperation(AccountName, URL, PublicKey,
-     * ChainProperties, Asset, List<FutureExtensions>)}, but creates a new
-     * ChainProperties object with default values (Account creation fee = 0.001
-     * STEEM, maximum block size = minimum block size * 2, SBD interest rate =
-     * 10%).
+     * Like
+     * {@link #WitnessSetPropertiesOperation(AccountName, URL, PublicKey, ChainProperties, LegacyAsset, List)},
+     * but creates a new ChainProperties object with default values (Account
+     * creation fee = 0.001 STEEM, maximum block size = minimum block size * 2,
+     * SBD interest rate = 10%).
      *
      * @param owner
      *            The Witness account name to set (see
@@ -105,7 +106,8 @@ public class WitnessSetPropertiesOperation extends Operation {
      *            The public part of the key used to sign a block (see
      *            {@link #setNewSigningKey(PublicKey)}).
      * @param fee
-     *            The fee to pay for this update (see {@link #setFee(LegacyAsset)}).
+     *            The fee to pay for this update (see
+     *            {@link #setFee(LegacyAsset)}).
      */
     public WitnessSetPropertiesOperation(AccountName owner, URL url, PublicKey blockSigningKey, LegacyAsset fee,
             List<FutureExtensions> extensions) {
@@ -301,9 +303,9 @@ public class WitnessSetPropertiesOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if ((!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_VALIDATION.equals(validationType))
+    public void validate(List<ValidationType> validationsToSkip) {
+        if ((!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)
+                && !validationsToSkip.contains(ValidationType.SKIP_VALIDATION))
                 && (this.getFee().getAmount() < 0
                         || !SteemJConfig.getInstance().getTokenSymbol().equals(this.getFee().getSymbol()))) {
             throw new InvalidParameterException("The fee needs to be a positive amount of STEEM.");

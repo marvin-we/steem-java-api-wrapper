@@ -311,8 +311,8 @@ public class CustomBinaryOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (id.length() > 32) {
                 throw new InvalidParameterException("The id must be less than 32 characters long.");
             } else if (requiredOwnerAuths.size() + requiredActiveAuths.size() + requiredPostingAuths.size() <= 0) {

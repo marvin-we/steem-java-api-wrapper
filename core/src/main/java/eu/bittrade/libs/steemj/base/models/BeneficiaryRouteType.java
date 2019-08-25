@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.base.models;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -133,8 +134,8 @@ public class BeneficiaryRouteType implements ByteTransformable, Validatable {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!validationType.equals(ValidationType.SKIP_VALIDATION) && this.getWeight() > 10000) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION) && this.getWeight() > 10000) {
             throw new InvalidParameterException("Cannot allocate more than 100% of rewards to one account.");
         }
     }

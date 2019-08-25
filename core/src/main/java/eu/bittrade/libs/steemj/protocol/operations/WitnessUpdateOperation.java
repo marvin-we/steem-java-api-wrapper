@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -84,7 +85,8 @@ public class WitnessUpdateOperation extends Operation {
      *            The chain properties the witness is voting for (see
      *            {@link #setProperties(ChainProperties)}).
      * @param fee
-     *            The fee to pay for this update (see {@link #setFee(LegacyAsset)}).
+     *            The fee to pay for this update (see
+     *            {@link #setFee(LegacyAsset)}).
      */
     @JsonCreator
     public WitnessUpdateOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("url") URL url,
@@ -115,7 +117,8 @@ public class WitnessUpdateOperation extends Operation {
      *            The public part of the key used to sign a block (see
      *            {@link #setBlockSigningKey(PublicKey)}).
      * @param fee
-     *            The fee to pay for this update (see {@link #setFee(LegacyAsset)}).
+     *            The fee to pay for this update (see
+     *            {@link #setFee(LegacyAsset)}).
      */
     public WitnessUpdateOperation(AccountName owner, URL url, PublicKey blockSigningKey, LegacyAsset fee) {
         super(false);
@@ -280,9 +283,9 @@ public class WitnessUpdateOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if ((!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_VALIDATION.equals(validationType))
+    public void validate(List<ValidationType> validationsToSkip) {
+        if ((!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)
+                && !validationsToSkip.contains(ValidationType.SKIP_VALIDATION))
                 && (this.getFee().getAmount() < 0
                         || !SteemJConfig.getInstance().getTokenSymbol().equals(this.getFee().getSymbol()))) {
             throw new InvalidParameterException("The fee needs to be a positive amount of STEEM.");
