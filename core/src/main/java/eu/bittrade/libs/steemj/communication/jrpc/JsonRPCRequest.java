@@ -22,6 +22,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -37,12 +39,17 @@ import eu.bittrade.libs.steemj.enums.SteemApiType;
 @JsonPropertyOrder({ "jsonrpc", "method", "params", "id" })
 public class JsonRPCRequest {
     /** A shared <code>Random</code> instance. */
-    private static Random randomGenerator = new Random();
+    private static final Random randomGenerator = new Random();
     /** The JSON RPC version. */
     private static final String JSONRPC = "2.0";
     /** The ID of this request. */
     private final long id = randomGenerator.nextLong();
     private String method;
+    /**
+     * The parameters of the request which should only be added in case there
+     * are parameters at all.
+     */
+    @JsonInclude(Include.NON_NULL)
     private Object params;
 
     /**
@@ -69,9 +76,9 @@ public class JsonRPCRequest {
     }
 
     /**
-     * Get the json-rpc version.
+     * Get the JSON-RPC version.
      * 
-     * @return The used json-rpc version.
+     * @return The used JSON-RPC version.
      */
     public String getJsonrpc() {
         return JSONRPC;
@@ -101,11 +108,13 @@ public class JsonRPCRequest {
      * @return The additional parameters.
      */
     public Object getParams() {
-        return params;
+        return this.params;
     }
 
     /**
-     * @return The json representation of this object.
+     * Tramsform this request object into its JSON representation.
+     *  
+     * @return The JSON representation of this object.
      * @throws JsonProcessingException
      *             If the object can not be transformed into valid json.
      */
