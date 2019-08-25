@@ -19,6 +19,10 @@ package eu.bittrade.libs.steemj.plugins.apis.database.models;
 import java.math.BigInteger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joou.UByte;
+import org.joou.UInteger;
+import org.joou.ULong;
+import org.joou.UShort;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,37 +31,35 @@ import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlobalProperties;
 import eu.bittrade.libs.steemj.protocol.AccountName;
 import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
- * This class represents the Steem "dynamic_global_property_api_obj" object.
+ * This class represents the Steem "dynamic_global_property_object" object.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class DynamicGlobalProperty {
-    // Original type is id_type which is a uint16_t so we use int here.
-    private int id;
-    // Original type is uint32_t so we use long here.
+    // Original type is id_type which is a uint16_t.
+    private UShort id;
     @JsonProperty("head_block_number")
-    private long headBlockNumber;
+    private UInteger headBlockNumber;
     @JsonProperty("head_block_id")
     private BlockId headBlockId;
     @JsonProperty("time")
     private TimePointSec time;
     @JsonProperty("current_witness")
     private AccountName currentWitness;
-    // The original type is uint64_t so we use BigInteger here.
     @JsonProperty("total_pow")
-    private BigInteger totalPow;
-    // Original type is uint32_t so we use long here.
+    private ULong totalPow;
     @JsonProperty("num_pow_witnesses")
-    private long numPowWitnesses;
+    private UInteger numPowWitnesses;
     @JsonProperty("virtual_supply")
     private Asset virtualSupply;
     @JsonProperty("current_supply")
     private Asset currentSupply;
     @JsonProperty("confidential_supply")
     private Asset confidentialSupply;
+    @JsonProperty("init_sbd_supply")
+    private Asset initSbdSupply;
     @JsonProperty("current_sbd_supply")
     private Asset currentSdbSupply;
     @JsonProperty("confidential_sbd_supply")
@@ -75,30 +77,52 @@ public class DynamicGlobalProperty {
     private Asset pendingRewardedVestingShares;
     @JsonProperty("pending_rewarded_vesting_steem")
     private Asset pendingRewardedVestingSteem;
-    // Original type is uint16_t so we use int here.
     @JsonProperty("sbd_interest_rate")
-    private int sdbInterestRate;
-    // Original type is uint16_t so we use int here.
+    /** This property defines the interest rate that SBD deposits receive. */
+    private UShort sdbInterestRate;
     @JsonProperty("sbd_print_rate")
-    private int sdbPrintRate;
-    // Original type is uint32_t so we use long here.
+    private UShort sdbPrintRate;
     @JsonProperty("maximum_block_size")
-    private long maximumBlockSize;
-    // Original type is uint64_t so we use BigInteger here.
+    private UInteger maximumBlockSize;
+    @JsonProperty("required_actions_partition_percent")
+    private UShort requiredActionsPartitionPercent;
     @JsonProperty("current_aslot")
-    private BigInteger currentAslot;
+    private ULong currentAslot;
     // Original type is uint128 so we use BigInteger here.
     @JsonProperty("recent_slots_filled")
     private BigInteger recentSlotsFilled;
-    // Original type is uint8_t so we use short here.
     @JsonProperty("participation_count")
-    private short participationCount;
-    // Original type is uint32_t so we use long here.
+    private UByte participationCount;
     @JsonProperty("last_irreversible_block_num")
-    private long lastIrreversibleBlockNum;
-    // Original type is uint32_t so we use long here.
+    private UInteger lastIrreversibleBlockNum;
     @JsonProperty("vote_power_reserve_rate")
-    private long votePowerReserveRate;
+    private UInteger votePowerReserveRate;
+    @JsonProperty("delegation_return_period")
+    private UInteger delegationReturnPeriod;
+    @JsonProperty("reverse_auction_seconds")
+    private ULong reverseAuctionSeconds;
+    @JsonProperty("available_account_subsidies")
+    private long availableAccountSubsidies;
+    @JsonProperty("sbd_stop_percent")
+    private UShort sbdStopPercent;
+    @JsonProperty("sbd_start_percent")
+    private UShort sbdStartPercent;
+    @JsonProperty("sbd_stop_adjust")
+    private UShort sbdStopAdjust;
+    @JsonProperty("next_maintenance_time")
+    private TimePointSec nextMaintenanceTime;
+    @JsonProperty("last_budget_time")
+    private TimePointSec lastBudgetTime;
+    @JsonProperty("content_reward_percent")
+    private UShort contentRewardPercent;
+    @JsonProperty("vesting_reward_percent")
+    private UShort vestingRewardPercent;
+    @JsonProperty("sps_fund_percent")
+    private UShort spsFundPercent;
+    @JsonProperty("sps_interval_ledger")
+    private Asset spsIntervalLedger;
+    @JsonProperty("downvote_pool_percent")
+    private UShort downvotePoolPercent;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -113,14 +137,14 @@ public class DynamicGlobalProperty {
     /**
      * @return the id
      */
-    public int getId() {
+    public UShort getId() {
         return id;
     }
 
     /**
      * @return the headBlockNumber
      */
-    public long getHeadBlockNumber() {
+    public UInteger getHeadBlockNumber() {
         return headBlockNumber;
     }
 
@@ -146,18 +170,16 @@ public class DynamicGlobalProperty {
     }
 
     /**
-     * @return The total POW accumulated, aka the sum of num_pow_witness at the
-     *         time new POW is added.
+     * @return the totalPow
      */
-    public BigInteger getTotalPow() {
+    public ULong getTotalPow() {
         return totalPow;
     }
 
     /**
-     * @return The current count of how many pending POW witnesses there are,
-     *         determines the difficulty of doing pow.
+     * @return the numPowWitnesses
      */
-    public long getNumPowWitnesses() {
+    public UInteger getNumPowWitnesses() {
         return numPowWitnesses;
     }
 
@@ -180,6 +202,13 @@ public class DynamicGlobalProperty {
      */
     public Asset getConfidentialSupply() {
         return confidentialSupply;
+    }
+
+    /**
+     * @return the initSbdSupply
+     */
+    public Asset getInitSbdSupply() {
+        return initSbdSupply;
     }
 
     /**
@@ -239,44 +268,42 @@ public class DynamicGlobalProperty {
     }
 
     /**
-     * @return This property defines the interest rate that SBD deposits
-     *         receive.
+     * @return the sdbInterestRate
      */
-    public int getSdbInterestRate() {
+    public UShort getSdbInterestRate() {
         return sdbInterestRate;
     }
 
     /**
      * @return the sdbPrintRate
      */
-    public int getSdbPrintRate() {
+    public UShort getSdbPrintRate() {
         return sdbPrintRate;
     }
 
     /**
-     * @return Maximum block size is decided by the set of active witnesses
-     *         which change every round. Each witness posts what they think the
-     *         maximum size should be as part of their witness properties, the
-     *         median size is chosen to be the maximum block size for the round.
-     *         <b>Notice:</b> The minimum value for maximum_block_size is
-     *         defined by the protocol to prevent the network from getting stuck
-     *         by witnesses attempting to set this too low.
+     * @return the maximumBlockSize
      */
-    public long getMaximumBlockSize() {
+    public UInteger getMaximumBlockSize() {
         return maximumBlockSize;
     }
 
     /**
-     * @return The current absolute slot number. Equal to the total number of
-     *         slots since genesis. Also equal to the total number of missed
-     *         slots plus head_block_number.
+     * @return the requiredActionsPartitionPercent
      */
-    public BigInteger getCurrentAslot() {
+    public UShort getRequiredActionsPartitionPercent() {
+        return requiredActionsPartitionPercent;
+    }
+
+    /**
+     * @return the currentAslot
+     */
+    public ULong getCurrentAslot() {
         return currentAslot;
     }
 
     /**
-     * @return The recentSlotsFilled - Used to compute witness participation.
+     * @return the recentSlotsFilled
      */
     public BigInteger getRecentSlotsFilled() {
         return recentSlotsFilled;
@@ -285,25 +312,113 @@ public class DynamicGlobalProperty {
     /**
      * @return the participationCount
      */
-    public short getParticipationCount() {
+    public UByte getParticipationCount() {
         return participationCount;
     }
 
     /**
      * @return the lastIrreversibleBlockNum
      */
-    public long getLastIrreversibleBlockNum() {
+    public UInteger getLastIrreversibleBlockNum() {
         return lastIrreversibleBlockNum;
     }
 
     /**
-     * @return The number of votes regenerated per day. Any user voting slower
-     *         than this rate will be "wasting" voting power through spillover;
-     *         any user voting faster than this rate will have their votes
-     *         reduced.
+     * @return the votePowerReserveRate
      */
-    public long getVotePowerReserveRate() {
+    public UInteger getVotePowerReserveRate() {
         return votePowerReserveRate;
+    }
+
+    /**
+     * @return the delegationReturnPeriod
+     */
+    public UInteger getDelegationReturnPeriod() {
+        return delegationReturnPeriod;
+    }
+
+    /**
+     * @return the reverseAuctionSeconds
+     */
+    public ULong getReverseAuctionSeconds() {
+        return reverseAuctionSeconds;
+    }
+
+    /**
+     * @return the availableAccountSubsidies
+     */
+    public long getAvailableAccountSubsidies() {
+        return availableAccountSubsidies;
+    }
+
+    /**
+     * @return the sbdStopPercent
+     */
+    public UShort getSbdStopPercent() {
+        return sbdStopPercent;
+    }
+
+    /**
+     * @return the sbdStartPercent
+     */
+    public UShort getSbdStartPercent() {
+        return sbdStartPercent;
+    }
+
+    /**
+     * @return the sbdStopAdjust
+     */
+    public UShort getSbdStopAdjust() {
+        return sbdStopAdjust;
+    }
+
+    /**
+     * @return the nextMaintenanceTime
+     */
+    public TimePointSec getNextMaintenanceTime() {
+        return nextMaintenanceTime;
+    }
+
+    /**
+     * @return the lastBudgetTime
+     */
+    public TimePointSec getLastBudgetTime() {
+        return lastBudgetTime;
+    }
+
+    /**
+     * @return the contentRewardPercent
+     */
+    public UShort getContentRewardPercent() {
+        return contentRewardPercent;
+    }
+
+    /**
+     * @return the vestingRewardPercent
+     */
+    public UShort getVestingRewardPercent() {
+        return vestingRewardPercent;
+    }
+
+    /**
+     * @return the spsFundPercent
+     */
+    public UShort getSpsFundPercent() {
+        return spsFundPercent;
+    }
+
+    /**
+     * @return the spsIntervalLedger
+     */
+    public Asset getSpsIntervalLedger() {
+        return spsIntervalLedger;
+    }
+
+    /**
+     * @return the downvotePoolPercent
+     */
+    public UShort getDownvotePoolPercent() {
+        return downvotePoolPercent;
     }
 
     @Override
