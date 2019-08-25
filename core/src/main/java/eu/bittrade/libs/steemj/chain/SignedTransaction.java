@@ -176,7 +176,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *             If the transaction can not be signed.
      */
     public void sign(String chainId) throws SteemInvalidTransactionException {
-        if (!SteemJConfig.getInstance().getValidationLevel().equals(ValidationType.SKIP_VALIDATION)) {
+        if (!SteemJConfig.getInstance().getValidationsToSkip().contains(ValidationType.SKIP_VALIDATION)) {
             this.validate();
         }
 
@@ -310,7 +310,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
                  * 
                  * TODO: Add a validation method to the Transaction Object?
                  */
-                operation.validate(SteemJConfig.getInstance().getValidationLevel());
+                operation.validate(SteemJConfig.getInstance().getValidationsToSkip());
                 serializedTransaction.write(operation.toByteArray());
             }
 

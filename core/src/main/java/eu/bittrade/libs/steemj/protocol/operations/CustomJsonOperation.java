@@ -233,8 +233,8 @@ public class CustomJsonOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (requiredPostingAuths.isEmpty() && requiredAuths.isEmpty()) {
                 throw new InvalidParameterException(
                         "At least one authority type (POSTING or ACTIVE) needs to be provided.");

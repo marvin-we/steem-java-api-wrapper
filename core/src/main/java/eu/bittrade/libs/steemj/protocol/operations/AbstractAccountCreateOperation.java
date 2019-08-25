@@ -17,6 +17,7 @@
 package eu.bittrade.libs.steemj.protocol.operations;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,8 +27,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -228,11 +229,11 @@ public abstract class AbstractAccountCreateOperation extends AbstractAccountOper
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
-            super.validate(validationType);
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
+            super.validate(validationsToSkip);
 
-            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationsToSkip)) {
                 if (!fee.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())) {
                     throw new InvalidParameterException("The fee must be paid in STEEM.");
                 } else if (fee.getAmount() < 0) {

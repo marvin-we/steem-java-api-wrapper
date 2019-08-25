@@ -17,6 +17,7 @@
 package eu.bittrade.libs.steemj.plugins.apis.follow.models.operations;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -145,8 +146,8 @@ public class ReblogOperation extends CustomJsonOperationPayload {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (this.getAccount() == null) {
                 throw new InvalidParameterException("The account cannot be null.");
             } else if (this.getAuthor() == null) {

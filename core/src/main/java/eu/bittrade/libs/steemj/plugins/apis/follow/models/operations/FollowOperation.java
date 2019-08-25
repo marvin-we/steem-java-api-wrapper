@@ -157,8 +157,8 @@ public class FollowOperation extends CustomJsonOperationPayload {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (this.getFollower() == null) {
                 throw new InvalidParameterException("The follower account cannot be null.");
             } else if (this.getFollowing() == null) {
