@@ -122,7 +122,7 @@ public class DatabaseApi {
      * 
      * @param communicationHandler
      * 
-     * @return The steem configuration.
+     * @return The STEEM configuration.
      * @throws SteemCommunicationException
      *             <ul>
      *             <li>If the server was not able to answer the request in the
@@ -149,7 +149,6 @@ public class DatabaseApi {
      * Get the global properties.
      * 
      * @param communicationHandler
-     * 
      * @return The dynamic global properties.
      * @throws SteemCommunicationException
      *             <ul>
@@ -178,7 +177,6 @@ public class DatabaseApi {
      * Get the witness schedule.
      * 
      * @param communicationHandler
-     * 
      * @return The witness schedule.
      * @throws SteemCommunicationException
      *             <ul>
