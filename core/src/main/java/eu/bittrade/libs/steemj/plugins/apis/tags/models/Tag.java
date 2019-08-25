@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.tags.models;
 
@@ -23,7 +23,7 @@ import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "tag_api_obj" object.
@@ -36,7 +36,7 @@ public class Tag {
     private String name;
     @JsonProperty("total_payouts")
     /** The total payouts for posts and comments using this tag. */
-    private Asset totalPayouts;
+    private LegacyAsset totalPayouts;
     @JsonProperty("net_votes")
     /** The number of votes made for posts and comments which used this tag. */
     private Integer netVotes;
@@ -66,7 +66,7 @@ public class Tag {
     /**
      * @return The sum of the paid amounts for posts using this tag.
      */
-    public Asset getTotalPayouts() {
+    public LegacyAsset getTotalPayouts() {
         return totalPayouts;
     }
 

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.enums;
 
@@ -105,7 +105,13 @@ public enum OperationType {
     /** The delegate_vesting_shares_operation type. */
     DELEGATE_VESTING_SHARES_OPERATION(40),
     /** The account_create_with_delegation_operation type. */
-    ACCOUNT_CREATE_WITH_DELEGATION_OPERATION(41);
+    ACCOUNT_CREATE_WITH_DELEGATION_OPERATION(41),
+    /** The claim_account_operation type */
+    CLAIM_ACCOUNT_OPERATION(42),
+    /** The create_claimed_account_operation type */
+    CREATE_CLAIMED_ACCOUNT_OPERATION(43),
+    /** The witness_set_properties_operation type */
+    WITNESS_SET_PROPERTIES_OPERATION(44);
 
     /**
      * The id of an operation. The id is used for the byte transformation and

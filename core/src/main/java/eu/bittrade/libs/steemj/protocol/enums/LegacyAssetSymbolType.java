@@ -12,10 +12,28 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
-package eu.bittrade.libs.steemj.chain.util;
+package eu.bittrade.libs.steemj.protocol.enums;
 
-public class Asset {
-
+/**
+ * This enum stores all available asset symbols.
+ * 
+ * @author <a href="http://steemit.com/@dez1337">dez1337</a>
+ */
+public enum LegacyAssetSymbolType {
+    /** Steem Power (SP) Symbol */
+    VESTS,
+    /** Steem Sybol */
+    STEEM,
+    /** Steem Backed Dollar (SBD) Symbol */
+    SBD,
+    /** Steem Dollar Symbol */
+    STMD,
+    /** Steem Sybol for the test network */
+    TESTS,
+    /** Steem Backed Dollar Symbol for the test network */
+    TBD,
+    /** Steem Dollar Symbol for the test network */
+    TSTD
 }

@@ -12,16 +12,15 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol;
-
-import java.util.Arrays;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spongycastle.crypto.digests.RIPEMD160Digest;
+import org.spongycastle.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;

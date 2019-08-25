@@ -12,15 +12,10 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj;
 
-/**
- * Category marker interface for integration tests.
- * 
- * @author <a href="http://steemit.com/@dez1337">dez1337</a>
- */
 public interface IntegrationTest {
 
 }

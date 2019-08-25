@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations.virtual;
 
@@ -32,7 +32,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.CurationRewardOperation;
 
@@ -48,7 +48,7 @@ public class CurationRewardOperationIT extends BaseITForOperationParsing {
     private static final AccountName EXPECTED_CURATOR = new AccountName("quinneaker");
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-quinneaker-re-joearnold-re-quinneaker-bounties-of-the-land-episode-7-preparing-for-winter-final-harvests-soon-20171003t161412134z");
-    private static final AssetSymbolType EXPECTED_REWARD_SYMBOL = AssetSymbolType.VESTS;
+    private static final LegacyAssetSymbolType EXPECTED_REWARD_SYMBOL = LegacyAssetSymbolType.VESTS;
     private static final BigDecimal EXPECTED_REWARD_VALUE_REAL = BigDecimal.valueOf(6.173331);
     private static final long EXPECTED_REWARD_VALUE = 6173331L;
 

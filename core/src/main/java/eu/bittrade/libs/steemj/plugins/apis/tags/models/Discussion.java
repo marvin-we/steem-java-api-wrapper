@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.tags.models;
 
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.plugins.apis.database.models.Comment;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents the Steem "discussion" object.
@@ -38,9 +38,9 @@ public class Discussion extends Comment {
     @JsonProperty("root_title")
     private String rootTitle;
     @JsonProperty("pending_payout_value")
-    private Asset pendingPayoutValue;
+    private LegacyAsset pendingPayoutValue;
     @JsonProperty("total_pending_payout_value")
-    private Asset totalPendingPayoutValue;
+    private LegacyAsset totalPendingPayoutValue;
     // Original type is vector<vote_state>.
     @JsonProperty("active_votes")
     private List<VoteState> activeVotes;
@@ -48,7 +48,7 @@ public class Discussion extends Comment {
     // Original type is "share_type" which is a "safe<int64_t>".
     @JsonProperty("author_reputation")
     private long authorReputation;
-    private Asset promoted;
+    private LegacyAsset promoted;
     // Original type is uint32_t
     @JsonProperty("body_length")
     private UInteger bodyLength;
@@ -83,14 +83,14 @@ public class Discussion extends Comment {
     /**
      * @return the pendingPayoutValue
      */
-    public Asset getPendingPayoutValue() {
+    public LegacyAsset getPendingPayoutValue() {
         return pendingPayoutValue;
     }
 
     /**
      * @return the totalPendingPayoutValue
      */
-    public Asset getTotalPendingPayoutValue() {
+    public LegacyAsset getTotalPendingPayoutValue() {
         return totalPendingPayoutValue;
     }
 
@@ -118,7 +118,7 @@ public class Discussion extends Comment {
     /**
      * @return the promoted
      */
-    public Asset getPromoted() {
+    public LegacyAsset getPromoted() {
         return promoted;
     }
 

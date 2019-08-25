@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol;
 
@@ -26,8 +26,7 @@ import java.security.InvalidParameterException;
 import org.junit.Test;
 
 import eu.bittrade.crypto.core.CryptoUtils;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 
 /**
  * Test the Asset object.
@@ -35,7 +34,7 @@ import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  *
  */
-public class AssetTest {
+public class LegacyAssetTest {
     private final String EXPECTED_VESTS_ASSET_BYTE_REPRESENTATION = "ce040000000000000656455354530000";
 
     private final String EXPECTED_STEEM_ASSET_BYTE_REPRESENTATION = "78e001000000000003535445454d0000";
@@ -47,7 +46,7 @@ public class AssetTest {
     private final String EXPECTED_TSTD_ASSET_BYTE_REPRESENTATION = "be9bb404000000000354535444000000";
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#toByteArray()}
      * method for the VESTS asset type.
      * 
      * @throws Exception
@@ -55,7 +54,7 @@ public class AssetTest {
      */
     @Test
     public void testVestsAssetToByteArray() throws Exception {
-        Asset vestsAsset = new Asset(1230, AssetSymbolType.VESTS);
+        LegacyAsset vestsAsset = new LegacyAsset(1230, LegacyAssetSymbolType.VESTS);
 
         assertThat(vestsAsset.getPrecision(), equalTo(6));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -63,7 +62,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#toByteArray()}
      * method for the STEEM asset type.
      * 
      * @throws Exception
@@ -71,7 +70,7 @@ public class AssetTest {
      */
     @Test
     public void testSteemAssetToByteArray() throws Exception {
-        Asset steemAsset = new Asset(123000, AssetSymbolType.STEEM);
+        LegacyAsset steemAsset = new LegacyAsset(123000, LegacyAssetSymbolType.STEEM);
 
         assertThat(steemAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -79,7 +78,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#toByteArray()}
      * method for the SBD asset type.
      * 
      * @throws Exception
@@ -87,7 +86,7 @@ public class AssetTest {
      */
     @Test
     public void testSbdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset(123, AssetSymbolType.SBD);
+        LegacyAsset sbdAsset = new LegacyAsset(123, LegacyAssetSymbolType.SBD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -95,7 +94,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#toByteArray()}
      * method for the STMD asset type.
      * 
      * @throws Exception
@@ -103,7 +102,7 @@ public class AssetTest {
      */
     @Test
     public void testStmdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset(56844, AssetSymbolType.STMD);
+        LegacyAsset sbdAsset = new LegacyAsset(56844, LegacyAssetSymbolType.STMD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -111,7 +110,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#toByteArray()}
      * method for the TESTS asset type.
      * 
      * @throws Exception
@@ -119,7 +118,7 @@ public class AssetTest {
      */
     @Test
     public void testTestsAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset(36741, AssetSymbolType.TESTS);
+        LegacyAsset sbdAsset = new LegacyAsset(36741, LegacyAssetSymbolType.TESTS);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -127,7 +126,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#toByteArray()}
      * method for the TBD asset type.
      * 
      * @throws Exception
@@ -135,7 +134,7 @@ public class AssetTest {
      */
     @Test
     public void testTbdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset(4547, AssetSymbolType.TBD);
+        LegacyAsset sbdAsset = new LegacyAsset(4547, LegacyAssetSymbolType.TBD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -143,7 +142,7 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#toByteArray()}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#toByteArray()}
      * method for the TSTD asset type.
      * 
      * @throws Exception
@@ -151,7 +150,7 @@ public class AssetTest {
      */
     @Test
     public void testTstdAssetToByteArray() throws Exception {
-        Asset sbdAsset = new Asset(78945214, AssetSymbolType.TSTD);
+        LegacyAsset sbdAsset = new LegacyAsset(78945214, LegacyAssetSymbolType.TSTD);
 
         assertThat(sbdAsset.getPrecision(), equalTo(3));
         assertThat("Expect that the asset object has the given byte representation.",
@@ -159,33 +158,33 @@ public class AssetTest {
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset#equals(Object)}
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset#equals(Object)}
      * method for the VESTS asset type.
      */
     @Test
     public void testAssetEqualsMethod() {
-        Asset asset = new Asset(115, AssetSymbolType.SBD);
+        LegacyAsset asset = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
 
-        Asset sameAsset = new Asset(new BigDecimal("0.115"), AssetSymbolType.SBD);
+        LegacyAsset sameAsset = new LegacyAsset(new BigDecimal("0.115"), LegacyAssetSymbolType.SBD);
 
-        Asset differentAsset = new Asset(100, AssetSymbolType.STEEM);
+        LegacyAsset differentAsset = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         assertThat(asset.equals(sameAsset), equalTo(true));
         assertThat(sameAsset.equals(differentAsset), equalTo(false));
     }
 
     /**
-     * Test the {@link eu.bittrade.libs.steemj.protocol.Asset} method for the
+     * Test the {@link eu.bittrade.libs.steemj.protocol.LegacyAsset} method for the
      * VESTS asset type.
      */
     @Test
     public void testAssetBigDecimalConstructor() {
-        new Asset(new BigDecimal("0.115"), AssetSymbolType.SBD);
-        new Asset(new BigDecimal("200.11"), AssetSymbolType.STEEM);
-        new Asset(new BigDecimal("2500.145111"), AssetSymbolType.VESTS);
+        new LegacyAsset(new BigDecimal("0.115"), LegacyAssetSymbolType.SBD);
+        new LegacyAsset(new BigDecimal("200.11"), LegacyAssetSymbolType.STEEM);
+        new LegacyAsset(new BigDecimal("2500.145111"), LegacyAssetSymbolType.VESTS);
 
         try {
-            new Asset(new BigDecimal("0.1151"), AssetSymbolType.SBD);
+            new LegacyAsset(new BigDecimal("0.1151"), LegacyAssetSymbolType.SBD);
             fail();
         } catch (InvalidParameterException e) {
             // Expected.

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -34,7 +34,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -46,11 +46,11 @@ public class ClaimRewardBalanceOperation extends Operation {
     @JsonProperty("account")
     private AccountName account;
     @JsonProperty("reward_steem")
-    private Asset rewardSteem;
+    private LegacyAsset rewardSteem;
     @JsonProperty("reward_sbd")
-    private Asset rewardSbd;
+    private LegacyAsset rewardSbd;
     @JsonProperty("reward_vests")
-    private Asset rewardVests;
+    private LegacyAsset rewardVests;
 
     /**
      * Create a new and empty claim reward balance operation.
@@ -60,19 +60,19 @@ public class ClaimRewardBalanceOperation extends Operation {
      *            {@link #setAccount(AccountName)}).
      * @param rewardSteem
      *            The amount of Steem to claim (see
-     *            {@link #setRewardSteem(Asset)}).
+     *            {@link #setRewardSteem(LegacyAsset)}).
      * @param rewardSbd
-     *            The amount of SBD to claim (see {@link #setRewardSbd(Asset)}).
+     *            The amount of SBD to claim (see {@link #setRewardSbd(LegacyAsset)}).
      * @param rewardVests
      *            The amount of VESTS to claim (see
-     *            {@link #setRewardVests(Asset)}).
+     *            {@link #setRewardVests(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the parameters does not fulfill the requirements.
      */
     @JsonCreator
     public ClaimRewardBalanceOperation(@JsonProperty("account") AccountName account,
-            @JsonProperty("reward_steem") Asset rewardSteem, @JsonProperty("reward_sbd") Asset rewardSbd,
-            @JsonProperty("reward_vests") Asset rewardVests) {
+            @JsonProperty("reward_steem") LegacyAsset rewardSteem, @JsonProperty("reward_sbd") LegacyAsset rewardSbd,
+            @JsonProperty("reward_vests") LegacyAsset rewardVests) {
         super(false);
 
         this.setAccount(account);
@@ -109,7 +109,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * 
      * @return The amount of Steem.
      */
-    public Asset getRewardSteem() {
+    public LegacyAsset getRewardSteem() {
         return rewardSteem;
     }
 
@@ -127,7 +127,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      *             have the symbol type STEEM or the amount to claim is
      *             negative.
      */
-    public void setRewardSteem(Asset rewardSteem) {
+    public void setRewardSteem(LegacyAsset rewardSteem) {
         if (rewardSteem == null) {
             throw new InvalidParameterException("The STEEM reward can't be null.");
         }
@@ -140,7 +140,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * 
      * @return The amount of Steem Doller.
      */
-    public Asset getRewardSbd() {
+    public LegacyAsset getRewardSbd() {
         return rewardSbd;
     }
 
@@ -157,7 +157,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      *             If the provided <code>rewardSbd</code> is null, does not have
      *             the symbol type SBD or the amount to claim is negative.
      */
-    public void setRewardSbd(Asset rewardSbd) {
+    public void setRewardSbd(LegacyAsset rewardSbd) {
         if (rewardSbd == null) {
             throw new InvalidParameterException("The SBD reward can't be null.");
         }
@@ -170,7 +170,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      * 
      * @return The amount of Vests.
      */
-    public Asset getRewardVests() {
+    public LegacyAsset getRewardVests() {
         return rewardVests;
     }
 
@@ -188,7 +188,7 @@ public class ClaimRewardBalanceOperation extends Operation {
      *             have the symbol type VESTS or the amount to claim is
      *             negative.
      */
-    public void setRewardVests(Asset rewardVests) {
+    public void setRewardVests(LegacyAsset rewardVests) {
         if (rewardVests == null) {
             throw new InvalidParameterException("The VESTS reward can't be null.");
         }

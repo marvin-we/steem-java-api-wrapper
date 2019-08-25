@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -33,7 +33,7 @@ import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -46,7 +46,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class AccountCreateWithDelegationOperation extends AbstractAccountCreateOperation {
     @JsonProperty("delegation")
-    private Asset delegation;
+    private LegacyAsset delegation;
     // Original type is "extension_type" which is an array of "future_extions".
     @JsonProperty("extensions")
     private List<FutureExtensions> extensions;
@@ -61,7 +61,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      *            {@link #setCreator(AccountName)}).
      * @param fee
      *            Set the fee the <code>creator</code> will pay (see
-     *            {@link #setFee(Asset)}).
+     *            {@link #setFee(LegacyAsset)}).
      * @param newAccountName
      *            Set the new account name (see
      *            {@link #setNewAccountName(AccountName)}).
@@ -69,7 +69,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      *            Set the amount of VESTS to delegate from the
      *            <code>creator</code> account to the
      *            <code>newAccountName</code> (see
-     *            {@link #setDelegation(Asset)}).
+     *            {@link #setDelegation(LegacyAsset)}).
      * @param owner
      *            The new owner authority or null if the owner authority should
      *            not be updated (see {@link #setOwner(Authority)}).
@@ -93,8 +93,8 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      */
     @JsonCreator
     public AccountCreateWithDelegationOperation(@JsonProperty("creator") AccountName creator,
-            @JsonProperty("fee") Asset fee, @JsonProperty("new_account_name") AccountName newAccountName,
-            @JsonProperty("delegation") Asset delegation, @JsonProperty("owner") Authority owner,
+            @JsonProperty("fee") LegacyAsset fee, @JsonProperty("new_account_name") AccountName newAccountName,
+            @JsonProperty("delegation") LegacyAsset delegation, @JsonProperty("owner") Authority owner,
             @JsonProperty("active") Authority active, @JsonProperty("posting") Authority posting,
             @JsonProperty("memo_key") PublicKey memoKey, @JsonProperty("json_metadata") String jsonMetadata,
             @JsonProperty("extensions") List<FutureExtensions> extensions) {
@@ -118,7 +118,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      * 
      * @return The amount of VESTS delegated to the new account.
      */
-    public Asset getDelegation() {
+    public LegacyAsset getDelegation() {
         return delegation;
     }
 
@@ -132,7 +132,7 @@ public class AccountCreateWithDelegationOperation extends AbstractAccountCreateO
      *             If the <code>fee</code> is null, of symbol type VESTS or less
      *             than 0.
      */
-    public void setDelegation(Asset delegation) {
+    public void setDelegation(LegacyAsset delegation) {
         this.delegation = SteemJUtils.setIfNotNull(delegation, "The delegation can't be null.");
     }
 

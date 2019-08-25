@@ -9,14 +9,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class GetSmtNextIdentifierReturn {
     // TODO: vector< asset_symbol_type > nais;
-    
+
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
     private GetSmtNextIdentifierReturn() {
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

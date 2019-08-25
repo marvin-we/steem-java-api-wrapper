@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations.virtual;
 
@@ -30,7 +30,7 @@ import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
 
@@ -43,7 +43,7 @@ public class ProducerRewardOperationIT extends BaseITForOperationParsing {
     private static final int BLOCK_NUMBER_CONTAINING_OPERATION = 16212111;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_PRODUCER = "xeldal";
-    private static final AssetSymbolType EXPECTED_VESTS_SYMBOL = AssetSymbolType.VESTS;
+    private static final LegacyAssetSymbolType EXPECTED_VESTS_SYMBOL = LegacyAssetSymbolType.VESTS;
     private static final BigDecimal EXPECTED_VESTS_VALUE_REAL = BigDecimal.valueOf(390.97665);
     private static final long EXPECTED_VESTS_VALUE = 390976650L;
 

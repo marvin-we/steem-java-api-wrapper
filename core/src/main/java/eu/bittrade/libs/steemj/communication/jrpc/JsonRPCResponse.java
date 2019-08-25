@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.communication.jrpc;
 
@@ -93,8 +93,8 @@ public class JsonRPCResponse {
      * 
      * &#64;param id The request id to compare with.
      * &#64;param response The JSON returned from the node.
-     * @return <code>true</code> if the <code>response</code> contains the
-     *         <code>id</code> or <code>false</code> if not.
+     * &#64;return <code>true</code> if the <code>response</code> contains the
+     * <code>id</code> or <code>false</code> if not.
      */
     private boolean hasExpectedId(long id, ObjectNode response) {
         return response.has(ID_FIELD_NAME) && response.get(ID_FIELD_NAME) != null

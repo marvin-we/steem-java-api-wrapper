@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.chain;
 
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "vesting_delegation_object" object.
@@ -38,7 +38,7 @@ public class VestingDelegation {
     @JsonProperty("delegatee")
     private AccountName delegatee;
     @JsonProperty("vesting_shares")
-    private Asset vestingShares;
+    private LegacyAsset vestingShares;
     @JsonProperty("min_delegation_time")
     private TimePointSec minDelegationTime;
 
@@ -97,7 +97,7 @@ public class VestingDelegation {
     /**
      * @return the vestingShares
      */
-    public Asset getVestingShares() {
+    public LegacyAsset getVestingShares() {
         return vestingShares;
     }
 
@@ -105,7 +105,7 @@ public class VestingDelegation {
      * @param vestingShares
      *            the vestingShares to set
      */
-    public void setVestingShares(Asset vestingShares) {
+    public void setVestingShares(LegacyAsset vestingShares) {
         this.vestingShares = vestingShares;
     }
 

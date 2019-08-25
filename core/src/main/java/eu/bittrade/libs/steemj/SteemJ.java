@@ -40,13 +40,17 @@ import eu.bittrade.libs.steemj.base.models.ChainProperties;
 import eu.bittrade.libs.steemj.base.models.CommentOptionsExtension;
 import eu.bittrade.libs.steemj.base.models.CommentPayoutBeneficiaries;
 import eu.bittrade.libs.steemj.base.models.FeedHistory;
+import eu.bittrade.libs.steemj.base.models.LiquidityBalance;
 import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.base.models.ScheduledHardfork;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.communication.CommunicationHandler;
+import eu.bittrade.libs.steemj.communication.jrpc.JsonRPCRequest;
 import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
+import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.RewardFundType;
+import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
@@ -68,6 +72,7 @@ import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedDynamicGlob
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.ExtendedLimitOrder;
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.State;
 import eu.bittrade.libs.steemj.plugins.apis.database.DatabaseApi;
+import eu.bittrade.libs.steemj.plugins.apis.database.models.Config;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.DynamicGlobalProperty;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.OrderBook;
 import eu.bittrade.libs.steemj.plugins.apis.database.models.RewardFund;
@@ -109,12 +114,12 @@ import eu.bittrade.libs.steemj.plugins.apis.witness.models.AccountBandwidth;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.GetAccountBandwidthArgs;
 import eu.bittrade.libs.steemj.plugins.apis.witness.models.ReserveRatioObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.BlockHeader;
 import eu.bittrade.libs.steemj.protocol.Price;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.protocol.SignedBlock;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
@@ -141,7 +146,7 @@ public class SteemJ {
     private static final String NO_DEFAULT_ACCOUNT_ERROR_MESSAGE = "You try to use a simplified operation without having a default account configured in SteemJConfig. Please configure a default account or use another method.";
     private static final String MARKDOWN = "markdown";
 
-    private CommunicationHandler communicationHandler;
+    private static CommunicationHandler communicationHandler;
 
     /**
      * Initialize the SteemJ.
@@ -2099,25 +2104,25 @@ public class SteemJ {
     // ## UTILITY METHODS ######################################################
     // #########################################################################
 
-    public static Asset steemToSbd(Price price, Asset steemAsset) {
-        if (steemAsset == null || !steemAsset.getSymbol().equals(AssetSymbolType.STEEM)) {
+    public static LegacyAsset steemToSbd(Price price, LegacyAsset steemAsset) {
+        if (steemAsset == null || !steemAsset.getSymbol().equals(LegacyAssetSymbolType.STEEM)) {
             throw new InvalidParameterException("The asset needs be of SymbolType STEEM.");
         }
 
         if (price == null) {
-            return new Asset(0, AssetSymbolType.SBD);
+            return new LegacyAsset(0, LegacyAssetSymbolType.SBD);
         }
 
         return price.multiply(steemAsset);
     }
 
-    public static Asset sbdToSteem(Price price, Asset sbdAsset) {
-        if (sbdAsset == null || !sbdAsset.getSymbol().equals(AssetSymbolType.SBD)) {
+    public static LegacyAsset sbdToSteem(Price price, LegacyAsset sbdAsset) {
+        if (sbdAsset == null || !sbdAsset.getSymbol().equals(LegacyAssetSymbolType.SBD)) {
             throw new InvalidParameterException("The asset needs be of SymbolType STEEM.");
         }
 
         if (price == null) {
-            return new Asset(0, AssetSymbolType.STEEM);
+            return new LegacyAsset(0, LegacyAssetSymbolType.STEEM);
         }
 
         return price.multiply(sbdAsset);
@@ -2895,7 +2900,9 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags);
+        // TODO: Readd 
+        // return createPost(SteemJConfig.getInstance().getDefaultAccount(), title, content, tags);
+        return null;
     }
 
     /**
@@ -2937,7 +2944,8 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public CommentOperation createPost(AccountName authorThatPublishsThePost, String title, String content,
+    /* TODO: Readd
+   
             String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         if (tags == null || tags.length < 1 || tags.length > 5) {
@@ -3001,6 +3009,7 @@ public class SteemJ {
 
         return commentOperation;
     }
+      */
 
     /**
      * Use this method to create a new comment.
@@ -3066,8 +3075,10 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
-                permlinkOfThePostOrCommentToReplyTo, content, tags);
+        // TODO: Readd 
+        //return createComment(SteemJConfig.getInstance().getDefaultAccount(), authorOfThePostOrCommentToReplyTo,
+        //        permlinkOfThePostOrCommentToReplyTo, content, tags);
+        return null;
     }
 
     /**
@@ -3112,6 +3123,8 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
+    // TODO: Readd 
+    /*
     public CommentOperation createComment(AccountName authorThatPublishsTheComment,
             AccountName authorOfThePostOrCommentToReplyTo, Permlink permlinkOfThePostOrCommentToReplyTo, String content,
             String[] tags)
@@ -3175,6 +3188,7 @@ public class SteemJ {
 
         return commentOperation;
     }
+    */
 
     /**
      * Use this method to update an existing post.
@@ -3244,8 +3258,10 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
-                tags);
+        // TODO: Readd 
+        //return updatePost(SteemJConfig.getInstance().getDefaultAccount(), permlinkOfThePostToUpdate, title, content,
+        //        tags);
+        return null;
     }
 
     /**
@@ -3294,6 +3310,8 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
+    // TODO: Readd 
+    /*
     public CommentOperation updatePost(AccountName authorOfThePostToUpdate, Permlink permlinkOfThePostToUpdate,
             String title, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
@@ -3324,6 +3342,7 @@ public class SteemJ {
 
         return commentOperation;
     }
+    */
 
     /**
      * Use this method to update an existing comment.
@@ -3397,8 +3416,10 @@ public class SteemJ {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
         }
 
-        return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
-                originalPermlinkOfTheCommentToUpdate, content, tags);
+        // TODO: Readd 
+        //return updateComment(SteemJConfig.getInstance().getDefaultAccount(), parentAuthor, parentPermlink,
+         //       originalPermlinkOfTheCommentToUpdate, content, tags);
+        return null;
     }
 
     /**
@@ -3450,6 +3471,8 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
+    // TODO: Readd 
+    /*
     public CommentOperation updateComment(AccountName originalAuthorOfTheCommentToUpdate, AccountName parentAuthor,
             Permlink parentPermlink, Permlink originalPermlinkOfTheCommentToUpdate, String content, String[] tags)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
@@ -3476,6 +3499,7 @@ public class SteemJ {
 
         return commentOperation;
     }
+    */
 
     /**
      * Use this method to remove a comment or a post.
@@ -3609,7 +3633,7 @@ public class SteemJ {
      * transfer from. If no default account has been provided, this method will
      * throw an error. If you do not want to configure the following account as
      * a default account, please use the
-     * {@link #transfer(AccountName, AccountName, Asset, String)} method and
+     * {@link #transfer(AccountName, AccountName, LegacyAsset, String)} method and
      * provide the <code>from</code> account separately.</li>
      * </ul>
      *
@@ -3618,8 +3642,8 @@ public class SteemJ {
      *            {@link SteemJConfig#getDefaultAccount() DefaultAccount} should
      *            transfer currency to.
      * @param amount
-     *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType}
+     *            An {@link LegacyAsset} object containing the Asset type (see
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType}
      *            and the amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
@@ -3644,7 +3668,7 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public TransferOperation transfer(AccountName to, Asset amount, String memo)
+    public TransferOperation transfer(AccountName to, LegacyAsset amount, String memo)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
@@ -3672,8 +3696,8 @@ public class SteemJ {
      * @param to
      *            The account to which to transfer currency.
      * @param amount
-     *            An {@link Asset} object containing the Asset type (see
-     *            {@link eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType}
+     *            An {@link LegacyAsset} object containing the Asset type (see
+     *            {@link eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType}
      *            and the amount to transfer.
      * @param memo
      *            Message include with transfer (255 char max)
@@ -3698,7 +3722,7 @@ public class SteemJ {
      *             If one of the provided parameters does not fulfill the
      *             requirements described above.
      */
-    public TransferOperation transfer(AccountName from, AccountName to, Asset amount, String memo)
+    public TransferOperation transfer(AccountName from, AccountName to, LegacyAsset amount, String memo)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         TransferOperation transferOperation = new TransferOperation(from, to, amount, memo);
         ArrayList<Operation> operations = new ArrayList<>();
@@ -3792,9 +3816,9 @@ public class SteemJ {
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         // Get extended account info to determine reward balances
         ExtendedAccount extendedAccount = this.getAccounts(Lists.newArrayList(accountName)).get(0);
-        Asset steemReward = extendedAccount.getRewardSteemBalance();
-        Asset sbdReward = extendedAccount.getRewardSdbBalance();
-        Asset vestingReward = extendedAccount.getRewardVestingBalance();
+        LegacyAsset steemReward = extendedAccount.getRewardSteemBalance();
+        LegacyAsset sbdReward = extendedAccount.getRewardSdbBalance();
+        LegacyAsset vestingReward = extendedAccount.getRewardVestingBalance();
 
         // Create claim operation based on available reward balances
         ClaimRewardBalanceOperation claimOperation = new ClaimRewardBalanceOperation(accountName, steemReward,
@@ -3845,7 +3869,7 @@ public class SteemJ {
      * @throws SteemInvalidTransactionException
      *             If there is a problem while signing the transaction.
      */
-    public void delegateVestingShares(AccountName delegatee, Asset vestingShares)
+    public void delegateVestingShares(AccountName delegatee, LegacyAsset vestingShares)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         if (SteemJConfig.getInstance().getDefaultAccount().isEmpty()) {
             throw new InvalidParameterException(NO_DEFAULT_ACCOUNT_ERROR_MESSAGE);
@@ -3856,7 +3880,7 @@ public class SteemJ {
 
     /**
      * This method is like the
-     * {@link #delegateVestingShares(AccountName, AccountName, Asset)} method,
+     * {@link #delegateVestingShares(AccountName, AccountName, LegacyAsset)} method,
      * but allows you to define the author account separately instead of using
      * the {@link SteemJConfig#getDefaultAccount() DefaultAccount}.
      * 
@@ -3883,7 +3907,7 @@ public class SteemJ {
      * @throws SteemInvalidTransactionException
      *             If there is a problem while signing the transaction.
      */
-    public void delegateVestingShares(AccountName delegator, AccountName delegatee, Asset vestingShares)
+    public void delegateVestingShares(AccountName delegator, AccountName delegatee, LegacyAsset vestingShares)
             throws SteemCommunicationException, SteemResponseException, SteemInvalidTransactionException {
         DelegateVestingSharesOperation delegateVestingSharesOperation = new DelegateVestingSharesOperation(delegator,
                 delegatee, vestingShares);
@@ -3896,4 +3920,84 @@ public class SteemJ {
         signedTransaction.sign();
         this.broadcastTransaction(signedTransaction);
     }
+
+	/**
+	 * Get the configuration.
+	 * 
+	 * @return The steem configuration.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 */
+	public static Config getConfig() throws SteemCommunicationException, SteemResponseException {
+		String[] parameters = {};
+		JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_CONFIG, parameters);
+
+		return communicationHandler.performRequest(requestObject, Config.class).get(0);
+	}
+
+	/**
+	 * Get the liquidity queue for a specified account.
+	 * 
+	 * @param accoutName
+	 *            The name of the account you want to request the queue entries for.
+	 * @param limit
+	 *            Number of results.
+	 * @return A list of liquidity queue entries.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 */
+	public static List<LiquidityBalance> getLiquidityQueue(AccountName accoutName, int limit) throws SteemCommunicationException, SteemResponseException {
+		Object[] parameters = { accoutName.getName(), String.valueOf(limit) };
+		JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_LIQUIDITY_QUEUE, parameters);
+		return communicationHandler.performRequest(requestObject, LiquidityBalance.class);
+	}
+
+	/**
+	 * Get the hardfork version the node you are connected to is using.
+	 * 
+	 * @return The hardfork version that the connected node is running on.
+	 * @throws SteemCommunicationException
+	 *             <ul>
+	 *             <li>If the server was not able to answer the request in the given
+	 *             time (see
+	 *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+	 *             setResponseTimeout}).</li>
+	 *             <li>If there is a connection problem.</li>
+	 *             </ul>
+	 * @throws SteemResponseException
+	 *             <ul>
+	 *             <li>If the SteemJ is unable to transform the JSON response into a
+	 *             Java object.</li>
+	 *             <li>If the Server returned an error object.</li>
+	 *             </ul>
+	 */
+	public String getHardforkVersion() throws SteemCommunicationException, SteemResponseException {
+		String[] parameters = {};
+		JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.DATABASE_API, RequestMethod.GET_HARDFORK_VERSION, parameters);
+		return communicationHandler.performRequest(requestObject, String.class).get(0);
+	}
 }

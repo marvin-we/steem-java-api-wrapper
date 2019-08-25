@@ -12,12 +12,12 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.tags;
 
 public class TagsApiIT {
-    DECLARE_API(
+    /*DECLARE_API(
             (get_trending_tags)
             (get_tags_used_by_author)
             (get_discussion)
@@ -38,5 +38,5 @@ public class TagsApiIT {
             (get_replies_by_last_update)
             (get_discussions_by_author_before_date)
             (get_active_votes)
-         )
+         )*/
 }

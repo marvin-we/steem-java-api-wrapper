@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations;
 
@@ -29,8 +29,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.block.models.ExtendedSignedBlock;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOptionsOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -47,7 +47,7 @@ public class CommentOptionsOperationParsingIT extends BaseITForOperationParsing 
     private static final String EXPECTED_AUTHOR = "rihchie.ebb";
     private static final String EXPECTED_PERMANENT_LINK = "giving-a-farewell-speech";
     private static final boolean EXPECTED_VOTES_ALLOWED = true;
-    private static final Asset EXPECTED_ASSET = new Asset(1000000000, AssetSymbolType.SBD);
+    private static final LegacyAsset EXPECTED_ASSET = new LegacyAsset(1000000000, LegacyAssetSymbolType.SBD);
 
     /**
      * Prepare all required fields used by this test class.

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.chain;
 
@@ -212,7 +212,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      *             {@link eu.bittrade.libs.steemj.configuration.PrivateKeyStorage}.
      */
     @JsonIgnore
-    protected List<ECKey> getRequiredSignatureKeys() throws SteemInvalidTransactionException {
+	public List<ECKey> getRequiredSignatureKeys() throws SteemInvalidTransactionException {
         List<ECKey> requiredSignatures = new ArrayList<>();
         Map<SignatureObject, PrivateKeyType> requiredAuthorities = getRequiredAuthorities();
 
@@ -294,7 +294,7 @@ public class SignedTransaction extends Transaction implements ByteTransformable,
      * @throws SteemInvalidTransactionException
      *             If the transaction can not be signed.
      */
-    protected byte[] toByteArray(String chainId) throws SteemInvalidTransactionException {
+    public byte[] toByteArray(String chainId) throws SteemInvalidTransactionException {
         try (ByteArrayOutputStream serializedTransaction = new ByteArrayOutputStream()) {
             if (chainId != null && !chainId.isEmpty()) {
                 serializedTransaction.write(CryptoUtils.HEX.decode(chainId));

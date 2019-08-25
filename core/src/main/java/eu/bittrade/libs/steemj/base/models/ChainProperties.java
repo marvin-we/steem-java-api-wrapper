@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models;
 
@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
@@ -37,7 +37,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
  */
 public class ChainProperties implements ByteTransformable {
     @JsonProperty("account_creation_fee")
-    private Asset accountCreationFee;
+    private LegacyAsset accountCreationFee;
     // Original type is uint32_t so we use long here.
     @JsonProperty("maximum_block_size")
     private long maximumBlockSize;
@@ -53,7 +53,7 @@ public class ChainProperties implements ByteTransformable {
      * @param sdbInterestRate
      */
     @JsonCreator
-    public ChainProperties(@JsonProperty("account_creation_fee") Asset accountCreationFee,
+    public ChainProperties(@JsonProperty("account_creation_fee") LegacyAsset accountCreationFee,
             @JsonProperty("maximum_block_size") long maximumBlockSize,
             @JsonProperty("sbd_interest_rate") int sdbInterestRate) {
         this.setAccountCreationFee(accountCreationFee);
@@ -64,7 +64,7 @@ public class ChainProperties implements ByteTransformable {
     /**
      * @return The fee that needs to be paid when a new account is created.
      */
-    public Asset getAccountCreationFee() {
+    public LegacyAsset getAccountCreationFee() {
         return accountCreationFee;
     }
 
@@ -82,7 +82,7 @@ public class ChainProperties implements ByteTransformable {
      * @throws InvalidParameterException
      *             If the fee is not present or less than 0.
      */
-    public void setAccountCreationFee(Asset accountCreationFee) {
+    public void setAccountCreationFee(LegacyAsset accountCreationFee) {
         if (accountCreationFee == null || accountCreationFee.getAmount() <= 0) {
             throw new InvalidParameterException("The account creation fee needs to be greater than 0.");
         }

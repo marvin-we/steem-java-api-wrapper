@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.account.history;
 
@@ -71,11 +71,12 @@ public class AccountHistoryApi {
      *             </ul>
      */
     public static GetOpsInBlockReturn getOpsInBlock(CommunicationHandler communicationHandler,
-            GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
+           GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
+    	 /*   JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
                 RequestMethod.GET_OPS_IN_BLOCK, getOpsInBlockArgs);
 
-        return communicationHandler.performRequest(requestObject, GetOpsInBlockReturn.class).get(0);
+        return communicationHandler.performRequest(requestObject, GetOpsInBlockReturn.class).get(0);*/
+        return null;
     }
 
     /**

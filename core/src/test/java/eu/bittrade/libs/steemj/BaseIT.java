@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj;
 
@@ -28,9 +28,6 @@ import eu.bittrade.libs.steemj.enums.SynchronizationType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 
-/**
- * @author Anthony Martin
- */
 public abstract class BaseIT extends BaseTest {
     protected static SteemJConfig config;
     protected static SteemJ steemJ;

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations;
 
@@ -30,9 +30,9 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Price;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.FeedPublishOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -67,8 +67,8 @@ public class FeedPublishOperationIT extends BaseTransactionVerificationIT {
                 STEEMNET_ENDPOINT_IDENTIFIER);
 
         // 1 STEEM = 1.15 SBD
-        Asset base = new Asset(115, AssetSymbolType.SBD);
-        Asset quote = new Asset(100, AssetSymbolType.STEEM);
+        LegacyAsset base = new LegacyAsset(115, LegacyAssetSymbolType.SBD);
+        LegacyAsset quote = new LegacyAsset(100, LegacyAssetSymbolType.STEEM);
 
         Price exchangeRate = new Price(base, quote);
         AccountName publisher = new AccountName("dez1337");

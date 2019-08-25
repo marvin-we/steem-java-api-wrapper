@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations.virtual;
 
@@ -26,7 +26,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
@@ -40,7 +40,7 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
 public class CommentRewardOperation extends Operation {
     private AccountName author;
     private Permlink permlink;
-    private Asset payout;
+    private LegacyAsset payout;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -73,7 +73,7 @@ public class CommentRewardOperation extends Operation {
      * 
      * @return The payout.
      */
-    public Asset getPayout() {
+    public LegacyAsset getPayout() {
         return payout;
     }
 

@@ -9,14 +9,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  */
 public class GetTransactionHexReturn {
     // TODO: std::string hex;
-    
+
     /**
      * This object is only used to wrap the JSON response in a POJO, so
      * therefore this class should not be instantiated.
      */
     private GetTransactionHexReturn() {
     }
-    
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);

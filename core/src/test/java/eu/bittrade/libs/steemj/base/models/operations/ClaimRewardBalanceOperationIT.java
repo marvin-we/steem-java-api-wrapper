@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations;
 
@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.ClaimRewardBalanceOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -69,9 +69,9 @@ public class ClaimRewardBalanceOperationIT extends BaseTransactionVerificationIT
 
         AccountName account = new AccountName("dez1337");
 
-        Asset rewardSbd = new Asset(1, AssetSymbolType.SBD);
-        Asset rewardSteem = new Asset(2, AssetSymbolType.STEEM);
-        Asset rewardVests = new Asset(2, AssetSymbolType.VESTS);
+        LegacyAsset rewardSbd = new LegacyAsset(1, LegacyAssetSymbolType.SBD);
+        LegacyAsset rewardSteem = new LegacyAsset(2, LegacyAssetSymbolType.STEEM);
+        LegacyAsset rewardVests = new LegacyAsset(2, LegacyAssetSymbolType.VESTS);
 
         ClaimRewardBalanceOperation claimRewardBalanceOperation = new ClaimRewardBalanceOperation(account, rewardSteem,
                 rewardSbd, rewardVests);

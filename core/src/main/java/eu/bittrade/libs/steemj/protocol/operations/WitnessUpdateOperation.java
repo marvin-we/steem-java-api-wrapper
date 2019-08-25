@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -35,7 +35,7 @@ import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
 
@@ -54,7 +54,7 @@ public class WitnessUpdateOperation extends Operation {
     @JsonProperty("props")
     private ChainProperties properties;
     @JsonProperty("fee")
-    private Asset fee;
+    private LegacyAsset fee;
 
     /**
      * Create a new witness update operation.
@@ -84,12 +84,12 @@ public class WitnessUpdateOperation extends Operation {
      *            The chain properties the witness is voting for (see
      *            {@link #setProperties(ChainProperties)}).
      * @param fee
-     *            The fee to pay for this update (see {@link #setFee(Asset)}).
+     *            The fee to pay for this update (see {@link #setFee(LegacyAsset)}).
      */
     @JsonCreator
     public WitnessUpdateOperation(@JsonProperty("owner") AccountName owner, @JsonProperty("url") URL url,
             @JsonProperty("block_signing_key") PublicKey blockSigningKey,
-            @JsonProperty("props") ChainProperties properties, @JsonProperty("fee") Asset fee) {
+            @JsonProperty("props") ChainProperties properties, @JsonProperty("fee") LegacyAsset fee) {
         super(false);
 
         this.setOwner(owner);
@@ -101,7 +101,7 @@ public class WitnessUpdateOperation extends Operation {
 
     /**
      * Like
-     * {@link #WitnessUpdateOperation(AccountName, URL, PublicKey, ChainProperties, Asset)},
+     * {@link #WitnessUpdateOperation(AccountName, URL, PublicKey, ChainProperties, LegacyAsset)},
      * but creates a new ChainProperties object with default values (Account
      * creation fee = 0.001 STEEM, maximum block size = minimum block size * 2,
      * SBD interest rate = 10%).
@@ -115,9 +115,9 @@ public class WitnessUpdateOperation extends Operation {
      *            The public part of the key used to sign a block (see
      *            {@link #setBlockSigningKey(PublicKey)}).
      * @param fee
-     *            The fee to pay for this update (see {@link #setFee(Asset)}).
+     *            The fee to pay for this update (see {@link #setFee(LegacyAsset)}).
      */
-    public WitnessUpdateOperation(AccountName owner, URL url, PublicKey blockSigningKey, Asset fee) {
+    public WitnessUpdateOperation(AccountName owner, URL url, PublicKey blockSigningKey, LegacyAsset fee) {
         super(false);
 
         this.setOwner(owner);
@@ -125,7 +125,7 @@ public class WitnessUpdateOperation extends Operation {
         this.setBlockSigningKey(blockSigningKey);
         this.setFee(fee);
 
-        Asset accountCreationFee = new Asset(1, SteemJConfig.getInstance().getTokenSymbol());
+        LegacyAsset accountCreationFee = new LegacyAsset(1, SteemJConfig.getInstance().getTokenSymbol());
         long maximumBlockSize = 131072;
         int sdbInterestRate = 1000;
         ChainProperties chainProperties = new ChainProperties(accountCreationFee, maximumBlockSize, sdbInterestRate);
@@ -231,7 +231,7 @@ public class WitnessUpdateOperation extends Operation {
      * 
      * @return The fee that has been paid for this witness update.
      */
-    public Asset getFee() {
+    public LegacyAsset getFee() {
         return fee;
     }
 
@@ -245,7 +245,7 @@ public class WitnessUpdateOperation extends Operation {
      * @throws InvalidParameterException
      *             If the provided asset object is null.
      */
-    public void setFee(Asset fee) {
+    public void setFee(LegacyAsset fee) {
         this.fee = SteemJUtils.setIfNotNull(fee, "The fee can't be null.");
     }
 

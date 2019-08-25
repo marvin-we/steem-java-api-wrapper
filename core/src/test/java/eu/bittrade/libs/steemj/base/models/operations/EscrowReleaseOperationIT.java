@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.operations;
 
@@ -30,8 +30,8 @@ import eu.bittrade.libs.steemj.IntegrationTest;
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.EscrowReleaseOperation;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
@@ -74,8 +74,8 @@ public class EscrowReleaseOperationIT extends BaseTransactionVerificationIT {
         AccountName receiver = new AccountName("dez1337");
         long escrowId = 34;
 
-        Asset sbdAmount = new Asset(1L, AssetSymbolType.SBD);
-        Asset steemAmount = new Asset(10L, AssetSymbolType.STEEM);
+        LegacyAsset sbdAmount = new LegacyAsset(1L, LegacyAssetSymbolType.SBD);
+        LegacyAsset steemAmount = new LegacyAsset(10L, LegacyAssetSymbolType.STEEM);
 
         EscrowReleaseOperation escrowReleaseOperation = new EscrowReleaseOperation(from, to, agent, escrowId, who,
                 receiver, sbdAmount, steemAmount);

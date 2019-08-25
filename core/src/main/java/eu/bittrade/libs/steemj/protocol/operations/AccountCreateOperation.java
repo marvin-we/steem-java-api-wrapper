@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import eu.bittrade.libs.steemj.enums.OperationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.Authority;
 import eu.bittrade.libs.steemj.protocol.PublicKey;
 import eu.bittrade.libs.steemj.util.SteemJUtils;
@@ -49,7 +49,7 @@ public class AccountCreateOperation extends AbstractAccountCreateOperation {
      *            {@link #setCreator(AccountName)}).
      * @param fee
      *            Set the fee the <code>creator</code> will pay (see
-     *            {@link #setFee(Asset)}).
+     *            {@link #setFee(LegacyAsset)}).
      * @param newAccountName
      *            Set the new account name (see
      *            {@link #setNewAccountName(AccountName)}).
@@ -72,7 +72,7 @@ public class AccountCreateOperation extends AbstractAccountCreateOperation {
      *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
-    public AccountCreateOperation(@JsonProperty("creator") AccountName creator, @JsonProperty("fee") Asset fee,
+    public AccountCreateOperation(@JsonProperty("creator") AccountName creator, @JsonProperty("fee") LegacyAsset fee,
             @JsonProperty("new_account_name") AccountName newAccountName, @JsonProperty("owner") Authority owner,
             @JsonProperty("active") Authority active, @JsonProperty("posting") Authority posting,
             @JsonProperty("memo_key") PublicKey memoKey, @JsonProperty("json_metadata") String jsonMetadata) {

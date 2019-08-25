@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.plugins.apis.database.models;
 
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.database.enums.OrderType;
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * This class represents a Steem "order_history_item" object.
@@ -35,9 +35,9 @@ public class OrderHistoryItem {
     @JsonProperty("type")
     private OrderType type;
     @JsonProperty("sbd_quantity")
-    private Asset sbdQuantity;
+    private LegacyAsset sbdQuantity;
     @JsonProperty("steem_quantity")
-    private Asset steemQuantity;
+    private LegacyAsset steemQuantity;
     @JsonProperty("real_price")
     private double realPrice;
 
@@ -65,14 +65,14 @@ public class OrderHistoryItem {
     /**
      * @return the sbdQuantity
      */
-    public Asset getSbdQuantity() {
+    public LegacyAsset getSbdQuantity() {
         return sbdQuantity;
     }
 
     /**
      * @return the steemQuantity
      */
-    public Asset getSteemQuantity() {
+    public LegacyAsset getSteemQuantity() {
         return steemQuantity;
     }
 

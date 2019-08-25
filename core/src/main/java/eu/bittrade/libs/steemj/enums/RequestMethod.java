@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.enums;
 
@@ -272,5 +272,7 @@ public enum RequestMethod {
     /** */
     GET_ACCOUNT_BANDWIDTH,
     /** */
-    GET_REVERSE_RATIO
+    GET_REVERSE_RATIO,
+    
+    GET_LIQUIDITY_QUEUE
 }

@@ -12,7 +12,7 @@
  *     GNU General Public License for more details.
  * 
  *     You should have received a copy of the GNU General Public License
- *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ *     along with SteemJ.  If not, see <http://www.gnu.org/licenses/>.
  */
 package eu.bittrade.libs.steemj.base.models.serializer;
 
@@ -23,15 +23,15 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
-import eu.bittrade.libs.steemj.protocol.Asset;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 
 /**
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AssetSerializer extends JsonSerializer<Asset> {
+public class AssetSerializer extends JsonSerializer<LegacyAsset> {
 
     @Override
-    public void serialize(Asset asset, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+    public void serialize(LegacyAsset asset, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException {
         String amountFormat = "%." + (int) asset.getPrecision() + "f";
         jsonGenerator.writeString(String.format(Locale.US, amountFormat, asset.toReal()) + " "
