@@ -17,6 +17,7 @@
 package eu.bittrade.libs.steemj.plugins.apis.witness.models.operations;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -109,7 +110,7 @@ public class EnableContentEditingOperation extends CustomJsonOperationPayload {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
+    public void validate(List<ValidationType> validationsToSkip) {
         // No additional validation required.
     }
 }

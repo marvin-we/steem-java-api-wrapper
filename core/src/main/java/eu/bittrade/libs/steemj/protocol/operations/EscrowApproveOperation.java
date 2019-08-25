@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -214,8 +215,8 @@ public class EscrowApproveOperation extends AbstractEscrowOperation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType) && !(who.equals(to) || who.equals(agent))) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION) && !(who.equals(to) || who.equals(agent))) {
             throw new InvalidParameterException(
                     "The to account or the agent account must approve this escrow operation.");
         }

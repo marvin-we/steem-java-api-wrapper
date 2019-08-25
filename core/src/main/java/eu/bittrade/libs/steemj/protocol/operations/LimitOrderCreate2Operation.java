@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;
@@ -67,7 +68,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The order id for this order (see
      *            {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
+     *            The amount to sell (see
+     *            {@link #setAmountToSell(LegacyAsset)}).
      * @param fillOrKill
      *            Define if this order is a "fillOrKill" order (see
      *            {@link #setFillOrKill(boolean)}).
@@ -111,14 +113,16 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The order id for this order (see
      *            {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
+     *            The amount to sell (see
+     *            {@link #setAmountToSell(LegacyAsset)}).
      * @param exchangeRate
      *            The exchange rate to set (see
      *            {@link #setExchangeRate(Price)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreate2Operation(AccountName owner, UInteger orderId, LegacyAsset amountToSell, Price exchangeRate) {
+    public LimitOrderCreate2Operation(AccountName owner, UInteger orderId, LegacyAsset amountToSell,
+            Price exchangeRate) {
         this(owner, orderId, amountToSell, false, exchangeRate, new TimePointSec(Long.MAX_VALUE));
     }
 
@@ -131,7 +135,8 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
      *            The owner of the order that should be created (see
      *            {@link #setOwner(AccountName)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
+     *            The amount to sell (see
+     *            {@link #setAmountToSell(LegacyAsset)}).
      * @param exchangeRate
      *            The exchange rate to set (see
      *            {@link #setExchangeRate(Price)}).
@@ -304,9 +309,9 @@ public class LimitOrderCreate2Operation extends AbstractLimitOrderOperation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)
+                || !validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
             if (!amountToSell.getSymbol().equals(this.getExchangeRate().getBase().getSymbol())) {
                 throw new InvalidParameterException("The sell asset must be the base of the price.");
             } else if (exchangeRate.multiply(amountToSell).getAmount() <= 0) {

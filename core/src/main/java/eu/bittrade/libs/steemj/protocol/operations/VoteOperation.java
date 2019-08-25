@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -219,8 +220,8 @@ public class VoteOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (weight > 10000) {
                 throw new InvalidParameterException(
                         "The voting weight can't be higher than 10000 which is equivalent to 100%.");

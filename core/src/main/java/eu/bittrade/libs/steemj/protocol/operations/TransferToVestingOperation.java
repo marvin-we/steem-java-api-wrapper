@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -72,9 +73,9 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
 
     /**
      * Like
-     * {@link #TransferToVestingOperation(AccountName, AccountName, LegacyAsset)}, but
-     * will transform the <code>asset</code> from the <code>from</code> account
-     * to the <code>from</code> account.
+     * {@link #TransferToVestingOperation(AccountName, AccountName, LegacyAsset)},
+     * but will transform the <code>asset</code> from the <code>from</code>
+     * account to the <code>from</code> account.
      * 
      * @param from
      *            The account to transfer the vestings from (see
@@ -142,10 +143,10 @@ public class TransferToVestingOperation extends AbstractTransferOperation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
-                && (!amount.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol()))) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)
+                || !validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)
+                        && (!amount.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol()))) {
             throw new InvalidParameterException("The amount must be of type STEEM.");
         }
     }

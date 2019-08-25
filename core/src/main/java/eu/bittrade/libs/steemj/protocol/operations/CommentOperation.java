@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -367,8 +368,8 @@ public class CommentOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (title.length() > 255) {
                 throw new InvalidParameterException("The title can't have more than 255 characters.");
             } else if (!SteemJUtils.verifyJsonString(jsonMetadata)) {

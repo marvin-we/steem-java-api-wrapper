@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -183,11 +184,11 @@ public class TransferFromSavingsOperation extends AbstractTransferOperation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
-            super.validate(validationType);
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
+            super.validate(validationsToSkip);
 
-            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+            if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
                 if (!amount.getSymbol().equals(SteemJConfig.getInstance().getTokenSymbol())
                         && !amount.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The amount must be of type STEEM or SBD.");

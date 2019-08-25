@@ -16,6 +16,7 @@
  */
 package eu.bittrade.libs.steemj.protocol.operations;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -116,7 +117,7 @@ public class Pow2Operation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
+    public void validate(List<ValidationType> validationsToSkip) {
         // TODO Auto-generated method stub
 
     }

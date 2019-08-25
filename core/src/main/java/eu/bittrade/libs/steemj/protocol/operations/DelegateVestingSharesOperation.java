@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -68,13 +69,15 @@ public class DelegateVestingSharesOperation extends Operation {
      *            The account to send the <code>vestingShares</code> to (see
      *            {@link #setDelegatee(AccountName)}).
      * @param vestingShares
-     *            The amount to deletage (see {@link #setVestingShares(LegacyAsset)}).
+     *            The amount to deletage (see
+     *            {@link #setVestingShares(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
     @JsonCreator
     public DelegateVestingSharesOperation(@JsonProperty("delegator") AccountName delegator,
-            @JsonProperty("delegatee") AccountName delegatee, @JsonProperty("vesting_shares") LegacyAsset vestingShares) {
+            @JsonProperty("delegatee") AccountName delegatee,
+            @JsonProperty("vesting_shares") LegacyAsset vestingShares) {
         super(false);
 
         this.setDelegator(delegator);
@@ -178,9 +181,9 @@ public class DelegateVestingSharesOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
-            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
+            if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
                 if (!vestingShares.getSymbol().equals(SteemJConfig.getInstance().getVestsSymbol())) {
                     throw new InvalidParameterException("Can only delegate VESTS.");
                 } else if (vestingShares.getAmount() <= 0) {

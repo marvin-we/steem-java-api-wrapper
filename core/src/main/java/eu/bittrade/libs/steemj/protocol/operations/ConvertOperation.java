@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -184,9 +185,9 @@ public class ConvertOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)
+                || !validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
             if (!amount.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                 // Only allow conversion from SBD to STEEM, allowing the
                 // opposite can enable traders to abuse market fluxuations

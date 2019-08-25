@@ -82,7 +82,9 @@ public abstract class BaseTransactionalIT extends BaseIT {
 
         // The expiration date used for tests is way to old in general -
         // Therefore the validation needs to be disabled.
-        config.setValidationLevel(ValidationType.SKIP_VALIDATION);
+        ArrayList<ValidationType> validationsToSkip = new ArrayList<>();
+        validationsToSkip.add(ValidationType.SKIP_VALIDATION);
+        config.setValidationsToSkip(validationsToSkip);
 
         try {
             if (TEST_ENDPOINT.equals(TESTNET_ENDPOINT_IDENTIFIER)) {

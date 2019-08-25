@@ -19,6 +19,7 @@ package eu.bittrade.libs.steemj.protocol.operations;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joou.UInteger;
@@ -60,7 +61,8 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @param orderId
      *            The id of this order (see {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
+     *            The amount to sell (see
+     *            {@link #setAmountToSell(LegacyAsset)}).
      * @param minToReceive
      *            The minimal amount to receive for the offered asset (see
      *            {@link #setMinToReceive(LegacyAsset)}).
@@ -102,14 +104,16 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      * @param orderId
      *            The id of this order (see {@link #setOrderId(UInteger)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
+     *            The amount to sell (see
+     *            {@link #setAmountToSell(LegacyAsset)}).
      * @param minToReceive
      *            The minimal amount to receive for the offered asset (see
      *            {@link #setMinToReceive(LegacyAsset)}).
      * @throws InvalidParameterException
      *             If one of the arguments does not fulfill the requirements.
      */
-    public LimitOrderCreateOperation(AccountName owner, UInteger orderId, LegacyAsset amountToSell, LegacyAsset minToReceive) {
+    public LimitOrderCreateOperation(AccountName owner, UInteger orderId, LegacyAsset amountToSell,
+            LegacyAsset minToReceive) {
         this(owner, orderId, amountToSell, minToReceive, false, new TimePointSec(Long.MAX_VALUE));
     }
 
@@ -122,7 +126,8 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
      *            The account to create the operation for (see
      *            {@link #setOwner(AccountName)}).
      * @param amountToSell
-     *            The amount to sell (see {@link #setAmountToSell(LegacyAsset)}).
+     *            The amount to sell (see
+     *            {@link #setAmountToSell(LegacyAsset)}).
      * @param minToReceive
      *            The minimal amount to receive for the offered asset (see
      *            {@link #setMinToReceive(LegacyAsset)}).
@@ -296,11 +301,11 @@ public class LimitOrderCreateOperation extends AbstractLimitOrderOperation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
-                && !ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)
-                && (!SteemJConfig.getInstance().getTokenSymbol().equals(amountToSell)
-                        && SteemJConfig.getInstance().getDollarSymbol().equals(minToReceive))
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)
+                || !validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)
+                        && (!SteemJConfig.getInstance().getTokenSymbol().equals(amountToSell)
+                                && SteemJConfig.getInstance().getDollarSymbol().equals(minToReceive))
                 || (SteemJConfig.getInstance().getDollarSymbol().equals(amountToSell)
                         && SteemJConfig.getInstance().getTokenSymbol().equals(minToReceive))) {
             // TODO: (amount_to_sell / min_to_receive).validate();

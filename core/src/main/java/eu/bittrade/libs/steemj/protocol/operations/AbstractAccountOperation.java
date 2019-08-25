@@ -17,6 +17,7 @@
 package eu.bittrade.libs.steemj.protocol.operations;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -143,8 +144,8 @@ public abstract class AbstractAccountOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)
                 && (!jsonMetadata.isEmpty() && !SteemJUtils.verifyJsonString(jsonMetadata))) {
             throw new InvalidParameterException("The given json metadata is no valid JSON");
         }

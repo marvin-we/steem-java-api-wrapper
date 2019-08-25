@@ -62,7 +62,8 @@ public class ClaimRewardBalanceOperation extends Operation {
      *            The amount of Steem to claim (see
      *            {@link #setRewardSteem(LegacyAsset)}).
      * @param rewardSbd
-     *            The amount of SBD to claim (see {@link #setRewardSbd(LegacyAsset)}).
+     *            The amount of SBD to claim (see
+     *            {@link #setRewardSbd(LegacyAsset)}).
      * @param rewardVests
      *            The amount of VESTS to claim (see
      *            {@link #setRewardVests(LegacyAsset)}).
@@ -225,13 +226,13 @@ public class ClaimRewardBalanceOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if ((rewardSbd.getAmount() + rewardSteem.getAmount() + rewardVests.getAmount()) <= 0) {
                 throw new InvalidParameterException("Must claim something.");
             }
 
-            if (!ValidationType.SKIP_ASSET_VALIDATION.equals(validationType)) {
+            if (!validationsToSkip.contains(ValidationType.SKIP_ASSET_VALIDATION)) {
                 if (!rewardSbd.getSymbol().equals(SteemJConfig.getInstance().getDollarSymbol())) {
                     throw new InvalidParameterException("The SBD reward must be of symbol type SBD.");
                 } else if (rewardSbd.getAmount() < 0) {

@@ -286,8 +286,8 @@ public class RecoverAccountOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
-        if (!ValidationType.SKIP_VALIDATION.equals(validationType)) {
+    public void validate(List<ValidationType> validationsToSkip) {
+        if (!validationsToSkip.contains(ValidationType.SKIP_VALIDATION)) {
             if (this.getRecentOwnerAuthority().equals(newOwnerAuthority)) {
                 throw new InvalidParameterException("Cannot set new owner authority to the recent owner authority.");
             } else if (newOwnerAuthority.isImpossible()) {

@@ -22,8 +22,8 @@ import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperat
 import eu.bittrade.libs.steemj.plugins.apis.condenser.models.AccountVote;
 import eu.bittrade.libs.steemj.plugins.apis.tags.models.VoteState;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.Asset;
-import eu.bittrade.libs.steemj.protocol.enums.AssetSymbolType;
+import eu.bittrade.libs.steemj.protocol.LegacyAsset;
+import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.AccountCreateOperation;
 import eu.bittrade.libs.steemj.protocol.operations.CommentOperation;
 
@@ -126,12 +126,12 @@ public class SteemJUsageExample {
             /*
              * Let the default account transfer 1.0 SBD to @dez1337.
              */
-            steemJ.transfer(new AccountName("dez1337"), new LegacyAsset(new BigDecimal("1.000"), AssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
+            steemJ.transfer(new AccountName("dez1337"), new LegacyAsset(new BigDecimal("1.000"), LegacyAssetSymbolType.STEEM), "Hello @dez1337 - I've send you one STEEM.");
           
             /*
              * Let the default account delegate 10.0 VESTS to @dez1337.
              */
-            steemJ.delegateVestingShares(new AccountName("dez1337"), new LegacyAsset(10L, AssetSymbolType.VESTS));
+            steemJ.delegateVestingShares(new AccountName("dez1337"), new LegacyAsset(10L, LegacyAssetSymbolType.VESTS));
             
             /*
              * Claim the rewards of the default account.

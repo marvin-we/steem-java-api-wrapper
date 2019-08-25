@@ -16,6 +16,7 @@
  */
 package eu.bittrade.libs.steemj.protocol.operations.virtual;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -115,7 +116,7 @@ public class FillConvertRequestOperation extends Operation {
     }
 
     @Override
-    public void validate(ValidationType validationType) {
+    public void validate(List<ValidationType> validationsToSkip) {
         // There is no need to validate virtual operations.
     }
 }

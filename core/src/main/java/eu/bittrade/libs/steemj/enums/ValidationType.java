@@ -29,6 +29,10 @@ public enum ValidationType {
     SKIP_VALIDATION,
     /** Indicates that the validation of assets should be skipped. */
     SKIP_ASSET_VALIDATION,
-    /** Indicates that all fields should be validated. */
-    ALL
+    /**
+     * Indicates that the JSON response should not be handled strict. This can
+     * help in cases where the Steem node provides an API in an incompatible
+     * version which results in incompatible/missing fields.
+     */
+    SKIP_JSON_VALIDATION
 }

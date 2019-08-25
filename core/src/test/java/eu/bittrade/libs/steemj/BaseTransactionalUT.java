@@ -17,9 +17,9 @@
 package eu.bittrade.libs.steemj;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import eu.bittrade.libs.steemj.chain.SignedTransaction;
-import eu.bittrade.libs.steemj.configuration.SteemJConfig;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 
@@ -39,7 +39,11 @@ public abstract class BaseTransactionalUT extends BaseUT {
     protected static void setupUnitTestEnvironmentForTransactionalTests() {
         setupUnitTestEnvironment();
 
-        SteemJConfig.getInstance().setValidationLevel(ValidationType.SKIP_VALIDATION);
+        // The expiration date used for tests is way to old in general -
+        // Therefore the validation needs to be disabled.
+        ArrayList<ValidationType> validationsToSkip = new ArrayList<>();
+        validationsToSkip.add(ValidationType.SKIP_VALIDATION);
+        config.setValidationsToSkip(validationsToSkip);
     }
 
     /**

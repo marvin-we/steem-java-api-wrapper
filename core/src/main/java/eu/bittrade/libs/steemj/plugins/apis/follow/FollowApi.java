@@ -132,9 +132,10 @@ public class FollowApi {
      *             </ul>
      */
     public static List<FollowApiObject> getFollowing(CommunicationHandler communicationHandler, AccountName follower,
-            AccountName startFollowing, FollowType type, short limit)
+            AccountName startFollowing, FollowType type, UInteger limit)
             throws SteemCommunicationException, SteemResponseException {
-        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_FOLLOWING, null);
+        GetFollowersArgs getFollowersArgs = new GetFollowersArgs(follower, startFollowing, type, limit);
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.FOLLOW_API, RequestMethod.GET_FOLLOWING, getFollowersArgs);
 
         return communicationHandler.performRequest(requestObject, FollowApiObject.class);
     }

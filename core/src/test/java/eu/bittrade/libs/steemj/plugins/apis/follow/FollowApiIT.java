@@ -28,6 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -108,7 +109,7 @@ public class FollowApiIT extends BaseIT {
     @Test
     public void testGetFollowing() throws SteemCommunicationException, SteemResponseException {
         final List<FollowApiObject> following = FollowApi.getFollowing(COMMUNICATION_HANDLER,
-                new AccountName("dez1337"), new AccountName("dez1337"), FollowType.BLOG, (short) 10);
+                new AccountName("dez1337"), new AccountName("dez1337"), FollowType.BLOG, UInteger.valueOf(10));
 
         assertThat(following.size(), equalTo(10));
         assertTrue(following.get(0).getFollower().getName().matches("[a-z0-9\\.-]{3,16}"));
