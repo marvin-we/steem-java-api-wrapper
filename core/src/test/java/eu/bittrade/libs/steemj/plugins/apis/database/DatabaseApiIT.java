@@ -199,9 +199,10 @@ public class DatabaseApiIT extends BaseIT {
     public void testGetOpsInBlock() throws SteemCommunicationException, SteemResponseException {
           final List<AppliedOperation> appliedOperationsOnlyVirtual =
           AccountHistoryApi.getOpsInBlock(COMMUNICATION_HANDLER,new GetOpsInBlockArgs(UInteger.valueOf(5443322), true)).getOperations();
-          LOGGER.debug(appliedOperationsOnlyVirtual.size());
-          assertThat(appliedOperationsOnlyVirtual.size(), equalTo(6));
-         /* assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx(),
+        //  LOGGER.debug(appliedOperationsOnlyVirtual.size());
+          assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx().intValue(),equalTo(0));
+          /*assertThat(appliedOperationsOnlyVirtual.size(), equalTo(6));
+          assertThat(appliedOperationsOnlyVirtual.get(0).getOpInTrx(),
           equalTo(1));
           assertThat(appliedOperationsOnlyVirtual.get(0).getTrxInBlock(),
           equalTo(41));
@@ -211,9 +212,9 @@ public class DatabaseApiIT extends BaseIT {
           
           final List<AppliedOperation> appliedOperations =
           AccountHistoryApi.getOpsInBlock(COMMUNICATION_HANDLER,new GetOpsInBlockArgs(UInteger.valueOf(1), false)).getOperations();
-          
-          assertThat(appliedOperations.size(), equalTo(51));
-          /*assertThat(appliedOperations.get(1).getOpInTrx(), equalTo(0));
+          assertThat(appliedOperations.get(0).getOpInTrx().intValue(),equalTo(0));
+          /*assertThat(appliedOperations.size(), equalTo(51));
+          assertThat(appliedOperations.get(1).getOpInTrx(), equalTo(0));
           assertThat(appliedOperations.get(1).getTrxInBlock(), equalTo(1));
           assertThat(appliedOperations.get(1).getVirtualOp(), equalTo(0L));
           assertThat(appliedOperations.get(1).getOp(), instanceOf(CommentOperation.class));*/
