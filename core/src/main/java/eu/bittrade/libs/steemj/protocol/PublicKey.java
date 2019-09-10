@@ -37,7 +37,7 @@ import eu.bittrade.libs.steemj.interfaces.ByteTransformable;
 
 /**
  * This class is the java implementation of the <a href=
- * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steemit/protocol/types.hpp">Steem
+ * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steem/protocol/types.hpp">Steem
  * public_key object</a>.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>

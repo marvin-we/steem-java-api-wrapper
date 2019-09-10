@@ -37,7 +37,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class is the java implementation of the <a href=
- * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steemit/protocol/steem_operations.hpp">Steem
+ * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steem/protocol/steem_operations.hpp">Steem
  * limit_order_create_operation</a>.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
