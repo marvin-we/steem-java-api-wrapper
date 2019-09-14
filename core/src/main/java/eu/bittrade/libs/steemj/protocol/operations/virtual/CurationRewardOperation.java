@@ -23,14 +23,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.CurationRewardValue;
 
 /**
  * This class represents a "curation_reward_operation" object.
@@ -41,14 +39,8 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CurationRewardOperation extends Operation {
-    @JsonProperty("curator")
-    private AccountName curator;
-    @JsonProperty("reward")
-    private LegacyAsset reward;
-    @JsonProperty("comment_author")
-    private AccountName commentAuthor;
-    @JsonProperty("comment_permlink")
-    private Permlink commentPermlink;
+	@JsonProperty("value")
+	private CurationRewardValue curationRewardValue;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -59,43 +51,14 @@ public class CurationRewardOperation extends Operation {
     }
 
     /**
-     * Get the person that receives the reward.
+     * Gets all the values 
      * 
-     * @return The person that receives the reward.
+     * @return the value for type curation_reward_operation
      */
-    public AccountName getCurator() {
-        return curator;
-    }
-
-    /**
-     * Get the amount and the currency the curator receives.
-     * 
-     * @return The reward.
-     */
-    public LegacyAsset getReward() {
-        return reward;
-    }
-
-    /**
-     * Get the author of the post or comment that this curation reward is for.
-     * 
-     * @return The author of the post or comment.
-     */
-    public AccountName getCommentAuthor() {
-        return commentAuthor;
-    }
-
-    /**
-     * Get the permanent link of the post or comment that this curation reward
-     * is for.
-     * 
-     * @return The permanent link of the post or comment that this curation
-     *         reward is for.
-     */
-    public Permlink getCommentPermlink() {
-        return commentPermlink;
-    }
-
+	public CurationRewardValue getCurationRewardValue() {
+		return curationRewardValue;
+	}
+	
     @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
@@ -120,4 +83,5 @@ public class CurationRewardOperation extends Operation {
     public void validate(List<ValidationType> validationsToSkip) {
         // There is no need to validate virtual operations.
     }
+
 }
