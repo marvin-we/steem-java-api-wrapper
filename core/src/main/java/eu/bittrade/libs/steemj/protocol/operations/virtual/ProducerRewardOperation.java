@@ -21,7 +21,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
@@ -38,7 +40,12 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonTypeName("producer_reward_operation")
 public class ProducerRewardOperation extends Operation {
+	//TODO
+	@JsonIgnore
+	@JsonProperty("value")
+	private Object value;
     @JsonProperty("producer")
     private AccountName producer;
     @JsonProperty("vesting_shares")

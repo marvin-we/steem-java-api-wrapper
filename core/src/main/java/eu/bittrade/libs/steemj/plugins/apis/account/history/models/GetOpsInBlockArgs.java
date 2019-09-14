@@ -52,7 +52,7 @@ public class GetOpsInBlockArgs {
      */
     @JsonCreator()
     public GetOpsInBlockArgs(@JsonProperty("block_num") UInteger blockNum,
-            @JsonProperty("onlyVirtual") boolean onlyVirtual) {
+            @JsonProperty("only_virtual") boolean onlyVirtual) {
         this.setBlockNum(blockNum);
         this.setOnlyVirtual(onlyVirtual);
     }
