@@ -53,7 +53,7 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.ShutdownWitnessOpeart
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_ARRAY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = VoteOperation.class, name = "vote"),
         @Type(value = CommentOperation.class, name = "comment"),
         @Type(value = TransferOperation.class, name = "transfer"),
@@ -113,7 +113,7 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.ShutdownWitnessOpeart
         @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
         @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
         @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
-        @Type(value = ProducerRewardOperation.class, name = "producer_reward") })
+        @Type(value = ProducerRewardOperation.class, name = "producer_reward_operation") })
 public abstract class Operation extends BaseOperation implements ByteTransformable, Validatable {
     /**
      * This field is used to store the operation type.

@@ -72,11 +72,10 @@ public class AccountHistoryApi {
      */
     public static GetOpsInBlockReturn getOpsInBlock(CommunicationHandler communicationHandler,
            GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
-    	 /*   JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
+    	    JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
                 RequestMethod.GET_OPS_IN_BLOCK, getOpsInBlockArgs);
 
-        return communicationHandler.performRequest(requestObject, GetOpsInBlockReturn.class).get(0);*/
-        return null;
+        return communicationHandler.performRequest(requestObject, GetOpsInBlockReturn.class).get(0);
     }
 
     /**

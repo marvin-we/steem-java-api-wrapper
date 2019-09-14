@@ -40,6 +40,7 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.fc.TimePointSec;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.Bucket;
+import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetMarketHistoryArgs;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookArgs;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetOrderBookReturn;
 import eu.bittrade.libs.steemj.plugins.apis.market.history.models.GetRecentTradesArgs;
@@ -204,8 +205,9 @@ public class MarketHistoryApiIT extends BaseIT {
     @Test
     @Category({ IntegrationTest.class })
     public void testGetMarketHistory() throws SteemCommunicationException, SteemResponseException {
-        List<Bucket> marketHistory = MarketHistoryApi.getMarketHistory(COMMUNICATION_HANDLER, 3600,
+    	GetMarketHistoryArgs getMarketHistoryArgs = new GetMarketHistoryArgs(UInteger.valueOf(3600),
                 new TimePointSec(System.currentTimeMillis()-1000l*60l*60l*24l*7l), new TimePointSec(System.currentTimeMillis()));
+        List<Bucket> marketHistory = MarketHistoryApi.getMarketHistory(COMMUNICATION_HANDLER, getMarketHistoryArgs).getBuckets();
 
         assertThat(marketHistory.size(), greaterThan(0));
         assertThat(marketHistory.get(0).getCloseSbd(), greaterThan(0L));
