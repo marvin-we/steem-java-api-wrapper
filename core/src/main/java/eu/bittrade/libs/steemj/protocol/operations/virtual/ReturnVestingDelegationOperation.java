@@ -27,9 +27,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.ReturnVestingDelegationOperationValue;
 
 /**
  * This class represents the Steem "return_vesting_delegation_operation" object.
@@ -37,9 +36,8 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class ReturnVestingDelegationOperation extends Operation {
-    private AccountName account;
-    @JsonProperty("vesting_shares")
-    private LegacyAsset vestingShares;
+	@JsonProperty("value")
+    private ReturnVestingDelegationOperationValue value;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -50,20 +48,17 @@ public class ReturnVestingDelegationOperation extends Operation {
     }
 
     /**
-     * @return the account
+     * Gets all the values 
+     * 
+     * @return the value for type return_vesting_delegation_operation
      */
-    public AccountName getAccount() {
-        return account;
-    }
+    public ReturnVestingDelegationOperationValue getValue() {
+		return value;
+	}
 
-    /**
-     * @return the vestingShares
-     */
-    public LegacyAsset getVestingShares() {
-        return vestingShares;
-    }
 
-    @Override
+
+	@Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

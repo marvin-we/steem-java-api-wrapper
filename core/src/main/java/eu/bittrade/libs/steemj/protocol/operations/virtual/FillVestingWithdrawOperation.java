@@ -27,9 +27,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.FillVestingWithdrawOperationValue;
 
 /**
  * This class represents the Steem "fill_vesting_withdraw_operation" object.
@@ -37,12 +36,8 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillVestingWithdrawOperation extends Operation {
-    @JsonProperty("from_account")
-    private AccountName fromAccount;
-    @JsonProperty("to_account")
-    private AccountName toAccount;
-    private LegacyAsset withdrawn;
-    private LegacyAsset deposited;
+    @JsonProperty("value")
+    private FillVestingWithdrawOperationValue value;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -53,34 +48,16 @@ public class FillVestingWithdrawOperation extends Operation {
     }
 
     /**
-     * @return the fromAccount
+     * Gets all the values 
+     * 
+     * @return the value for type fill_vesting_withdraw_operation
      */
-    public AccountName getFromAccount() {
-        return fromAccount;
-    }
+    public FillVestingWithdrawOperationValue getValue() {
+		return value;
+	}
 
-    /**
-     * @return the toAccount
-     */
-    public AccountName getToAccount() {
-        return toAccount;
-    }
 
-    /**
-     * @return the withdrawn
-     */
-    public LegacyAsset getWithdrawn() {
-        return withdrawn;
-    }
-
-    /**
-     * @return the deposited
-     */
-    public LegacyAsset getDeposited() {
-        return deposited;
-    }
-
-    @Override
+	@Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.
