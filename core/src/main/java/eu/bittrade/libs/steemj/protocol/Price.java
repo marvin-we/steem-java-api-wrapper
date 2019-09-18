@@ -31,7 +31,7 @@ import eu.bittrade.libs.steemj.util.SteemJUtils;
 
 /**
  * This class is the java implementation of the <a href=
- * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steemit/protocol/asset.hpp">Steem
+ * "https://github.com/steemit/steem/blob/master/libraries/protocol/include/steem/protocol/asset.hpp">Steem
  * price object</a>.
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
