@@ -27,9 +27,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.FillOrderOperationValue;
 
 /**
  * This class represents a Steem "fill_order_operation" object.
@@ -40,20 +39,9 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillOrderOperation extends Operation {
-    @JsonProperty("current_owner")
-    private AccountName currentOwner;
-    @JsonProperty("current_orderid")
-    // Original type is uint32_t here so we have to use long.
-    private int currentOrderId;
-    @JsonProperty("current_pays")
-    private LegacyAsset currentPays;
-    @JsonProperty("open_owner")
-    private AccountName openOwner;
-    @JsonProperty("open_orderid")
-    // Original type is uint32_t here so we have to use long.
-    private long openOrderId;
-    @JsonProperty("open_pays")
-    private LegacyAsset openPays;
+	
+	@JsonProperty("value")
+	private FillOrderOperationValue value;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -64,48 +52,17 @@ public class FillOrderOperation extends Operation {
     }
 
     /**
-     * @return The current owner.
+     * Gets all the values 
+     * 
+     * @return the value for type fill_order_operation
      */
-    public AccountName getCurrentOwner() {
-        return currentOwner;
-    }
+    public FillOrderOperationValue getValue() {
+		return value;
+	}
 
-    /**
-     * @return The current order id.
-     */
-    public int getCurrentOrderId() {
-        return currentOrderId;
-    }
 
-    /**
-     * @return The current pays.
-     */
-    public LegacyAsset getCurrentPays() {
-        return currentPays;
-    }
 
-    /**
-     * @return The open owner.
-     */
-    public AccountName getOpenOwner() {
-        return openOwner;
-    }
-
-    /**
-     * @return The open order id.
-     */
-    public long getOpenOrderId() {
-        return openOrderId;
-    }
-
-    /**
-     * @return The open pays.
-     */
-    public LegacyAsset getOpenPays() {
-        return openPays;
-    }
-
-    @Override
+	@Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

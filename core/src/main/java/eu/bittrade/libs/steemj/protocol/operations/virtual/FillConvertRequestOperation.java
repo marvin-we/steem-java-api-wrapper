@@ -27,9 +27,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.FillConvertRequestOperationValue;
 
 /**
  * This class represents a Steem "fill_convert_request_operation" object.
@@ -40,15 +39,8 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillConvertRequestOperation extends Operation {
-    @JsonProperty("owner")
-    private AccountName owner;
-    // Original type is uint32_t so we have to use long here.
-    @JsonProperty("requestid")
-    private long requestId;
-    @JsonProperty("amount_in")
-    private LegacyAsset amountIn;
-    @JsonProperty("amount_out")
-    private LegacyAsset amountOut;
+    @JsonProperty("value")
+    private FillConvertRequestOperationValue value;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -59,43 +51,15 @@ public class FillConvertRequestOperation extends Operation {
     }
 
     /**
-     * Get the owner of this conversion request.
+     * Gets all the values 
      * 
-     * @return The owner as an AccountName instance.
+     * @return the value for type fill_convert_request_operation
      */
-    public AccountName getOwner() {
-        return owner;
-    }
+    public FillConvertRequestOperationValue getValue() {
+		return value;
+	}
 
-    /**
-     * Get the id of this request.
-     * 
-     * @return The id of this request.
-     */
-    public long getRequestId() {
-        return requestId;
-    }
-
-    /**
-     * Get the amount and the type of the currency that has been converted
-     * within this operation.
-     * 
-     * @return The source asset.
-     */
-    public LegacyAsset getAmountIn() {
-        return amountIn;
-    }
-
-    /**
-     * Get the amount and the type of the target currency.
-     * 
-     * @return The target asset.
-     */
-    public LegacyAsset getAmountOut() {
-        return amountOut;
-    }
-
-    @Override
+	@Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

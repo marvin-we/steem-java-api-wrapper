@@ -28,7 +28,7 @@ import org.junit.Test;
  *
  */
 public class BrainkeyDictionaryManagerTest {
-    private static final int NUMBER_OF_WORDS = 49744;
+    private static final int NUMBER_OF_WORDS = 49748;   //earlier 49744
 
     /**
      * Verify that the brain key dictionary has the correct amount of words.

@@ -28,9 +28,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.AuthorRewardOperationValue;
 
 /**
  * This class represents the Steem "author_reward_operation" object.
@@ -41,16 +40,9 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AuthorRewardOperation extends Operation {
-    @JsonProperty("author")
-    private AccountName author;
-    @JsonProperty("permlink")
-    private Permlink permlink;
-    @JsonProperty("sbd_payout")
-    private LegacyAsset sbdPayout;
-    @JsonProperty("steem_payout")
-    private LegacyAsset steemPayout;
-    @JsonProperty("vesting_payout")
-    private LegacyAsset vestingPayout;
+	
+	@JsonProperty("value")
+	private AuthorRewardOperationValue value;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -60,52 +52,18 @@ public class AuthorRewardOperation extends Operation {
         super(true);
     }
 
-    /**
-     * Get the author who received this reward.
-     * 
-     * @return The author who received the reward.
-     */
-    public AccountName getAuthor() {
-        return author;
-    }
 
     /**
-     * Get the permanent link of the post for which the author is rewarded.
+     * Gets all the values 
      * 
-     * @return The permanent link of the article.
+     * @return the value for type author_reward_operation
      */
-    public Permlink getPermlink() {
-        return permlink;
-    }
+    public AuthorRewardOperationValue getValue() {
+		return value;
+	}
 
-    /**
-     * Get the SDB amount the author gets for the article.
-     * 
-     * @return The amount of SBD.
-     */
-    public LegacyAsset getSbdPayout() {
-        return sbdPayout;
-    }
 
-    /**
-     * Get the Steem amount the author gets for the article.
-     * 
-     * @return The amount of Steem.
-     */
-    public LegacyAsset getSteemPayout() {
-        return steemPayout;
-    }
-
-    /**
-     * Get the Vests amount the author gets for the article.
-     * 
-     * @return The amount of Vests.
-     */
-    public LegacyAsset getVestingPayout() {
-        return vestingPayout;
-    }
-
-    @Override
+	@Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

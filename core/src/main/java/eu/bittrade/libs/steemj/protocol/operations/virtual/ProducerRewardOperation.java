@@ -22,14 +22,14 @@ import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.ProducerRewardOperationValue;
 
 /**
  * This class represents the Steem "producer_reward_operation" object.
@@ -38,11 +38,10 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
+@JsonTypeName("producer_reward_operation")
 public class ProducerRewardOperation extends Operation {
-    @JsonProperty("producer")
-    private AccountName producer;
-    @JsonProperty("vesting_shares")
-    private LegacyAsset vestingShares;
+	@JsonProperty("value")
+	private ProducerRewardOperationValue value;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -53,24 +52,16 @@ public class ProducerRewardOperation extends Operation {
     }
 
     /**
-     * Get the block producer.
+     * Gets all the values 
      * 
-     * @return The block producer.
+     * @return the value for type producer_reward_operation
      */
-    public AccountName getProducer() {
-        return producer;
-    }
+    public ProducerRewardOperationValue getValue() {
+		return value;
+	}
 
-    /**
-     * Get the amount of VESTS the <code>producer</code> got.
-     * 
-     * @return The vesting shares paid to the <code>producer</code>.
-     */
-    public LegacyAsset getVestingShares() {
-        return vestingShares;
-    }
 
-    @Override
+	@Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

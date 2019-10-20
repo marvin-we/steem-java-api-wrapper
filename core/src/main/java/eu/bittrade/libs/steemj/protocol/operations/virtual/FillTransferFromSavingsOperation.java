@@ -27,9 +27,8 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
-import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.LegacyAsset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
+import eu.bittrade.libs.steemj.protocol.operations.virtual.value.FillTransferFromSavingsOperationValue;
 
 /**
  * This class represents the Steem "fill_transfer_from_savings_operation"
@@ -38,13 +37,8 @@ import eu.bittrade.libs.steemj.protocol.operations.Operation;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillTransferFromSavingsOperation extends Operation {
-    private AccountName from;
-    private AccountName to;
-    private LegacyAsset amount;
-    // Original type is uint32_t here so we have to use long.
-    @JsonProperty("request_id")
-    private long requestId;
-    private String memo;
+	@JsonProperty("value")
+    private FillTransferFromSavingsOperationValue value;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -55,41 +49,16 @@ public class FillTransferFromSavingsOperation extends Operation {
     }
 
     /**
-     * @return the from
+     * Gets all the values 
+     * 
+     * @return the value for type fill_transfer_from_savings_operation
      */
-    public AccountName getFrom() {
-        return from;
-    }
+    public FillTransferFromSavingsOperationValue getValue() {
+		return value;
+	}
 
-    /**
-     * @return the to
-     */
-    public AccountName getTo() {
-        return to;
-    }
 
-    /**
-     * @return the amount
-     */
-    public LegacyAsset getAmount() {
-        return amount;
-    }
-
-    /**
-     * @return the requestId
-     */
-    public long getRequestId() {
-        return requestId;
-    }
-
-    /**
-     * @return the memo
-     */
-    public String getMemo() {
-        return memo;
-    }
-
-    @Override
+	@Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

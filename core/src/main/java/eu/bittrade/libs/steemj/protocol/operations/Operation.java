@@ -53,7 +53,7 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.ShutdownWitnessOpeart
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_ARRAY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = VoteOperation.class, name = "vote"),
         @Type(value = CommentOperation.class, name = "comment"),
         @Type(value = TransferOperation.class, name = "transfer"),
@@ -99,21 +99,21 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.ShutdownWitnessOpeart
         @Type(value = ClaimAccountOperation.class, name = "claim_account"),
         @Type(value = CreateClaimedAccountOperation.class, name = "create_claimed_account"),
         // Virtual Operations
-        @Type(value = AuthorRewardOperation.class, name = "author_reward"),
-        @Type(value = CommentBenefactorRewardOperation.class, name = "comment_benefactor_reward"),
-        @Type(value = CommentPayoutUpdateOperation.class, name = "comment_payout_update"),
-        @Type(value = CommentRewardOperation.class, name = "comment_reward"),
-        @Type(value = CurationRewardOperation.class, name = "curation_reward"),
-        @Type(value = FillConvertRequestOperation.class, name = "fill_convert_request"),
-        @Type(value = FillOrderOperation.class, name = "fill_order"),
-        @Type(value = FillTransferFromSavingsOperation.class, name = "fill_transfer_from_savings"),
-        @Type(value = FillVestingWithdrawOperation.class, name = "fill_vesting_withdraw"),
-        @Type(value = HardforkOperation.class, name = "hardfork"),
-        @Type(value = InterestOperation.class, name = "interest"),
-        @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward"),
-        @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation"),
-        @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness"),
-        @Type(value = ProducerRewardOperation.class, name = "producer_reward") })
+        @Type(value = AuthorRewardOperation.class, name = "author_reward_operation"),
+        @Type(value = CommentBenefactorRewardOperation.class, name = "comment_benefactor_reward_operation"),
+        @Type(value = CommentPayoutUpdateOperation.class, name = "comment_payout_update_operation"),
+        @Type(value = CommentRewardOperation.class, name = "comment_reward_operation"),
+        @Type(value = CurationRewardOperation.class, name = "curation_reward_operation"),
+        @Type(value = FillConvertRequestOperation.class, name = "fill_convert_request_operation"),
+        @Type(value = FillOrderOperation.class, name = "fill_order_operation"),
+        @Type(value = FillTransferFromSavingsOperation.class, name = "fill_transfer_from_savings_operation"),
+        @Type(value = FillVestingWithdrawOperation.class, name = "fill_vesting_withdraw_operation"),
+        @Type(value = HardforkOperation.class, name = "hardfork_operation"),
+        @Type(value = InterestOperation.class, name = "interest_operation"),
+        @Type(value = LiquidityRewardOperation.class, name = "liquidity_reward_operation"),
+        @Type(value = ReturnVestingDelegationOperation.class, name = "return_vesting_delegation_operation"),
+        @Type(value = ShutdownWitnessOpeartion.class, name = "shutdown_witness_operation"),
+        @Type(value = ProducerRewardOperation.class, name = "producer_reward_operation") })
 public abstract class Operation extends BaseOperation implements ByteTransformable, Validatable {
     /**
      * This field is used to store the operation type.
