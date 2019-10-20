@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>eu.bittrade.libs</groupId>
 		<artifactId>steemj-parent</artifactId>
-		<version>0.21.0-SNAPSHOT</version>
+		<version>0.22.1-1-SNAPSHOT</version>
 	</parent>
 
 	<licenses>
@@ -72,6 +72,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<log4j.version>2.12.0</log4j.version>
+		<log4j.version>2.12.1</log4j.version>
 	</properties>
 </project>

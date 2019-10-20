@@ -5,7 +5,7 @@
 
 	<groupId>eu.bittrade.libs</groupId>
 	<artifactId>steemj-parent</artifactId>
-	<version>0.21.0-SNAPSHOT</version>
+	<version>0.22.1-1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>SteemJ-Parent</name>
