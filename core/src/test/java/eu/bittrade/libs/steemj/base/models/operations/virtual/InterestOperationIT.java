@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,7 +31,6 @@ import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.CurationRewardOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.InterestOperation;
@@ -44,10 +44,8 @@ public class InterestOperationIT extends BaseITForOperationParsing {
     private static final int BLOCK_NUMBER_CONTAINING_OPERATION = 16022103;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_OWNER = "eric818";
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_INTEREST_SYMBOL = LegacyAssetSymbolType.SBD;
-     * private static final BigDecimal EXPECTED_INTEREST_VALUE_REAL = BigDecimal.valueOf(0.003);
-     */
+    private static final UInteger EXPECTED_INTEREST_SYMBOL = UInteger.valueOf(3200000003L);
+    private static final BigDecimal EXPECTED_INTEREST_VALUE_REAL = BigDecimal.valueOf(0.003);
     private static final long EXPECTED_INTEREST_VALUE = 3L;
 
     /**
@@ -66,16 +64,15 @@ public class InterestOperationIT extends BaseITForOperationParsing {
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation interestOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation interestOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper().getOperation();
 
         assertThat(interestOperation, instanceOf(InterestOperation.class));
 
-        assertThat(((InterestOperation) interestOperation).getValue().getOwner().getName(), equalTo(EXPECTED_OWNER));
-        //TODO: add more assertions
-       /* assertThat(((InterestOperation) interestOperation).getValue().getInterest().getSymbol(),
+        assertThat(((InterestOperation) interestOperation).getOwner().getName(), equalTo(EXPECTED_OWNER));
+        assertThat(((InterestOperation) interestOperation).getInterest().getAssetSymbolType().getAssetNumber(),
                 equalTo(EXPECTED_INTEREST_SYMBOL));
-        assertThat(((InterestOperation) interestOperation).getValue().getInterest().toReal(),
-                equalTo(EXPECTED_INTEREST_VALUE_REAL)); */
-        assertThat(((InterestOperation) interestOperation).getValue().getInterest().getAmount(), equalTo(EXPECTED_INTEREST_VALUE));
+        assertThat(((InterestOperation) interestOperation).getInterest().toReal(),
+                equalTo(EXPECTED_INTEREST_VALUE_REAL));
+        assertThat(((InterestOperation) interestOperation).getInterest().getAmount(), equalTo(EXPECTED_INTEREST_VALUE));
     }
 }

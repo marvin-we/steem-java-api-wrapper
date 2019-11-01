@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.joou.UInteger;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.TreeNode;
@@ -40,19 +38,19 @@ import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperat
  * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
-public class AppliedOperationHashMapDeserializer extends JsonDeserializer<Map<UInteger, AppliedOperation>> {
+public class AppliedOperationHashMapDeserializer extends JsonDeserializer<Map<Long, AppliedOperation>> {
     @Override
-    public Map<UInteger, AppliedOperation> deserialize(JsonParser jsonParser,
-            DeserializationContext deserializationContext) throws IOException {
+    public Map<Long, AppliedOperation> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+            throws IOException {
 
-        HashMap<UInteger, AppliedOperation> result = new HashMap<>();
+        HashMap<Long, AppliedOperation> result = new HashMap<>();
 
         ObjectCodec codec = jsonParser.getCodec();
         TreeNode rootNode = codec.readTree(jsonParser);
 
         if (rootNode.isArray()) {
             for (JsonNode node : (ArrayNode) rootNode) {
-                result.put(UInteger.valueOf(node.get(0).asLong()),
+                result.put(node.get(0).asLong(),
                         CommunicationHandler.getObjectMapper().treeToValue(node.get(1), AppliedOperation.class));
             }
 

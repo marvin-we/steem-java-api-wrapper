@@ -47,14 +47,14 @@ public class CommentPayoutUpdateOperation extends Operation {
     }
 
     /**
-     * @return the author
+     * @return The author of the comment.
      */
     public AccountName getAuthor() {
         return author;
     }
 
     /**
-     * @return the permlink
+     * @return The link to the comment.
      */
     public Permlink getPermlink() {
         return permlink;

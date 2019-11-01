@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -48,11 +49,9 @@ public class CommentBenefactorRewardOperationIT extends BaseITForOperationParsin
     private static final AccountName EXPECTED_BENEFACTOR = new AccountName("chainbb");
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-mayvil-que-hacer-cuando-no-sabemos-de-edicion-2017926t205055909z");
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_REWARD_VESTS_SYMBOL = LegacyAssetSymbolType.VESTS;
-     * private static final BigDecimal EXPECTED_REWARD_VESTS_VALUE_REAL = BigDecimal.valueOf(4.116952);
-     * private static final long EXPECTED_REWARD_VESTS_VALUE = 4116952L;
-    */
+    private static final UInteger EXPECTED_REWARD_VESTS_SYMBOL = UInteger.valueOf(3200000070L);
+    private static final BigDecimal EXPECTED_REWARD_VESTS_VALUE_REAL = BigDecimal.valueOf(4.116953);
+    private static final long EXPECTED_REWARD_VESTS_VALUE = 4116953L;
     private static final String EXPECTED_VESTING_PAYOUT = "4116953";
 
     /**
@@ -71,22 +70,24 @@ public class CommentBenefactorRewardOperationIT extends BaseITForOperationParsin
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation commentBenefactorRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation commentBenefactorRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper()
+                .getOperation();
 
         assertThat(commentBenefactorRewardOperation, instanceOf(CommentBenefactorRewardOperation.class));
-        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getValue().getAuthor().getName(),
+        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getAuthor().getName(),
                 equalTo(EXPECTED_AUTHOR));
-        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getValue().getBenefactor(),
+        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getBenefactor(),
                 equalTo(EXPECTED_BENEFACTOR));
-        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getValue().getPermlink(),
+        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getPermlink(),
                 equalTo(EXPECTED_PERMLINK));
-      //TODO: add more assertions
-     /*   assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getReward().getSymbol(),
-                equalTo(EXPECTED_REWARD_VESTS_SYMBOL));
-        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getReward().toReal(),
-                equalTo(EXPECTED_REWARD_VESTS_VALUE_REAL)); 
-        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getValue().getReward().getAmount(),
-                equalTo(EXPECTED_REWARD_VESTS_VALUE)); */
-        assertThat(Long.toString(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getValue().getVestingPayout().getAmount()), equalTo(EXPECTED_VESTING_PAYOUT));
+        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getVestingPayout()
+                .getAssetSymbolType().getAssetNumber(), equalTo(EXPECTED_REWARD_VESTS_SYMBOL));
+        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getVestingPayout().toReal(),
+                equalTo(EXPECTED_REWARD_VESTS_VALUE_REAL));
+        assertThat(((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getVestingPayout().getAmount(),
+                equalTo(EXPECTED_REWARD_VESTS_VALUE));
+        assertThat(Long.toString(
+                ((CommentBenefactorRewardOperation) commentBenefactorRewardOperation).getVestingPayout().getAmount()),
+                equalTo(EXPECTED_VESTING_PAYOUT));
     }
 }

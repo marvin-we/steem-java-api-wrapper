@@ -22,6 +22,7 @@ import static org.hamcrest.Matchers.instanceOf;
 
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -45,11 +46,11 @@ public class AuthorRewardOperationIT extends BaseITForOperationParsing {
     private static final String EXPECTED_AUTHOR = "joearnold";
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-quinneaker-re-joearnold-re-quinneaker-bounties-of-the-land-episode-7-preparing-for-winter-final-harvests-soon-20171003t161412134z");
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_SBD_ASSET_SYMBOL = LegacyAssetSymbolType.SBD;
-     * private static final LegacyAssetSymbolType EXPECTED_STEEM_ASSET_SYMBOL = LegacyAssetSymbolType.STEEM;
-     * private static final LegacyAssetSymbolType EXPECTED_VESTS_ASSET_SYMBOL = LegacyAssetSymbolType.VESTS;
-     */
+
+    private static final UInteger EXPECTED_SBD_ASSET_SYMBOL = UInteger.valueOf(3200000003L);
+    private static final UInteger EXPECTED_STEEM_ASSET_SYMBOL = UInteger.valueOf(3200000035L);
+    private static final UInteger EXPECTED_VESTS_ASSET_SYMBOL = UInteger.valueOf(3200000070L);
+
     /**
      * Prepare the environment for this specific test.
      * 
@@ -66,21 +67,22 @@ public class AuthorRewardOperationIT extends BaseITForOperationParsing {
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation authorRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation authorRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper().getOperation();
 
         assertThat(authorRewardOperation, instanceOf(AuthorRewardOperation.class));
 
-        assertThat(((AuthorRewardOperation) authorRewardOperation).getValue().getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
-        assertThat(((AuthorRewardOperation) authorRewardOperation).getValue().getPermlink(), equalTo(EXPECTED_PERMLINK));
-        assertThat(Long.toString(((AuthorRewardOperation) authorRewardOperation).getValue().getSbdPayout().getAmount()), equalTo(EXPECTED_SBD_VALUE));
+        assertThat(((AuthorRewardOperation) authorRewardOperation).getAuthor().getName(), equalTo(EXPECTED_AUTHOR));
+        assertThat(((AuthorRewardOperation) authorRewardOperation).getPermlink(), equalTo(EXPECTED_PERMLINK));
         
-        //TODO: add more assertions
-     /*   assertThat(((AuthorRewardOperation) authorRewardOperation).getValue().getSbdPayout().getSymbol(),
+        assertThat(Long.toString(((AuthorRewardOperation) authorRewardOperation).getSbdPayout().getAmount()),
+                equalTo(EXPECTED_SBD_VALUE));
+        assertThat(((AuthorRewardOperation) authorRewardOperation).getSbdPayout().getAssetSymbolType().getAssetNumber(),
                 equalTo(EXPECTED_SBD_ASSET_SYMBOL));
-          assertThat(((AuthorRewardOperation) authorRewardOperation).getValue().getSteemPayout().getSymbol(),
+        assertThat(
+                ((AuthorRewardOperation) authorRewardOperation).getSteemPayout().getAssetSymbolType().getAssetNumber(),
                 equalTo(EXPECTED_STEEM_ASSET_SYMBOL));
-          assertThat(((AuthorRewardOperation) authorRewardOperation).getValue().getVestingPayout().getSymbol(),
-                equalTo(EXPECTED_VESTS_ASSET_SYMBOL));*/
+        assertThat(((AuthorRewardOperation) authorRewardOperation).getVestingPayout().getAssetSymbolType()
+                .getAssetNumber(), equalTo(EXPECTED_VESTS_ASSET_SYMBOL));
     }
 
 }

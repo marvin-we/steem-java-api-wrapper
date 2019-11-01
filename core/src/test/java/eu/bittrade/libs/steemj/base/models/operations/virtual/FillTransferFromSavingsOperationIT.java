@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,7 +32,6 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.FillTransferFromSavingsOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
@@ -48,10 +48,8 @@ public class FillTransferFromSavingsOperationIT extends BaseITForOperationParsin
     private static final AccountName EXPECTED_TO = new AccountName("anonimous");
     private static final String EXPECTED_MEMO = "";
     private static final long EXPECTED_REQUEST_ID = 1506820294L;
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_AMOUNT_SYMBOL = LegacyAssetSymbolType.SBD;
-     * private static final BigDecimal EXPECTED_AMOUNT_VALUE_REAL = BigDecimal.valueOf(7.5);
-     */
+    private static final UInteger EXPECTED_AMOUNT_SYMBOL = UInteger.valueOf(3200000003L);
+    private static final BigDecimal EXPECTED_AMOUNT_VALUE_REAL = BigDecimal.valueOf(7500, 3);
     private static final long EXPECTED_AMOUNT_VALUE = 7500L;
 
     /**
@@ -70,23 +68,23 @@ public class FillTransferFromSavingsOperationIT extends BaseITForOperationParsin
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation fillTransferFromSavingsOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation fillTransferFromSavingsOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper()
+                .getOperation();
 
         assertThat(fillTransferFromSavingsOperation, instanceOf(FillTransferFromSavingsOperation.class));
 
-        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getValue().getFrom().getName(),
+        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getFrom().getName(),
                 equalTo(EXPECTED_FROM));
-        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getValue().getTo(), equalTo(EXPECTED_TO));
-        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getValue().getMemo(),
+        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getTo(), equalTo(EXPECTED_TO));
+        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getMemo(),
                 equalTo(EXPECTED_MEMO));
-        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getValue().getRequestId(),
+        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getRequestId(),
                 equalTo(EXPECTED_REQUEST_ID));
-      //TODO: add more assertions
-      /*  assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getValue().getAmount().getSymbol(),
-                equalTo(EXPECTED_AMOUNT_SYMBOL));
+        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getAmount()
+                .getAssetSymbolType().getAssetNumber(), equalTo(EXPECTED_AMOUNT_SYMBOL));
         assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getAmount().toReal(),
-                equalTo(EXPECTED_AMOUNT_VALUE_REAL)); */
-        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getValue().getAmount().getAmount(),
+                equalTo(EXPECTED_AMOUNT_VALUE_REAL));
+        assertThat(((FillTransferFromSavingsOperation) fillTransferFromSavingsOperation).getAmount().getAmount(),
                 equalTo(EXPECTED_AMOUNT_VALUE));
     }
 }

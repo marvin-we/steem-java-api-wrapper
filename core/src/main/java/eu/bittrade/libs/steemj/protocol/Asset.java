@@ -18,6 +18,7 @@ package eu.bittrade.libs.steemj.protocol;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
@@ -62,10 +63,13 @@ public class Asset implements ByteTransformable {
     }
 
     /**
-     * TODO
+     * Create a new Asset by providing an amount and an
+     * {@code #assetSymbolType}.
      * 
      * @param amount
+     *            The amount.
      * @param assetSymbolType
+     *            The symbol type.
      */
     public Asset(long amount, AssetSymbolType assetSymbolType) {
         this.amount = amount;
@@ -73,7 +77,7 @@ public class Asset implements ByteTransformable {
     }
 
     /**
-     * @return the amount
+     * @return The amount.
      */
     public long getAmount() {
         return amount;
@@ -81,14 +85,14 @@ public class Asset implements ByteTransformable {
 
     /**
      * @param amount
-     *            the amount to set
+     *            The amount to set.
      */
     public void setAmount(long amount) {
         this.amount = amount;
     }
 
     /**
-     * @return the assetSymbolType
+     * @return The symbol of the asset.
      */
     public AssetSymbolType getAssetSymbolType() {
         return assetSymbolType;
@@ -96,10 +100,19 @@ public class Asset implements ByteTransformable {
 
     /**
      * @param assetSymbolType
-     *            the assetSymbolType to set
+     *            The symbol of the asset.
      */
     public void setAssetSymbolType(AssetSymbolType assetSymbolType) {
         this.assetSymbolType = assetSymbolType;
+    }
+
+    /**
+     * Transform this asset into its {@link BigDecimal} representation.
+     * 
+     * @return The value of this asset in its {@link BigDecimal} representation.
+     */
+    public BigDecimal toReal() {
+        return BigDecimal.valueOf(this.getAmount(), this.getAssetSymbolType().getDecimalPlaces());
     }
 
     @Override

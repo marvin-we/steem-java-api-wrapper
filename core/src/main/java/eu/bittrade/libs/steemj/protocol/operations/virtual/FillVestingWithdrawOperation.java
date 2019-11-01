@@ -27,8 +27,9 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
-import eu.bittrade.libs.steemj.protocol.operations.virtual.value.FillVestingWithdrawOperationValue;
 
 /**
  * This class represents the Steem "fill_vesting_withdraw_operation" object.
@@ -36,8 +37,12 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.value.FillVestingWith
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillVestingWithdrawOperation extends Operation {
-    @JsonProperty("value")
-    private FillVestingWithdrawOperationValue value;
+    @JsonProperty("from_account")
+    private AccountName fromAccount;
+    @JsonProperty("to_account")
+    private AccountName toAccount;
+    private Asset withdrawn;
+    private Asset deposited;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -48,16 +53,34 @@ public class FillVestingWithdrawOperation extends Operation {
     }
 
     /**
-     * Gets all the values 
-     * 
-     * @return the value for type fill_vesting_withdraw_operation
+     * @return The account which has withdrawn VESTS.
      */
-    public FillVestingWithdrawOperationValue getValue() {
-		return value;
-	}
+    public AccountName getFromAccount() {
+        return fromAccount;
+    }
 
+    /**
+     * @return The account which will receive the VESTS.
+     */
+    public AccountName getToAccount() {
+        return toAccount;
+    }
 
-	@Override
+    /**
+     * @return The amount that has been withdrawn.
+     */
+    public Asset getWithdrawn() {
+        return withdrawn;
+    }
+
+    /**
+     * @return The amount that has been deposited.
+     */
+    public Asset getDeposited() {
+        return deposited;
+    }
+
+    @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

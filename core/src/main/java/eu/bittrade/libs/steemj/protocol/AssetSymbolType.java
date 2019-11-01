@@ -18,6 +18,7 @@ package eu.bittrade.libs.steemj.protocol;
 
 import java.security.InvalidParameterException;
 
+import org.apache.commons.lang3.Validate;
 import org.joou.UInteger;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -31,6 +32,37 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class AssetSymbolType {
+    // The NAI digits for the three default types:
+    private static final int STEEM_NAI_SBD = 1;
+    private static final int STEEM_NAI_STEEM = 2;
+    private static final int STEEM_NAI_VESTS = 3;
+    // The precision of the the three default types:
+    private static final int STEEM_PRECISION_SBD = 3;
+    private static final int STEEM_PRECISION_STEEM = 3;
+    private static final int STEEM_PRECISION_VESTS = 6;
+
+    // SMT Configuration
+    private static final long SMT_MAX_NAI = 99999999;
+    private static final long SMT_MIN_NON_RESERVED_NAI = 10000000;
+    private static final byte STEEM_ASSET_SYMBOL_PRECISION_BITS = 4;
+    private static final byte STEEM_ASSET_CONTROL_BITS = 1;
+    private static final byte SMT_MIN_NAI = 1;
+    private static final byte STEEM_NAI_SHIFT = (STEEM_ASSET_SYMBOL_PRECISION_BITS + STEEM_ASSET_CONTROL_BITS);
+    private static final int STEEM_ASSET_SYMBOL_NAI_LENGTH = 10;
+    private static final int STEEM_ASSET_SYMBOL_NAI_STRING_LENGTH = (STEEM_ASSET_SYMBOL_NAI_LENGTH + 2);
+    private static final int STEEM_ASSET_MAX_DECIMALS = 12;
+    private static final byte SMT_ASSET_NUM_PRECISION_MASK = 0xF;
+    private static final byte SMT_ASSET_NUM_CONTROL_MASK = 0x10;
+    private static final byte SMT_ASSET_NUM_VESTING_MASK = 0x20;
+
+    // The asset numbers of the the three default types:
+    private static final long STEEM_ASSET_NUM_SBD = ((SMT_MAX_NAI + STEEM_NAI_SBD) << STEEM_NAI_SHIFT)
+            | STEEM_PRECISION_SBD;
+    private static final long STEEM_ASSET_NUM_STEEM = ((SMT_MAX_NAI + STEEM_NAI_STEEM) << STEEM_NAI_SHIFT)
+            | STEEM_PRECISION_STEEM;
+    private static final long STEEM_ASSET_NUM_VESTS = ((SMT_MAX_NAI + STEEM_NAI_VESTS) << STEEM_NAI_SHIFT)
+            | STEEM_PRECISION_VESTS;
+
     /**
      * Numerical asset identifiers.
      * 
@@ -53,7 +85,7 @@ public class AssetSymbolType {
      */
     public AssetSymbolType(UInteger nai, byte decimalPlaces) {
         this.decimalPlaces = decimalPlaces;
-        this.assetNumber = assetNumberFromNai(nai, decimalPlaces);
+        this.assetNumber = UInteger.valueOf(assetNumberFromNai(nai, decimalPlaces));
     }
 
     /**
@@ -99,18 +131,35 @@ public class AssetSymbolType {
     }
 
     /**
-     * TODO
+     * Parse the asset number from the given <code>nai</code>.
      * 
      * @param nai
+     *            The nai.
      * @param decimalPlaces
-     * @return
+     *            The decimal places.
+     * @return The asset number.
      */
-    public static UInteger assetNumberFromNai(UInteger nai, byte decimalPlaces) {
-        return null;
-    }
+    public static long assetNumberFromNai(UInteger nai, byte decimalPlaces) {
+        long naiCheckDigits = nai.longValue() % 10;
+        long naiDataDigits = nai.longValue() / 10;
 
-    // TODO
-    // from_asset_num
+        // TODO: Damm Checksum validation.
+
+        switch ((int) naiDataDigits) {
+        case STEEM_NAI_SBD:
+            Validate.isTrue(decimalPlaces == STEEM_PRECISION_SBD);
+            return STEEM_ASSET_NUM_SBD;
+        case STEEM_NAI_STEEM:
+            Validate.isTrue(decimalPlaces == STEEM_PRECISION_STEEM);
+            return STEEM_ASSET_NUM_STEEM;
+        case STEEM_NAI_VESTS:
+            Validate.isTrue(decimalPlaces == STEEM_PRECISION_VESTS);
+            return STEEM_ASSET_NUM_VESTS;
+        default:
+            Validate.isTrue(decimalPlaces <= STEEM_ASSET_MAX_DECIMALS, "Invalid decimal places.");
+            return (naiDataDigits << STEEM_NAI_SHIFT) | SMT_ASSET_NUM_CONTROL_MASK | decimalPlaces;
+        }
+    }
 
     /**
      * This method is used to transform a <code>naiString</code> into a

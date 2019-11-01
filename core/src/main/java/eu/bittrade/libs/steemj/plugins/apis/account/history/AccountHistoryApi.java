@@ -22,11 +22,14 @@ import eu.bittrade.libs.steemj.enums.RequestMethod;
 import eu.bittrade.libs.steemj.enums.SteemApiType;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.EnumVirtualOps;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.EnumVirtualOpsArgs;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryArgs;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetAccountHistoryReturn;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockArgs;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.GetOpsInBlockReturn;
 import eu.bittrade.libs.steemj.protocol.AnnotatedSignedTransaction;
+import eu.bittrade.libs.steemj.protocol.TransactionId;
 
 /**
  * This class implements the "account_history_api".
@@ -71,22 +74,26 @@ public class AccountHistoryApi {
      *             </ul>
      */
     public static GetOpsInBlockReturn getOpsInBlock(CommunicationHandler communicationHandler,
-           GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
-    	    JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
+            GetOpsInBlockArgs getOpsInBlockArgs) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
                 RequestMethod.GET_OPS_IN_BLOCK, getOpsInBlockArgs);
 
         return communicationHandler.performRequest(requestObject, GetOpsInBlockReturn.class).get(0);
     }
 
     /**
-     * Find a transaction by its <code>transactionId</code>.
+     * Returns the details of a transaction based on a
+     * <code>transactionId</code>.
      * 
+     * @deprecated According to
+     *             https://developers.steem.io/apidefinitions/#apidefinitions-account-history-api
+     *             this method is deprecated.
      * @param communicationHandler
      *            A
      *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
      *            CommunicationHandler} instance that should be used to send the
      *            request.
-     * @param transactionId
+     * @param getTransactionArgs
      *            The <code>transactionId</code> to search for.
      * @return A sequence of operations included/generated within a particular
      *         block.
@@ -105,8 +112,9 @@ public class AccountHistoryApi {
      *             <li>If the Server returned an error object.</li>
      *             </ul>
      */
+    @Deprecated
     public static AnnotatedSignedTransaction getTransaction(CommunicationHandler communicationHandler,
-            GetAccountHistoryArgs getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
+            TransactionId getTransactionArgs) throws SteemCommunicationException, SteemResponseException {
         JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
                 RequestMethod.GET_TRANSACTION, getTransactionArgs);
 
@@ -150,5 +158,41 @@ public class AccountHistoryApi {
                 RequestMethod.GET_ACCOUNT_HISTORY, getAccountHistoryArgs);
 
         return communicationHandler.performRequest(requestObject, GetAccountHistoryReturn.class).get(0);
+    }
+
+    /**
+     * Get all virtual operations in a specified range of blocks..
+     * 
+     * @param communicationHandler
+     *            A
+     *            {@link eu.bittrade.libs.steemj.communication.CommunicationHandler
+     *            CommunicationHandler} instance that should be used to send the
+     *            request.
+     * @param enumVirtualOpsArgs
+     *            The user name of the account.
+     * @return A list of
+     *         {@link eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation
+     *         AppliedOperations}.
+     * @throws SteemCommunicationException
+     *             <ul>
+     *             <li>If the server was not able to answer the request in the
+     *             given time (see
+     *             {@link eu.bittrade.libs.steemj.configuration.SteemJConfig#setResponseTimeout(int)
+     *             setResponseTimeout}).</li>
+     *             <li>If there is a connection problem.</li>
+     *             </ul>
+     * @throws SteemResponseException
+     *             <ul>
+     *             <li>If the SteemJ is unable to transform the JSON response
+     *             into a Java object.</li>
+     *             <li>If the Server returned an error object.</li>
+     *             </ul>
+     */
+    public static EnumVirtualOps enumVirtualOps(CommunicationHandler communicationHandler,
+            EnumVirtualOpsArgs enumVirtualOpsArgs) throws SteemCommunicationException, SteemResponseException {
+        JsonRPCRequest requestObject = new JsonRPCRequest(SteemApiType.ACCOUNT_HISTORY_API,
+                RequestMethod.ENUM_VIRTUAL_OPS, enumVirtualOpsArgs);
+
+        return communicationHandler.performRequest(requestObject, EnumVirtualOps.class).get(0);
     }
 }

@@ -32,6 +32,8 @@ public enum RequestMethod {
     GET_TRANSACTION,
     /** Get the full history of an account. */
     GET_ACCOUNT_HISTORY,
+    /** Receive virtual operations for blocks. */
+    ENUM_VIRTUAL_OPS,
     // block_api
     /** */
     GET_BLOCK,
@@ -273,6 +275,6 @@ public enum RequestMethod {
     GET_ACCOUNT_BANDWIDTH,
     /** */
     GET_REVERSE_RATIO,
-    
+
     GET_LIQUIDITY_QUEUE
 }

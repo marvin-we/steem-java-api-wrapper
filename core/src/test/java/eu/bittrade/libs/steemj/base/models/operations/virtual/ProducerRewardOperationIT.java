@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,7 +31,6 @@ import eu.bittrade.libs.steemj.BaseITForOperationParsing;
 import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
-import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
 
@@ -43,10 +43,9 @@ public class ProducerRewardOperationIT extends BaseITForOperationParsing {
     private static final int BLOCK_NUMBER_CONTAINING_OPERATION = 16212111;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_PRODUCER = "xeldal";
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_VESTS_SYMBOL = LegacyAssetSymbolType.VESTS;
-     * private static final BigDecimal EXPECTED_VESTS_VALUE_REAL = BigDecimal.valueOf(390.97665);
-     */
+    private static final UInteger EXPECTED_VESTS_SYMBOL = UInteger.valueOf(3200000070L);
+    private static final BigDecimal EXPECTED_VESTS_VALUE_REAL = BigDecimal.valueOf(390976650, 6);
+
     private static final long EXPECTED_VESTS_VALUE = 390976650L;
 
     /**
@@ -65,18 +64,17 @@ public class ProducerRewardOperationIT extends BaseITForOperationParsing {
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation producerRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation producerRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper().getOperation();
 
         assertThat(producerRewardOperation, instanceOf(ProducerRewardOperation.class));
 
-        assertThat(((ProducerRewardOperation) producerRewardOperation).getValue().getProducer().getName(),
+        assertThat(((ProducerRewardOperation) producerRewardOperation).getProducer().getName(),
                 equalTo(EXPECTED_PRODUCER));
-        //TODO: add more assertions
-    /*    assertThat(((ProducerRewardOperation) producerRewardOperation).getValue().getVestingShares().getSymbol(),
-                equalTo(EXPECTED_VESTS_SYMBOL));
-        assertThat(((ProducerRewardOperation) producerRewardOperation).getValue().getVestingShares().toReal(),
-                equalTo(EXPECTED_VESTS_VALUE_REAL));*/
-        assertThat(((ProducerRewardOperation) producerRewardOperation).getValue().getVestingShares().getAmount(),
+        assertThat(((ProducerRewardOperation) producerRewardOperation).getVestingShares().getAssetSymbolType()
+                .getAssetNumber(), equalTo(EXPECTED_VESTS_SYMBOL));
+        assertThat(((ProducerRewardOperation) producerRewardOperation).getVestingShares().toReal(),
+                equalTo(EXPECTED_VESTS_VALUE_REAL));
+        assertThat(((ProducerRewardOperation) producerRewardOperation).getVestingShares().getAmount(),
                 equalTo(EXPECTED_VESTS_VALUE));
     }
 }

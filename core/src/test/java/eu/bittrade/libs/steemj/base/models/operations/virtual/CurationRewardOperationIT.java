@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -47,10 +48,8 @@ public class CurationRewardOperationIT extends BaseITForOperationParsing {
     private static final AccountName EXPECTED_CURATOR = new AccountName("quinneaker");
     private static final Permlink EXPECTED_PERMLINK = new Permlink(
             "re-quinneaker-re-joearnold-re-quinneaker-bounties-of-the-land-episode-7-preparing-for-winter-final-harvests-soon-20171003t161412134z");
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_REWARD_SYMBOL = LegacyAssetSymbolType.VESTS;
-     * private static final BigDecimal EXPECTED_REWARD_VALUE_REAL = BigDecimal.valueOf(6.173331);
-    */
+    private static final UInteger EXPECTED_REWARD_SYMBOL = UInteger.valueOf(3200000070L);
+    private static final BigDecimal EXPECTED_REWARD_VALUE_REAL = BigDecimal.valueOf(6.173331);
     private static final long EXPECTED_REWARD_VALUE = 6173331L;
 
     /**
@@ -69,21 +68,21 @@ public class CurationRewardOperationIT extends BaseITForOperationParsing {
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation curationRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation curationRewardOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper().getOperation();
 
         assertThat(curationRewardOperation, instanceOf(CurationRewardOperation.class));
 
-        assertThat(((CurationRewardOperation) curationRewardOperation).getCurationRewardValue().getCommentAuthor().getName(),
+        assertThat(((CurationRewardOperation) curationRewardOperation).getCommentAuthor().getName(),
                 equalTo(EXPECTED_AUTHOR));
-        assertThat(((CurationRewardOperation) curationRewardOperation).getCurationRewardValue().getCurator(), equalTo(EXPECTED_CURATOR));
-        assertThat(((CurationRewardOperation) curationRewardOperation).getCurationRewardValue().getCommentPermlink(),
+        assertThat(((CurationRewardOperation) curationRewardOperation).getCurator(), equalTo(EXPECTED_CURATOR));
+        assertThat(((CurationRewardOperation) curationRewardOperation).getCommentPermlink(),
                 equalTo(EXPECTED_PERMLINK));
-      //TODO: add more assertions
-     /*   assertThat(((CurationRewardOperation) curationRewardOperation).getCurationRewardValue().getReward().getSymbol(),
+        assertThat(
+                ((CurationRewardOperation) curationRewardOperation).getReward().getAssetSymbolType().getAssetNumber(),
                 equalTo(EXPECTED_REWARD_SYMBOL));
-        assertThat(((CurationRewardOperation) curationRewardOperation).getCurationRewardValue().getReward().toReal(),
-                equalTo(EXPECTED_REWARD_VALUE_REAL)); */
-        assertThat(((CurationRewardOperation) curationRewardOperation).getCurationRewardValue().getReward().getAmount(),
+        assertThat(((CurationRewardOperation) curationRewardOperation).getReward().toReal(),
+                equalTo(EXPECTED_REWARD_VALUE_REAL));
+        assertThat(((CurationRewardOperation) curationRewardOperation).getReward().getAmount(),
                 equalTo(EXPECTED_REWARD_VALUE));
     }
 
