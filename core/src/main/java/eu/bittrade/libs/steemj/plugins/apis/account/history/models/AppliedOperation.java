@@ -24,8 +24,8 @@ import org.joou.UShort;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import eu.bittrade.libs.steemj.fc.TimePointSec;
+import eu.bittrade.libs.steemj.plugins.apis.account.history.models.deserializer.OperationWrapper;
 import eu.bittrade.libs.steemj.protocol.TransactionId;
-import eu.bittrade.libs.steemj.protocol.operations.Operation;
 
 /**
  * This class is the java implementation of the Steem "api_operation_object"
@@ -51,7 +51,7 @@ public class AppliedOperation {
     @JsonProperty("timestamp")
     private TimePointSec timestamp;
     @JsonProperty("op")
-    private Operation op;
+    private OperationWrapper operationWrapper;
 
     /**
      * This object is only used to wrap the JSON response in a POJO, so
@@ -79,27 +79,27 @@ public class AppliedOperation {
     }
 
     /**
-     * Get the index of the transaction inside the block.
+     * Get the number of transactions inside the block.
      * 
-     * @return The transaction index in the block.
+     * @return The number of transactions inside the block.
      */
     public UInteger getTrxInBlock() {
         return trxInBlock;
     }
 
     /**
-     * Get the index of the operation inside the transaction.
+     * Get the number of operations inside the transaction.
      * 
-     * @return The operation index in the transaction.
+     * @return The number of operations inside the transaction.
      */
     public UShort getOpInTrx() {
         return opInTrx;
     }
 
     /**
-     * Get the index of the virtual operation inside the transaction.
+     * Get the number of virtual operations inside the transaction.
      * 
-     * @return The virtual operation index in the transaction.
+     * @return The number of virtual operations inside the transaction.
      */
     public ULong getVirtualOp() {
         return virtualOp;
@@ -115,12 +115,12 @@ public class AppliedOperation {
     }
 
     /**
-     * Get the whole operation object.
+     * Get a wrapper object which stores the whole operation object.
      * 
      * @return The operation object.
      */
-    public Operation getOp() {
-        return op;
+    public OperationWrapper getOperationWrapper() {
+        return operationWrapper;
     }
 
     @Override
