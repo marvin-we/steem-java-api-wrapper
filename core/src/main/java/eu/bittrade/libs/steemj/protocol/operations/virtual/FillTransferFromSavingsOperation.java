@@ -27,18 +27,27 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
-import eu.bittrade.libs.steemj.protocol.operations.virtual.value.FillTransferFromSavingsOperationValue;
 
 /**
  * This class represents the Steem "fill_transfer_from_savings_operation"
  * object.
  * 
+ * This operation occurs if a transfer from the savings wallet has been
+ * fulfilled.
+ * 
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class FillTransferFromSavingsOperation extends Operation {
-	@JsonProperty("value")
-    private FillTransferFromSavingsOperationValue value;
+    private AccountName from;
+    private AccountName to;
+    private Asset amount;
+    // Original type is uint32_t here so we have to use long.
+    @JsonProperty("request_id")
+    private long requestId;
+    private String memo;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -49,16 +58,41 @@ public class FillTransferFromSavingsOperation extends Operation {
     }
 
     /**
-     * Gets all the values 
-     * 
-     * @return the value for type fill_transfer_from_savings_operation
+     * @return The account the {@code #amount} is coming from.
      */
-    public FillTransferFromSavingsOperationValue getValue() {
-		return value;
-	}
+    public AccountName getFrom() {
+        return from;
+    }
 
+    /**
+     * @return The account which received the {@code #amount}.
+     */
+    public AccountName getTo() {
+        return to;
+    }
 
-	@Override
+    /**
+     * @return The amount that has been transfered.
+     */
+    public Asset getAmount() {
+        return amount;
+    }
+
+    /**
+     * @return The id of the transfer operation.
+     */
+    public long getRequestId() {
+        return requestId;
+    }
+
+    /**
+     * @return The message added to the transfer.
+     */
+    public String getMemo() {
+        return memo;
+    }
+
+    @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

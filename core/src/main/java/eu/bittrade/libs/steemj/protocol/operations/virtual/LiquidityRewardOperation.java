@@ -47,14 +47,14 @@ public class LiquidityRewardOperation extends Operation {
     }
 
     /**
-     * @return the owner
+     * @return The account which receives the payout.
      */
     public AccountName getOwner() {
         return owner;
     }
 
     /**
-     * @return the payout
+     * @return The amount the owner receives.
      */
     public LegacyAsset getPayout() {
         return payout;

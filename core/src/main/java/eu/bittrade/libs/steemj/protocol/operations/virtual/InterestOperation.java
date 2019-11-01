@@ -27,8 +27,9 @@ import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
-import eu.bittrade.libs.steemj.protocol.operations.virtual.value.InterestOperationValue;
 
 /**
  * This class represents a Steem "interest_operation" object.
@@ -36,8 +37,10 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.value.InterestOperati
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class InterestOperation extends Operation {
-    @JsonProperty("value")
-    private InterestOperationValue value;
+    @JsonProperty("owner")
+    private AccountName owner;
+    @JsonProperty("interest")
+    private Asset interest;
 
     /**
      * This operation is a virtual one and can only be created by the blockchain
@@ -48,16 +51,20 @@ public class InterestOperation extends Operation {
     }
 
     /**
-     * Gets all the values 
-     * 
-     * @return the value for type interest_operation
+     * @return The owner.
      */
-    public InterestOperationValue getValue() {
-		return value;
-	}
+    public AccountName getOwner() {
+        return owner;
+    }
 
+    /**
+     * @return The interest.
+     */
+    public Asset getInterest() {
+        return interest;
+    }
 
-	@Override
+    @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.

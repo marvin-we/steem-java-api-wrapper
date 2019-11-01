@@ -23,12 +23,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.bittrade.libs.steemj.base.models.Permlink;
 import eu.bittrade.libs.steemj.enums.PrivateKeyType;
 import eu.bittrade.libs.steemj.enums.ValidationType;
 import eu.bittrade.libs.steemj.exceptions.SteemInvalidTransactionException;
 import eu.bittrade.libs.steemj.interfaces.SignatureObject;
+import eu.bittrade.libs.steemj.protocol.AccountName;
+import eu.bittrade.libs.steemj.protocol.Asset;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
-import eu.bittrade.libs.steemj.protocol.operations.virtual.value.CommentBenefactorRewardOperationValue;
 
 /**
  * This class represents the Steem "comment_benefactor_reward_operation" object.
@@ -36,8 +38,19 @@ import eu.bittrade.libs.steemj.protocol.operations.virtual.value.CommentBenefact
  * @author <a href="http://steemit.com/@dez1337">dez1337</a>
  */
 public class CommentBenefactorRewardOperation extends Operation {
-	@JsonProperty("value")
-	private CommentBenefactorRewardOperationValue value;
+    @JsonProperty("benefactor")
+    private AccountName benefactor;
+    @JsonProperty("author")
+    private AccountName author;
+    @JsonProperty("permlink")
+    private Permlink permlink;
+    @JsonProperty("sbd_payout")
+    private Asset sbdPayout;
+    @JsonProperty("steem_payout")
+    private Asset steemPayout;
+    @JsonProperty("vesting_payout")
+    private Asset vestingPayout;
+
     /**
      * This operation is a virtual one and can only be created by the blockchain
      * itself. Due to that, this constructor is private.
@@ -47,17 +60,48 @@ public class CommentBenefactorRewardOperation extends Operation {
     }
 
     /**
-     * Gets all the values 
-     * 
-     * @return the value for type comment_benefactor_reward_operation
+     * @return The benefactor which the payout.
      */
-    public CommentBenefactorRewardOperationValue getValue() {
-		return value;
-	}
+    public AccountName getBenefactor() {
+        return benefactor;
+    }
 
+    /**
+     * @return The author of the post.
+     */
+    public AccountName getAuthor() {
+        return author;
+    }
 
+    /**
+     * @return The link to the post.
+     */
+    public Permlink getPermlink() {
+        return permlink;
+    }
 
-	@Override
+    /**
+     * @return The amount of SBD received by the {@code #benefactor}.
+     */
+    public Asset getSbdPayout() {
+        return sbdPayout;
+    }
+
+    /**
+     * @return The amount of STEEM received by the {@code #benefactor}.
+     */
+    public Asset getSteemPayout() {
+        return steemPayout;
+    }
+
+    /**
+     * @return The amount of VESTS received by the {@code #benefactor}.
+     */
+    public Asset getVestingPayout() {
+        return vestingPayout;
+    }
+
+    @Override
     public byte[] toByteArray() throws SteemInvalidTransactionException {
         // The byte representation is not needed for virtual operations as we
         // can't broadcast them.
