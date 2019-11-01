@@ -20,8 +20,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,16 +45,11 @@ public class FillConvertRequestOperationIT extends BaseITForOperationParsing {
     private static final int OPERATION_INDEX = 1;
     private static final String EXPECTED_OWNER = "jiminykricket";
     private static final long EXPECTED_REQUEST_ID = 1506775956L;
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_AMOUNT_IN_SYMBOL = LegacyAssetSymbolType.SBD;
-     * private static final BigDecimal EXPECTED_AMOUNT_IN_VALUE_REAL = BigDecimal.valueOf(0.024);
-    
-     */
+    private static final UInteger EXPECTED_AMOUNT_IN_SYMBOL = UInteger.valueOf(3200000003L);
+    private static final BigDecimal EXPECTED_AMOUNT_IN_VALUE_REAL = BigDecimal.valueOf(0.024);
     private static final long EXPECTED_AMOUNT_IN_VALUE = 24L;
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_AMOUNT_OUT_SYMBOL = LegacyAssetSymbolType.STEEM;
-     * private static final BigDecimal EXPECTED_AMOUNT_OUT_VALUE_REAL = BigDecimal.valueOf(0.017);
-     */
+    private static final UInteger EXPECTED_AMOUNT_OUT_SYMBOL = UInteger.valueOf(3200000035L);
+    private static final BigDecimal EXPECTED_AMOUNT_OUT_VALUE_REAL = BigDecimal.valueOf(0.017);
     private static final long EXPECTED_AMOUNT_OUT_VALUE = 17L;
 
     /**
@@ -71,26 +68,26 @@ public class FillConvertRequestOperationIT extends BaseITForOperationParsing {
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation fillConvertRequestOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation fillConvertRequestOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper()
+                .getOperation();
 
         assertThat(fillConvertRequestOperation, instanceOf(FillConvertRequestOperation.class));
 
-        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getOwner().getName(),
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getOwner().getName(),
                 equalTo(EXPECTED_OWNER));
-        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getRequestId(),
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getRequestId(),
                 equalTo(EXPECTED_REQUEST_ID));
-      //TODO: add more assertions
-     /*   assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getAmountIn().getSymbol(),
-                equalTo(EXPECTED_AMOUNT_IN_SYMBOL));
-        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getAmountIn().toReal(),
-                equalTo(EXPECTED_AMOUNT_IN_VALUE_REAL));*/
-        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getAmountIn().getAmount(),
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getAmountIn().getAssetSymbolType()
+                .getAssetNumber(), equalTo(EXPECTED_AMOUNT_IN_SYMBOL));
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getAmountIn().toReal(),
+                equalTo(EXPECTED_AMOUNT_IN_VALUE_REAL));
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getAmountIn().getAmount(),
                 equalTo(EXPECTED_AMOUNT_IN_VALUE));
-       /* assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getAmountOut().getSymbol(),
-                equalTo(EXPECTED_AMOUNT_OUT_SYMBOL));
-        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getAmountOut().toReal(),
-                equalTo(EXPECTED_AMOUNT_OUT_VALUE_REAL));*/
-        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getValue().getAmountOut().getAmount(),
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getAmountOut().getAssetSymbolType()
+                .getAssetNumber(), equalTo(EXPECTED_AMOUNT_OUT_SYMBOL));
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getAmountOut().toReal(),
+                equalTo(EXPECTED_AMOUNT_OUT_VALUE_REAL));
+        assertThat(((FillConvertRequestOperation) fillConvertRequestOperation).getAmountOut().getAmount(),
                 equalTo(EXPECTED_AMOUNT_OUT_VALUE));
     }
 }

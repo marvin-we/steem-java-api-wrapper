@@ -23,6 +23,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,7 +32,6 @@ import eu.bittrade.libs.steemj.exceptions.SteemCommunicationException;
 import eu.bittrade.libs.steemj.exceptions.SteemResponseException;
 import eu.bittrade.libs.steemj.plugins.apis.account.history.models.AppliedOperation;
 import eu.bittrade.libs.steemj.protocol.AccountName;
-import eu.bittrade.libs.steemj.protocol.enums.LegacyAssetSymbolType;
 import eu.bittrade.libs.steemj.protocol.operations.Operation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.FillOrderOperation;
 import eu.bittrade.libs.steemj.protocol.operations.virtual.ProducerRewardOperation;
@@ -48,16 +48,11 @@ public class FillOrderOperationIT extends BaseITForOperationParsing {
     private static final AccountName EXPECTED_OPEN_OWNER = new AccountName("oscarps");
     private static final int EXPECTED_CURRENT_ORDER_ID = 1507078540;
     private static final long EXPECTED_OPEN_ORDER_ID = 1507059984L;
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_OPEN_PAYS_SYMBOL = LegacyAssetSymbolType.STEEM;
-     * private static final BigDecimal EXPECTED_OPEN_PAYS_VALUE_REAL = BigDecimal.valueOf(0.015);
-    
-     */
+    private static final UInteger EXPECTED_OPEN_PAYS_SYMBOL = UInteger.valueOf(3200000035L);
+    private static final BigDecimal EXPECTED_OPEN_PAYS_VALUE_REAL = new BigDecimal("0.015");
     private static final long EXPECTED_OPEN_PAYS_VALUE = 15L;
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_CURRENT_PAYS_SYMBOL = LegacyAssetSymbolType.SBD;
-     * private static final BigDecimal EXPECTED_CURRENT_PAYS_VALUE_REAL = BigDecimal.valueOf(0.02);
-     */
+    private static final UInteger EXPECTED_CURRENT_PAYS_SYMBOL = UInteger.valueOf(3200000003L);
+    private static final BigDecimal EXPECTED_CURRENT_PAYS_VALUE_REAL = new BigDecimal("0.020");
     private static final long EXPECTED_CURRENT_PAYS_VALUE = 20L;
 
     /**
@@ -76,27 +71,26 @@ public class FillOrderOperationIT extends BaseITForOperationParsing {
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation fillOrderOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation fillOrderOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper().getOperation();
 
         assertThat(fillOrderOperation, instanceOf(FillOrderOperation.class));
 
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getCurrentOwner().getName(),
+        assertThat(((FillOrderOperation) fillOrderOperation).getCurrentOwner().getName(),
                 equalTo(EXPECTED_CURRENT_OWNER));
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getOpenOwner(), equalTo(EXPECTED_OPEN_OWNER));
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getCurrentOrderId(), equalTo(EXPECTED_CURRENT_ORDER_ID));
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getOpenOrderId(), equalTo(EXPECTED_OPEN_ORDER_ID));
-      //TODO: add more assertions
-     /*   assertThat(((FillOrderOperation) fillOrderOperation).getValue().getOpenPays().getSymbol(),
-                equalTo(EXPECTED_OPEN_PAYS_SYMBOL)); 
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getOpenPays().toReal(),
-                equalTo(EXPECTED_OPEN_PAYS_VALUE_REAL)); */
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getOpenPays().getAmount(),
+        assertThat(((FillOrderOperation) fillOrderOperation).getOpenOwner(), equalTo(EXPECTED_OPEN_OWNER));
+        assertThat(((FillOrderOperation) fillOrderOperation).getCurrentOrderId(), equalTo(EXPECTED_CURRENT_ORDER_ID));
+        assertThat(((FillOrderOperation) fillOrderOperation).getOpenOrderId(), equalTo(EXPECTED_OPEN_ORDER_ID));
+        assertThat(((FillOrderOperation) fillOrderOperation).getOpenPays().getAssetSymbolType().getAssetNumber(),
+                equalTo(EXPECTED_OPEN_PAYS_SYMBOL));
+        assertThat(((FillOrderOperation) fillOrderOperation).getOpenPays().toReal(),
+                equalTo(EXPECTED_OPEN_PAYS_VALUE_REAL));
+        assertThat(((FillOrderOperation) fillOrderOperation).getOpenPays().getAmount(),
                 equalTo(EXPECTED_OPEN_PAYS_VALUE));
-      /*  assertThat(((FillOrderOperation) fillOrderOperation).getValue().getCurrentPays().getSymbol(),
+        assertThat(((FillOrderOperation) fillOrderOperation).getCurrentPays().getAssetSymbolType().getAssetNumber(),
                 equalTo(EXPECTED_CURRENT_PAYS_SYMBOL));
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getCurrentPays().toReal(),
-                equalTo(EXPECTED_CURRENT_PAYS_VALUE_REAL));*/
-        assertThat(((FillOrderOperation) fillOrderOperation).getValue().getCurrentPays().getAmount(),
+        assertThat(((FillOrderOperation) fillOrderOperation).getCurrentPays().toReal(),
+                equalTo(EXPECTED_CURRENT_PAYS_VALUE_REAL));
+        assertThat(((FillOrderOperation) fillOrderOperation).getCurrentPays().getAmount(),
                 equalTo(EXPECTED_CURRENT_PAYS_VALUE));
     }
 }

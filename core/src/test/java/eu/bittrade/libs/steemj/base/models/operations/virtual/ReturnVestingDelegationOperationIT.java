@@ -20,8 +20,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import org.joou.UInteger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,11 +44,10 @@ public class ReturnVestingDelegationOperationIT extends BaseITForOperationParsin
     private static final int BLOCK_NUMBER_CONTAINING_OPERATION = 16022132;
     private static final int OPERATION_INDEX = 0;
     private static final String EXPECTED_ACCOUNT = "minnowbooster";
-    /*
-     * private static final LegacyAssetSymbolType EXPECTED_VESTS_SYMBOL = LegacyAssetSymbolType.VESTS;
-     * private static final BigDecimal EXPECTED_VESTS_VALUE_REAL = BigDecimal.valueOf(2362500.0);
-     */
+    // Since SMTs, assets are only representeted through their NAI.
+    private static final UInteger EXPECTED_VESTS_SYMBOL = UInteger.valueOf(3200000070L);
     private static final long EXPECTED_VESTS_VALUE = 2362500000000L;
+    private static final BigDecimal EXPECTED_VESTS_VALUE_REAL = BigDecimal.valueOf(EXPECTED_VESTS_VALUE, 6);
 
     /**
      * Prepare the environment for this specific test.
@@ -64,18 +65,18 @@ public class ReturnVestingDelegationOperationIT extends BaseITForOperationParsin
     public void testOperationParsing() throws SteemCommunicationException, SteemResponseException {
         List<AppliedOperation> operationsInBlock = steemJ.getOpsInBlock(BLOCK_NUMBER_CONTAINING_OPERATION, true);
 
-        Operation returnVestingDelegationOperation = operationsInBlock.get(OPERATION_INDEX).getOp();
+        Operation returnVestingDelegationOperation = operationsInBlock.get(OPERATION_INDEX).getOperationWrapper()
+                .getOperation();
 
         assertThat(returnVestingDelegationOperation, instanceOf(ReturnVestingDelegationOperation.class));
 
-        assertThat(((ReturnVestingDelegationOperation) returnVestingDelegationOperation).getValue().getAccount().getName(),
+        assertThat(((ReturnVestingDelegationOperation) returnVestingDelegationOperation).getAccount().getName(),
                 equalTo(EXPECTED_ACCOUNT));
-        //TODO: add more assertions
-      /*  assertThat(((ReturnVestingDelegationOperation) returnVestingDelegationOperation).getVestingShares().getSymbol(),
-                equalTo(EXPECTED_VESTS_SYMBOL));
+        assertThat(((ReturnVestingDelegationOperation) returnVestingDelegationOperation).getVestingShares()
+                .getAssetSymbolType().getAssetNumber(), equalTo(EXPECTED_VESTS_SYMBOL));
         assertThat(((ReturnVestingDelegationOperation) returnVestingDelegationOperation).getVestingShares().toReal(),
-                equalTo(EXPECTED_VESTS_VALUE_REAL));*/
-        assertThat(((ReturnVestingDelegationOperation) returnVestingDelegationOperation).getValue().getVestingShares().getAmount(),
+                equalTo(EXPECTED_VESTS_VALUE_REAL));
+        assertThat(((ReturnVestingDelegationOperation) returnVestingDelegationOperation).getVestingShares().getAmount(),
                 equalTo(EXPECTED_VESTS_VALUE));
     }
 }
